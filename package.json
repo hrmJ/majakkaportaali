@@ -1,0 +1,23 @@
+{
+  "name": "lhportal",
+  "version": "1.0.0",
+  "description": "Project for organizing church service volunteers",
+  "dependencies": {
+    "nightmare": "^2.10.0",
+    "nightwatch": "^0.9.15"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "mocha tests/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "Juho Härme",
+  "license": "ISC",
+  "bugs": {
+    "url": ""
+  },
+  "homepage": ""
+}
