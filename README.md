@@ -75,6 +75,7 @@ jsDoc
 
 ### Php-dokumentaatio
 
+    phpdoc -d ./src/ -t docs/php
 
 #### Dokumentaatiotyökalun (phpdoc) asennus
 

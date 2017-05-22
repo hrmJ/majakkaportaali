@@ -7,10 +7,9 @@ use PHPUnit\Framework\TestCase;
 class TemplateTest extends TestCase
 {
 
-    /*
-     *
-     *
-     **/
+    /**
+     * Onko luokka olemassa
+     */
     public function testTemplateClassExists()
     {
         $mytemplate = new Template();

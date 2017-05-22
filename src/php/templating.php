@@ -1,11 +1,11 @@
 <?php
-/*
+/**
  * Sisältää oliot ja funktiot, jotka liittyvät pohjien (templates) käyttöön.
  *
- **/
+ */
 
 
-/*
+/**
  *
  * Sivupohjaolio, joka vastaa sisällön näyttämisestä.
  * Jokainen sivu, joka luodaan, on oma Template-luokan
@@ -13,7 +13,10 @@
  *
  * Lähtökohta: http://www.
  *
- **/
+ * @param file {string}
+ * @param values {array}
+ *
+ */
 class Template{
     protected $file;
     protected $values = Array();
