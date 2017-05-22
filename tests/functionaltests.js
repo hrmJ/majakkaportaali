@@ -3,7 +3,7 @@ var expect = require('chai').expect; // jshint ignore:line
 var assert = require('chai').assert; 
 
 
-describe('Basic test suite', function() {
+describe('Alkutestit', function() {
 
     before(function() {
         console.log("Aloitetaan testit. Kirjaudutaan sisään...");
@@ -16,9 +16,9 @@ describe('Basic test suite', function() {
       // ...
     });
 
-    describe('Some tests', function() {
-      it('test 1', function(done) {
-        this.timeout('2s');
+    describe('Testaa, onko etusivu pystyssä', function() {
+      it('Käyttäjä näkee sivun otsikkona: Majakkaportaali', function(done) {
+        this.timeout('10s');
         this.nightmare
             .goto('http://localhost/majakkaportaali/index.php')
             .evaluate(function () {

@@ -17,7 +17,7 @@ Kannattaa kloonata projektikansio jonnekin aivan muualle ja luoda symbolinen lin
 silla /var/www/html/-kansioon.
 
     cd /var/www/html/
-    ln -s ~/projects/majakkaportaali/ .
+    ln -s ~/projects/majakkaportaali/src majakkaportaali #Huom: linkkaa nimenomaan src-kansio
 
 ##  Testityökalut
 
