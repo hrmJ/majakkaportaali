@@ -20,7 +20,16 @@
 class Template{
     protected $file;
     protected $values = Array();
+
+    /**
+     * @param file {string} pohjan tiedostonimi
+     */
+    public function __construct($file){
+        $this->file = $file;
+    }
 }
 
 
+
 ?>
+
