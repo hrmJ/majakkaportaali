@@ -4,12 +4,17 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers Template
  */
-class NewsfeedTest extends TestCase
+class TemplateTest extends TestCase
 {
 
-    public function testClassExists()
+    /*
+     *
+     *
+     **/
+    public function testTemplateClassExists()
     {
-        $this->assertTrue(1==2, "Huono testi.");
+        $mytemplate = new Template();
+        $this->assertTrue(get_class($mytemplate) == "Template", "Ei onnistuttu luomaan template-oliota");
     }
 
 }

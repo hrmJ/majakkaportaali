@@ -64,7 +64,7 @@ Asennus on simppeli, lataa vain paketti, jonka valinnaan mukaan voi kopioida /us
 
 Aja testit (esimerkiksi) komennolla
 
-    phpunit --bootstrap src/php/templating.php --testdox tests/unittests.php
+    phpunit --bootstrap src/php/templating.php --testdox tests/IndexTest
 
 
 ## Dokumentaation luonti
