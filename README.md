@@ -11,6 +11,14 @@ simppeleillä web-tekniikoilla (css, html, php, js).
 
 Tässä perustiedot siitä, miten projektin saa käyntiin.
 
+## Projektikansio localhostille
+
+Kannattaa kloonata projektikansio jonnekin aivan muualle ja luoda symbolinen linkki
+silla /var/www/html/-kansioon.
+
+    cd /var/www/html/
+    ln -s ~/projects/majakkaportaali/ .
+
 ##  Testityökalut
 
 Perusideologiana projektin kehittämisessä on testata koodia mahdollisimman tehokkaasti.
