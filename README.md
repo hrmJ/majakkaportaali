@@ -44,11 +44,7 @@ Selainpohjainen testaus on toteutettu Nightmare + mocha + chai -yhdistelmällä
     npm install mocha
 
 
-#### Testaaminen
-
-Aja `npm test` projektin juurikansiossa.
-
-### Phpunit
+### Phpunit 
 
 Php-testien kanssa alkuun pääsee [phpunitilla](https://phpunit.de/getting-started.html)
 
@@ -60,36 +56,36 @@ Asennus on simppeli, lataa vain paketti, jonka valinnaan mukaan voi kopioida /us
     chmod +x phpunit.phar
     sudo mv phpunit.phar /usr/local/bin/phpunit
 
-#### Testaaminen
+# Testaaminen
+
+## Nightmare (functional tests)
+
+Aja `npm test` projektin juurikansiossa.
+
+
+## Phpunit (unit tests)
 
 Aja testit (esimerkiksi) komennolla
 
     phpunit --bootstrap src/php/templating.php --testdox tests/IndexTest
 
 
-## Dokumentaation luonti
+# Dokumentaation luonti
 
-### Javascript-dokumentaatio 
+## Javascript-dokumentaatio 
 
 jsDoc
 
-### Php-dokumentaatio
+## Php-dokumentaatio
+
+### Dokumentaatiotyökalun (phpdoc) asennus
 
 1. Lataa phpdoc phar-tiedostona osoitteesta https://phpdoc.org/
 2. Luo dokumentaatio ajamalla:
 
     php phpDocumentor.phar -d ./src/ -t docs/php
 
-#### Dokumentaatiotyökalun (phpdoc) asennus
-
-Ubuntulla:
-
-    sudo apt-get install php7.0-xml # Riippuen php-versiosta
-    sudo pear channel-discover pear.phpdoc.org
-
-On myös mahdollista ladata phar-arkistona.
-
-
+(varmista tarpeeksi korkea php-versio)
 
 ## SQL-taulujen luonti
 
