@@ -75,7 +75,10 @@ jsDoc
 
 ### Php-dokumentaatio
 
-    phpdoc -d ./src/ -t docs/php
+1. Lataa phpdoc phar-tiedostona osoitteesta https://phpdoc.org/
+2. Luo dokumentaatio ajamalla:
+
+    php phpDocumentor.phar -d ./src/ -t docs/php
 
 #### Dokumentaatiotyökalun (phpdoc) asennus
 
