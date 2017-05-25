@@ -7,6 +7,9 @@ use PHPUnit\Framework\TestCase;
 class TemplateTest extends TestCase
 {
 
+    /**
+     * Testaa, että pohjaolio on määritelty ja sitä pystyy käyttämään.
+     */
     public function testTemplateClassExists()
     {
         $this->mytemplate = new Template("servicelist.tpl");

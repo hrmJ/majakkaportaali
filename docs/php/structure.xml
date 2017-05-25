@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project title="API Documentation" version="v2.9.0">
   <partials/>
-  <file path="templating.php" generated-path="templating.html" hash="a5f391fdb2518214703209397c6982f5" package="Default">
+  <file path="templating.php" generated-path="templating.html" hash="ea43b103b2c1ded5c265a3b135253762" package="Default">
     <docblock line="0">
       <description>Sisältää oliot ja funktiot, jotka liittyvät pohjien (templates) käyttöön.</description>
       <long-description></long-description>
@@ -17,11 +17,11 @@
 olionsa.
 
 Lähtökohta: http://www.broculos.net/2008/03/how-to-make-simple-html-template-engine.html#.WScryR_S3UI</long-description>
-        <tag name="param" line="20" description="&lt;p&gt;{string} pohjan tiedostonimi sisältäen koko suhteellisen hakemistopolun kutsujatiedostosta katsoen. (esim. templates/x.tpl)&lt;/p&gt;" type="\file" variable="">
-          <type>\file</type>
+        <tag name="param" line="20" description="&lt;p&gt;pohjan tiedostonimi sisältäen koko suhteellisen hakemistopolun kutsujatiedostosta katsoen. (esim. templates/x.tpl)&lt;/p&gt;" type="string" variable="$file">
+          <type>string</type>
         </tag>
-        <tag name="param" line="20" description="&lt;p&gt;{array} mitä pohjaan syötetään&lt;/p&gt;" type="\values" variable="">
-          <type>\values</type>
+        <tag name="param" line="20" description="&lt;p&gt;mitä pohjaan syötetään&lt;/p&gt;" type="array" variable="$values">
+          <type>array</type>
         </tag>
         <tag name="package" line="20" description="Default"/>
       </docblock>
@@ -49,14 +49,14 @@ Lähtökohta: http://www.broculos.net/2008/03/how-to-make-simple-html-template-e
         <docblock line="27">
           <description></description>
           <long-description></long-description>
-          <tag name="param" line="27" description="&lt;p&gt;{string} pohjan tiedostonimi&lt;/p&gt;" type="\file" variable="$file">
-            <type>\file</type>
+          <tag name="param" line="27" description="&lt;p&gt;pohjan tiedostonimi&lt;/p&gt;" type="string" variable="$file">
+            <type>string</type>
           </tag>
         </docblock>
         <argument line="0" by_reference="false">
           <name>$file</name>
           <default></default>
-          <type/>
+          <type>string</type>
         </argument>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="" line="40" package="Default">
@@ -66,22 +66,22 @@ Lähtökohta: http://www.broculos.net/2008/03/how-to-make-simple-html-template-e
           <description>Syöttää pohjaan arvoja: esimerkiksi sen, mikä merkkijono (html-koodi) korvaa
 pohjassa olevan [@table]-paikanmerkin.</description>
           <long-description></long-description>
-          <tag name="param" line="40" description="&lt;p&gt;{string} Se kohta pohjaa, joka korvataan (&quot;kirjanmerkki&quot;)&lt;/p&gt;" type="\bookmark" variable="$bookmark">
-            <type>\bookmark</type>
+          <tag name="param" line="40" description="&lt;p&gt;Se kohta pohjaa, joka korvataan (&quot;kirjanmerkki&quot;)&lt;/p&gt;" type="string" variable="$bookmark">
+            <type>string</type>
           </tag>
-          <tag name="param" line="40" description="&lt;p&gt;{string} Html-sisältö, joka syötetään kirjanmerkin paikalle&lt;/p&gt;" type="\content" variable="$content">
-            <type>\content</type>
+          <tag name="param" line="40" description="&lt;p&gt;Html-sisältö, joka syötetään kirjanmerkin paikalle&lt;/p&gt;" type="string" variable="$content">
+            <type>string</type>
           </tag>
         </docblock>
         <argument line="0" by_reference="false">
           <name>$bookmark</name>
           <default></default>
-          <type/>
+          <type>string</type>
         </argument>
         <argument line="0" by_reference="false">
           <name>$content</name>
           <default></default>
-          <type/>
+          <type>string</type>
         </argument>
       </method>
       <method final="false" abstract="false" static="false" visibility="public" namespace="" line="51" package="Default">
@@ -101,7 +101,7 @@ pohjassa olevan [@table]-paikanmerkin.</description>
       <error line="21" code="PPC:ERR-50007">No summary for property $file</error>
       <error line="22" code="PPC:ERR-50007">No summary for property $values</error>
     </parse_markers>
-    <source>eJyNVNFu2zgQfNdX7Ll5kINIDq4vRdKk6cMB1+KAK+oUfQgKYyMzES2KFMiVUyPI3/gb8gP6sS4p2pLboq1gxIGynJmdGeb1m6ZsktnxcQLHMJeu2yrqtt0WjJKGYIVw1+qK+PcTWBmqEJSURJt1tyVoTLmSQkNKom4UknBTqLrthqh77p51zpj8mSVJJOg51q0/h57AYzLkGh0hggv0ik+C7lG2tXTC8beHgvc8KzXzOcaIR1Vrloj6BIwGUyNcRyUZ/6FC7Y95Iu0wqoH/um3J+ipTEp5BSdSczWYPDw/5rTVFq4zLtaDZ36enr2anL2elecjIZDVWInOSsUVWUq2y3caZ0PesKfcvX+Sf54XdfFzMX356F9muGrRYw51UAh4dWanvn4JvqIGkWBpHRstaxuV5Vd6vMpUB15YkhFLsgIaS+dkLMo1RLQ+05NoV7gDYPaiQnBE6h1Swzhz2kcy+5tSo6UjMGlUrHDyitbh5gloya6+JRblN90widEDv8isUOre39jEBfhprSBQklnDklzv//mUkuYC3niWdnvcl+HNHEiYOmO2tkoWvYcE11LBYFBwn2bagNFBPe0H+OaJSuuwyYF+MhT0l4SvUkJ/4E+Z+2b7vu/3Rrs2Ki+FdFLaSleNsBBesllxt8O8quTLaQBqKUBmzlFx7Y9eIETZgOYdcPbFmzJsrwlslvmQNSi5lwPW3Y6QkunJrTFWjrQZn5gJCVaPAWPtAR15vOqmkXfWglZxMD/HYKhKaBrh/veZd154j2jhzGOCkhiBYKTHW+vNY5oLj2Mk/gaPI/GM4fTFu9rNffFJx+pdhXfvL6f9P9GXx2kvTB0b++sctaJPDB1TY0jA7ik3jd8ZbQa3l08Ggfj7aQoFQeJt/v///LTUtpaN95V36l2/gQnzlm+vSUTmn0/2Uf6KEyT/WGgvK4NJL2d3gcFXOxt2enCeDqyYQs4mB617QIpp5yDg6cmeswKJMDwIBdLDPBC4uf5ZgnyLeX5uPgqUV/pJNbq6GKCfnh7N7bezuwvZn0gOEoSknu/HpAPI0iI4exZl9UfiTvLlMkm/JlUCL</source>
+    <source>eJyNVMFu4zYQvesrpm4OchDJQfdSJE02PRRoiwIt1in2ECyMicxENClSIEfOGov9G39DfkA/1iFF2Uo2aCsIliHPvPfmzaN/et/WbbY4Pc3gFJbS93tN/b7fg9XSEmwQHjqjiL+fwcaSQtBSEu22/Z6gtfVGCgM5iabVSMLPQfX7HVH/3D+bkjH5XmRZIhg4tl3ow0AQMBlyi54QwUd6zZ1gBpR9I73w/AxQ8DvXSsN8njFSq+7sGtGcgTVgG4TbpKTgHxSa0BaIjMekBv7o9zXrU7YmvICaqL1YLJ6ensp7Z6tOW18aQYsfzs9/XJy/W9T2qSBbNKhE4SVji6KmRhfjxIUwj6ypDC+/Lz8uK7f7sFq++/u3xHbTosMGPDlpHuHkQWoRbUMDJMXaerJGNjLNzpPyeMoqC76rSQit2QADNdOzFWRbqzsu6Mh3GxwB2DxQSN4KU0IuWGYJh40sPpfU6vlECzqHOzjZou6Eh0Yy6SCJNfld/0wiJsCM26s0en8w9ksGfLXOkqhIrIeRLl+/TOBX8HMgy+eXQwT+tx8Z80bI7l7LKmSw4gwaWK0q3iW5rqI8Ns8HPeE6oVr64jpCXk11fc3iI2aQr/QJyzDrEPZxfHRbu+FUBA+FU1J53ozgdDWScw3hnZIbayzkMQXK2rXkzFu3RUywEct75NyJLWPe3RDea/GpaFFyIiNuOBoTJa9MubdWNegULAXEmCZ9KfKRjYLcfKak2wyYSs7mb8OxYyQMwa9B8Ziz5wQ2XTgc0aSBKFdrMVX69lKWgpcxij47EH67miEVd4faT2FPqfpfV3UbzmX4ixiiErTXdlgXhZOfpqBdCX+hxo6OtZOlGXxluxPUOTMaFeuTLRQJRXD5v+f/s6O2o3wyr3zIvwv5W4nPfGp9PonmfH6oCleSMPvFOetAW1wHKePphdBxMU327DI7umojMZsYuR4FrZKZLxknLQ/WCazq/MVCAP0kdFfXb21w2CI+3toPgqVV4YjN7m6Oq5xdvqw9aGN3V27oyV8gHJNyNpbPjyBfj6KTR6nmEBS+s/fXWfYPFog8Zw==</source>
   </file>
   <package name="Default" full_name="Default"/>
   <package name="global" full_name="global"/>

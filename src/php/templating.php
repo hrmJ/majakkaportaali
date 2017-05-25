@@ -13,8 +13,8 @@
  *
  * Lähtökohta: http://www.broculos.net/2008/03/how-to-make-simple-html-template-engine.html#.WScryR_S3UI
  *
- * @param file {string} pohjan tiedostonimi sisältäen koko suhteellisen hakemistopolun kutsujatiedostosta katsoen. (esim. templates/x.tpl)
- * @param values {array} mitä pohjaan syötetään
+ * @param string $file pohjan tiedostonimi sisältäen koko suhteellisen hakemistopolun kutsujatiedostosta katsoen. (esim. templates/x.tpl)
+ * @param array $values mitä pohjaan syötetään
  *
  */
 class Template{
@@ -22,7 +22,7 @@ class Template{
     protected $values = Array();
 
 /**
-* @param file {string} pohjan tiedostonimi
+* @param string $file pohjan tiedostonimi
 */
     public function __construct($file){
         $this->file = $file;
@@ -33,8 +33,8 @@ class Template{
     * Syöttää pohjaan arvoja: esimerkiksi sen, mikä merkkijono (html-koodi) korvaa
     * pohjassa olevan [@table]-paikanmerkin.
     *
-    * @param bookmark {string} Se kohta pohjaa, joka korvataan ("kirjanmerkki")
-    * @param content {string} Html-sisältö, joka syötetään kirjanmerkin paikalle
+    * @param string $bookmark Se kohta pohjaa, joka korvataan ("kirjanmerkki")
+    * @param string $content Html-sisältö, joka syötetään kirjanmerkin paikalle
     *
     */
     public function Set($bookmark, $content){

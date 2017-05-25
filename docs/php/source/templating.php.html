@@ -49,8 +49,8 @@
  *
  * L&auml;ht&ouml;kohta: http://www.broculos.net/2008/03/how-to-make-simple-html-template-engine.html#.WScryR_S3UI
  *
- * @param file {string} pohjan tiedostonimi sis&auml;lt&auml;en koko suhteellisen hakemistopolun kutsujatiedostosta katsoen. (esim. templates/x.tpl)
- * @param values {array} mit&auml; pohjaan sy&ouml;tet&auml;&auml;n
+ * @param string $file pohjan tiedostonimi sis&auml;lt&auml;en koko suhteellisen hakemistopolun kutsujatiedostosta katsoen. (esim. templates/x.tpl)
+ * @param array $values mit&auml; pohjaan sy&ouml;tet&auml;&auml;n
  *
  */
 class Template{
@@ -58,7 +58,7 @@ class Template{
     protected $values = Array();
 
 /**
-* @param file {string} pohjan tiedostonimi
+* @param string $file pohjan tiedostonimi
 */
     public function __construct($file){
         $this-&gt;file = $file;
@@ -69,8 +69,8 @@ class Template{
     * Sy&ouml;tt&auml;&auml; pohjaan arvoja: esimerkiksi sen, mik&auml; merkkijono (html-koodi) korvaa
     * pohjassa olevan [@table]-paikanmerkin.
     *
-    * @param bookmark {string} Se kohta pohjaa, joka korvataan (&quot;kirjanmerkki&quot;)
-    * @param content {string} Html-sis&auml;lt&ouml;, joka sy&ouml;tet&auml;&auml;n kirjanmerkin paikalle
+    * @param string $bookmark Se kohta pohjaa, joka korvataan (&quot;kirjanmerkki&quot;)
+    * @param string $content Html-sis&auml;lt&ouml;, joka sy&ouml;tet&auml;&auml;n kirjanmerkin paikalle
     *
     */
     public function Set($bookmark, $content){
