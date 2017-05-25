@@ -1,3 +1,5 @@
 node_modules
 *phpdoc-cache*
 phpDocumentor.phar
+docs/php/graphs/
+docs/php/reports/
