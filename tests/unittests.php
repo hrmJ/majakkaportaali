@@ -9,10 +9,20 @@ class TemplateTest extends TestCase
 
     public function testTemplateClassExists()
     {
-        $this->mytemplate = new Template("indexlayout.php");
+        $this->mytemplate = new Template("servicelist.tpl");
         $this->assertTrue(get_class($this->mytemplate) == "Template", "Ei onnistuttu luomaan template-oliota");
     }
 
+    public function testSetTemplateValue()
+    {
+        $this->mytemplate = new Template("src/templates/servicelist.tpl");
+        $bookmark = "tableofservices";
+        $content = "<table></table>";
+        $this->mytemplate->Set($bookmark,$content);
+        $output = $this->mytemplate->Output();
+        $this->assertRegExp('/table/', $output);
+        
+    }
 
 }
 
