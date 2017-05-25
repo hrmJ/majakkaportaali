@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<checkstyle version="1.3.0">
+  <file name="templating.php">
+    <error line="27" severity="error" message="No summary for method __construct()" source="phpDocumentor.file.PPC:ERR-50008"/>
+    <error line="21" severity="error" message="No summary for property $file" source="phpDocumentor.file.PPC:ERR-50007"/>
+    <error line="22" severity="error" message="No summary for property $values" source="phpDocumentor.file.PPC:ERR-50007"/>
+  </file>
+</checkstyle>

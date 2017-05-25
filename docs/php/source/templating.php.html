@@ -1,0 +1,114 @@
+<html>
+    <head>
+        <script
+            type="text/javascript"
+            src="../js/jquery-1.4.2.min.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../syntax_highlighter/scripts/shCore.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../syntax_highlighter/scripts/shBrushJScript.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../syntax_highlighter/scripts/shBrushPhp.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../syntax_highlighter/scripts/shBrushXml.js">
+        </script>
+        <link
+            href="../syntax_highlighter/styles/shCore.css" rel="stylesheet"
+            type="text/css"
+        />
+        <link
+            href="../syntax_highlighter/styles/shCoreEclipse.css"
+            rel="stylesheet" type="text/css"
+        />
+        <link
+            href="../syntax_highlighter/styles/shThemeWordpress.css"
+            rel="stylesheet" type="text/css"
+        />
+    </head>
+    <body>
+        <pre class="brush: php">&lt;?php
+/**
+ * Sis&auml;lt&auml;&auml; oliot ja funktiot, jotka liittyv&auml;t pohjien (templates) k&auml;ytt&ouml;&ouml;n.
+ *
+ */
+
+
+/**
+ *
+ * Sivupohjaolio, joka vastaa sis&auml;ll&ouml;n n&auml;ytt&auml;misest&auml;.
+ * Jokainen sivu, joka luodaan, on oma Template-luokan
+ * olionsa.
+ *
+ * L&auml;ht&ouml;kohta: http://www.broculos.net/2008/03/how-to-make-simple-html-template-engine.html#.WScryR_S3UI
+ *
+ * @param file {string} pohjan tiedostonimi sis&auml;lt&auml;en koko suhteellisen hakemistopolun kutsujatiedostosta katsoen. (esim. templates/x.tpl)
+ * @param values {array} mit&auml; pohjaan sy&ouml;tet&auml;&auml;n
+ *
+ */
+class Template{
+    protected $file;
+    protected $values = Array();
+
+/**
+* @param file {string} pohjan tiedostonimi
+*/
+    public function __construct($file){
+        $this-&gt;file = $file;
+    }
+
+    /**
+    *
+    * Sy&ouml;tt&auml;&auml; pohjaan arvoja: esimerkiksi sen, mik&auml; merkkijono (html-koodi) korvaa
+    * pohjassa olevan [@table]-paikanmerkin.
+    *
+    * @param bookmark {string} Se kohta pohjaa, joka korvataan (&quot;kirjanmerkki&quot;)
+    * @param content {string} Html-sis&auml;lt&ouml;, joka sy&ouml;tet&auml;&auml;n kirjanmerkin paikalle
+    *
+    */
+    public function Set($bookmark, $content){
+        $this-&gt;values[$bookmark] = $content;
+    }
+
+    /**
+    *
+    * Tulostaa pohjan, johon arvot on sy&ouml;tetty. Palauttaa pohjan merkkijonona.
+    *
+    * @return string pohja, joka tulostetaan
+    *
+    */
+    public function Output(){
+        if(!file_exists($this-&gt;file))
+            return &quot;Error loading template file: $this-&gt;file&quot;;
+
+        $output = file_get_contents($this-&gt;file);
+
+        foreach($this-&gt;values as $bookmark =&gt; $content){
+            $tagToReplace = &quot;[@$bookmark]&quot;;
+            $output = str_replace($tagToReplace, $content, $output);
+        }
+
+        return $output;
+    }
+
+}
+
+
+?&gt;
+
+</pre>
+        <script type="text/javascript">
+             SyntaxHighlighter.all();
+             jQuery('.gutter div').each(function(key, data){
+                jQuery(data).prepend('<a name="L'+jQuery(data).text()+'"/>');
+             });
+        </script>
+    </body>
+</html>

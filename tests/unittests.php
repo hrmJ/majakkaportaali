@@ -13,6 +13,11 @@ class TemplateTest extends TestCase
         $this->assertTrue(get_class($this->mytemplate) == "Template", "Ei onnistuttu luomaan template-oliota");
     }
 
+    /**
+     *
+     * Testaa, että pohjaan pystyy syöttämään arvoja.
+     *
+     */
     public function testSetTemplateValue()
     {
         $this->mytemplate = new Template("src/templates/servicelist.tpl");

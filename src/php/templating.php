@@ -21,9 +21,9 @@ class Template{
     protected $file;
     protected $values = Array();
 
-    /**
-     * @param file {string} pohjan tiedostonimi
-     */
+/**
+* @param file {string} pohjan tiedostonimi
+*/
     public function __construct($file){
         $this->file = $file;
     }
@@ -44,6 +44,8 @@ class Template{
     /**
     *
     * Tulostaa pohjan, johon arvot on syötetty. Palauttaa pohjan merkkijonona.
+    *
+    * @return string pohja, joka tulostetaan
     *
     */
     public function Output(){

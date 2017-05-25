@@ -83,7 +83,7 @@ jsDoc
 1. Lataa phpdoc phar-tiedostona osoitteesta https://phpdoc.org/
 2. Luo dokumentaatio ajamalla:
 
-    php phpDocumentor.phar -d ./src/ -t docs/php
+    php phpDocumentor.phar -d ./src/ -t docs/php --template="zend"
 
 (varmista tarpeeksi korkea php-versio)
 
@@ -95,8 +95,3 @@ ks. sql/taulut.sql
 
 auth/create_user.php
 
-# HUOM!
-
-Tällä hetkellä diojen luonti palvelimella on siirtymävaiheessa, niin että 
-esitystekniikka on toteutettu symlinkkeinä htmlslides-Projektin kansiosta 
-(ks. pres-kansio tässä projektissa).
