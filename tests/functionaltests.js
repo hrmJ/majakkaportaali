@@ -6,8 +6,8 @@ var assert = require('chai').assert;
 describe('Alkutestit', function() {
 
     before(function() {
-        console.log("Aloitetaan testit. Kirjaudutaan sisään...");
-        this.nightmare = Nightmare({show:true});
+        console.log("Aloitetaan testit.");
+        this.nightmare = Nightmare({show:false});
     });
 
     after(function() {
@@ -16,13 +16,13 @@ describe('Alkutestit', function() {
       // ...
     });
 
-    describe('Testaa, onko etusivu pystyssä', function() {
+    describe('Testaa, onko messulistasivu olemassa', function() {
       it('Käyttäjä näkee sivun otsikkona: Majakkaportaali', function(done) {
         this.timeout('10s');
         this.nightmare
-            .goto('http://localhost/majakkaportaali/index.php')
+            .goto('http://localhost/majakkaportaali/servicelist.php')
             .evaluate(function () {
-                return document.querySelector('title').textContent;
+                return document.title;
             })
             .then(function(title) {
                 expect(title).to.equal('Majakkaportaali');

@@ -7,5 +7,11 @@
  *
  */
 
+require("php/templating.php");
+
+$layout = new Template("templates/layout.tpl");
+$layout->Set("title", "Majakkaportaali");
+echo $layout->Output();
+
 
 ?>

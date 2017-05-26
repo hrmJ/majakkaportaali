@@ -17,18 +17,30 @@ class TemplateTest extends TestCase
     }
 
     /**
-     *
      * Testaa, että pohjaan pystyy syöttämään arvoja.
-     *
      */
     public function testSetTemplateValue()
     {
         $this->mytemplate = new Template("src/templates/servicelist.tpl");
         $bookmark = "tableofservices";
         $content = "<table></table>";
-        $this->mytemplate->Set($bookmark,$content);
+        $this->mytemplate->Set($bookmark, $content);
         $output = $this->mytemplate->Output();
         $this->assertRegExp('/table/', $output);
+        
+    }
+
+    /**
+     * Testaa, että layout-pohjaan voi sijoittaa arvoja
+     */
+    public function testSetLayoutTemplateValue()
+    {
+        $this->mytemplate = new Template("src/templates/layout.tpl");
+        $bookmark = "title";
+        $content = "Majakkaportaali";
+        $this->mytemplate->Set($bookmark, $content);
+        $output = $this->mytemplate->Output();
+        $this->assertRegExp('/Majakkaportaali/', $output);
         
     }
 
