@@ -57,18 +57,22 @@ class TemplateTest extends TestCase
     
         $templatepath="src/templates";
 
-        $srow = new Template("$templatepath/servicelistrow.tpl");
-        $srow->Set("date", "11.6.2016");
-        $srow->Set("theme", "Kesä on ihanaa");
+        $servicedata = Array(Array("date"=>"11.6.2016","theme"=>"Kesä on ihanaa"),
+                             Array("date"=>"19.6.2016","theme"=>"Kohta on juhannus"));
+
+
+        $tablecontent = new ServiceListTable($templatepath, $servicedata);
 
         $slist = new Template("$templatepath/servicelist.tpl");
-        $slist->Set("tableofservices", $srow->Output());
+        $slist->Set("tableofservices", $tablecontent->Output());
 
         $layout = new Template("$templatepath/layout.tpl");
         $layout->Set("title", "Majakkaportaali");
         $layout->Set("content", $slist->Output());
 
-        $this->assertRegExp('/Kesä on ihanasa/', $layout->Output());
+        $this->assertRegExp('/Kesä on ihanaa/', $layout->Output());
+
+
 
     
     }

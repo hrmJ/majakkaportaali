@@ -64,6 +64,47 @@ class Template{
 
 }
 
+/**
+ *
+ * Kuvaa yhtä taulukon riviä
+ *
+ */
+class ServiceListTable{
+
+    /**
+     *
+     *
+     * @param string $path suhteellinen polku templates-kansioon
+     * @param Array $servicedata taulukko, jossa messut riveinä, riveillä päivämäärä + teema
+     *
+     */
+    public function __construct($path, $servicedata){
+        $this->rows = Array();
+        foreach($servicedata as $key=>$val){
+            $tpl = new Template("$path/servicelistrow.tpl");
+            $tpl->Set("date", $val["date"]);
+            $tpl->Set("theme", $val["theme"]);
+            $this->rows[] = $tpl;
+        }
+    }
+
+    /**
+     *
+     * Yhdistää solut ja palauttaa taulukon merkkijonona
+     *
+     * @return string taulukko merkkijonona
+     *
+     */
+    public function Output(){
+        $output = "";
+        foreach($this->rows as $row){
+            $output .= "\n" . $row->Output();
+        }
+        return $output;
+    }
+
+}
+
 
 ?>
 
