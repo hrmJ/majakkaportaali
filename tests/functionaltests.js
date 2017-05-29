@@ -6,7 +6,6 @@ const nightmare = new Nightmare({
   show: false,
   typeInterval: 20,
   pollInterval: 50,
-  timeout: 4000,
 });
 
 describe("Messulistasivu", () => {
@@ -19,7 +18,7 @@ describe("Messulistasivu", () => {
       .then((title) => {
         assert.equal(title, "Majakkaportaali");
         done();
-      })
+      }).catch(done);
   });
 
   it('Käyttäjä näkee taulukon sivulla', (done) => {
@@ -29,8 +28,23 @@ describe("Messulistasivu", () => {
       .then((table) => {
           assert.equal(table,true);
           done();
-      });
+      }).catch(done);
   });
+
+
+  it('Taulukossa on rivejä', (done) => {
+    nightmare
+      .goto('http://localhost/majakkaportaali/servicelist.php')
+      .evaluate(function(){
+          return document.querySelector("table");
+      })
+      .then((table) => {
+        assert.equal(1, 2);
+        done();
+      }).catch(done);
+  });
+
+
 });
 
 
