@@ -42,6 +42,7 @@ Selainpohjainen testaus on toteutettu Nightmare + mocha + chai -yhdistelmällä
 
     npm install nightmare
     npm install mocha
+    npm install chai
 
 
 ### Phpunit 
@@ -67,7 +68,7 @@ Aja `npm test` projektin juurikansiossa.
 
 Aja testit (esimerkiksi) komennolla
 
-    phpunit --bootstrap src/php/templating.php --testdox tests/IndexTest
+    phpunit --bootstrap src/php/templating.php --testdox tests/unittests.php
 
 
 # Dokumentaation luonti
@@ -81,9 +82,14 @@ jsDoc
 ### Dokumentaatiotyökalun (phpdoc) asennus
 
 1. Lataa phpdoc phar-tiedostona osoitteesta https://phpdoc.org/
+
+    wget http://phpdoc.org/phpDocumentor.phar
+    chmod +x phpDocumentor.phar
+    sudo mv phpDocumentor.phar /usr/local/bin/phpdoc
+
 2. Luo dokumentaatio ajamalla:
 
-    php phpDocumentor.phar -d ./src/ -t docs/php --template="zend"
+    phpdoc -d ./src/ -t docs/php --template="zend"
 
 (varmista tarpeeksi korkea php-versio)
 
