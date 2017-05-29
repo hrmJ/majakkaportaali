@@ -1,5 +1,4 @@
 var Nightmare = require('nightmare');
-var expect = require('chai').expect; // jshint ignore:line
 var assert = require('chai').assert; 
 
 const nightmare = new Nightmare({
@@ -26,7 +25,7 @@ describe("Messulistasivu", () => {
       .goto('http://localhost/majakkaportaali/servicelist.php')
       .exists('table')
       .then((table) => {
-          assert.equal(table,true);
+          assert.isTrue(table)
           done();
       }).catch(done);
   });
@@ -36,10 +35,10 @@ describe("Messulistasivu", () => {
     nightmare
       .goto('http://localhost/majakkaportaali/servicelist.php')
       .evaluate(function(){
-          return document.querySelector("table");
+          return document.querySelector("table tr");
       })
-      .then((table) => {
-        assert.equal(1, 2);
+      .then((row) => {
+        assert.isNotNull(row);
         done();
       }).catch(done);
   });

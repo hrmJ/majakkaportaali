@@ -9,9 +9,13 @@
 
 require("php/templating.php");
 
+$slist = new Template("templates/servicelist.tpl");
+$slist->Set("tableofservices", "<tr></tr>");
+
 $layout = new Template("templates/layout.tpl");
 $layout->Set("title", "Majakkaportaali");
-echo $layout->Output();
+$layout->Set("content", $slist->Output());
 
+echo $layout->Output();
 
 ?>

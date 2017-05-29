@@ -21,13 +21,9 @@ class TemplateTest extends TestCase
      */
     public function testSetTemplateValue()
     {
-        $this->mytemplate = new Template("src/templates/servicelist.tpl");
-        $bookmark = "tableofservices";
-        $content = "<table></table>";
-        $this->mytemplate->Set($bookmark, $content);
-        $output = $this->mytemplate->Output();
-        $this->assertRegExp('/table/', $output);
-        
+        $slist = new Template("src/templates/servicelist.tpl");
+        $slist->Set("tableofservices", "<table></table>");
+        $this->assertRegExp('/table/', $slist->Output());
     }
 
     /**
@@ -35,13 +31,21 @@ class TemplateTest extends TestCase
      */
     public function testSetLayoutTemplateValue()
     {
-        $this->mytemplate = new Template("src/templates/layout.tpl");
-        $bookmark = "title";
-        $content = "Majakkaportaali";
-        $this->mytemplate->Set($bookmark, $content);
-        $output = $this->mytemplate->Output();
-        $this->assertRegExp('/Majakkaportaali/', $output);
+        $layout = new Template("src/templates/layout.tpl");
+        $layout->Set("title", "Majakkaportaali");
+        $this->assertRegExp('/Majakkaportaali/', $layout->Output());
+    }
+
+    public function testSetTemplateInsideLayout()
+    {
+        $slist = new Template("src/templates/servicelist.tpl");
+        $slist->Set("tableofservices", "<table></table>");
         
+        $layout = new Template("src/templates/layout.tpl");
+        $layout->Set("content", $slist->Output());
+
+        $this->assertRegExp('/table/', $layout->Output());
+
     }
 
 }
