@@ -44,6 +44,22 @@ describe("Messulistasivu", () => {
   });
 
 
+  it('Taulukon riveillä on  messujen päivämääriä ja aiheita', (done) => {
+    nightmare
+      .goto('http://localhost/majakkaportaali/servicelist.php')
+      .evaluate(function(){
+          var tds = document.querySelector("table tr").children;
+          return {"date": tds[0].textContent,
+                  "theme": tds[1].textContent};
+      })
+      .then((rowcontent) => {
+          assert.match(rowcontent.date,/\d+/)
+          assert.match(rowcontent.theme,/\w+/)
+          done();
+      }).catch(done);
+  });
+
+
 });
 
 
