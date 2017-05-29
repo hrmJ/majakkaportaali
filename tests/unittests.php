@@ -48,6 +48,31 @@ class TemplateTest extends TestCase
 
     }
 
+    /**
+     *
+     * Luo ulkoasupohjan, johon liittää taulukkopohjan, johon sivupohjan
+     *
+     */
+    public function testLayOutPageHasContent(){
+    
+        $templatepath="src/templates";
+
+        $srow = new Template("$templatepath/servicelistrow.tpl");
+        $srow->Set("date", "11.6.2016");
+        $srow->Set("theme", "Kesä on ihanaa");
+
+        $slist = new Template("$templatepath/servicelist.tpl");
+        $slist->Set("tableofservices", $srow->Output());
+
+        $layout = new Template("$templatepath/layout.tpl");
+        $layout->Set("title", "Majakkaportaali");
+        $layout->Set("content", $slist->Output());
+
+        $this->assertRegExp('/Kesä on ihanasa/', $layout->Output());
+
+    
+    }
+
 }
 
 
