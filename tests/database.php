@@ -17,6 +17,17 @@ class DbTest extends TestCase
         $this-> assertTrue(is_string($con->username));
     }
 
+    /**
+     * Testaa, että select-kysely toimii
+     */
+    public function testSelectFromDb()
+    {
+        $con = new DBcon("config.ini");
+        $results = $con->ArraySelect("SELECT pvm, teema FROM messut");
+        var_dump($results[0]);
+        $this->assertInternalType("array", $results);
+    }
+
 }
 
 
