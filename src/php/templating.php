@@ -88,7 +88,7 @@ class DataTable{
         foreach($servicedata as $key=>$val){
             if($this->type=="list"){
                 $tpl = new Template("$path/servicelistrow.tpl");
-                $tpl->Set("category", $val["date"]);
+                $tpl->Set("category", FormatDate($val["servicedate"]));
                 $tpl->Set("value", $val["theme"]);
             }
             elseif($this->type=="details"){

@@ -23,17 +23,20 @@ class DbTest extends TestCase
     public function testSelectFromDb()
     {
         $con = new DBcon("config.ini");
-        $results = $con->ArraySelect("SELECT pvm, teema FROM messut");
+        $results = $con->Select("SELECT servicedate, theme FROM services");
         $this->assertInternalType("array", $results);
     }
 
     /**
-     * Valitse kaikki messut kaudesta
+     * Valitse lähin kausi
      */
     public function testSelectServicesOfSeason()
     {
         $con = new DBcon("config.ini");
-        $results = $con->ArraySelect("SELECT id, nimi, alkupvm, loppupvm from kaudet WHERE alkupvm <=:date AND loppupvm >=:date ORDER BY alkupvm", Array("date"=>$date));
+
+        $date = date('Y-m-d');
+        $season = $con->Select("SELECT id, name, startdate, enddate FROM seasons WHERE startdate <=:date AND enddate >=:date ORDER BY startdate", Array("date"=>$date),"row");
+        $results = $con->select("SELECT servicedate, theme, id FROM services WHERE servicedate >= :startdate & servicedate <= :enddate ORDER BY servicedate", Array("startdate"=>$season["startdate"], "enddate"=>$season["enddate"]));
         $this->assertInternalType("array", $results);
     }
 

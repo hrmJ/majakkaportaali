@@ -3,6 +3,7 @@
         <testsuite name="unit tests">
             <file>tests/database.php</file>
             <file>tests/templates.php</file>
+            <file>tests/utilities.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

@@ -42,9 +42,10 @@ class DbCon{
      *
      * @param string $query kysely
      * @param array $params key-value-pareista koostuva taulukko sidottavista arvoista. Voi olla tyhjä.
+     * @param string $return palautetaanko rivien taulukko (oletus), rivi(row), vai yhden rivin yksi sarake
      *
      */
-    public function ArraySelect($query, $params=Array()){
+    public function Select($query, $params=Array(),$return="all"){
         //$columns: array, $wheredict: array of arrays, with [0] as column name, [1] as =, not, LIke etc, [2] as the value
         
         $this->query = $this->connection->prepare($query);
@@ -55,7 +56,14 @@ class DbCon{
 
         $this->Run();
 
-        return $this->query->fetchAll();
+        switch($return){
+            case "all":
+                return $this->query->fetchAll();
+                break;
+            case "row":
+                return $this->query->fetch();
+                break;
+        }
     }
 
     /**
