@@ -1,4 +1,5 @@
 <section>
+    <h2>[@theme]</h2>
     <table>
         <thead></thead>
         <tbody>

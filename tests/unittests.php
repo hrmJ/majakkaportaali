@@ -53,18 +53,17 @@ class TemplateTest extends TestCase
      * Luo ulkoasupohjan, johon liittää taulukkopohjan, johon sivupohjan
      *
      */
-    public function testLayOutPageHasContent(){
+    public function testServicelistHasContent(){
     
         $templatepath="src/templates";
 
         $servicedata = Array(Array("date"=>"11.6.2016","theme"=>"Kesä on ihanaa"),
                              Array("date"=>"19.6.2016","theme"=>"Kohta on juhannus"));
 
-
         $tablecontent = new ServiceListTable($templatepath, $servicedata);
 
         $slist = new Template("$templatepath/servicelist.tpl");
-        $slist->Set("tableofservices", $tablecontent->Output());
+        $slist->Set("table", $tablecontent->Output());
 
         $layout = new Template("$templatepath/layout.tpl");
         $layout->Set("title", "Majakkaportaali");
@@ -72,10 +71,29 @@ class TemplateTest extends TestCase
 
         $this->assertRegExp('/Kesä on ihanaa/', $layout->Output());
 
-
-
-    
     }
+
+    public function testServicedetailsHasContent(){
+    
+        $templatepath="src/templates";
+
+        $servicedata = Array(Array("vastuu"=>"juontaja","vastuullinen"=>"Jussi"),
+                             Array("vastuu"=>"liturgi","vastuullinen"=>"Ville"));
+
+        $tablecontent = new ServiceDetailsTable($templatepath, $servicedata);
+
+        $slist = new Template("$templatepath/servicedetails.tpl");
+        $slist->Set("table", $tablecontent->Output());
+        $slist->Set("theme", "Hauska messu");
+
+        $layout = new Template("$templatepath/layout.tpl");
+        $layout->Set("title", "Majakkamessu x.x.xxxx");
+        $layout->Set("content", $slist->Output());
+
+        $this->assertRegExp('/Jussi/', $layout->Output());
+
+    }
+
 
 }
 

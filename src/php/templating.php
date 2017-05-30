@@ -66,10 +66,16 @@ class Template{
 
 /**
  *
- * Kuvaa yhtä taulukon riviä
+ * Edustaa taulukkoa, joka voidaan tulostaa sivulle esimerkiksi messujen listan
+ * kuvaamiseen.
+ *
+ * @param array $rows taulukon rivit, joista kukin on oma servicelistrow-pohjansa
  *
  */
-class ServiceListTable{
+class DataTable{
+
+
+    protected $rows = Array();
 
     /**
      *
@@ -79,14 +85,21 @@ class ServiceListTable{
      *
      */
     public function __construct($path, $servicedata){
-        $this->rows = Array();
         foreach($servicedata as $key=>$val){
-            $tpl = new Template("$path/servicelistrow.tpl");
-            $tpl->Set("date", $val["date"]);
-            $tpl->Set("theme", $val["theme"]);
+            if($this->type=="list"){
+                $tpl = new Template("$path/servicelistrow.tpl");
+                $tpl->Set("category", $val["date"]);
+                $tpl->Set("value", $val["theme"]);
+            }
+            elseif($this->type=="details"){
+                $tpl = new Template("$path/servicelistrow.tpl");
+                $tpl->Set("category", $val["vastuu"]);
+                $tpl->Set("value", $val["vastuullinen"]);
+            }
             $this->rows[] = $tpl;
         }
     }
+
 
     /**
      *
@@ -101,6 +114,37 @@ class ServiceListTable{
             $output .= "\n" . $row->Output();
         }
         return $output;
+    }
+
+}
+
+/**
+ *
+ * Taulukko messujen listan kuvaamista varten.
+ *
+ */
+class ServiceListTable extends DataTable{
+
+    protected $type = "list";
+
+    public function __construct($path, $servicedata){
+        parent::__construct($path, $servicedata);
+    }
+
+}
+
+
+/**
+ *
+ * Taulukko yksittäisen messun vastuunkantajien kuvaamista varten.
+ *
+ */
+class ServiceDetailsTable extends DataTable{
+
+    protected $type = "details";
+
+    public function __construct($path, $servicedata){
+        parent::__construct($path, $servicedata);
     }
 
 }

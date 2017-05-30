@@ -1,4 +1,4 @@
 <tr>
-    <td>[@date]</td>
-    <td>[@theme]</td>
+    <td>[@category]</td>
+    <td>[@value]</td>
 </tr>

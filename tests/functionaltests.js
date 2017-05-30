@@ -63,3 +63,19 @@ describe("Messulistasivu", () => {
 });
 
 
+describe("Messudetaljisivu", () => {
+  it('Käyttäjä näkee otsikkossa sanan Majakkamessu', (done) => {
+    nightmare
+      .goto('http://localhost/majakkaportaali/servicedetails.php')
+      .evaluate(function(){
+          return document.title;
+      })
+      .then((title) => {
+        assert.match(title,/Majakkamessu/);
+        done();
+      }).catch(done);
+  });
+
+
+});
+

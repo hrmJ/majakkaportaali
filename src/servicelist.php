@@ -8,18 +8,15 @@
  */
 
 require("php/templating.php");
-
 $templatepath="templates";
-
 
 $servicedata = Array(Array("date"=>"11.6.2016","theme"=>"Kesä on ihanaa"),
                      Array("date"=>"19.6.2016","theme"=>"Kohta on juhannus"));
 
-
 $tablecontent = new ServiceListTable($templatepath, $servicedata);
 
 $slist = new Template("$templatepath/servicelist.tpl");
-$slist->Set("tableofservices", $tablecontent->Output());
+$slist->Set("table", $tablecontent->Output());
 
 $layout = new Template("$templatepath/layout.tpl");
 $layout->Set("title", "Majakkaportaali");
