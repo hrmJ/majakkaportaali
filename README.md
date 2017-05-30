@@ -19,6 +19,19 @@ silla /var/www/html/-kansioon.
     cd /var/www/html/
     ln -s ~/projects/majakkaportaali/src majakkaportaali #Huom: linkkaa nimenomaan src-kansio
 
+## Sensitiivinen tieto ini-tiedostoon
+
+Tallenna sensitiivinen tieto src-kansion ulkopuolelle config.ini-tiedostoon. Tämä
+tiedosto pitää myös jättää pois versionhallinnasta lisäämällä se .gitignore-tiedostoon
+
+Tiedoston sisältö
+
+    un = [käyttäjätunnus]
+    pw = [salasana]
+    dbname = [tietokannan nimi]
+    host = localhost
+
+
 ##  Testityökalut
 
 Perusideologiana projektin kehittämisessä on testata koodia mahdollisimman tehokkaasti.
@@ -68,8 +81,7 @@ Aja `npm test` projektin juurikansiossa.
 
 Aja testit (esimerkiksi) komennolla
 
-    phpunit --bootstrap src/php/templating.php --testdox tests/unittests.php
-
+    phpunit --config=phpunit.xml
 
 # Dokumentaation luonti
 

@@ -1,6 +1,7 @@
 <?php 
 use PHPUnit\Framework\TestCase;
 
+
 /**
  * @covers Template
  */
@@ -91,11 +92,11 @@ class TemplateTest extends TestCase
         $layout->Set("content", $slist->Output());
 
         $this->assertRegExp('/Jussi/', $layout->Output());
-
     }
 
 
 }
+
 
 
 ?>
