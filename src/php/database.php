@@ -46,12 +46,13 @@ class DbCon{
      */
     public function ArraySelect($query, $params=Array()){
         //$columns: array, $wheredict: array of arrays, with [0] as column name, [1] as =, not, LIke etc, [2] as the value
-        if(sizeof($params)>0){
         
-        }
-        else{
-        }
         $this->query = $this->connection->prepare($query);
+
+        foreach($params as $key => $val){
+             $this->query->bindParam($key, $val);
+        }
+
         $this->Run();
 
         return $this->query->fetchAll();
@@ -77,4 +78,5 @@ class DbCon{
 
 
 ?>
+
 

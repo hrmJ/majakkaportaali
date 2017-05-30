@@ -3,7 +3,7 @@ use PHPUnit\Framework\TestCase;
 
 
 /**
- * @covers DBcon
+ * @covers DbCon
  */
 class DbTest extends TestCase
 {
@@ -24,9 +24,19 @@ class DbTest extends TestCase
     {
         $con = new DBcon("config.ini");
         $results = $con->ArraySelect("SELECT pvm, teema FROM messut");
-        var_dump($results[0]);
         $this->assertInternalType("array", $results);
     }
+
+    /**
+     * Valitse kaikki messut kaudesta
+     */
+    public function testSelectServicesOfSeason()
+    {
+        $con = new DBcon("config.ini");
+        $results = $con->ArraySelect("SELECT id, nimi, alkupvm, loppupvm from kaudet WHERE alkupvm <=:date AND loppupvm >=:date ORDER BY alkupvm", Array("date"=>$date));
+        $this->assertInternalType("array", $results);
+    }
+
 
 }
 
