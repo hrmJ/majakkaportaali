@@ -85,16 +85,17 @@ class DataTable{
      *
      */
     public function __construct($path, $servicedata){
-        foreach($servicedata as $key=>$val){
+        foreach($servicedata as $datarow){
             if($this->type=="list"){
                 $tpl = new Template("$path/servicelistrow.tpl");
-                $tpl->Set("category", FormatDate($val["servicedate"]));
-                $tpl->Set("value", $val["theme"]);
+                $tpl->Set("category", FormatDate($datarow["servicedate"]));
+                $tpl->Set("value", $datarow["theme"]);
+                $tpl->Set("id", $datarow["id"]);
             }
             elseif($this->type=="details"){
                 $tpl = new Template("$path/servicelistrow.tpl");
-                $tpl->Set("category", $val["vastuu"]);
-                $tpl->Set("value", $val["vastuullinen"]);
+                $tpl->Set("category", $datarow["vastuu"]);
+                $tpl->Set("value", $datarow["vastuullinen"]);
             }
             $this->rows[] = $tpl;
         }

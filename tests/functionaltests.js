@@ -60,6 +60,19 @@ describe("Messulistasivu", () => {
   });
 
 
+  it('Käyttäjä klikkaa taulukon riviä ja siirtyy messudetaljisivulle.', (done) => {
+    nightmare
+      .goto('http://localhost/majakkaportaali/servicelist.php')
+      .click("#serviceid_162")
+      .evaluate(function(){
+          return document.title;
+      })
+      .then((title) => {
+        assert.match(title, /Majakkamessu/);
+        done();
+      }).catch(done);
+  });
+
 });
 
 

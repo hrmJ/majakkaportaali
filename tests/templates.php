@@ -49,31 +49,12 @@ class TemplateTest extends TestCase
 
     }
 
+
     /**
      *
-     * Luo ulkoasupohjan, johon liittää taulukkopohjan, johon sivupohjan
+     * Testaa, että messudetaljisivulla on sisältöä
      *
      */
-    public function testServicelistHasContent(){
-    
-        $templatepath="src/templates";
-
-        $servicedata = Array(Array("servicedate"=>"11.6.2016","theme"=>"Kesä on ihanaa"),
-                             Array("servicedate"=>"19.6.2016","theme"=>"Kohta on juhannus"));
-
-        $tablecontent = new ServiceListTable($templatepath, $servicedata);
-
-        $slist = new Template("$templatepath/servicelist.tpl");
-        $slist->Set("table", $tablecontent->Output());
-
-        $layout = new Template("$templatepath/layout.tpl");
-        $layout->Set("title", "Majakkaportaali");
-        $layout->Set("content", $slist->Output());
-
-        $this->assertRegExp('/Kesä on ihanaa/', $layout->Output());
-
-    }
-
     public function testServicedetailsHasContent(){
     
         $templatepath="src/templates";

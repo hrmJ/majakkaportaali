@@ -4,6 +4,7 @@
             <file>tests/database.php</file>
             <file>tests/templates.php</file>
             <file>tests/utilities.php</file>
+            <file>tests/servicelist.php</file>
         </testsuite>
     </testsuites>
 </phpunit>
