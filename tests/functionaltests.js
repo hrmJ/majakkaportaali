@@ -93,7 +93,7 @@ describe("Messudetaljisivu", () => {
   it('Käyttäjä huomaa, että vastuuhenkilöiden nimiä voi muokata. Hän muokkaa nimeä ja nimi on vaihtunut.', (done) => {
     nightmare
       .goto('http://localhost/majakkaportaali/servicedetails.php')
-      .type("#liturgi","Justin Brierly")
+      .type("[name='liturgi']","Justin Brierly")
       .click("#savedetails")
       .evaluate(function(){
           return document.querySelector("#liturgi").value;
