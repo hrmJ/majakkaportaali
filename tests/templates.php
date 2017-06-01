@@ -59,8 +59,8 @@ class TemplateTest extends TestCase
     
         $templatepath="src/templates";
 
-        $servicedata = Array(Array("vastuu"=>"juontaja","vastuullinen"=>"Jussi"),
-                             Array("vastuu"=>"liturgi","vastuullinen"=>"Ville"));
+        $servicedata = Array(Array("responsibility"=>"juontaja","responsible"=>"Jussi"),
+                             Array("responsibility"=>"liturgi","responsible"=>"Ville"));
 
         $tablecontent = new ServiceDetailsTable($templatepath, $servicedata);
 

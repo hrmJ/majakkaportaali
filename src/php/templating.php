@@ -77,25 +77,18 @@ class DataTable{
 
     protected $rows = Array();
 
-    /**
-     *
-     *
-     * @param string $path suhteellinen polku templates-kansioon
-     * @param Array $servicedata taulukko, jossa messut riveinä, riveillä päivämäärä + teema
-     *
-     */
-    public function __construct($path, $servicedata){
-        foreach($servicedata as $datarow){
+    public function __construct(){
+        foreach($this->data as $datarow){
+            $tpl = new Template($this->templatefile);
             if($this->type=="list"){
-                $tpl = new Template("$path/servicelistrow.tpl");
                 $tpl->Set("category", FormatDate($datarow["servicedate"]));
                 $tpl->Set("value", $datarow["theme"]);
                 $tpl->Set("id", $datarow["id"]);
             }
             elseif($this->type=="details"){
-                $tpl = new Template("$path/servicelistrow.tpl");
-                $tpl->Set("category", $datarow["vastuu"]);
-                $tpl->Set("value", $datarow["vastuullinen"]);
+                $tpl->Set("category", $datarow["responsibility"]);
+                $tpl->Set("value", $datarow["responsible"]);
+                $tpl->Set("name", $datarow["responsibility"]);
             }
             $this->rows[] = $tpl;
         }
@@ -128,8 +121,16 @@ class ServiceListTable extends DataTable{
 
     protected $type = "list";
 
+    /**
+     *
+     *@param string $path polku templates-kansioon
+     *@param Array $servicedata taulukkojen taulukko;  sisemmän taulukon alkiot nimillä "servicedate" ja "theme"
+     *
+     */
     public function __construct($path, $servicedata){
-        parent::__construct($path, $servicedata);
+        $this->templatefile = "$path/servicelistrow.tpl";
+        $this->data = $servicedata;
+        parent::__construct();
     }
 
 }
@@ -137,15 +138,23 @@ class ServiceListTable extends DataTable{
 
 /**
  *
- * Taulukko yksittäisen messun vastuunkantajien kuvaamista varten.
+ * Taulukko yksittäisen messun responsibilitynkantajien kuvaamista varten.
  *
  */
 class ServiceDetailsTable extends DataTable{
 
     protected $type = "details";
 
+    /**
+     *
+     *@param string $path polku templates-kansioon
+     *@param Array $servicedata taulukkojen taulukko;  sisemmän taulukon alkiot nimillä "responsibility" ja "responsible"
+     *
+     */
     public function __construct($path, $servicedata){
-        parent::__construct($path, $servicedata);
+        $this->templatefile = "$path/servicedetailsrow.tpl";
+        $this->data = $servicedata;
+        parent::__construct();
     }
 
 }
