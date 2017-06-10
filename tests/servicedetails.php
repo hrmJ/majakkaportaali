@@ -31,7 +31,22 @@ class ServiceDetailsTest extends TestCase
         $this->assertRegExp('/type="text" name="liturgi"/', $layout->Output());
     }
 
+    /**
+     * Testaa, että tiedon tallentaminen onnistuu
+     */
+    public function testCanSaveData()
+    {
+        $con = new DBcon("config.ini");
+        $id = $con->select("SELECT id FROM services",Array(),"column");
+        $savedname = $con->select("SELECT responsible FROM responsibilities WHERE messu_id = :id AND responsibility = :res",Array("id"=>$id,"res"=>"liturgi"),"column");
+        SaveServiceDetails($con, $id, Array("liturgi"=>"Justin Brierly","juontaja"=>"Kevin Harris"));
+        $savedname = $con->select("SELECT responsible FROM responsibilities WHERE messu_id = :id AND responsibility = :res",Array("id"=>$id,"res"=>"liturgi"),"column");
+        $this->assertEquals($savedname, "Justin Brierly");
+    }
+
+
 }
+
 
 
 

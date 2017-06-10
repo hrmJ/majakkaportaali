@@ -13,7 +13,7 @@
  * Jos tämäkin epäonnistuu, hakee lähimmän kauden menneisyydestä.
  *
  * 
- * @param DbCon yhteys tietokantaan
+ * @param DbCon $con yhteys tietokantaan
  *
  * @return  array  Taulukon, jossa on ilmaistu messukauden alku- ja loppupäivät.
  *
@@ -27,6 +27,22 @@ function GetCurrentSeason($con){
     if(!$season) #2: ota edellinen kausi menneisyydestä
         $season = $con->Select("SELECT id, name, startdate, enddate FROM seasons WHERE enddate <=:date ORDER BY enddate DESC", Array("date"=>$date),"row");
     return  $season;
+}
+
+
+/**
+ *
+ * Tallentaa käyttäjän tekemät muokkaukset tietokantaan.
+ * 
+ * @param DbCon $con yhteys tietokantaan
+ * @param integer $id messun id
+ * @param array $values taulukko niistä vastuista, joita ollaan päivittämässä. Tyyppiä "vastuu"=>"vastuullinen".
+ *
+ */
+function SaveServiceDetails($con, $id, $values){
+    foreach($values as $key => $value){
+        $con->SELECT("UPDATE responsibilities SET responsible = :responsible WHERE messu_id = :id AND responsibility = :responsibility",Array("id"=>intval($id),"responsible"=>$value,"responsibility"=>$key),"none");
+    }
 }
 
 

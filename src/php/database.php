@@ -63,6 +63,9 @@ class DbCon{
             case "row":
                 return $this->query->fetch();
                 break;
+            case "column":
+                return $this->query->fetch()[0];
+                break;
         }
     }
 

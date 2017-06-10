@@ -63,7 +63,7 @@ describe("Messulistasivu", () => {
   it('Käyttäjä klikkaa taulukon riviä ja siirtyy messudetaljisivulle.', (done) => {
     nightmare
       .goto('http://localhost/majakkaportaali/servicelist.php')
-      .click("#serviceid_162")
+      .click("tr")
       .evaluate(function(){
           return document.title;
       })
