@@ -83,6 +83,9 @@ Aja testit (esimerkiksi) komennolla
 
     phpunit --config=phpunit.xml
 
+Hyödyllinen liipasin: --testdox (Tällä näkee nopeasti, mikä testi feilaa ja mikä menee läpi, joskaan ei sitä, *miksi*)
+
+
 # Dokumentaation luonti
 
 ## Javascript-dokumentaatio 

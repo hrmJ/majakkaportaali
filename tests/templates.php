@@ -85,7 +85,7 @@ class TemplateTest extends TestCase
         $con = new DBcon("config.ini");
 
         $date = date('Y-m-d');
-        $season = $con->Select("SELECT id, name, startdate, enddate FROM seasons WHERE startdate <=:date AND enddate >=:date ORDER BY startdate", Array("date"=>$date),"row");
+        $season = GetCurrentSeason($con);
         $servicedata = $con->select("SELECT servicedate, theme, id FROM services WHERE servicedate >= :startdate & servicedate <= :enddate ORDER BY servicedate", Array("startdate"=>$season["startdate"], "enddate"=>$season["enddate"]));
 
         $tablecontent = new ServiceListTable($templatepath, $servicedata);

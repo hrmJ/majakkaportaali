@@ -51,7 +51,7 @@ class DbCon{
         $this->query = $this->connection->prepare($query);
 
         foreach($params as $key => $val){
-             $this->query->bindParam($key, $val);
+             $this->query->bindValue($key, $val);
         }
 
         $this->Run();
@@ -82,7 +82,6 @@ class DbCon{
 
 
 }
-
 
 
 ?>

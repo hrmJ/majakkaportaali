@@ -12,7 +12,7 @@ class ServiceDetailsTest extends TestCase
     /**
      * Testaa, että riveillä on id:t
      */
-    public function test()
+    public function testRowsHaveValues()
     {
         $templatepath="src/templates";
 

@@ -10,15 +10,13 @@
 require("php/utilities.php");
 require("php/templating.php");
 require("php/database.php");
+require("php/services.php");
 
 $templatepath="templates";
 
 $con = new DBcon("../config.ini");
-
-$date = date('Y-m-d');
-$season = $con->Select("SELECT id, name, startdate, enddate FROM seasons WHERE startdate <=:date AND enddate >=:date ORDER BY startdate", Array("date"=>$date),"row");
-$servicedata = $con->select("SELECT servicedate, theme, id FROM services WHERE servicedate >= :startdate & servicedate <= :enddate ORDER BY servicedate", Array("startdate"=>$season["startdate"], "enddate"=>$season["enddate"]));
-
+$season = GetCurrentSeason($con);
+$servicedata = $con->select("SELECT servicedate, theme, id FROM services WHERE servicedate >= :startdate AND servicedate <= :enddate ORDER BY servicedate", Array("startdate"=>$season["startdate"], "enddate"=>$season["enddate"]));
 
 $tablecontent = new ServiceListTable($templatepath, $servicedata);
 $slist = new Template("$templatepath/servicelist.tpl");
