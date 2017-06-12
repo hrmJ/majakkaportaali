@@ -90,6 +90,10 @@ Testaaminen tapahtuu phpunit-sovelluksen avulla.
 Tämä luo tietokannat (tai poistaa, jos ne on jo olemassa) ja pystyttää
 uudelleen syöttäen samalla testidatan.
 
+Jos halutaan tehdä testejä, jotka *olettavat, ettei tietokannassa ole dataa*, lisää
+*tähän kyseiseen testiin* osa, joka tyhjentää tarvittavat kohdat tietokannasta. Vaihtoehtoisesti
+tämä tarkoituksellinen tyhjennys voi olla oma skriptinsä, joka pitää ajaa ennen tiettyä testiä.
+
 Aja testit (esimerkiksi) komennolla
 
     phpunit --config=phpunit.xml
