@@ -3,9 +3,12 @@ require("src/php/database.php");
 
 $con = new DbCon("config.ini");
 
-$con->select("DELETE FROM responsibilities",Array(),"none");
-$con->select("DELETE FROM services",Array(),"none");
-$con->select("DELETE FROM seasons",Array(),"none");
+$con->select("SET FOREIGN_KEY_CHECKS = 0",Array(),"none");
+$con->select("TRUNCATE table comments",Array(),"none");
+$con->select("TRUNCATE table responsibilities",Array(),"none");
+$con->select("TRUNCATE table services",Array(),"none");
+$con->select("TRUNCATE table seasons",Array(),"none");
+$con->select("SET FOREIGN_KEY_CHECKS = 1",Array(),"none");
 
 
 $con->select("INSERT INTO seasons (startdate, enddate, name) VALUES ('2017-01-01','2020-12-12','testseason')",Array(),"none");

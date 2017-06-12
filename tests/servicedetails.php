@@ -32,6 +32,16 @@ class ServiceDetailsTest extends TestCase
     }
 
     /**
+     * Testaa, että tiedon hakeminen onnistuu
+     */
+    public function testCanFetchData()
+    {
+        $con = new DBcon("config.ini");
+        $volunteers = $con->select("SELECT responsible, responsibility FROM responsibilities WHERE messu_id = :id",Array("id"=>1),"all");
+        $this->assertTrue(sizeof($volunteers)>3);
+    }
+
+    /**
      * Testaa, että tiedon tallentaminen onnistuu
      */
     public function testCanSaveData()
