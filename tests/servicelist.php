@@ -20,7 +20,7 @@ class ServiceListTest extends TestCase
 
         $date = date('Y-m-d');
         $season = GetCurrentSeason($con);
-        $servicedata = $con->select("SELECT servicedate, theme, id FROM services WHERE servicedate >= :startdate AND servicedate <= :enddate ORDER BY servicedate", Array("startdate"=>$season["startdate"], "enddate"=>$season["enddate"]));
+        $servicedata = $con->q("SELECT servicedate, theme, id FROM services WHERE servicedate >= :startdate AND servicedate <= :enddate ORDER BY servicedate", Array("startdate"=>$season["startdate"], "enddate"=>$season["enddate"]));
 
         $tablecontent = new ServiceListTable($templatepath, $servicedata);
 

@@ -20,12 +20,12 @@
  */
 function GetCurrentSeason($con){
     $date = date('Y-m-d');
-    $season = $con->Select("SELECT id, name, startdate, enddate FROM seasons WHERE startdate <=:date AND enddate >=:date ORDER BY startdate", Array("date"=>$date),"row");
+    $season = $con->q("SELECT id, name, startdate, enddate FROM seasons WHERE startdate <=:date AND enddate >=:date ORDER BY startdate", Array("date"=>$date),"row");
     #Jos nykyinen pvm ei osu mihinkään kauteen
     if(!$season) #1: ota seuraava kausi tulevaisuudesta
-        $season = $con->Select("SELECT id, name, startdate, enddate FROM seasons WHERE startdate >=:date ORDER BY startdate", Array("date"=>$date),"row");
+        $season = $con->q("SELECT id, name, startdate, enddate FROM seasons WHERE startdate >=:date ORDER BY startdate", Array("date"=>$date),"row");
     if(!$season) #2: ota edellinen kausi menneisyydestä
-        $season = $con->Select("SELECT id, name, startdate, enddate FROM seasons WHERE enddate <=:date ORDER BY enddate DESC", Array("date"=>$date),"row");
+        $season = $con->q("SELECT id, name, startdate, enddate FROM seasons WHERE enddate <=:date ORDER BY enddate DESC", Array("date"=>$date),"row");
     return  $season;
 }
 
@@ -41,7 +41,7 @@ function GetCurrentSeason($con){
  */
 function SaveServiceDetails($con, $id, $values){
     foreach($values as $key => $value){
-        $con->SELECT("UPDATE responsibilities SET responsible = :responsible WHERE messu_id = :id AND responsibility = :responsibility",Array("id"=>intval($id),"responsible"=>$value,"responsibility"=>$key),"none");
+        $con->q("UPDATE responsibilities SET responsible = :responsible WHERE service_id = :id AND responsibility = :responsibility",Array("id"=>intval($id),"responsible"=>$value,"responsibility"=>$key),"none");
     }
 }
 

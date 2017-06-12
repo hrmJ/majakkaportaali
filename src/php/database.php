@@ -12,16 +12,18 @@ class DbCon{
      * Tietokannan perustiedot
      *
      * @param string $path polku ini-tiedostoon
+     * @param boolean $connect yhdistetäänkö heti vai ei 
      *
      **/
-    public function __construct ($path) {
+    public function __construct ($path, $connect=True) {
 
         $config = parse_ini_file($path);
         $this->hostname = $config["hostname"];
         $this->dbname = $config["dbname"];
         $this->username = $config["un"];
         $this->password = $config["pw"];
-        $this->Connect();
+        if($connect)
+            $this->Connect();
 
     }
 
@@ -38,14 +40,14 @@ class DbCon{
 
     /**
      *
-     * Suorittaa select-kyselyn
+     * Suorittaa mysql-kyselyn
      *
      * @param string $query kysely
      * @param array $params key-value-pareista koostuva taulukko sidottavista arvoista. Voi olla tyhjä.
      * @param string $return palautetaanko rivien taulukko (oletus), rivi(row), vai yhden rivin yksi sarake
      *
      */
-    public function Select($query, $params=Array(),$return="all"){
+    public function q($query, $params=Array(),$return="all"){
         //$columns: array, $wheredict: array of arrays, with [0] as column name, [1] as =, not, LIke etc, [2] as the value
         
         $this->query = $this->connection->prepare($query);

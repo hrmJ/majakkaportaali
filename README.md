@@ -72,12 +72,23 @@ Asennus on simppeli, lataa vain paketti, jonka valinnaan mukaan voi kopioida /us
 
 # Testaaminen
 
-## Nightmare (functional tests)
+## Javascript (functional tests)
+
+Testaaminen tapahtuu Nightmare-sovelluksen avulla.
 
 Aja `npm test` projektin juurikansiossa.
 
 
-## Phpunit (unit tests)
+## Php (unit tests)
+
+Testaaminen tapahtuu phpunit-sovelluksen avulla.
+
+**Huom!** Aja ennen testejä:
+
+    php mockdb.php
+
+Tämä luo tietokannat (tai poistaa, jos ne on jo olemassa) ja pystyttää
+uudelleen syöttäen samalla testidatan.
 
 Aja testit (esimerkiksi) komennolla
 
