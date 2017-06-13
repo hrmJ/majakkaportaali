@@ -24,6 +24,7 @@ $slist->Set("table", $tablecontent->Output());
 $layout = new Template("$templatepath/layout.tpl");
 $layout->Set("title", "Majakkaportaali");
 $layout->Set("content", $slist->Output());
+$layout->Set("jsaddress", "js/servicelist.js");
 
 echo $layout->Output();
 

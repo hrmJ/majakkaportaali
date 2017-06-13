@@ -77,6 +77,7 @@ describe("Messulistasivu", () => {
 
 
 describe("Messudetaljisivu", () => {
+
   it('Käyttäjä näkee otsikkossa sanan Majakkamessu', (done) => {
     nightmare
       .goto('http://localhost/majakkaportaali/servicedetails.php')
@@ -92,14 +93,15 @@ describe("Messudetaljisivu", () => {
 
   it('Käyttäjä huomaa, että vastuuhenkilöiden nimiä voi muokata. Hän muokkaa nimeä ja nimi on vaihtunut.', (done) => {
     nightmare
-      .goto('http://localhost/majakkaportaali/servicedetails.php')
-      .type("[name='liturgi']","Justin Brierly")
-      .click("#savedetails")
+      .goto('http://localhost/majakkaportaali/servicedetails.php?id=1')
+      .type("[name='liturgi']","")
+      .type("[name='liturgi']","Paul Copan")
+      .click("[name=savedetails]")
       .evaluate(function(){
-          return document.querySelector("#liturgi").value;
+          return document.querySelector("[name=liturgi]").value;
       })
       .then((liturgi) => {
-        assert.equal(liturgi,"Justin Brierly");
+        assert.equal(liturgi,"Paul Copan");
         done();
       }).catch(done);
   });

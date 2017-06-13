@@ -7,6 +7,6 @@
                 [@table]
             </tbody>
         </table>
-        <div><input type="submit" id="savedetails" name="savedetails" value="Tallenna"></div>
+        <div><input type="submit" name="savedetails" value="Tallenna"></div>
     </form>
 </section>

@@ -47,11 +47,11 @@ class ServiceDetailsTest extends TestCase
     public function testCanSaveData()
     {
         $con = new DBcon("config.ini");
-        $id = $con->q("SELECT id FROM services",Array(),"column");
+        $id = 2;
         $savedname = $con->q("SELECT responsible FROM responsibilities WHERE service_id = :id AND responsibility = :res",Array("id"=>$id,"res"=>"liturgi"),"column");
-        SaveServiceDetails($con, $id, Array("liturgi"=>"Justin Brierly","juontaja"=>"Kevin Harris"));
+        SaveServiceDetails($con, $id, Array("liturgi"=>"Ville Vallaton","juontaja"=>"Gareth Bale"));
         $savedname = $con->q("SELECT responsible FROM responsibilities WHERE service_id = :id AND responsibility = :res",Array("id"=>$id,"res"=>"liturgi"),"column");
-        $this->assertEquals($savedname, "Justin Brierly");
+        $this->assertEquals($savedname, "Ville Vallaton");
     }
 
 

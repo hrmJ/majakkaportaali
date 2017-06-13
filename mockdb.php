@@ -17,6 +17,8 @@ $con->q("INSERT INTO services (servicedate, theme) VALUES ('2017-03-06', 'Neljä
 $con->q("INSERT INTO services (servicedate, theme) VALUES ('2017-03-13', 'Viides messu')",Array(),"none");
 $con->q("INSERT INTO services (servicedate, theme) VALUES ('2017-03-20', 'Kuudes messu')",Array(),"none");
 
+
+
 $ids = $con->q("SELECT id FROM services",Array(),"all");
 $responsibilities = Array("juontaja","liturgi","saarna","diat","bändi");
 foreach($ids as $id){
@@ -25,6 +27,12 @@ foreach($ids as $id){
 
     }
 }
+
+
+$con->q("UPDATE responsibilities SET responsible=:res WHERE service_id=:sid AND responsibility=:resbty",Array("res"=>"Bill Craig","sid"=>2,"resbty"=>"liturgi"),"none");
+$con->q("UPDATE responsibilities SET responsible=:res WHERE service_id=:sid AND responsibility=:resbty",Array("res"=>"James Rodriguez","sid"=>2,"resbty"=>"juontaja"),"none");
+$con->q("UPDATE responsibilities SET responsible=:res WHERE service_id=:sid AND responsibility=:resbty",Array("res"=>"Eero Huovinen","sid"=>3,"resbty"=>"saarna"),"none");
+$con->q("UPDATE responsibilities SET responsible=:res WHERE service_id=:sid AND responsibility=:resbty",Array("res"=>"The Afters","sid"=>3,"resbty"=>"bändi"),"none");
 
 echo "Database ready..\n";
 

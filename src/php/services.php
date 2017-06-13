@@ -41,7 +41,7 @@ function GetCurrentSeason($con){
  */
 function SaveServiceDetails($con, $id, $values){
     foreach($values as $key => $value){
-        $con->q("UPDATE responsibilities SET responsible = :responsible WHERE service_id = :id AND responsibility = :responsibility",Array("id"=>intval($id),"responsible"=>$value,"responsibility"=>$key),"none");
+        $con->q("UPDATE responsibilities SET responsible = :responsible WHERE service_id = :id AND responsibility = :responsibility",Array("id"=>$id,"responsible"=>$value,"responsibility"=>$key),"none");
     }
 }
 
