@@ -14,13 +14,24 @@ require("php/services.php");
 
 $templatepath="templates";
 
+#Valmistelu ja tietokantayhteys
 $con = new DBcon("../config.ini");
 $season = GetCurrentSeason($con);
-$servicedata = $con->q("SELECT servicedate, theme, id FROM services WHERE servicedate >= :startdate AND servicedate <= :enddate ORDER BY servicedate", Array("startdate"=>$season["startdate"], "enddate"=>$season["enddate"]));
 
+#Select-elementti vastuiden suodattamista varten
+$responsibilities = $con->q("SELECT DISTINCT responsibility FROM responsibilities", Array());
+$select = new Select($templatepath, $responsibilities);
+
+#Varsinainen lista messuista
+$servicedata = $con->q("SELECT servicedate, theme, id FROM services WHERE servicedate >= :startdate AND servicedate <= :enddate ORDER BY servicedate", Array("startdate"=>$season["startdate"], "enddate"=>$season["enddate"]));
 $tablecontent = new ServiceListTable($templatepath, $servicedata);
+
+#Kootaan yllä tuotettu sisältö
 $slist = new Template("$templatepath/servicelist.tpl");
 $slist->Set("table", $tablecontent->Output());
+$slist->Set("select", $select->Output());
+
+#Sivun yleinen ulkoasu ja tiedot
 $layout = new Template("$templatepath/layout.tpl");
 $layout->Set("title", "Majakkaportaali");
 $layout->Set("content", $slist->Output());

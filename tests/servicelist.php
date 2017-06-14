@@ -9,45 +9,42 @@ use PHPUnit\Framework\TestCase;
 class ServiceListTest extends TestCase
 {
 
-    /**
-     * Testaa, että riveillä on id:t
-     */
-    public function testTemplateClassExists()
+  protected function setUp()
     {
-        $templatepath="src/templates";
-        
-        $con = new DBcon("config.ini");
+        $this->con = new DBcon("config.ini");
+        $this->templatepath="src/templates";
+        $this->date = date('Y-m-d');
+        $this->season = GetCurrentSeason($this->con);
+        $this->layout = new Template("$this->templatepath/layout.tpl");
+        $this->layout->Set("title", "Majakkaportaali");
+        $this->responsibilities = $this->con->q("SELECT DISTINCT responsibility FROM responsibilities", Array());
 
-        $date = date('Y-m-d');
-        $season = GetCurrentSeason($con);
-        $servicedata = $con->q("SELECT servicedate, theme, id FROM services WHERE servicedate >= :startdate AND servicedate <= :enddate ORDER BY servicedate", Array("startdate"=>$season["startdate"], "enddate"=>$season["enddate"]));
+        $this->servicedata = $this->con->q("SELECT servicedate, theme, id FROM services WHERE servicedate >= :startdate AND servicedate <= :enddate ORDER BY servicedate", Array("startdate"=>$this->season["startdate"], "enddate"=>$this->season["enddate"]));
+        $this->tablecontent = new ServiceListTable($this->templatepath, $this->servicedata);
 
-        $tablecontent = new ServiceListTable($templatepath, $servicedata);
-
-        $slist = new Template("$templatepath/servicelist.tpl");
-        $slist->Set("table", $tablecontent->Output());
-
-        $layout = new Template("$templatepath/layout.tpl");
-        $layout->Set("title", "Majakkaportaali");
-        $layout->Set("content", $slist->Output());
-
-        $this->assertRegExp('/<tr id=/', $layout->Output());
+        $this->slist = new Template("$this->templatepath/servicelist.tpl");
     }
 
-    /**
-     *
-     * Testataan vastuiden suodattamista.
-     *
-     */
+    public function testTemplateClassExists()
+    {
+        $this->slist->Set("table", $this->tablecontent->Output());
+        $this->layout->Set("content", $this->slist->Output());
+        $this->assertRegExp('/<tr id=/', $this->layout->Output());
+    }
+
     public function testCreateSelectForFilteringResponsibilities()
     {
-        $templatepath="src/templates";
-        $con = new DBcon("config.ini");
-        $date = date('Y-m-d');
-        $season = GetCurrentSeason($con);
-        $responsibilities = $con->q("SELECT DISTINCT responsibility FROM responsibilities", Array());
-        $select = new Select($templatepath, $responsibilities);
+        $select = new Select($this->templatepath, $this->responsibilities);
         $this->assertRegExp('/<option>juontaja/', $select->Output());
+    }
+
+    public function testLayoutIncludesSelect()
+    {
+        $select = new Select($this->templatepath, $this->responsibilities);
+        $this->slist->Set("table", $this->tablecontent->Output());
+        $this->slist->Set("select",$select->Output());
+        $this->layout->Set("content", $this->slist->Output());
+        $this->assertRegExp('/<select>/', $this->layout->Output());
     }
 
 }
