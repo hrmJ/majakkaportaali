@@ -59,6 +59,19 @@ describe("Messulistasivu", () => {
       }).catch(done);
   });
 
+  it('Käyttäjä suodattaa messulistanäkymää niin, että siinä näkyy vain joka viikon juontaja.', (done) => {
+    nightmare
+      .goto('http://localhost/majakkaportaali/servicelist.php')
+      .click("[select]")
+      .evaluate(function(){
+          return document.querySelector("table tr");
+      })
+      .then((row) => {
+        assert.isNotNull(row);
+        done();
+      }).catch(done);
+  });
+
 
   it('Käyttäjä klikkaa taulukon riviä ja siirtyy messudetaljisivulle.', (done) => {
     nightmare

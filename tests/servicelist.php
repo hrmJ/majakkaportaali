@@ -34,6 +34,22 @@ class ServiceListTest extends TestCase
         $this->assertRegExp('/<tr id=/', $layout->Output());
     }
 
+    /**
+     *
+     * Testataan vastuiden suodattamista.
+     *
+     */
+    public function testCreateSelectForFilteringResponsibilities()
+    {
+        $templatepath="src/templates";
+        $con = new DBcon("config.ini");
+        $date = date('Y-m-d');
+        $season = GetCurrentSeason($con);
+        $responsibilities = $con->q("SELECT DISTINCT responsibility FROM responsibilities", Array());
+        $select = new Select($templatepath, $responsibilities);
+        $this->assertRegExp('/<option>juontaja/', $select->Output());
+    }
+
 }
 
 

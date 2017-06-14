@@ -21,9 +21,9 @@ class Template{
     protected $file;
     protected $values = Array();
 
-/**
-* @param string $file pohjan tiedostonimi
-*/
+    /**
+    * @param string $file pohjan tiedostonimi
+    */
     public function __construct($file){
         $this->file = $file;
     }
@@ -116,6 +116,8 @@ class DataTable{
  *
  * Taulukko messujen listan kuvaamista varten.
  *
+ * @param string $type taulukon tyyppi 
+ *
  */
 class ServiceListTable extends DataTable{
 
@@ -140,6 +142,8 @@ class ServiceListTable extends DataTable{
  *
  * Taulukko yksittäisen messun responsibilitynkantajien kuvaamista varten.
  *
+ * @param string $type taulukon tyyppi
+ *
  */
 class ServiceDetailsTable extends DataTable{
 
@@ -159,6 +163,37 @@ class ServiceDetailsTable extends DataTable{
 
 }
 
+
+/**
+ *
+ * Taulukko yksittäisen messun responsibilitynkantajien kuvaamista varten.
+ *
+ * @param string $type taulukon tyyppi
+ *
+ */
+class Select extends Template{
+
+    protected $type = "details";
+
+    /**
+     *
+     * @param string $path polku templates-kansioon
+     * @param array $optiondata taulukko arvoista, jotka syötetään select-elementin riveiksi
+     *
+     */
+    public function __construct($path, $optiondata){
+        parent::__construct("$path/select.tpl");
+        $options = "";
+        foreach($optiondata as $option){
+            $tpl = new Template("$path/option.tpl");
+            $tpl->Set("value",$option[0]);
+            $tpl->Set("selected","");
+            $options .= $tpl->Output();
+        }
+        $this->Set("content",$options);
+    }
+
+}
 
 ?>
 
