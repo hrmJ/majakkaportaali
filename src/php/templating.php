@@ -179,15 +179,21 @@ class Select extends Template{
      *
      * @param string $path polku templates-kansioon
      * @param array $optiondata taulukko arvoista, jotka syötetään select-elementin riveiksi
+     * @param string $selected se arvo, joka valitaan, kun elementti luodaan
+     * @param string $label select-elementin ensimmäinen, otsikkona toimiva  arvo
      *
      */
-    public function __construct($path, $optiondata){
+    public function __construct($path, $optiondata, $selected, $label){
         parent::__construct("$path/select.tpl");
-        $options = "";
+        $optiondata = array_merge(Array(Array($label),Array("------------")), $optiondata);
+        $options="";
         foreach($optiondata as $option){
             $tpl = new Template("$path/option.tpl");
             $tpl->Set("value",$option[0]);
-            $tpl->Set("selected","");
+            if($option==$selected)
+                $tpl->Set("selected","selected");
+            else
+                $tpl->Set("selected","");
             $options .= $tpl->Output();
         }
         $this->Set("content",$options);

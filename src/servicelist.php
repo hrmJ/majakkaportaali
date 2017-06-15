@@ -20,7 +20,7 @@ $season = GetCurrentSeason($con);
 
 #Select-elementti vastuiden suodattamista varten
 $responsibilities = $con->q("SELECT DISTINCT responsibility FROM responsibilities", Array());
-$select = new Select($templatepath, $responsibilities);
+$select = new Select($templatepath, $responsibilities, "Yleisnäkymä", "Yleisnäkymä");
 
 #Varsinainen lista messuista
 $servicedata = $con->q("SELECT servicedate, theme, id FROM services WHERE servicedate >= :startdate AND servicedate <= :enddate ORDER BY servicedate", Array("startdate"=>$season["startdate"], "enddate"=>$season["enddate"]));

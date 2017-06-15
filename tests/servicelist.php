@@ -34,18 +34,32 @@ class ServiceListTest extends TestCase
 
     public function testCreateSelectForFilteringResponsibilities()
     {
-        $select = new Select($this->templatepath, $this->responsibilities);
+        $select = new Select($this->templatepath, $this->responsibilities, "Yleisnäkymä","Yleisnäkymä");
         $this->assertRegExp('/<option>juontaja/', $select->Output());
     }
 
     public function testLayoutIncludesSelect()
     {
-        $select = new Select($this->templatepath, $this->responsibilities);
+        $select = new Select($this->templatepath, $this->responsibilities, "Yleisnäkymä", "Yleisnäkymä");
         $this->slist->Set("table", $this->tablecontent->Output());
         $this->slist->Set("select",$select->Output());
         $this->layout->Set("content", $this->slist->Output());
-        $this->assertRegExp('/<select>/', $this->layout->Output());
+        $this->assertRegExp('/Yleisnäkymä/', $this->layout->Output());
     }
+
+    public function testShowResponsibilitiesFiltered()
+    {
+        $filterbythis = "juontaja";
+        $serviceids = $this->con->q("SELECT id FROM services WHERE servicedate >= :startdate AND servicedate <= :enddate ORDER BY servicedate", Array("startdate"=>$this->season["startdate"], "enddate"=>$this->season["enddate"]));
+        $filteredids = Array();
+        foreach($serviceids as $sid){
+            $sid[0];
+            $filteredids[] = $sid["id"];
+        }
+        $filteredresponsibilities = $this->con->q("SELECT responsible FROM responsibilities WHERE responsibility = ? AND service_id IN (" .  implode(",", array_fill(0, sizeof($filteredids), "?")) . ") ORDER BY service_id", array_merge(Array($filterbythis),$filteredids));
+        $this->assertEquals(sizeof($filteredresponsibilities),sizeof($serviceids));
+    }
+
 
 }
 

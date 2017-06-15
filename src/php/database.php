@@ -53,6 +53,9 @@ class DbCon{
         $this->query = $this->connection->prepare($query);
 
         foreach($params as $key => $val){
+            #1-based numbers, so increment by in
+            if(is_numeric($key))
+                $key++;
              $this->query->bindValue($key, $val);
         }
 
