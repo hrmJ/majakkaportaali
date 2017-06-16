@@ -1,1 +1,1 @@
-<option[@selected]>[@value]</option>
+<option value="[@value]"[@selected]>[@content]</option>

@@ -181,22 +181,28 @@ class Select extends Template{
      * @param array $optiondata taulukko arvoista, jotka syötetään select-elementin riveiksi
      * @param string $selected se arvo, joka valitaan, kun elementti luodaan
      * @param string $label select-elementin ensimmäinen, otsikkona toimiva  arvo
+     * @param array $valuedata option-elementin value-attribuutin arvot taulukkona
      *
      */
-    public function __construct($path, $optiondata, $selected, $label){
+    public function __construct($path, $optiondata, $selected, $label, $id="", $valuedata=Array()){
         parent::__construct("$path/select.tpl");
         $optiondata = array_merge(Array(Array($label),Array("------------")), $optiondata);
         $options="";
-        foreach($optiondata as $option){
+        foreach($optiondata as $key=>$option){
             $tpl = new Template("$path/option.tpl");
-            $tpl->Set("value",$option[0]);
-            if($option==$selected)
+            $tpl->Set("content",$option[0]);
+            if($option[0]==$selected)
                 $tpl->Set("selected","selected");
             else
                 $tpl->Set("selected","");
+            if(sizeof($optiondata)==sizeof($valuedata))
+                $tpl->Set("value",$valuedata[$key]);
+            else
+                $tpl->Set("value",$option[0]);
             $options .= $tpl->Output();
         }
         $this->Set("content",$options);
+        $this->Set("id",$id);
     }
 
 }

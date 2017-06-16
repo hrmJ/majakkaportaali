@@ -35,7 +35,7 @@ class ServiceListTest extends TestCase
     public function testCreateSelectForFilteringResponsibilities()
     {
         $select = new Select($this->templatepath, $this->responsibilities, "Yleisnäkymä","Yleisnäkymä");
-        $this->assertRegExp('/<option>juontaja/', $select->Output());
+        $this->assertRegExp('/<option.*juontaja/', $select->Output());
     }
 
     public function testLayoutIncludesSelect()

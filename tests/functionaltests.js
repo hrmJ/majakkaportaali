@@ -5,6 +5,7 @@ const nightmare = new Nightmare({
   show: false,
   typeInterval: 20,
   pollInterval: 50,
+  waitTimeout: 3000 // in ms
 });
 
 describe("Messulistasivu", () => {
@@ -62,12 +63,12 @@ describe("Messulistasivu", () => {
   it('Käyttäjä suodattaa messulistanäkymää niin, että siinä näkyy vain joka viikon juontaja.', (done) => {
     nightmare
       .goto('http://localhost/majakkaportaali/servicelist.php')
-      .click("[select]")
+      .select("select", "juontaja")
       .evaluate(function(){
-          return document.querySelector("table tr");
+          return document.querySelector("table tr").textContent;
       })
       .then((row) => {
-        assert.isNotNull(row);
+        assert.match(row,/Brierly/);
         done();
       }).catch(done);
   });

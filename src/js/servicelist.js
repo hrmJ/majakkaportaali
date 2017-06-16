@@ -1,5 +1,6 @@
 $(document).ready(function(){
-    $("tr").click(function(){
-        window.location="servicedetails.php?id=" + this.id.replace(/[^_]+_/,"");
-    })
+    //Siirtyminen messudetaljinäkymään
+    $("tr").click(function(){window.location="servicedetails.php?id=" + this.id.replace(/[^_]+_/,"");});
+    //Suodattaminen vastuun mukaan
+    $("#respfilter") .change(function(){window.location="servicelist.php?filterby=" + this.value;});
 })
