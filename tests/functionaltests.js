@@ -5,49 +5,17 @@ const nightmare = new Nightmare({
   show: true,
   typeInterval: 20,
   pollInterval: 50,
-  waitTimeout: 3000 // in ms
+  waitTimeout: 10000 // in ms
 });
 
-describe("Messulistasivu", () => {
-  it('Käyttäjä näkee otsikkona Majakkaportaali', (done) => {
+describe("Messulistasivu", function(){
+  this.timeout( 20000 );
+
+
+  it('Käyttäjä näkee taulukon ja sen riveillä messujen päivämääriä ja aiheita', (done) => {
     nightmare
       .goto('http://localhost/majakkaportaali/servicelist.php')
-      .evaluate(function(){
-          return document.title;
-      })
-      .then((title) => {
-        assert.equal(title, "Majakkaportaali");
-        done();
-      }).catch(done);
-  });
-
-  it('Käyttäjä näkee taulukon sivulla', (done) => {
-    nightmare
-      .goto('http://localhost/majakkaportaali/servicelist.php')
-      .exists('table')
-      .then((table) => {
-          assert.isTrue(table)
-          done();
-      }).catch(done);
-  });
-
-
-  it('Taulukossa on rivejä', (done) => {
-    nightmare
-      .goto('http://localhost/majakkaportaali/servicelist.php')
-      .evaluate(function(){
-          return document.querySelector("table tr");
-      })
-      .then((row) => {
-        assert.isNotNull(row);
-        done();
-      }).catch(done);
-  });
-
-
-  it('Taulukon riveillä on  messujen päivämääriä ja aiheita', (done) => {
-    nightmare
-      .goto('http://localhost/majakkaportaali/servicelist.php')
+      .wait("table").wait(800)
       .evaluate(function(){
           var tds = document.querySelector("table tr").children;
           return {"date": tds[0].textContent,
@@ -63,12 +31,14 @@ describe("Messulistasivu", () => {
   it('Käyttäjä suodattaa messulistanäkymää niin, että siinä näkyy vain joka viikon juontaja.', (done) => {
     nightmare
       .goto('http://localhost/majakkaportaali/servicelist.php')
-      .select("select", "juontaja")
+      .wait("select").wait(800)
+      .select("select", "juontaja").wait(900)
+      .wait("[name=filteredchanges]")
       .evaluate(function(){
-          return document.querySelector("table tr").textContent;
+          return document.querySelector("[name='id_2']").value;
       })
       .then((row) => {
-        assert.match(row,/Brierly/);
+        assert.match(row,/James/);
         done();
       }).catch(done);
   });
@@ -76,10 +46,12 @@ describe("Messulistasivu", () => {
 
   it('Käyttäjä suodattaa näkyviin vain juontajat ja vaihtaa juontajan messuun 2', (done) => {
     nightmare
-      .goto('http://localhost/majakkaportaali/servicelist.php')
-      .select("select", "juontaja")
-      .type("[name='id_2']", "Simo Lipsanen")
-      .click("[type='submit']")
+      .goto('http://localhost/majakkaportaali/servicelist.php?filterby=juontaja')
+      .wait("table")
+      .type("[name='id_2']","")
+      .type("[name='id_2']","Simo Lipsanen").wait(500)
+      .click("[name='filteredchanges']")
+      .wait("[name='id_2']").wait(500)
       .evaluate(function(){
           return document.querySelector("[name='id_2']").value;
       })
@@ -94,7 +66,9 @@ describe("Messulistasivu", () => {
   it('Käyttäjä klikkaa taulukon riviä ja siirtyy messudetaljisivulle.', (done) => {
     nightmare
       .goto('http://localhost/majakkaportaali/servicelist.php')
-      .click("tr")
+      .wait("#serviceid_3").wait(800)
+      .click("#serviceid_3")
+      .wait("h2").wait(600)
       .evaluate(function(){
           return document.title;
       })
@@ -107,11 +81,12 @@ describe("Messulistasivu", () => {
 });
 
 
-describe("Messudetaljisivu", () => {
-
+describe("Messudetaljisivu", function(){
+  this.timeout( 20000 );
   it('Käyttäjä näkee otsikkossa sanan Majakkamessu', (done) => {
     nightmare
-      .goto('http://localhost/majakkaportaali/servicedetails.php')
+      .goto('http://localhost/majakkaportaali/servicedetails.php?id=1')
+      .wait('h2').wait(300)
       .evaluate(function(){
           return document.title;
       })
@@ -125,9 +100,11 @@ describe("Messudetaljisivu", () => {
   it('Käyttäjä huomaa, että vastuuhenkilöiden nimiä voi muokata. Hän muokkaa nimeä ja nimi on vaihtunut.', (done) => {
     nightmare
       .goto('http://localhost/majakkaportaali/servicedetails.php?id=1')
+      .wait("table").wait(400)
       .type("[name='liturgi']","")
       .type("[name='liturgi']","Paul Copan")
       .click("[name=savedetails]")
+      .wait("h2").wait(1000)
       .evaluate(function(){
           return document.querySelector("[name=liturgi]").value;
       })

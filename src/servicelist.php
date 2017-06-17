@@ -17,7 +17,6 @@ $templatepath="templates";
 #Valmistelu ja tietokantayhteys
 $con = new DBcon("../config.ini");
 $season = GetCurrentSeason($con);
-
 if(isset($_POST["filteredchanges"]))
     SaveFiltered($con, $_GET["filterby"], $_POST);
 
