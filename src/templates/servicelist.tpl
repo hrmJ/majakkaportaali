@@ -7,5 +7,6 @@
                 [@table]
             </tbody>
         </table>
+        <div>[@submit]</div>
     </form>
 </section>

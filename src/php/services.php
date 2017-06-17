@@ -32,6 +32,21 @@ function GetCurrentSeason($con){
 
 /**
  *
+ * Tallentaa käyttäjän tekemät yhden tietyn vastuun muokkaukset tietokantaan.
+ * 
+ * @param DbCon $con yhteys tietokantaan
+ * @param string $filterby Vastuu, jota ollaan muokkaamassa
+ * @param array $values taulukko niistä messujen id:istä, jotka ovat muokkauksen kohteena
+ *
+ */
+function SaveFiltered($con, $filterby, $values){
+    foreach($values as $id => $responsible){
+        $con->q("UPDATE responsibilities SET responsible = :responsible WHERE service_id = :id AND responsibility = :responsibility",Array("id"=>str_replace("id_","",$id),"responsible"=>$responsible,"responsibility"=>$filterby),"none");
+    }
+}
+
+/**
+ *
  * Tallentaa käyttäjän tekemät muokkaukset tietokantaan.
  * 
  * @param DbCon $con yhteys tietokantaan
@@ -48,7 +63,9 @@ function SaveServiceDetails($con, $id, $values){
 
 /**
  *
- * Tallentaa käyttäjän tekemät muokkaukset tietokantaan.
+ * Hae messulistan näkymä. Joko päivämäärät ja teemat listaava näkymä
+ * tai vastuun mukaan suodatettu näkymä. Jos valittu vastuun mukaan suodatettu,
+ * otetaan huomioon, että 
  * 
  * @param DbCon $con yhteys tietokantaan
  * @param string $filterby vastuu, jonka mukaan suodatetaan
@@ -71,7 +88,7 @@ function FilterContent($con, $filterby, $season){
     $responsibles =  $con->q("SELECT service_id, responsible FROM responsibilities WHERE responsibility = ? AND service_id IN (" .  implode(",", array_fill(0, sizeof($filteredids), "?")) . ") ORDER BY service_id", array_merge(Array($filterby),$filteredids));
     $returnarray = Array();
     foreach($responsibles as $key=> $responsible){
-        $returnarray[] = Array("servicedate"=>$dates_and_themes[$key]["servicedate"],"theme"=>$responsible["responsible"],"id"=>$dates_and_themes[$key]["id"]);
+        $returnarray[] = Array("servicedate"=>$dates_and_themes[$key]["servicedate"],"theme"=>"<input type='text' name='id_{$dates_and_themes[$key]["id"]}' value='{$responsible["responsible"]}'>","id"=>$dates_and_themes[$key]["id"]);
     }
     return $returnarray;
 }

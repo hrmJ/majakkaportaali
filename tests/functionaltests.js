@@ -2,7 +2,7 @@ var Nightmare = require('nightmare');
 var assert = require('chai').assert; 
 
 const nightmare = new Nightmare({
-  show: false,
+  show: true,
   typeInterval: 20,
   pollInterval: 50,
   waitTimeout: 3000 // in ms
@@ -72,6 +72,23 @@ describe("Messulistasivu", () => {
         done();
       }).catch(done);
   });
+
+
+  it('Käyttäjä suodattaa näkyviin vain juontajat ja vaihtaa juontajan messuun 2', (done) => {
+    nightmare
+      .goto('http://localhost/majakkaportaali/servicelist.php')
+      .select("select", "juontaja")
+      .type("[name='id_2']", "Simo Lipsanen")
+      .click("[type='submit']")
+      .evaluate(function(){
+          return document.querySelector("[name='id_2']").value;
+      })
+      .then((field) => {
+        assert.match(field,/Simo Lipsanen/);
+        done();
+      }).catch(done);
+  });
+
 
 
   it('Käyttäjä klikkaa taulukon riviä ja siirtyy messudetaljisivulle.', (done) => {

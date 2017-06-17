@@ -47,19 +47,24 @@ class ServiceListTest extends TestCase
         $this->assertRegExp('/Yleisnäkymä/', $this->layout->Output());
     }
 
-    public function testShowResponsibilitiesFiltered()
+    public function testShowResponsibilitiesFilteredBasic()
     {
-        $filterbythis = "juontaja";
-        $serviceids = $this->con->q("SELECT id FROM services WHERE servicedate >= :startdate AND servicedate <= :enddate ORDER BY servicedate", Array("startdate"=>$this->season["startdate"], "enddate"=>$this->season["enddate"]));
-        $filteredids = Array();
-        foreach($serviceids as $sid){
-            $sid[0];
-            $filteredids[] = $sid["id"];
-        }
-        $filteredresponsibilities = $this->con->q("SELECT responsible FROM responsibilities WHERE responsibility = ? AND service_id IN (" .  implode(",", array_fill(0, sizeof($filteredids), "?")) . ") ORDER BY service_id", array_merge(Array($filterbythis),$filteredids));
-        $this->assertEquals(sizeof($filteredresponsibilities),sizeof($serviceids));
+        $data = FilterContent($this->con,"Yleisnäkymä",$this->season);
+        $this->assertTrue(sizeof($data)>0);
     }
 
+    public function testShowResponsibilitiesFilteredByJuontaja()
+    {
+        $data = FilterContent($this->con,"juontaja",$this->season);
+        $this->assertTrue(sizeof($data)>0);
+    }
+
+    public function testSubmitButton()
+    {
+        $sub = new Submit($this->templatepath,"filteredchanges","Tallenna","");
+        $this->slist->Set("submit", $sub->Output());
+        $this->assertRegExp("/input type=.submit/", $this->slist->Output());
+    }
 
 }
 

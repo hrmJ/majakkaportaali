@@ -18,6 +18,9 @@ $templatepath="templates";
 $con = new DBcon("../config.ini");
 $season = GetCurrentSeason($con);
 
+if(isset($_POST["filteredchanges"]))
+    SaveFiltered($con, $_GET["filterby"], $_POST);
+
 #Select-elementti vastuiden suodattamista varten
 $responsibilities = $con->q("SELECT DISTINCT responsibility FROM responsibilities", Array());
 $filterby = (isset($_GET["filterby"]) ? $_GET["filterby"] : "Yleisnäkymä");
@@ -29,8 +32,17 @@ $tablecontent = new ServiceListTable($templatepath, $servicedata);
 
 #Kootaan yllä tuotettu sisältö
 $slist = new Template("$templatepath/servicelist.tpl");
+$slist->Set("action", $_SERVER["PHP_SELF"] . "?filterby=" . $_GET["filterby"]);
 $slist->Set("table", $tablecontent->Output());
 $slist->Set("select", $select->Output());
+if($filterby!="Yleisnäkymä"){
+    $sub = new Submit($templatepath, "filteredchanges","Tallenna","");
+    $subval = $sub->Output();
+}
+else{
+    $subval = "";
+}
+$slist->Set("submit", $subval);
 
 #Sivun yleinen ulkoasu ja tiedot
 $layout = new Template("$templatepath/layout.tpl");

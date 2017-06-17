@@ -173,8 +173,6 @@ class ServiceDetailsTable extends DataTable{
  */
 class Select extends Template{
 
-    protected $type = "details";
-
     /**
      *
      * @param string $path polku templates-kansioon
@@ -203,6 +201,33 @@ class Select extends Template{
         }
         $this->Set("content",$options);
         $this->Set("id",$id);
+    }
+
+}
+
+/**
+ *
+ * Taulukko yksittäisen messun responsibilitynkantajien kuvaamista varten.
+ *
+ * @param string $type taulukon tyyppi
+ *
+ */
+class Submit extends Template{
+
+    /**
+     *
+     * @param string $path polku templates-kansioon
+     * @param array $name elementin nimi
+     * @param string $value Value-attribuutiin teksti
+     * @param string $class css-luokka
+     * @param boolean $output tulostetaanko heti
+     *
+     */
+    public function __construct($path, $name, $value, $class=""){
+        parent::__construct("$path/submit.tpl");
+        $this->Set("name",$name);
+        $this->Set("value",$value);
+        $this->Set("class",$class);
     }
 
 }
