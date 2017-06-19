@@ -80,15 +80,21 @@ class DataTable{
     public function __construct(){
         foreach($this->data as $datarow){
             $tpl = new Template($this->templatefile);
-            if($this->type=="list"){
-                $tpl->Set("category", FormatDate($datarow["servicedate"]));
-                $tpl->Set("value", $datarow["theme"]);
-                $tpl->Set("id", $datarow["id"]);
-            }
-            elseif($this->type=="details"){
-                $tpl->Set("category", $datarow["responsibility"]);
-                $tpl->Set("value", $datarow["responsible"]);
-                $tpl->Set("name", $datarow["responsibility"]);
+            switch($this->type){
+                case "list":
+                    $tpl->Set("category", FormatDate($datarow["servicedate"]));
+                    $tpl->Set("value", $datarow["theme"]);
+                    $tpl->Set("id", $datarow["id"]);
+                    break;
+                case "details":
+                    $tpl->Set("category", $datarow["responsibility"]);
+                    $tpl->Set("value", $datarow["responsible"]);
+                    $tpl->Set("name", $datarow["responsibility"]);
+                    break;
+                case "songlist":
+                    $tpl->Set("name", $datarow["category"]);
+                    $tpl->Set("value", $datarow["value"]);
+                    break;
             }
             $this->rows[] = $tpl;
         }
@@ -131,6 +137,32 @@ class ServiceListTable extends DataTable{
      */
     public function __construct($path, $servicedata){
         $this->templatefile = "$path/servicelistrow.tpl";
+        $this->data = $servicedata;
+        parent::__construct();
+    }
+
+}
+
+
+/**
+ *
+ * Taulukko yksittäisen messun responsibilitynkantajien kuvaamista varten.
+ *
+ * @param string $type taulukon tyyppi
+ *
+ */
+class SongDataTable extends DataTable{
+
+    protected $type = "songlist";
+
+    /**
+     *
+     *@param string $path polku templates-kansioon
+     *@param Array $servicedata taulukkojen taulukko;  sisemmän taulukon alkiot nimillä "responsibility" ja "responsible"
+     *
+     */
+    public function __construct($path, $servicedata){
+        $this->templatefile = "$path/songlistrow.tpl";
         $this->data = $servicedata;
         parent::__construct();
     }

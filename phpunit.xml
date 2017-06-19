@@ -6,6 +6,7 @@
             <file>tests/utilities.php</file>
             <file>tests/servicelist.php</file>
             <file>tests/servicedetails.php</file>
+            <file>tests/songs.php</file>
         </testsuite>
     </testsuites>
 </phpunit>
