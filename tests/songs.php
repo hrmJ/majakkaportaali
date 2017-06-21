@@ -9,24 +9,40 @@ use PHPUnit\Framework\TestCase;
 class SongListTest extends TestCase
 {
 
-    /**
-     * Testaa, että riveillä on id:t
-     */
-    public function testRowsHaveValues()
+  protected function setUp()
     {
-        $templatepath="src/templates";
-        $songslistcontent = new Template("$templatepath/songlist.tpl");
+        $this->templatepath="src/templates";
+        $this->con = new DBcon("config.ini");
+        $this->templatepath="src/templates";
+        $this->date = date('Y-m-d');
+        $this->season = GetCurrentSeason($this->con);
+        $this->layout = new Template("$this->templatepath/layout.tpl");
+        $this->layout->Set("title", "Laulujen syöttö majakkamesuun x.x.xxxx");
+        $this->songslistcontent = new Template("$this->templatepath/songlist.tpl");
+    }
+
+
+    public function testSingleSongs()
+    {
 
         $songdata = Array(Array("category"=>"alkulaulu","value"=>""),
                              Array("category"=>"päivän laulu","value"=>""));
 
-        $tablecontent = new SongDataTable($templatepath, $songdata);
-        $songslistcontent->Set("singlesongs", $tablecontent->Output());
+        $tablecontent = new SongDataTable($this->templatepath, $songdata);
+        $this->songslistcontent->Set("singlesongs", $tablecontent->Output());
+        $this->layout->Set("content", $this->songslistcontent->Output());
+        $this->assertRegExp('/type="text" name="alkulaulu"/', $this->layout->Output());
+    }
+    
+    public function testWorshipSongs()
+    {
 
-        $layout = new Template("$templatepath/layout.tpl");
-        $layout->Set("title", "Laulujen syöttö majakkamesuun x.x.xxxx");
-        $layout->Set("content", $songslistcontent->Output());
-        $this->assertRegExp('/type="text" name="alkulaulu"/', $layout->Output());
+        $songdata = Array(Array("category"=>"Ylistyslaulu 1","value"=>""));
+
+        $tablecontent = new SongDataTable($this->templatepath, $songdata);
+        $this->songslistcontent->Set("worshipsongs", $tablecontent->Output());
+        $this->layout->Set("content", $this->songslistcontent->Output());
+        $this->assertRegExp('/type="text" name="alkulaulu"/', $this->layout->Output());
     }
 
 
