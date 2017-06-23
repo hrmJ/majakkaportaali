@@ -18,33 +18,39 @@ class SongListTest extends TestCase
         $this->season = GetCurrentSeason($this->con);
         $this->layout = new Template("$this->templatepath/layout.tpl");
         $this->layout->Set("title", "Laulujen syöttö majakkamesuun x.x.xxxx");
-        $this->songslistcontent = new Template("$this->templatepath/songlist.tpl");
+        $this->songlistcontent = new Template("$this->templatepath/songlist.tpl");
     }
 
 
     public function testSingleSongs()
     {
 
-        $songdata = Array(Array("category"=>"alkulaulu","value"=>""),
-                             Array("category"=>"päivän laulu","value"=>""));
+        $songdata = Array(Array("name"=>"alkulaulu", "category"=>"alkulaulu","value"=>""),
+                          Array("name"=>"Päivän laulu", "category"=>"päivän laulu","value"=>""));
 
         $tablecontent = new SongDataTable($this->templatepath, $songdata);
-        $this->songslistcontent->Set("singlesongs", $tablecontent->Output());
-        $this->layout->Set("content", $this->songslistcontent->Output());
+        $this->songlistcontent->Set("singlesongs", $tablecontent->Output());
+        $this->layout->Set("content", $this->songlistcontent->Output());
         $this->assertRegExp('/type="text" name="alkulaulu"/', $this->layout->Output());
     }
     
     public function testWorshipSongs()
     {
 
-        $songdata = Array(Array("category"=>"Ylistyslaulu 1","value"=>""));
+        $songdata = Array(Array("name"=>"ws1","category"=>"Ylistyslaulu 1","value"=>""));
 
         $tablecontent = new SongDataTable($this->templatepath, $songdata);
-        $this->songslistcontent->Set("worshipsongs", $tablecontent->Output());
-        $this->layout->Set("content", $this->songslistcontent->Output());
-        $this->assertRegExp('/type="text" name="alkulaulu"/', $this->layout->Output());
+        $this->songlistcontent->Set("worshipsongs", $tablecontent->Output());
+        $this->layout->Set("content", $this->songlistcontent->Output());
+        $this->assertRegExp('/type="text" name="ws1"/', $this->layout->Output());
     }
 
+    public function testSingleSongsWithDbData()
+    {
+
+        //$songdata = $this->con->q("SELECT ")
+
+    }
 
 }
 

@@ -2,7 +2,7 @@ var Nightmare = require('nightmare');
 var assert = require('chai').assert; 
 
 const nightmare = new Nightmare({
-  show: false,
+  show: true,
   typeInterval: 20,
   pollInterval: 50,
   waitTimeout: 10000 // in ms

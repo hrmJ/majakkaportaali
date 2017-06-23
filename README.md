@@ -131,3 +131,7 @@ ks. sql/taulut.sql
 
 auth/create_user.php
 
+# Muuta
+
+src-kansiossa myös get_hymn.py-pythonksripti, jolla voi ladata virsien sanoja tekstimuodossa
+evlfi-sivuilta.

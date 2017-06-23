@@ -1,4 +1,6 @@
 <?php
+
+
 require("src/php/database.php");
 
 echo "Deleting and creating database majakkaportaali\n";
@@ -17,6 +19,31 @@ $con->q("INSERT INTO services (servicedate, theme) VALUES ('2017-03-06', 'Neljä
 $con->q("INSERT INTO services (servicedate, theme) VALUES ('2017-03-13', 'Viides messu')",Array(),"none");
 $con->q("INSERT INTO services (servicedate, theme) VALUES ('2017-03-20', 'Kuudes messu')",Array(),"none");
 
+//laulutietokantaan täytettä
+//
+
+echo "Inserting songs...";
+$dir = new DirectoryIterator(dirname("mocksongdata/*"));
+foreach ($dir as $fileinfo) {
+    if (!$fileinfo->isDot()) {
+        $songtext = file_get_contents("mocksongdata/" . $fileinfo->getFilename());
+        $slines = preg_split("/\n{2}/", $songtext);
+        $title = $slines[0];
+        $verses = implode("\n\n",array_slice($slines,1));
+        $con->q("INSERT INTO songdata (title, verses) VALUES (:title, :verses)",Array("title"=>$title,"verses"=>$verses),"none");
+    }
+}
+
+//Lauluja messuun nro 2
+$con->q("INSERT INTO servicesongs (service_id, song_id, songtype) VALUES (2, 1, 'alkulaulu')",Array(),"none");
+$con->q("INSERT INTO servicesongs (service_id, song_id, songtype) VALUES (2, 2, 'paivanlaulu')",Array(),"none");
+$con->q("INSERT INTO servicesongs (service_id, song_id, songtype) VALUES (2, 4, 'loppulaulu')",Array(),"none");
+$con->q("INSERT INTO servicesongs (service_id, song_id, songtype) VALUES (2, 7, 'ws')",Array(),"none");
+$con->q("INSERT INTO servicesongs (service_id, song_id, songtype) VALUES (2, 9, 'ws')",Array(),"none");
+$con->q("INSERT INTO servicesongs (service_id, song_id, songtype) VALUES (2, 8, 'ws')",Array(),"none");
+$con->q("INSERT INTO servicesongs (service_id, song_id, songtype) VALUES (2, 10, 'com')",Array(),"none");
+$con->q("INSERT INTO servicesongs (service_id, song_id, songtype) VALUES (2, 11, 'com')",Array(),"none");
+$con->q("INSERT INTO servicesongs (service_id, song_id, songtype) VALUES (2, 12, 'com')",Array(),"none");
 
 
 $ids = $con->q("SELECT id FROM services",Array(),"all");

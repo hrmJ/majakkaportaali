@@ -92,7 +92,8 @@ class DataTable{
                     $tpl->Set("name", $datarow["responsibility"]);
                     break;
                 case "songlist":
-                    $tpl->Set("name", $datarow["category"]);
+                    $tpl->Set("category", $datarow["category"]);
+                    $tpl->Set("name", $datarow["name"]);
                     $tpl->Set("value", $datarow["value"]);
                     break;
             }
@@ -146,7 +147,8 @@ class ServiceListTable extends DataTable{
 
 /**
  *
- * Taulukko yksittäisen messun responsibilitynkantajien kuvaamista varten.
+ * Taulukko, jossa näkyvät messussa laulettavat laulut ja jossa
+ * lauluja voi muuttaa ja syöttää uusia.
  *
  * @param string $type taulukon tyyppi
  *
@@ -158,7 +160,7 @@ class SongDataTable extends DataTable{
     /**
      *
      *@param string $path polku templates-kansioon
-     *@param Array $servicedata taulukkojen taulukko;  sisemmän taulukon alkiot nimillä "responsibility" ja "responsible"
+     *@param Array $servicedata taulukkojen taulukko;  sisemmän taulukon alkiot nimillä "category" ja "value"
      *
      */
     public function __construct($path, $servicedata){
@@ -172,7 +174,7 @@ class SongDataTable extends DataTable{
 
 /**
  *
- * Taulukko yksittäisen messun responsibilitynkantajien kuvaamista varten.
+ * Taulukko yksittäisen messun vastuunkantajien kuvaamista varten.
  *
  * @param string $type taulukon tyyppi
  *

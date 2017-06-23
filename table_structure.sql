@@ -53,3 +53,31 @@ CREATE TABLE `responsibilities` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+
+--
+-- Table structure for table `servicesongs`
+--
+
+CREATE TABLE servicesongs (
+  id int(10) unsigned NOT NULL AUTO_INCREMENT,
+  service_id int(10) unsigned NOT NULL,
+  song_id int(22) NOT NULL,
+  songtype varchar(100) DEFAULT NULL,
+  PRIMARY KEY (id),
+  KEY service_index (service_id),
+  CONSTRAINT servicesongs_ibfk_1 FOREIGN KEY (service_id) REFERENCES services (id) ON DELETE CASCADE
+);
+
+
+--
+-- Table structure for table `songdata`
+--
+
+CREATE TABLE songdata (
+  id int(10) unsigned NOT NULL AUTO_INCREMENT,
+  title varchar(300) DEFAULT NULL,
+  composer varchar(300) DEFAULT NULL,
+  lyrics varchar(300) DEFAULT NULL,
+  verses text DEFAULT NULL,
+  PRIMARY KEY (id)
+);
