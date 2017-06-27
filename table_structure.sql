@@ -61,7 +61,7 @@ CREATE TABLE `responsibilities` (
 CREATE TABLE servicesongs (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
   service_id int(10) unsigned NOT NULL,
-  song_id int(22) NOT NULL,
+  song_title varchar(200) NOT NULL,
   songtype varchar(100) DEFAULT NULL,
   PRIMARY KEY (id),
   KEY service_index (service_id),

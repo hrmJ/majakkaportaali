@@ -35,15 +35,15 @@ foreach ($dir as $fileinfo) {
 }
 
 //Lauluja messuun nro 2
-$con->q("INSERT INTO servicesongs (service_id, song_id, songtype) VALUES (2, 1, 'alkulaulu')",Array(),"none");
-$con->q("INSERT INTO servicesongs (service_id, song_id, songtype) VALUES (2, 2, 'paivanlaulu')",Array(),"none");
-$con->q("INSERT INTO servicesongs (service_id, song_id, songtype) VALUES (2, 4, 'loppulaulu')",Array(),"none");
-$con->q("INSERT INTO servicesongs (service_id, song_id, songtype) VALUES (2, 7, 'ws')",Array(),"none");
-$con->q("INSERT INTO servicesongs (service_id, song_id, songtype) VALUES (2, 9, 'ws')",Array(),"none");
-$con->q("INSERT INTO servicesongs (service_id, song_id, songtype) VALUES (2, 8, 'ws')",Array(),"none");
-$con->q("INSERT INTO servicesongs (service_id, song_id, songtype) VALUES (2, 10, 'com')",Array(),"none");
-$con->q("INSERT INTO servicesongs (service_id, song_id, songtype) VALUES (2, 11, 'com')",Array(),"none");
-$con->q("INSERT INTO servicesongs (service_id, song_id, songtype) VALUES (2, 12, 'com')",Array(),"none");
+$con->q("INSERT INTO servicesongs (service_id, song_title, songtype) VALUES (2, 'Virsi 001', 'alkulaulu')",Array(),"none");
+$con->q("INSERT INTO servicesongs (service_id, song_title, songtype) VALUES (2, 'Virsi 012', 'paivanlaulu')",Array(),"none");
+$con->q("INSERT INTO servicesongs (service_id, song_title, songtype) VALUES (2, 'Virsi 033', 'loppulaulu')",Array(),"none");
+$con->q("INSERT INTO servicesongs (service_id, song_title, songtype) VALUES (2, 'Virsi 011', 'ws')",Array(),"none");
+$con->q("INSERT INTO servicesongs (service_id, song_title, songtype) VALUES (2, 'Virsi 029', 'ws')",Array(),"none");
+$con->q("INSERT INTO servicesongs (service_id, song_title, songtype) VALUES (2, 'Virsi 028', 'ws')",Array(),"none");
+$con->q("INSERT INTO servicesongs (service_id, song_title, songtype) VALUES (2, 'Virsi 006', 'com')",Array(),"none");
+$con->q("INSERT INTO servicesongs (service_id, song_title, songtype) VALUES (2, 'Virsi 002', 'com')",Array(),"none");
+$con->q("INSERT INTO servicesongs (service_id, song_title, songtype) VALUES (2, 'Virsi 018', 'com')",Array(),"none");
 
 
 $ids = $con->q("SELECT id FROM services",Array(),"all");
