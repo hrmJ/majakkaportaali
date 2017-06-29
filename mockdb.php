@@ -30,7 +30,7 @@ foreach ($dir as $fileinfo) {
         $slines = preg_split("/\n{2}/", $songtext);
         $title = $slines[0];
         $verses = implode("\n\n",array_slice($slines,1));
-        $con->q("INSERT INTO songdata (title, verses) VALUES (:title, :verses)",Array("title"=>$title,"verses"=>$verses),"none");
+        $con->q("INSERT INTO songdata (title, verses) VALUES (:title, :verses)",Array("title"=>$title,"verses"=>utf8_encode($verses)),"none");
     }
 }
 

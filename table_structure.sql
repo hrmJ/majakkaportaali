@@ -81,3 +81,4 @@ CREATE TABLE songdata (
   verses text DEFAULT NULL,
   PRIMARY KEY (id)
 ) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
+

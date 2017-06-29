@@ -47,12 +47,13 @@ class SongListTest extends TestCase
 
     public function testSingleSongsWithDbData()
     {
-
         $id = 2;
         $singlesongs = $this->con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype in ('alkulaulu','paivanlaulu','loppulaulu')",Array("sid"=>$id));
         $wssongs = $this->con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = 'ws'",Array("sid"=>$id));
         $comsongs = $this->con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = 'com'",Array("sid"=>$id));
         $this->assertTrue(sizeof($singlesongs)>2);
+        $this->assertTrue(sizeof($wssongs)>2);
+        $this->assertTrue(sizeof($comsongs)>2);
 
     }
 
