@@ -16,7 +16,7 @@ CREATE TABLE `seasons` (
   `comments` text,
   `name` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE utf8_general_ci;
 
 
 --
@@ -32,7 +32,7 @@ CREATE TABLE `services` (
   `theme` varchar(200) DEFAULT NULL,
   `info` varchar(9999) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -50,7 +50,7 @@ CREATE TABLE `responsibilities` (
   PRIMARY KEY (`id`),
   KEY `service_index` (`service_id`),
   CONSTRAINT `vastuut_ibfk_1` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 
@@ -80,4 +80,4 @@ CREATE TABLE songdata (
   lyrics varchar(300) DEFAULT NULL,
   verses text DEFAULT NULL,
   PRIMARY KEY (id)
-);
+) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
