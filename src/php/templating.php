@@ -92,9 +92,9 @@ class DataTable{
                     $tpl->Set("name", $datarow["responsibility"]);
                     break;
                 case "songlist":
-                    $tpl->Set("category", $datarow["category"]);
-                    $tpl->Set("name", $datarow["name"]);
-                    $tpl->Set("value", $datarow["value"]);
+                    $tpl->Set("category", $datarow["songtype"]);
+                    $tpl->Set("name", $datarow["songtype"]);
+                    $tpl->Set("value", $datarow["song_title"]);
                     break;
             }
             $this->rows[] = $tpl;

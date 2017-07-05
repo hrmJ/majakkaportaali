@@ -20,14 +20,17 @@ $id = (isset($_GET["service_id"]) ? $_GET["service_id"] : GetIdByDate());
 
 // Lataa data.
 $singlesongsdata = $con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype in ('alkulaulu','paivanlaulu','loppulaulu')",Array("sid"=>$id));
-$wssongs = $con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = 'ws'",Array("sid"=>$id));
-$comsongs = $con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = 'com'",Array("sid"=>$id));
+$wssongsdata = $con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = 'ws'",Array("sid"=>$id));
+$comsongsdata = $con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = 'com'",Array("sid"=>$id));
 
 $singlesongstable = new SongDataTable($templatepath, $singlesongsdata);
-$singlesongs->Set("singlesongs", $singlesongs->Output());
+$wssongstable = new SongDataTable($templatepath, $wssongsdata);
+$comsongstable = new SongDataTable($templatepath, $comsongsdata);
 
 $songslistcontent = new Template("$templatepath/songlist.tpl");
-$songslistcontent->Set("singlesongs", $singlesongs->Output());
+$songslistcontent->Set("singlesongs", $singlesongstable->Output());
+$songslistcontent->Set("worshipsongs", $wssongstable->Output());
+$songslistcontent->Set("communionsongs", $comsongstable->Output());
 
 $layout = new Template("$templatepath/layout.tpl");
 $layout->Set("title", "Laulujen syöttö majakkamesuun x.x.xxxx");

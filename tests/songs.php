@@ -25,8 +25,8 @@ class SongListTest extends TestCase
     public function testSingleSongs()
     {
 
-        $songdata = Array(Array("name"=>"alkulaulu", "category"=>"alkulaulu","value"=>""),
-                          Array("name"=>"Päivän laulu", "category"=>"päivän laulu","value"=>""));
+        $songdata = Array(Array("songtype"=>"alkulaulu", "song_title"=>""),
+                          Array("songtype"=>"Päivän laulu", "song_title"=>""));
 
         $tablecontent = new SongDataTable($this->templatepath, $songdata);
         $this->songlistcontent->Set("singlesongs", $tablecontent->Output());
@@ -34,17 +34,6 @@ class SongListTest extends TestCase
         $this->assertRegExp('/type="text" name="alkulaulu"/', $this->layout->Output());
     }
     
-    public function testWorshipSongs()
-    {
-
-        $songdata = Array(Array("name"=>"ws1","category"=>"Ylistyslaulu 1","value"=>""));
-
-        $tablecontent = new SongDataTable($this->templatepath, $songdata);
-        $this->songlistcontent->Set("worshipsongs", $tablecontent->Output());
-        $this->layout->Set("content", $this->songlistcontent->Output());
-        $this->assertRegExp('/type="text" name="ws1"/', $this->layout->Output());
-    }
-
     public function testSingleSongsWithDbData()
     {
         $id = 2;
@@ -54,6 +43,7 @@ class SongListTest extends TestCase
         $this->assertTrue(sizeof($singlesongs)>2);
         $this->assertTrue(sizeof($wssongs)>2);
         $this->assertTrue(sizeof($comsongs)>2);
+        $this->assertArrayHasKey("songtype", $singlesongs[0]);
 
     }
 
