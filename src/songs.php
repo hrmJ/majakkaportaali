@@ -31,6 +31,7 @@ $songslistcontent = new Template("$templatepath/songlist.tpl");
 $songslistcontent->Set("singlesongs", $singlesongstable->Output());
 $songslistcontent->Set("worshipsongs", $wssongstable->Output());
 $songslistcontent->Set("communionsongs", $comsongstable->Output());
+$songslistcontent->Set("action", "{$_SERVER['PHP_SELF']}?service_id=$id");
 
 $layout = new Template("$templatepath/layout.tpl");
 $layout->Set("title", "Laulujen syöttö majakkamesuun x.x.xxxx");

@@ -12,16 +12,18 @@ const nightmare = new Nightmare({
 describe.only("Laulujen syöttö", function(){
   this.timeout( 20000 );
 
-    it("Käyttäjä näkee kentän, johon voi syöttää alkulaulun ja kirjoittaa siihen Riihikirkkohymni",(done) => {
+    it("Käyttäjä näkee kentän, johon voi syöttää alkulaulun ja kirjoittaa siihen Virsi 015. Käyttäjä painaa tallenna, ja arvo on vaihtunut.",(done) => {
         nightmare
           .goto('http://localhost/majakkaportaali/songs.php?service_id=2')
           .wait("table").wait(800)
-          .type("[name='alkulaulu']","Riihikirkkohymni")
+          .type("[name='alkulaulu']","")
+          .type("[name='alkulaulu']","Virsi 015")
+          .click("[value='Tallenna']").wait("[name=alkulaulu]")
           .evaluate(function(){
               return document.querySelector("[name=alkulaulu]").value;
           })
           .then((inputval) => {
-              assert.equal(inputval,"Riihikirkkohymni")
+              assert.equal(inputval,"Virsi 015")
               done();
           }).catch(done);
     });
