@@ -11,10 +11,10 @@ require("php/services.php");
 require("php/database.php");
 require("php/utilities.php");
 
-$con = new DBcon("../config.ini");
+$con = new ServiceDetailsCon("../config.ini");
 
 if(isset($_POST["savedetails"]))
-    SaveServiceDetails($con, $_GET["id"], $_POST);
+    $con->SaveData($_GET["id"], $_POST);
 
 $volunteers = $con->q("SELECT responsible, responsibility FROM responsibilities WHERE service_id = :id",Array("id"=>$_GET["id"]),"all");
 $servicemeta = $con->q("SELECT theme, servicedate FROM services WHERE id = :id",Array("id"=>$_GET["id"]),"row");

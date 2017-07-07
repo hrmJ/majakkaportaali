@@ -62,6 +62,14 @@ class DbCon{
         $this->Run();
 
         switch($return){
+            case "all_flat":
+                $results =  $this->query->fetchAll();
+                $returnvals = Array();
+                foreach($results as $result){
+                    $returnvals[] = $result[0];
+                }
+                return $returnvals;
+                break;
             case "all":
                 return $this->query->fetchAll();
                 break;
@@ -102,10 +110,22 @@ class DbCon{
         foreach($values as $valuekey => $item){
             switch($this->type){
                 case "details":
-                    $this->q("UPDATE responsibilities SET responsible = :responsible WHERE service_id = :id AND responsibility = :responsibility",Array("id"=>str_replace("id_","",$valuekey),"responsible"=>$item,"responsibility"=>$identifier),"none");
+                    $this->q("UPDATE responsibilities SET responsible = :responsible WHERE service_id = :id AND responsibility = :responsibility",Array("id"=>$identifier,"responsible"=>$item,"responsibility"=>$valuekey),"none");
                     break;
                 case "list":
                     $this->q("UPDATE responsibilities SET responsible = :responsible WHERE service_id = :id AND responsibility = :responsibility",Array("id"=>str_replace("id_","",$valuekey),"responsible"=>$item,"responsibility"=>$identifier),"none");
+                    break;
+                case "song":
+                    $underscore = strpos($valuekey,"_");
+                    if($underscore){
+                        $songtype = substr($valuekey,0,$underscore);
+                        $songnumber = substr($valuekey,$underscore+1);
+                        $songs_of_this_type = $this->q("SELECT id FROM servicesongs WHERE service_id = :sid AND songtype = :st ORDER BY id",Array("sid"=>$identifier,"st"=>$songtype),"all_flat");
+                        if($songnumber>sizeof($songs_of_this_type))
+                            $this->q("INSERT INTO servicesongs (song_title, songtype, service_id) VALUES (:title, :type, :sid)",Array("title"=>$item,"type"=>$songtype,"sid"=>$identifier),"none");
+                        else
+                            $this->q("UPDATE servicesongs SET song_title = :title WHERE songtype = :type AND service_id = :serviceid AND id = :songid",Array("title"=>$item,"type"=>$songtype,"serviceid"=>$identifier,"songid"=>$songs_of_this_type[intval($songnumber)-1]),"none");
+                    }
                     break;
             }
         }

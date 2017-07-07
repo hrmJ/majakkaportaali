@@ -15,12 +15,11 @@ require("php/services.php");
 $templatepath="templates";
 
 #Valmistelu ja tietokantayhteys
-$con = new DBcon("../config.ini");
+$con = new ServiceListCon("../config.ini");
 $season = GetCurrentSeason($con);
 if(isset($_POST["filteredchanges"]))
-    SaveFiltered($con, $_GET["filterby"], $_POST);
+    $con->SaveData($_GET["filterby"], $_POST);
 
-var_dump($_POST);
 
 #Select-elementti vastuiden suodattamista varten
 $responsibilities = $con->q("SELECT DISTINCT responsibility FROM responsibilities", Array());

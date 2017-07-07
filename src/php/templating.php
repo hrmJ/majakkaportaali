@@ -92,8 +92,35 @@ class DataTable{
                     $tpl->Set("name", $datarow["responsibility"]);
                     break;
                 case "songlist":
-                    $tpl->Set("category", $datarow["songtype"]);
+                    if (!isset($this->counttype[$datarow["songtype"]]))
+                        $this->counttype[$datarow["songtype"]] = 1;
+                    else
+                        $this->counttype[$datarow["songtype"]]++;
+
                     $tpl->Set("name", $datarow["songtype"]);
+
+                    //Ylistys- ja ehtoollislaulut: useampi samaa tyyppiä, lisää indeksi
+                    if(in_array($datarow["songtype"],Array("ws","com")))
+                        $tpl->Set("name", $datarow["songtype"] . "_{$this->counttype[$datarow['songtype']]}");
+
+                    switch ($datarow["songtype"]){
+                        case "paivanlaulu":
+                            $tpl->Set("category", "Päivän laulu");
+                            break;
+                        case "loppulaulu":
+                            $tpl->Set("category", "Loppulaulu");
+                            break;
+                        case "alkulaulu":
+                            $tpl->Set("category", "Alkulaulu");
+                            break;
+                        case "ws":
+                            $tpl->Set("category", "Ylistyslaulu {$this->counttype[$datarow['songtype']]}");
+                            break;
+                        case "com":
+                            $tpl->Set("category", "Ehtoollislaulu {$this->counttype[$datarow['songtype']]}");
+                            break;
+                    }
+
                     $tpl->Set("value", $datarow["song_title"]);
                     break;
             }
@@ -151,6 +178,7 @@ class ServiceListTable extends DataTable{
  * lauluja voi muuttaa ja syöttää uusia.
  *
  * @param string $type taulukon tyyppi
+ * @param  $nth taulukon tyyppi
  *
  */
 class SongDataTable extends DataTable{
@@ -164,6 +192,7 @@ class SongDataTable extends DataTable{
      *
      */
     public function __construct($path, $servicedata){
+        $this->counttype = Array();
         $this->templatefile = "$path/songlistrow.tpl";
         $this->data = $servicedata;
         parent::__construct();
