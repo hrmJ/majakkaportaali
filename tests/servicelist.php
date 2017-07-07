@@ -71,8 +71,10 @@ class ServiceListTest extends TestCase
      */
     public function testCanSaveFiltered()
     {
-        $fakepost =  Array("id_1"=> "", "id_2"=>"Ville Vallaton", "id_3"=> "Alu Palu", "id_4"=> "Joku Kaveri", "id_5"=> "", "id_6"=> "", "filteredchanges"=> "Tallenna");
+        $fakepost =  Array("id_1"=> "", "id_2"=>"Mikko Mallikas", "id_3"=> "Alu Palu", "id_4"=> "Joku Kaveri", "id_5"=> "", "id_6"=> "", "filteredchanges"=> "Tallenna");
         $this->con->SaveData("liturgi", $fakepost);
+        $newdata = $this->con->q("SELECT responsible FROM responsibilities WHERE service_id = '2' AND responsibility = 'liturgi'",Array(),"column");
+        $this->assertEquals($newdata,"Mikko Mallikas");
     }
 
 }

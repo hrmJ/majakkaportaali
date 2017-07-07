@@ -126,6 +126,13 @@ class DbCon{
                         else
                             $this->q("UPDATE servicesongs SET song_title = :title WHERE songtype = :type AND service_id = :serviceid AND id = :songid",Array("title"=>$item,"type"=>$songtype,"serviceid"=>$identifier,"songid"=>$songs_of_this_type[intval($songnumber)-1]),"none");
                     }
+                    else{
+                        $id_of_this_song_type = $this->q("SELECT id FROM servicesongs WHERE service_id = :sid AND songtype = :st ORDER BY id",Array("sid"=>$identifier,"st"=>$valuekey),"column");
+                        if (!$id_of_this_song_type)
+                            $this->q("INSERT INTO servicesongs (song_title, songtype, service_id) VALUES (:title, :type, :sid)",Array("title"=>$item,"type"=>$valuekey,"sid"=>$identifier),"none");
+                        else
+                            $this->q("UPDATE servicesongs SET song_title = :title WHERE songtype = :type AND service_id = :serviceid AND id = :songid", Array("title"=>$item,"type"=>$valuekey,"serviceid"=>$identifier,"songid"=>$id_of_this_song_type),"none");
+                    }
                     break;
             }
         }

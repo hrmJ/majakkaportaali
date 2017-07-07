@@ -14,9 +14,12 @@ require("php/database.php");
 require("php/utilities.php");
 require("php/songs.php");
 
-$con = new DBcon("../config.ini");
+$con = new SongCon("../config.ini");
 $templatepath="templates";
 $id = (isset($_GET["service_id"]) ? $_GET["service_id"] : GetIdByDate());
+
+if (isset($_POST))
+    $con->SaveData($id,$_POST);
 
 // Lataa data.
 $singlesongsdata = $con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype in ('alkulaulu','paivanlaulu','loppulaulu')",Array("sid"=>$id));
