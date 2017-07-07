@@ -11,7 +11,7 @@ class ServiceListTest extends TestCase
 
   protected function setUp()
     {
-        $this->con = new DBcon("config.ini");
+        $this->con = new ServiceListCon("config.ini");
         $this->templatepath="src/templates";
         $this->date = date('Y-m-d');
         $this->season = GetCurrentSeason($this->con);
@@ -64,6 +64,15 @@ class ServiceListTest extends TestCase
         $sub = new Submit($this->templatepath,"filteredchanges","Tallenna","");
         $this->slist->Set("submit", $sub->Output());
         $this->assertRegExp("/input type=.submit/", $this->slist->Output());
+    }
+
+    /**
+     * Testaa, että tiedon tallentaminen onnistuu
+     */
+    public function testCanSaveFiltered()
+    {
+        $fakepost =  Array("id_1"=> "", "id_2"=>"Ville Vallaton", "id_3"=> "Alu Palu", "id_4"=> "Joku Kaveri", "id_5"=> "", "id_6"=> "", "filteredchanges"=> "Tallenna");
+        $this->con->SaveData("liturgi", $fakepost);
     }
 
 }

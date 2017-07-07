@@ -20,6 +20,8 @@ $season = GetCurrentSeason($con);
 if(isset($_POST["filteredchanges"]))
     SaveFiltered($con, $_GET["filterby"], $_POST);
 
+var_dump($_POST);
+
 #Select-elementti vastuiden suodattamista varten
 $responsibilities = $con->q("SELECT DISTINCT responsibility FROM responsibilities", Array());
 $filterby = (isset($_GET["filterby"]) ? $_GET["filterby"] : "Yleisnäkymä");

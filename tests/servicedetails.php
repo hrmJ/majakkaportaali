@@ -9,6 +9,16 @@ use PHPUnit\Framework\TestCase;
 class ServiceDetailsTest extends TestCase
 {
 
+  protected function setUp()
+    {
+        $this->templatepath="src/templates";
+        $this->con = new ServiceDetailsCon("config.ini");
+        $this->templatepath="src/templates";
+        $this->date = date('Y-m-d');
+        $this->season = GetCurrentSeason($this->con);
+        $this->layout = new Template("$this->templatepath/layout.tpl");
+    }
+
     /**
      * Testaa, että riveillä on id:t
      */
@@ -36,8 +46,7 @@ class ServiceDetailsTest extends TestCase
      */
     public function testCanFetchData()
     {
-        $con = new DBcon("config.ini");
-        $volunteers = $con->q("SELECT responsible, responsibility FROM responsibilities WHERE service_id = :id",Array("id"=>1),"all");
+        $volunteers = $this->con->q("SELECT responsible, responsibility FROM responsibilities WHERE service_id = :id",Array("id"=>1),"all");
         $this->assertTrue(sizeof($volunteers)>3);
     }
 
@@ -46,11 +55,10 @@ class ServiceDetailsTest extends TestCase
      */
     public function testCanSaveData()
     {
-        $con = new DBcon("config.ini");
         $id = 2;
-        $savedname = $con->q("SELECT responsible FROM responsibilities WHERE service_id = :id AND responsibility = :res",Array("id"=>$id,"res"=>"liturgi"),"column");
-        SaveServiceDetails($con, $id, Array("liturgi"=>"Ville Vallaton","juontaja"=>"Gareth Bale"));
-        $savedname = $con->q("SELECT responsible FROM responsibilities WHERE service_id = :id AND responsibility = :res",Array("id"=>$id,"res"=>"liturgi"),"column");
+        $savedname = $this->con->q("SELECT responsible FROM responsibilities WHERE service_id = :id AND responsibility = :res",Array("id"=>$id,"res"=>"liturgi"),"column");
+        $this->con->SaveData($id, Array("liturgi"=>"Ville Vallaton","juontaja"=>"Gareth Bale"));
+        $savedname = $this->con->q("SELECT responsible FROM responsibilities WHERE service_id = :id AND responsibility = :res",Array("id"=>$id,"res"=>"liturgi"),"column");
         $this->assertEquals($savedname, "Ville Vallaton");
     }
 

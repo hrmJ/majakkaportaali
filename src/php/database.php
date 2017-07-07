@@ -89,8 +89,56 @@ class DbCon{
     }
 
 
+    /**
+     *
+     * Tallentaa käyttäjän tekemät muutokset joko messulistaan, yksittäiseen messuun
+     * tai laulujen listaan
+     *
+     * @param array values Arvot, joita syötetään tietokantaan
+     * @param string/integer identifier messun id tai vastuun nimi, jonka perusteella päivitys tehdään
+     *
+     */
+    public function SaveData($identifier, $values){
+        foreach($values as $valuekey => $item){
+            switch($this->type){
+                case "details":
+                    $this->q("UPDATE responsibilities SET responsible = :responsible WHERE service_id = :id AND responsibility = :responsibility",Array("id"=>str_replace("id_","",$valuekey),"responsible"=>$item,"responsibility"=>$identifier),"none");
+                    break;
+                case "list":
+                    $this->q("UPDATE responsibilities SET responsible = :responsible WHERE service_id = :id AND responsibility = :responsibility",Array("id"=>str_replace("id_","",$valuekey),"responsible"=>$item,"responsibility"=>$identifier),"none");
+                    break;
+            }
+        }
+    }
+
 }
 
+/**
+ *
+ * Yhteys tietokantaan messujen listasta käsin
+ *
+ */
+class ServiceListCon extends DbCon{
+    protected $type = "list";
+}
+
+/**
+ *
+ * Yhteys tietokantaan yksittäisestä messunäkymästä käsin
+ *
+ */
+class ServiceDetailsCon extends DbCon{
+    protected $type = "details";
+}
+
+/**
+ *
+ * Yhteys tietokantaan laulujen listasta käsin
+ *
+ */
+class SongCon extends DbCon{
+    protected $type = "song";
+}
 
 ?>
 

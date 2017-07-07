@@ -47,6 +47,12 @@ class SongListTest extends TestCase
 
     }
 
+    public function testSaveSongData()
+    {
+        $id = 2;
+        SaveSongs($this->con);
+    }
+
 }
 
 
