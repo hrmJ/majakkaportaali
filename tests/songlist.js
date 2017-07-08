@@ -27,5 +27,21 @@ describe.only("Laulujen syöttö", function(){
               done();
           }).catch(done);
     });
+
+    it("Käyttäjä lisää uuden ylistyslaulun painamalla +-nappia. Laulu tallennetaan ja se on muuttunut.",(done) => {
+        nightmare
+          .goto('http://localhost/majakkaportaali/songs.php?service_id=2')
+          .wait("table").wait(800)
+          .click("#wsbuttons .increaser").wait("[name=ws_4]")
+          .type("[name=ws_4]","Bless the Lord").click("[value='Tallenna']").wait("table")
+          .evaluate(function(){
+              return document.querySelector("[name=ws_4]").value;
+          })
+          .then((inputval) => {
+              assert.equal(inputval,"Bless the Lord")
+              done();
+          }).catch(done);
+    });
+
 });
 
