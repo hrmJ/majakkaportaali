@@ -39,6 +39,7 @@ $songslistcontent->Set("action", "{$_SERVER['PHP_SELF']}?service_id=$id");
 $layout = new Template("$templatepath/layout.tpl");
 $layout->Set("title", "Laulujen syöttö majakkamesuun x.x.xxxx");
 $layout->Set("content", $songslistcontent->Output());
+$layout->Set("jsaddress", "js/songs.js");
 
 echo $layout->Output();
 

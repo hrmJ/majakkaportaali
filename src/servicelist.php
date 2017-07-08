@@ -9,8 +9,7 @@
 
 require("php/utilities.php");
 require("php/templating.php");
-require("php/database.php");
-require("php/services.php");
+require("php/database.php"); require("php/services.php");
 
 $templatepath="templates";
 
