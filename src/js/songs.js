@@ -5,7 +5,9 @@
  */
 
 $(document).ready(function(){
-
+    $(".multisongs [type='button']").click(function(){
+        console.log("#ll");
+    });
 });
 
 

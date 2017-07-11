@@ -3,10 +3,10 @@ var Nightmare = require('nightmare');
 var assert = require('chai').assert; 
 
 const nightmare = new Nightmare({
-  show: true,
+  show: false,
   typeInterval: 20,
   pollInterval: 50,
-  waitTimeout: 10000 // in ms
+  waitTimeout: 3000 // in ms
 });
 
 describe.only("Laulujen syöttö", function(){
@@ -32,7 +32,7 @@ describe.only("Laulujen syöttö", function(){
         nightmare
           .goto('http://localhost/majakkaportaali/songs.php?service_id=2')
           .wait("table").wait(800)
-          .click("#wsbuttons .increaser").wait("[name=ws_4]")
+          .click(".multisongs.ws .increaser").wait("[name=ws_4]")
           .type("[name=ws_4]","Bless the Lord").click("[value='Tallenna']").wait("table")
           .evaluate(function(){
               return document.querySelector("[name=ws_4]").value;

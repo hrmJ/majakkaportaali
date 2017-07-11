@@ -18,7 +18,7 @@
             [@worshipsongs]
             </tbody>
         </table>
-        <div class="multisongs ws"><button class="increaser">+</button> <button class="decreaser">-</button></div>
+        <div class="multisongs ws"><input type="button" class="increaser" value="+"> <input type="button" class="decreaser" value="-"></div></div>
 
         <h3>Ehtoollislaulut</h3>
         <table>
@@ -27,7 +27,7 @@
             [@communionsongs]
             </tbody>
         </table>
-        <div class="multisongs com"><button class="increaser">+</button> <button class="decreaser">-</button></div>
+        <div class="multisongs com"><input type="button" class="increaser" value="+"> <input type="button" class="decreaser" value="-"></div>
 
         <h3>Liturgiset</h3>
         <table>
