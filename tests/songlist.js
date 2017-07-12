@@ -9,6 +9,7 @@ const nightmare = new Nightmare({
   waitTimeout: 3000 // in ms
 });
 
+
 describe.only("Laulujen syöttö", function(){
   this.timeout( 20000 );
 
@@ -28,10 +29,10 @@ describe.only("Laulujen syöttö", function(){
           }).catch(done);
     });
 
-    it("Käyttäjä lisää uuden ylistyslaulun painamalla +-nappia. Laulu tallennetaan ja se on muuttunut.",(done) => {
+    it("Käyttäjä lisää uuden ylistyslaulun painamalla +-nappia.",(done) => {
         nightmare
           .goto('http://localhost/majakkaportaali/songs.php?service_id=2')
-          .wait("table").wait(800)
+          .wait("table")
           .click(".multisongs.ws .increaser").wait("[name=ws_4]")
           .type("[name=ws_4]","Bless the Lord").click("[value='Tallenna']").wait("table")
           .evaluate(function(){

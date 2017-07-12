@@ -5,20 +5,19 @@
  */
 
 
-/**
- *
- * Lisää uusi rivi monta laulua sisältävään taulukkoon.
- * Tavallisimmin kyseessä on ylistyslaulu tai ehtoollislaulu.
- *
- */
-function AddMultiSong(){
-
-    return 1;
-
-}
-
 $(document).ready(function(){
-    $(".multisongs [type='button']").click(AddMultiSong);
+    $(".multisongs [type='button']").click(
+        /**
+         * Lisää tai poista uusi rivi laulujen listaan.
+         */
+        function(){
+            var $table = $(this).parent().prev("table");
+            var $tr = $table.find("tr:last-child").clone(true);
+            var number = $tr.find("td:first-child").text().replace(/([^\d+]+ ?)(\d+)/,"$2") *1 + 1;
+            console.log(number);
+            //td.textContent.
+            //$table.append($tr);
+    });
 });
 
 
