@@ -51,10 +51,10 @@ describe.only("Laulujen syöttö", function(){
           .click(".multisongs.ws .decreaser").click(".multisongs.ws .decreaser").wait("[name=ws_2]")
           .click("[value='Tallenna']").wait("table")
           .evaluate(function(){
-              return document.querySelector("[name=ws_3]").value;
+              return document.querySelector("[name=ws_3]");
           })
           .then((inputval) => {
-              assert.isUndefined(inputval)
+              assert.isNull(inputval)
               done();
           }).catch(done);
     });
