@@ -18,7 +18,7 @@ $con = new SongCon("../config.ini");
 $templatepath="templates";
 $id = (isset($_GET["service_id"]) ? $_GET["service_id"] : GetIdByDate());
 
-if (isset($_POST))
+if (isset($_POST["savesongs"]))
     $con->SaveData($id,$_POST);
 
 // Lataa data.

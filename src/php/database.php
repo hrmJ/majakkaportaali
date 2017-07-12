@@ -100,13 +100,15 @@ class DbCon{
     /**
      *
      * Tallentaa käyttäjän tekemät muutokset joko messulistaan, yksittäiseen messuun
-     * tai laulujen listaan
+     * tai laulujen listaan riippuen siitä, mikä DbCon-luokan alalauokka kyseessä.
      *
      * @param array values Arvot, joita syötetään tietokantaan
      * @param string/integer identifier messun id tai vastuun nimi, jonka perusteella päivitys tehdään
      *
      */
     public function SaveData($identifier, $values){
+        if($this->type=="song")
+            $this->q("DELETE FROM servicesongs WHERE service_id = :sid",Array("sid"=>$identifier),"none");
         foreach($values as $valuekey => $item){
             switch($this->type){
                 case "details":
@@ -120,18 +122,10 @@ class DbCon{
                     if($underscore){
                         $songtype = substr($valuekey,0,$underscore);
                         $songnumber = substr($valuekey,$underscore+1);
-                        $songs_of_this_type = $this->q("SELECT id FROM servicesongs WHERE service_id = :sid AND songtype = :st ORDER BY id",Array("sid"=>$identifier,"st"=>$songtype),"all_flat");
-                        if($songnumber>sizeof($songs_of_this_type))
-                            $this->q("INSERT INTO servicesongs (song_title, songtype, service_id) VALUES (:title, :type, :sid)",Array("title"=>$item,"type"=>$songtype,"sid"=>$identifier),"none");
-                        else
-                            $this->q("UPDATE servicesongs SET song_title = :title WHERE songtype = :type AND service_id = :serviceid AND id = :songid",Array("title"=>$item,"type"=>$songtype,"serviceid"=>$identifier,"songid"=>$songs_of_this_type[intval($songnumber)-1]),"none");
+                        $this->q("INSERT INTO servicesongs (song_title, songtype, service_id) VALUES (:title, :type, :sid)",Array("title"=>$item,"type"=>$songtype,"sid"=>$identifier),"none");
                     }
                     else{
-                        $id_of_this_song_type = $this->q("SELECT id FROM servicesongs WHERE service_id = :sid AND songtype = :st ORDER BY id",Array("sid"=>$identifier,"st"=>$valuekey),"column");
-                        if (!$id_of_this_song_type)
-                            $this->q("INSERT INTO servicesongs (song_title, songtype, service_id) VALUES (:title, :type, :sid)",Array("title"=>$item,"type"=>$valuekey,"sid"=>$identifier),"none");
-                        else
-                            $this->q("UPDATE servicesongs SET song_title = :title WHERE songtype = :type AND service_id = :serviceid AND id = :songid", Array("title"=>$item,"type"=>$valuekey,"serviceid"=>$identifier,"songid"=>$id_of_this_song_type),"none");
+                        $this->q("INSERT INTO servicesongs (song_title, songtype, service_id) VALUES (:title, :type, :sid)",Array("title"=>$item,"type"=>$valuekey,"sid"=>$identifier),"none");
                     }
                     break;
             }
@@ -144,6 +138,8 @@ class DbCon{
  *
  * Yhteys tietokantaan messujen listasta käsin
  *
+ * @param string $type Yhteyden tyyppi
+ *
  */
 class ServiceListCon extends DbCon{
     protected $type = "list";
@@ -152,6 +148,8 @@ class ServiceListCon extends DbCon{
 /**
  *
  * Yhteys tietokantaan yksittäisestä messunäkymästä käsin
+ *
+ * @param string $type Yhteyden tyyppi
  *
  */
 class ServiceDetailsCon extends DbCon{
@@ -162,9 +160,13 @@ class ServiceDetailsCon extends DbCon{
  *
  * Yhteys tietokantaan laulujen listasta käsin
  *
+ * @param string $type Yhteyden tyyppi
+ * @param Array $multisongs_inserted taulukko, jolla seurataan, minkä verran ehtoollis-/ylistyslauluja syötetty
+ *
  */
 class SongCon extends DbCon{
     protected $type = "song";
+    protected $multisongs_inserted = Array("ws"=>0,"com"=>0);
 }
 
 ?>

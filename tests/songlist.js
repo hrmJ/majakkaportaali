@@ -3,7 +3,7 @@ var Nightmare = require('nightmare');
 var assert = require('chai').assert; 
 
 const nightmare = new Nightmare({
-  show: false,
+  show: true,
   typeInterval: 20,
   pollInterval: 50,
   waitTimeout: 3000 // in ms
@@ -29,12 +29,12 @@ describe.only("Laulujen syöttö", function(){
           }).catch(done);
     });
 
-    it("Käyttäjä lisää uuden ylistyslaulun painamalla +-nappia.",(done) => {
+    it("Käyttäjä lisää uuden ylistyslaulun painamalla +-nappia. Käyttäjä kirjoittaa laulun nimeksi 'Bless the Lord' ja tallentaa.",(done) => {
         nightmare
           .goto('http://localhost/majakkaportaali/songs.php?service_id=2')
           .wait("table")
           .click(".multisongs.ws .increaser").wait("[name=ws_4]")
-          .type("[name=ws_4]","Bless the Lord").click("[value='Tallenna']").wait("table")
+          .type("[name=ws_4]","").type("[name=ws_4]","Bless the Lord").click("[value='Tallenna']").wait("table")
           .evaluate(function(){
               return document.querySelector("[name=ws_4]").value;
           })
@@ -43,6 +43,23 @@ describe.only("Laulujen syöttö", function(){
               done();
           }).catch(done);
     });
+
+    it("Käyttäjä poistaa yhden ylistyslaulun",(done) => {
+        nightmare
+          .goto('http://localhost/majakkaportaali/songs.php?service_id=2')
+          .wait("table")
+          .click(".multisongs.ws .decreaser").click(".multisongs.ws .decreaser").wait("[name=ws_2]")
+          .click("[value='Tallenna']").wait("table")
+          .evaluate(function(){
+              return document.querySelector("[name=ws_3]").value;
+          })
+          .then((inputval) => {
+              assert.isUndefined(inputval)
+              done();
+          }).catch(done);
+    });
+
+  it("Viimeistä ehtoollislaulua ei voi poistaa");
 
 });
 
