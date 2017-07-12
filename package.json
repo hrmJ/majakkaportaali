@@ -6,7 +6,9 @@
     "nightmare": "^2.10.0",
     "nightwatch": "^0.9.15"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "mocha": "^3.4.2"
+  },
   "scripts": {
     "test": "mocha tests/*.js"
   },

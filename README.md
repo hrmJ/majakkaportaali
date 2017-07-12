@@ -72,11 +72,20 @@ Asennus on simppeli, lataa vain paketti, jonka valinnaan mukaan voi kopioida /us
 
 # Testaaminen
 
-## Javascript (functional tests)
+## Javascript 
 
-Testaaminen tapahtuu Nightmare-sovelluksen avulla.
+### Functional tests
+
+Testaaminen tapahtuu Nightmare-sovelluksen avulla -- yhdistettynä mocha- ja
+chai-kirjastoihin.
 
 Aja `npm test` projektin juurikansiossa.
+
+### Unit tests
+
+Testaaminen  tapahtuun mocha- ja chai-kirjastoilla selaimen kautta.
+
+Testit näkyvät, kun avaat selaimessa tiedoston jsunittests.html.
 
 
 ## Php (unit tests)
