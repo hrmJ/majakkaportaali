@@ -1,33 +1,30 @@
+
+
 /**
  *
  * Laululistan toimimiseen liittyvä javascript.
  *
  */
 
-function SongData(){
-
-    this.titles = undefined;
-
-    this.LoadTitles = function(){
-        $.getJSON("php/loaders/songtitles.php",this.SaveLoadedTitles);
-    }
-
-    this.SaveLoadedTitles = function(data){
-        this.titles = data;
-        this.test = "Böö";
-    };
-
-}
-
 
 $(document).ready(function(){
 
-    /**
-     * Lataa laulujen 
-     */
-    var songs = new SongData();
-    songs.LoadTitles();
-    console.log(songs.test);
+
+      $( ".songinput" ).autocomplete({
+        /**
+         *
+         * Lataa laulujen nimet tietokannasta ja syötä  laulun nimi tai sen osa,
+         * kun käyttäjä aloittaa kirjoittamisen. Vaati jQuery UI:n.
+         *
+         */
+          source: function( request, response ) { $.getJSON("php/loaders/songtitles.php",{songname:request.term},response);},
+          minLength: 2,
+          select: function( event, ui ) {
+            log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+          }
+        } );
+
+
 
     $(".multisongs [type='button']").click(
         /**

@@ -22,11 +22,13 @@ function GetIdByDate(){
 
 /**
  *
+ * Käsittelee lauluihin liittyvää tietokantadataa
  *
  */
 class SongData{
 
     /**
+     *
      *
      * @param SongCon $con yhteys tietokantaan
      *
@@ -35,20 +37,16 @@ class SongData{
         $this->con = $con;
     }
 
-    /**
-     * Hakee kaikkien laulujen nimet tietokannasta.
-     *
-     */
-    public function FetchListOfTitles(){
-        $this->titleslist = $this->con->q("SELECT title FROM songdata ORDER by title",Array(),"all_flat");
-    }
 
     /**
-     * Tulostaa laulujen
+     * Hakee kaikkien laulujen nimet tietokannasta ja tulostaa ne filtteröitynä
+     * laulun nimen ja jonkin sen sisältämän merkkijonon mukaan.
+     *
+     * @param $title merkkijono, joka laulun nimestä on löydyttävä 
+     *
      */
-    public function OutputSongTitles(){
-        if(!isset($this->titleslist))
-            $this->FetchListOfTitles();
+    public function OutputSongTitles($title){
+        $this->titleslist = $this->con->q("SELECT title FROM songdata WHERE title LIKE :giventitle ORDER by title",Array("giventitle"=>"%$title%"),"all_flat");
         echo json_encode($this->titleslist);
     }
 

@@ -3,6 +3,6 @@
 require("../database.php");
 require("../songs.php");
 $songs = new SongData(new SongCon("../../../config.ini"));
-$songs->OutputSongTitles();
+$songs->OutputSongTitles($_GET["songname"]);
 
 ?>
