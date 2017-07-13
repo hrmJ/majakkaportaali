@@ -2,7 +2,7 @@ var Nightmare = require('nightmare');
 var assert = require('chai').assert; 
 
 const nightmare = new Nightmare({
-  show: true,
+  show: false,
   typeInterval: 20,
   pollInterval: 50,
   waitTimeout: 10000 // in ms
@@ -12,7 +12,7 @@ var waitsmall = 0;
 var waitbig = 0;
 
 describe("Messulistasivu", function(){
-  this.timeout( 00 );
+  this.timeout( 20000 );
 
 
   it('Käyttäjä näkee taulukon ja sen riveillä messujen päivämääriä ja aiheita', (done) => {

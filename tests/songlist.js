@@ -3,14 +3,14 @@ var Nightmare = require('nightmare');
 var assert = require('chai').assert; 
 
 const nightmare = new Nightmare({
-  show: true,
+  show: false,
   typeInterval: 20,
   pollInterval: 50,
   waitTimeout: 3000 // in ms
 });
 
 
-describe.only("Laulujen syöttö", function(){
+describe("Laulujen syöttö", function(){
   this.timeout( 20000 );
 
     it("Käyttäjä näkee kentän, johon voi syöttää alkulaulun ja kirjoittaa siihen Taivas varjele. Käyttäjä painaa tallenna, ja arvo on vaihtunut.",(done) => {
@@ -59,7 +59,22 @@ describe.only("Laulujen syöttö", function(){
           }).catch(done);
     });
 
-  it("Viimeistä ehtoollislaulua ei voi poistaa");
+  it.only("Viimeistä ehtoollislaulua ei voi poistaa",(done)=>{
+        nightmare
+          .goto('http://localhost/majakkaportaali/songs.php?service_id=2')
+          .wait("table")
+          .click(".multisongs.com .decreaser").click(".multisongs.com .decreaser").click(".multisongs.com .decreaser").click(".multisongs.com .decreaser").wait("[name=com_1]")
+          .click("[value='Tallenna']").wait("table")
+          .evaluate(function(){
+              return document.querySelector("[name=com_1]");
+          })
+          .then((inputval) => {
+              assert.isNotNull(inputval)
+              done();
+          }).catch(done);
+  });
+
+ it("Näyttää viestin, jos yrittää poistaa viimeisen laulun");
 
 });
 

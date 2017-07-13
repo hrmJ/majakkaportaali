@@ -8,13 +8,13 @@
 $(document).ready(function(){
     $(".multisongs [type='button']").click(
         /**
-         * Lisää tai poista uusi rivi laulujen listaan.
+         * Lisää uusi rivi laulujen listaan tai poista viimeisin rivi.
          */
         function(){
             var $table = $(this).parent().prev("table");
             if($(this).hasClass('decreaser')){
-                //Poista viimeisin, jos painettu miinuspainiketta
-                $table.find("tr:last-child").remove();
+                //Poista viimeisin, jos painettu miinuspainiketta ja jos vähintään 1 jäljellä
+                if($table.find("tr").length>1) $table.find("tr:last-child").remove();
             }
             else{
                 //Kopioi taulukon viimeinen rivi
