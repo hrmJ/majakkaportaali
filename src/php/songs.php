@@ -20,5 +20,38 @@ function GetIdByDate(){
 }
 
 
+/**
+ *
+ *
+ */
+class SongData{
+
+    /**
+     *
+     * @param SongCon $con yhteys tietokantaan
+     *
+     */
+    public function __construct($con){
+        $this->con = $con;
+    }
+
+    /**
+     * Hakee kaikkien laulujen nimet tietokannasta.
+     *
+     */
+    public function FetchListOfTitles(){
+        $this->titleslist = $this->con->q("SELECT title FROM songdata ORDER by title",Array(),"all_flat");
+    }
+
+    /**
+     * Tulostaa laulujen
+     */
+    public function OutputSongTitles(){
+        if(!isset($this->titleslist))
+            $this->FetchListOfTitles();
+        echo json_encode($this->titleslist);
+    }
+
+}
 
 ?>

@@ -92,6 +92,13 @@ class SongListTest extends TestCase
 
     }
 
+    public function testLoadListOfSongs(){
+        $songs = new SongData($this->con);
+        $songs->FetchListOfTitles();
+        $songs->OutputSongTitles();
+        $this->assertTrue(sizeof($songs->titleslist)>10);
+    }
+
 }
 
 

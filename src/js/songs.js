@@ -4,8 +4,31 @@
  *
  */
 
+function SongData(){
+
+    this.titles = undefined;
+
+    this.LoadTitles = function(){
+        $.getJSON("php/loaders/songtitles.php",this.SaveLoadedTitles);
+    }
+
+    this.SaveLoadedTitles = function(data){
+        this.titles = data;
+        this.test = "Böö";
+    };
+
+}
+
 
 $(document).ready(function(){
+
+    /**
+     * Lataa laulujen 
+     */
+    var songs = new SongData();
+    songs.LoadTitles();
+    console.log(songs.test);
+
     $(".multisongs [type='button']").click(
         /**
          * Lisää uusi rivi laulujen listaan tai poista viimeisin rivi.
