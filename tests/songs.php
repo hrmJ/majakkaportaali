@@ -31,7 +31,7 @@ class SongListTest extends TestCase
         $tablecontent = new SongDataTable($this->templatepath, $songdata);
         $this->songlistcontent->Set("singlesongs", $tablecontent->Output());
         $this->layout->Set("content", $this->songlistcontent->Output());
-        $this->assertRegExp('/type="text" name="alkulaulu"/', $this->layout->Output());
+        $this->assertRegExp('/name="alkulaulu"/', $this->layout->Output());
     }
     
     public function testSingleSongsWithDbData()
@@ -94,8 +94,7 @@ class SongListTest extends TestCase
 
     public function testLoadListOfSongs(){
         $songs = new SongData($this->con);
-        $songs->FetchListOfTitles();
-        $songs->OutputSongTitles();
+        $songs->OutputSongTitles("irsi");
         $this->assertTrue(sizeof($songs->titleslist)>10);
     }
 

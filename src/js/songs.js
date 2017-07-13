@@ -9,23 +9,14 @@
 
 $(document).ready(function(){
 
+    //Jquery UI:n autocomplete-pluginin asetukset laulujen nimien täydennystä varten
+    var autocompsongtitle = {
+              source: function( request, response ) { $.getJSON("php/loaders/songtitles.php",{songname:request.term},response);},
+              minLength: 2
+            }
 
-      $( ".songinput" ).autocomplete({
-        /**
-         *
-         * Lataa laulujen nimet tietokannasta ja syötä  laulun nimi tai sen osa,
-         * kun käyttäjä aloittaa kirjoittamisen. Vaati jQuery UI:n.
-         *
-         */
-          source: function( request, response ) { $.getJSON("php/loaders/songtitles.php",{songname:request.term},response);},
-          minLength: 2,
-          select: function( event, ui ) {
-            log( "Selected: " + ui.item.value + " aka " + ui.item.id );
-          }
-        } );
-
-
-
+    $( ".songinput" ).autocomplete(autocompsongtitle);
+    
     $(".multisongs [type='button']").click(
         /**
          * Lisää uusi rivi laulujen listaan tai poista viimeisin rivi.
@@ -42,8 +33,8 @@ $(document).ready(function(){
                 //Muuta kopioidun rivin numero niin, että se on yhden suurempi kuin alkuperäisessä rivissä
                 var number = $tr.find("td:first-child").text().replace(/([^\d+]+ ?)(\d+)/,"$2")*1;
                 var $newtr = $($tr.html().replace(new RegExp(number,"g"), number +1 ));
-                //Tyhjennä itse laulun nimi
-                $newtr.find("input").attr({"value":""});
+                //Tyhjennä itse laulun nimi ja lisää mukaan automaattiseen täydennykseen
+                $newtr.find("input").attr({"value":""}).autocomplete(autocompsongtitle);
                 //Syötä uusi rivi taulukkoon
                 $newtr.insertAfter($table.find("tr:last-child")).wrapAll("<tr></tr>");
             }

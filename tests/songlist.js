@@ -59,7 +59,7 @@ describe("Laulujen syöttö", function(){
           }).catch(done);
     });
 
-  it.only("Viimeistä ehtoollislaulua ei voi poistaa",(done)=>{
+  it("Viimeistä ehtoollislaulua ei voi poistaa",(done)=>{
         nightmare
           .goto('http://localhost/majakkaportaali/songs.php?service_id=2')
           .wait("table")
