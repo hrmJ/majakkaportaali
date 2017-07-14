@@ -42,11 +42,17 @@ class SongData{
      * Hakee kaikkien laulujen nimet tietokannasta ja tulostaa ne filtteröitynä
      * laulun nimen ja jonkin sen sisältämän merkkijonon mukaan.
      *
-     * @param $title merkkijono, joka laulun nimestä on löydyttävä 
+     * @param string $title merkkijono, joka laulun nimestä on löydyttävä 
+     * @param boolean $checkfullname etsitäänkö merkkijonon osilla vai täsmällisellä merkkijonolla
      *
      */
-    public function OutputSongTitles($title){
-        $this->titleslist = $this->con->q("SELECT title FROM songdata WHERE title LIKE :giventitle ORDER by title",Array("giventitle"=>"%$title%"),"all_flat");
+    public function OutputSongTitles($title, $checkfullname=false){
+        if ($checkfullname){
+            $this->titleslist = $this->con->q("SELECT title FROM songdata WHERE title = :giventitle ORDER by title",Array("giventitle"=>$title),"all_flat");
+        }
+        else{
+            $this->titleslist = $this->con->q("SELECT title FROM songdata WHERE title LIKE :giventitle ORDER by title",Array("giventitle"=>"%$title%"),"all_flat");
+        }
         echo json_encode($this->titleslist);
     }
 

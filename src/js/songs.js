@@ -6,16 +6,39 @@
  *
  */
 
+//Polku ajax-skriptit sisältävään kansioon
+var loaderpath = "php/loaders";
+
+
+/**
+ * Tarkkailee tekstikenttiä ja katsoo, onko tietokannassa laulua, jonka nimi vastaisi tekstikentän arvoa.
+ */
+function CheckIfLyricsExist(event, val){
+    //Jos kutsuttiin näppäinpainalluksen seurauksena, ota tekstikentän arvo tapahtumasta
+    if(val==undefined && event.hasOwnProperty("target")) val = event.target.value;
+    //Ota talteen tekstikentän sisältävä solu riippuen siitä, kutsuttiinko each-loopista vai ei
+    var $td = event.hasOwnProperty("target") ? $(event.target).parent() : event.parent();
+    //Säädä viereisen solun teksti riippuen siitä, onko laulua tietokannassa vai ei
+    $.getJSON(loaderpath + "/songtitles.php",{songname:val,fullname:"yes"},function(data){
+        if(data.length==0) $td.next(".lyricsindicator").text("Lisää sanat");
+        else $td.next(".lyricsindicator").text("Katso sanoja");
+        if (val=="") $td.next(".lyricsindicator").text("");
+    });
+} 
 
 $(document).ready(function(){
 
+
     //Jquery UI:n autocomplete-pluginin asetukset laulujen nimien täydennystä varten
     var autocompsongtitle = {
-              source: function( request, response ) { $.getJSON("php/loaders/songtitles.php",{songname:request.term},response);},
-              minLength: 2
-            }
+                source: function(request, response){ $.getJSON(loaderpath + "/songtitles.php",{songname:request.term},response);},
+                minLength: 2,
+                select: function(event,input){CheckIfLyricsExist(event, input.item.value);}};
 
-    $( ".songinput" ).autocomplete(autocompsongtitle);
+    $(".songinput").autocomplete(autocompsongtitle);
+    $(".songinput").on("change paste keyup",CheckIfLyricsExist);
+    //Tarkista jo syötetyistä lauluista, onko niitä tietokannassa
+    $(".songinput").each(function(){CheckIfLyricsExist($(this),$(this).val())});
     
     $(".multisongs [type='button']").click(
         /**

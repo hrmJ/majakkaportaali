@@ -54,7 +54,7 @@ describe("Laulujen syöttö", function(){
               return document.querySelector("[name=ws_3]");
           })
           .then((inputval) => {
-              assert.isNull(inputval)
+              assert.isNull(inputval);
               done();
           }).catch(done);
     });
@@ -69,12 +69,32 @@ describe("Laulujen syöttö", function(){
               return document.querySelector("[name=com_1]");
           })
           .then((inputval) => {
-              assert.isNotNull(inputval)
+              assert.isNotNull(inputval);
               done();
           }).catch(done);
   });
 
  it("Näyttää viestin, jos yrittää poistaa viimeisen laulun");
 
+});
+
+describe.only("sanojen olemassaolon indikaattori",function(){
+    this.timeout(3000);
+    it("Laulurivien kolmannessa solussa ei lue mitään", (done)=>{
+        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait("table")
+        .evaluate(function(){
+            return document.querySelectorAll(".lyricsindicator")[0].textContent;
+        })
+        .then((tdval)=>{
+            assert.equal(tdval,"");
+            done();
+        }).catch(done);
+    });
+    it("Käyttäjä kirjoittaa 001, ja solussa lukee 'lisää sanat'",(done)=>{
+        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait("table")
+        .type("[name='alkulaulu']","001")
+    });
+    it("Käyttäjä kirjoittaa Virsi 001, ja solussa lukee 'katso sanoja'");
+    it("Käyttäjä kirjoittaa 001, painaa alanuolta ja enteriä. Solussa lukee 'katso sanoja'");
 });
 
