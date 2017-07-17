@@ -56,6 +56,31 @@ class SongData{
         echo json_encode($this->titleslist);
     }
 
+    /**
+     * Hakee laulun tarkat tiedot tietokannasta
+     *
+     * @param string $title laulun tarkka nimi
+     *
+     */
+    public function OutputSongInfo($title){
+        
+        $row = $this->con->q("SELECT title, verses FROM songdata WHERE title = :giventitle ORDER by title",Array("giventitle"=>$title),"row");
+        $this->songcontent = Array("title"=>$row["title"],"verses"=>$row["verses"]);
+        echo json_encode($this->songcontent);
+    }
+
+
+    /**
+     * Tallentaa muokatut laulun sanat
+     *
+     * @param string $title laulun tarkka nimi
+     * @param string $verses kahdella rivivälillä toisistaan erotetut laulujen sanat
+     *
+     */
+    public function ProcessEditedLyrics($title, $verses){
+        $row = $this->con->q("UPDATE songdata SET verses = :versedata WHERE title = :giventitle",Array("giventitle"=>$title, "versedata"=>$verses),"none");
+    }
+
 }
 
 ?>

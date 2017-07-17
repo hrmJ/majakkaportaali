@@ -1,5 +1,6 @@
 
 var Nightmare = require('nightmare');
+var jquery = require('jquery');
 var assert = require('chai').assert; 
 
 const nightmare = new Nightmare({
@@ -78,10 +79,12 @@ describe("Laulujen syöttö", function(){
 
 });
 
-describe.only("sanojen olemassaolon indikaattori",function(){
+describe("sanojen olemassaolon indikaattori",function(){
     this.timeout(3000);
-    it("Laulurivien kolmannessa solussa ei lue mitään", (done)=>{
+    it("Laulurivien kolmannessa solussa ei lue mitään, jos solu on tyhjä", (done)=>{
         nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait("table")
+        .type("[name='alkulaulu']","")
+        .click("[value='Tallenna']").wait("[name='alkulaulu']").wait(20)
         .evaluate(function(){
             return document.querySelectorAll(".lyricsindicator")[0].textContent;
         })
@@ -92,9 +95,35 @@ describe.only("sanojen olemassaolon indikaattori",function(){
     });
     it("Käyttäjä kirjoittaa 001, ja solussa lukee 'lisää sanat'",(done)=>{
         nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait("table")
-        .type("[name='alkulaulu']","001")
+        .type("[name='alkulaulu']","").type("[name='alkulaulu']","001")
+        .evaluate(function(){
+            return document.querySelectorAll(".lyricsindicator")[0].textContent;
+        })
+        .then((tdval)=>{
+            assert.equal(tdval,"Lisää sanat")
+            done();
+        }).catch(done);
     });
-    it("Käyttäjä kirjoittaa Virsi 001, ja solussa lukee 'katso sanoja'");
+    it("Käyttäjä kirjoittaa Virsi 001, ja solussa lukee 'katso sanoja'",(done)=>{
+        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait("table")
+        .type("[name='alkulaulu']","").type("[name='alkulaulu']","Virsi 001")
+        .evaluate(function(){
+            return document.querySelectorAll(".lyricsindicator")[0].textContent;
+        })
+        .then((tdval)=>{
+            assert.equal(tdval,"Katso sanoja")
+            done();
+        }).catch(done);
+    });
     it("Käyttäjä kirjoittaa 001, painaa alanuolta ja enteriä. Solussa lukee 'katso sanoja'");
 });
+
+
+describe.only("Sanojen katselu ja lisääminen",function(){
+    this.timeout(3000);
+    it("Käyttäjä klikkaa 'Katso sanoja' -solua ja se tuo näkyviin kyseisen laulun sanat");
+    it("Käyttäjä klikkaa 'Muokkaa sanoja' -linkkiä ja sanoja voi muokata");
+    it("Käyttäjä tallentaa muutoksensa ja tiedot ovat vaihtuneet");
+});
+
 

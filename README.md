@@ -52,10 +52,12 @@ Node pitää mahdollisesti päivittää uusimpaan versioon:
 ### Nightmare + mocha
 
 Selainpohjainen testaus on toteutettu Nightmare + mocha + chai -yhdistelmällä
+Myös jquery node-moduulina pitää asentaa.
 
     npm install nightmare
     npm install mocha
     npm install chai
+    npm install jquery
 
 
 ### Phpunit 

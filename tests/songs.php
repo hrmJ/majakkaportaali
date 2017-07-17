@@ -98,6 +98,19 @@ class SongListTest extends TestCase
         $this->assertTrue(sizeof($songs->titleslist)>10);
     }
 
+    public function testLoadSongInfo(){
+        $songs = new SongData($this->con);
+        $songs->OutputSongInfo("Virsi 001");
+        $this->assertArrayHasKey("verses",$songs->songcontent);
+    }
+
+    public function testEditLyrics(){
+        $songs = new SongData($this->con);
+        $songs->ProcessEditedLyrics("Virsi 001", "Hoosianna, TAAvetin POIKA\n\n Hoosiaaaanna, joossokijoaisjoi\n Hoosiaanna...alskdjasldkj, hOOoss\n\n");
+        $songs->OutputSongInfo("Virsi 001");
+        $this->assertRegExp('/TAAvetin POIKA/', $songs->songcontent["verses"]);
+    }
+
 }
 
 
