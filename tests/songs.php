@@ -104,6 +104,13 @@ class SongListTest extends TestCase
         $this->assertArrayHasKey("verses",$songs->songcontent);
     }
 
+    public function testAddLyrics(){
+        $songs = new SongData($this->con);
+        $songs->ProcessEditedLyrics("Ihan uusi laulu", "Heippa vaan, laalaalaa");
+        $songs->OutputSongInfo("Ihan uusi laulu");
+        $this->assertRegExp('/Heippa vaan/', $songs->songcontent["verses"]);
+    }
+
     public function testEditLyrics(){
         $songs = new SongData($this->con);
         $songs->ProcessEditedLyrics("Virsi 001", "Hoosianna, TAAvetin POIKA\n\n Hoosiaaaanna, joossokijoaisjoi\n Hoosiaanna...alskdjasldkj, hOOoss\n\n");

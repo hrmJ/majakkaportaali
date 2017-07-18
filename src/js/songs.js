@@ -42,7 +42,7 @@ $(document).ready (function(){
                         verses = data.verses.split(new RegExp(/\n{2,}/));
                         $(".versedata").html("");
                         $.each(verses,function(i,verse){
-                            $(".versedata").append($("<p></p>").text(verse));
+                            $(".versedata").append($("<p></p>").html(verse.replace(/\n{1}/g,"<br>")));
                         });
                     });
     }
@@ -52,9 +52,13 @@ $(document).ready (function(){
      * solua.
      */
     function ShowLyricsWindow(){
+        var songtitle = $(this).parent().find("[type='text']").val()
+        if($(this).text()!="") $(".sideroller").show();
         if($(this).text()=="Katso sanoja"){
-            $(".sideroller").show();
-            LoadLyricsByTitle($(this).parent().find("[type='text']").val());
+            LoadLyricsByTitle(songtitle);
+        }
+        else if($(this).text()=="Lisää sanat"){
+            AddLyrics(songtitle);
         }
     }
 
@@ -66,16 +70,41 @@ $(document).ready (function(){
     function EditLyrics(){
         if($(".sideroller").find("button").length==0){
             var verses = "";
-            $.each($(".versedata").find("p"), function(idx,verse){ verses += "\n\n" + verse.textContent});
+            $.each($(".versedata").find("p"), function(idx,verse){ verses += "\n\n" + verse.innerHTML.replace(/<br>/g,"\n")});
             $(".versedata").html("");
             $("<textarea name='editedsong'></textarea>").text(verses.trim()).appendTo($(".versedata"));
-            $("<button>Tallenna muutokset</button>").appendTo(".sideroller").click(function(){
-                $.post(loaderpath + "/savelyrics.php",{
-                    songname:$(".sideroller > h2").text(),
-                    editedverses:$("[name='editedsong']").val()
-                }).done(function(data){LoadLyricsByTitle($(".sideroller > h2").text());});
-            });
+            $("<button>Tallenna muutokset</button>").appendTo(".sideroller").click(SaveLyrics);
         }
+    }
+
+    /**
+     *
+     * Lisää sanat uuteen lauluun
+     *
+     */
+    function AddLyrics(songtitle){
+        $(".versedata").html("");
+        $(".sideroller > h2").text(songtitle);
+        $("<textarea name='editedsong'></textarea>").appendTo($(".versedata"));
+        $("<button>Tallenna muutokset</button>").appendTo(".sideroller").click(SaveLyrics);
+    }
+
+
+    /**
+     *
+     * Lähettää ajax-kyselynä sanat palvelimelle
+     *
+     */
+    function SaveLyrics(){
+            console.log("moro");
+            $.post(loaderpath + "/savelyrics.php",{
+                songname:$(".sideroller > h2").text(),
+                editedverses:$("[name='editedsong']").val()
+            }).done(function(data){
+                LoadLyricsByTitle($(".sideroller > h2").text());
+                $(".songinput").each(function(){CheckIfLyricsExist($(this),$(this).val())});
+            }
+            );
     }
 
     //Jquery UI:n autocomplete-pluginin asetukset laulujen nimien täydennystä varten

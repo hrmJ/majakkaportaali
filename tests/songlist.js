@@ -80,11 +80,11 @@ describe("Laulujen syöttö", function(){
 });
 
 describe("sanojen olemassaolon indikaattori",function(){
-    this.timeout(3000);
+    this.timeout(5000);
     it("Laulurivien kolmannessa solussa ei lue mitään, jos solu on tyhjä", (done)=>{
         nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait("table")
-        .type("[name='alkulaulu']","")
-        .click("[value='Tallenna']").wait("[name='alkulaulu']").wait(20)
+        .type("[name='alkulaulu']","").wait(500)
+        .click("[value='Tallenna']").wait("[name='alkulaulu']").wait(2000)
         .evaluate(function(){
             return document.querySelectorAll(".lyricsindicator")[0].textContent;
         })
@@ -119,11 +119,81 @@ describe("sanojen olemassaolon indikaattori",function(){
 });
 
 
-describe.only("Sanojen katselu ja lisääminen",function(){
-    this.timeout(3000);
-    it("Käyttäjä klikkaa 'Katso sanoja' -solua ja se tuo näkyviin kyseisen laulun sanat");
-    it("Käyttäjä klikkaa 'Muokkaa sanoja' -linkkiä ja sanoja voi muokata");
-    it("Käyttäjä tallentaa muutoksensa ja tiedot ovat vaihtuneet");
+describe("Sanojen katselu ja lisääminen",function(){
+    this.timeout(7000);
+    it("Käyttäjä klikkaa 'Katso sanoja' -solua ja se tuo näkyviin kyseisen laulun sanat",(done)=>{
+        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait("table")
+        .type("[name='alkulaulu']","").type("[name='alkulaulu']","Virsi 001")
+        .click("table  tr:first-child td:last-child")
+        .evaluate(function(){
+            return document.querySelector(".sideroller h2").textContent;
+        })
+        .then((header)=>{
+            assert.equal(header,"Virsi 001");
+            done();
+        }).catch(done);
+    });
+
+    it("Käyttäjä klikkaa 'Muokkaa sanoja' -linkkiä ja sanoja voi muokata",(done)=>{
+        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait("table")
+        .type("[name='alkulaulu']","").type("[name='alkulaulu']","Virsi 001")
+        .click("table  tr:first-child td:last-child")
+        .click(".sideroller a")
+        .evaluate(function(){
+            return document.querySelector(".sideroller textarea").name;
+        })
+        .then((fieldname)=>{
+            assert.equal(fieldname,"editedsong");
+            done();
+        }).catch(done);
+    });
+
+    it("Käyttäjä klikkaa 'Muokkaa sanoja' -linkkiä ja sanoja voi muokata",(done)=>{
+        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait("table")
+        .type("[name='alkulaulu']","").type("[name='alkulaulu']","Virsi 001")
+        .click("table  tr:first-child td:last-child")
+        .click(".sideroller a")
+        .evaluate(function(){
+            return document.querySelector(".sideroller textarea").name;
+        })
+        .then((fieldname)=>{
+            assert.equal(fieldname,"editedsong");
+            done();
+        }).catch(done);
+    });
+
+    it("Käyttäjä tallentaa muutoksensa ja tiedot ovat vaihtuneet",(done)=>{
+        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait("table")
+        .type("[name='alkulaulu']","").type("[name='alkulaulu']","Virsi 001").wait(300)
+        .click("table  tr:first-child td:last-child")
+        .click(".sideroller a")
+        .type(".sideroller textarea", "Kirjoitin uudet sanat.").wait(500)
+        .click(".sideroller button").wait(".versedata").wait(1500)
+        .evaluate(function(){
+            return document.querySelector(".versedata").textContent;
+        })
+        .then((versedata)=>{
+            assert.match(versedata,/Kirjoitin uudet sanat/);
+            done();
+        }).catch(done);
+    });
+
+    it("Käyttäjä painaa lisää saat -linkkiä ja tallentaa sanat uuteen lauluun nimeltä Katson autiota autobaanaa",(done)=>{
+        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait("table")
+        .type("[name='alkulaulu']","").type("[name='alkulaulu']","Katson autiota autobaanaa")
+        .click("table  tr:first-child td:last-child")
+        .click(".sideroller a")
+        .type(".sideroller textarea", "Taas saavuin vanhaan autokahvilaan.\n\nSe ennen viimeistä kierrosta laalaalaa..\n\nLaalaalaa.").wait(500)
+        .click(".sideroller button").wait(".versedata").wait(300)
+        .evaluate(function(){
+            return document.querySelector(".versedata").textContent;
+        })
+        .then((versedata)=>{
+            assert.match(versedata,/Taas saavuin vanhaan/);
+            done();
+        }).catch(done);
+    });
+
 });
 
 

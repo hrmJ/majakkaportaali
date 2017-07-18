@@ -78,7 +78,11 @@ class SongData{
      *
      */
     public function ProcessEditedLyrics($title, $verses){
-        $row = $this->con->q("UPDATE songdata SET verses = :versedata WHERE title = :giventitle",Array("giventitle"=>$title, "versedata"=>$verses),"none");
+        $existingdata = $this->con->q("SELECT title FROM songdata WHERE title = :giventitle",Array("giventitle"=>$title),"row");
+        if(!$existingdata)
+           $this->con->q("INSERT INTO  songdata (title, verses) VALUES (:giventitle, :versedata)",Array("giventitle"=>$title, "versedata"=>$verses),"none");
+        else
+            $this->con->q("UPDATE songdata SET verses = :versedata WHERE title = :giventitle",Array("giventitle"=>$title, "versedata"=>$verses),"none");
     }
 
 }
