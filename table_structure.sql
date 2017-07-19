@@ -1,8 +1,5 @@
 DROP DATABASE if EXISTS majakkaportaali;
-CREATE DATABASE majakkaportaali;
-USE majakkaportaali;
-
-
+CREATE DATABASE majakkaportaali; USE majakkaportaali; 
 --
 -- Table structure for table `seasons`
 --
@@ -82,3 +79,18 @@ CREATE TABLE songdata (
   PRIMARY KEY (id)
 ) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
 
+
+--
+-- Table structure for table `liturgicalsongs`
+--
+
+CREATE TABLE liturgicalsongs (
+  id int(10) unsigned NOT NULL AUTO_INCREMENT,
+  title varchar(300) DEFAULT NULL,
+  titleseparator varchar(300) DEFAULT NULL,
+  role varchar(300) DEFAULT NULL,
+  composer varchar(300) DEFAULT NULL,
+  lyrics varchar(300) DEFAULT NULL,
+  verses text DEFAULT NULL,
+  PRIMARY KEY (id)
+) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
