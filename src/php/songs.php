@@ -46,12 +46,14 @@ class SongData{
      * @param boolean $checkfullname etsitäänkö merkkijonon osilla vai täsmällisellä merkkijonolla
      *
      */
-    public function OutputSongTitles($title, $checkfullname=false){
+    public function OutputSongTitles($title, $checkfullname=false, $by="title"){
         if ($checkfullname){
-            $this->titleslist = $this->con->q("SELECT title FROM songdata WHERE title = :giventitle ORDER by title",Array("giventitle"=>$title),"all_flat");
+            //Jos kyseessä Jumalan karitsa tai pyhä-hymnit, hae eri taulusta
+            $from = ($by=="id" ? "liturgicalsongs" : "songdata");
+            $this->titleslist = $this->con->q("SELECT title FROM $from WHERE $by = :giventitle ORDER by title",Array("giventitle"=>$title),"all_flat");
         }
         else{
-            $this->titleslist = $this->con->q("SELECT title FROM songdata WHERE title LIKE :giventitle ORDER by title",Array("giventitle"=>"%$title%"),"all_flat");
+            $this->titleslist = $this->con->q("SELECT title FROM songdata WHERE $by LIKE :giventitle ORDER by title",Array("giventitle"=>"%$title%"),"all_flat");
         }
         echo json_encode($this->titleslist);
     }
@@ -62,9 +64,9 @@ class SongData{
      * @param string $title laulun tarkka nimi
      *
      */
-    public function OutputSongInfo($title){
-        
-        $row = $this->con->q("SELECT title, verses FROM songdata WHERE title = :giventitle ORDER by title",Array("giventitle"=>$title),"row");
+    public function OutputSongInfo($title, $by){
+        $from = ($by=="id" ? "liturgicalsongs" : "songdata");
+        $row = $this->con->q("SELECT title, verses FROM $from WHERE $by = :giventitle ORDER by title",Array("giventitle"=>$title),"row");
         $this->songcontent = Array("title"=>$row["title"],"verses"=>$row["verses"]);
         echo json_encode($this->songcontent);
     }
@@ -77,12 +79,13 @@ class SongData{
      * @param string $verses kahdella rivivälillä toisistaan erotetut laulujen sanat
      *
      */
-    public function ProcessEditedLyrics($title, $verses){
-        $existingdata = $this->con->q("SELECT title FROM songdata WHERE title = :giventitle",Array("giventitle"=>$title),"row");
+    public function ProcessEditedLyrics($title, $verses, $by){
+        $from = ($by=="id" ? "liturgicalsongs" : "songdata");
+        $existingdata = $this->con->q("SELECT title FROM $from WHERE $by = :giventitle",Array("giventitle"=>$title),"row");
         if(!$existingdata)
            $this->con->q("INSERT INTO  songdata (title, verses) VALUES (:giventitle, :versedata)",Array("giventitle"=>$title, "versedata"=>$verses),"none");
         else
-            $this->con->q("UPDATE songdata SET verses = :versedata WHERE title = :giventitle",Array("giventitle"=>$title, "versedata"=>$verses),"none");
+            $this->con->q("UPDATE $from SET verses = :versedata WHERE $by = :giventitle",Array("giventitle"=>$title, "versedata"=>$verses),"none");
     }
 
 }

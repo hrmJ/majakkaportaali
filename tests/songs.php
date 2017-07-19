@@ -47,6 +47,20 @@ class SongListTest extends TestCase
 
     }
 
+
+
+    public function testJkMenu()
+    {
+        $select = new Select($this->templatepath, 
+            $this->con->q("SELECT CONCAT(title, titleseparator) FROM liturgicalsongs WHERE role=:role ORDER by ID",Array("role"=>"jumalan_karitsa"),"all"), "Valitse Jumalan karitsa -hymnin versio",
+            "Valitse Jumalan karitsa -hymnin versio",
+            "Valitse Jumalan karitsa -hymnin versio",
+            $valuedata=$this->con->q("SELECT id FROM liturgicalsongs WHERE role=:role ORDER by ID",Array("role"=>"jumalan_karitsa"),"all_flat"));
+        $this->songlistcontent->Set("jkmenu", $select->Output());
+        $this->layout->Set("content", $this->songlistcontent->Output());
+        $this->assertRegExp('/<option.*Jumalan karitsa \(/', $this->layout->Output());
+    }
+
     public function testSaveSongData()
     {
         $id = 2;
@@ -117,6 +131,7 @@ class SongListTest extends TestCase
         $songs->OutputSongInfo("Virsi 001");
         $this->assertRegExp('/TAAvetin POIKA/', $songs->songcontent["verses"]);
     }
+
 
 }
 

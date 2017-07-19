@@ -8,7 +8,7 @@
             <table>
                 <thead></thead>
                 <tbody>
-                [@singlesongs]
+                    [@singlesongs]
                 </tbody>
             </table>
 
@@ -16,7 +16,7 @@
             <table>
                 <thead></thead>
                 <tbody>
-                [@worshipsongs]
+                    [@worshipsongs]
                 </tbody>
             </table>
             <div class="multisongs ws"><input type="button" class="increaser" value="+"> <input type="button" class="decreaser" value="-"></div></div>
@@ -25,16 +25,29 @@
             <table>
                 <thead></thead>
                 <tbody>
-                [@communionsongs]
+                    [@communionsongs]
                 </tbody>
             </table>
             <div class="multisongs com"><input type="button" class="increaser" value="+"> <input type="button" class="decreaser" value="-"></div>
 
             <h3>Liturgiset</h3>
+            <p>Valitse Jumalan karitsa ja Pyhä-hymnin versio. Jos haluat käyttää jotakin
+            laulua, joka ei ole listassa, valitse kohta
+            "jokin muu" ja kirjoita laulun nimi ja
+            tarvittaessa sanat.</p>
             <table>
                 <thead></thead>
                 <tbody>
-                [@liturg]
+                    <tr>
+                        <td>Jumalan karitsa</td>
+                        <td>[@jkmenu]</td>
+                        <td class="lyricsindicator"></td>
+                    </tr>
+                    <tr>
+                        <td>Pyhä-hymni</td>
+                        <td>[@pyhmenu]</td>
+                        <td class="lyricsindicator"></td>
+                    </tr>
                 </tbody>
             </table>
 
@@ -47,3 +60,6 @@
         <div class='versedata'></div>
     </article>
 </section>
+
+
+

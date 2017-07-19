@@ -196,4 +196,9 @@ describe("Sanojen katselu ja lisääminen",function(){
 
 });
 
+describe.only("Liturgiset laulut", function(){
+  this.timeout( 20000 );
+    it("Käyttäjä klikkaa pudotusvalikkoa valitakseen Jumalan Karitsa -hymin"),(done)=>{
+    }
+});
 

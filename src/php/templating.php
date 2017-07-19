@@ -62,6 +62,22 @@ class Template{
         return $output;
     }
 
+    /**
+     *
+     * Yhdistää esimerkiksi taulukon solut tai listan rivit ja palauttaa
+     * taulukon/listan merkkijonona
+     *
+     * @return string taulukko merkkijonona
+     *
+     */
+    public function OutputRows(){
+        $output = "";
+        foreach($this->rows as $row){
+            $output .= "\n" . $row->Output();
+        }
+        return $output;
+    }
+
 }
 
 /**
@@ -248,6 +264,8 @@ class Select extends Template{
     public function __construct($path, $optiondata, $selected, $label, $id="", $valuedata=Array()){
         parent::__construct("$path/select.tpl");
         $optiondata = array_merge(Array(Array($label),Array("------------")), $optiondata);
+        if($valuedata)
+            $valuedata = array_merge(Array("",""), $valuedata);
         $options="";
         foreach($optiondata as $key=>$option){
             $tpl = new Template("$path/option.tpl");
@@ -280,7 +298,7 @@ class Submit extends Template{
     /**
      *
      * @param string $path polku templates-kansioon
-     * @param array $name elementin nimi
+     * @param string $name elementin nimi
      * @param string $value Value-attribuutiin teksti
      * @param string $class css-luokka
      * @param boolean $output tulostetaanko heti
@@ -294,6 +312,37 @@ class Submit extends Template{
     }
 
 }
+
+/**
+ *
+ * Taulukko yksittäisen messun responsibilitynkantajien kuvaamista varten.
+ *
+ * @param string $type taulukon tyyppi
+ *
+ */
+class UiMenu extends Template{
+
+    /**
+     *
+     * Jquery Ui:n menu-widgetin mukainen menupohja
+     *
+     * @param string $path polku templates-kansioon
+     * @param array $data elementit, jotka kuuluvat menuun
+     *
+     */
+    public function __construct($path, $data){
+        parent::__construct("$path/uimenu.tpl");
+        foreach($data as $item){
+            $tpl = new Template("$path/uimenurow.tpl");
+            $tpl->Set("item", $item);
+            $this->rows[] = $tpl;
+        }
+        $this->Set("menuitems",$this->OutputRows());
+    }
+
+
+}
+
 
 ?>
 

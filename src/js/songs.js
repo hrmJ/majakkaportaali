@@ -9,7 +9,6 @@ $(document).ready (function(){
     //Polku ajax-skriptit sisältävään kansioon
     var loaderpath = "php/loaders";
 
-
     /**
      * Tarkkailee tekstikenttiä ja katsoo, onko tietokannassa laulua, jonka nimi vastaisi tekstikentän arvoa.
      */
@@ -18,11 +17,12 @@ $(document).ready (function(){
         if(val==undefined && event.hasOwnProperty("target")) val = event.target.value;
         //Ota talteen tekstikentän sisältävä solu riippuen siitä, kutsuttiinko each-loopista vai ei
         var $td = event.hasOwnProperty("target") ? $(event.target).parent() : event.parent();
+        //Jos kyseessä pudostusvalikko eli liturginen laulu, hae id:n perusteella
+        var queryparams = $td.find("select").length>0 ? {songname:val,fullname:"yes",byid:"yes"} : {songname:val,fullname:"yes"};
         //Säädä viereisen solun teksti riippuen siitä, onko laulua tietokannassa vai ei
-        $.getJSON(loaderpath + "/songtitles.php",{songname:val,fullname:"yes"},function(data){
+        $.getJSON(loaderpath + "/songtitles.php",queryparams,function(data){
             if(data.length==0) $td.next(".lyricsindicator").text("Lisää sanat");
-            else $td.next(".lyricsindicator").text("Katso sanoja");
-            if (val=="") $td.next(".lyricsindicator").text("");
+            else $td.next(".lyricsindicator").text("Katso sanoja"); if ((val=="") || val.match(/^(Valitse |--------)/)) $td.next(".lyricsindicator").text("");
         });
     } 
 
@@ -32,15 +32,16 @@ $(document).ready (function(){
      * Lataa sanat annetun otsikon perusteella
      *
      */
-
-    function LoadLyricsByTitle(title){
+    function LoadLyricsByTitle(title, byid){
             $(".sideroller").find("button").remove();
-            $.getJSON(loaderpath + "/songcontent.php",
-                    {songname:title},
+            var queryparams = {songname:title};
+            if(byid) queryparams = {songname:title,byid:"yes"};
+            $.getJSON(loaderpath + "/songcontent.php", queryparams,
                     function(data){
                         $(".sideroller > h2").text(data.title);
                         verses = data.verses.split(new RegExp(/\n{2,}/));
                         $(".versedata").html("");
+                        if(byid) $(".sideroller h2").attr("id",title);
                         $.each(verses,function(i,verse){
                             $(".versedata").append($("<p></p>").html(verse.replace(/\n{1}/g,"<br>")));
                         });
@@ -53,9 +54,15 @@ $(document).ready (function(){
      */
     function ShowLyricsWindow(){
         var songtitle = $(this).parent().find("[type='text']").val()
+        var byid = false;
+        if(!songtitle){
+            var songtitle = $(this).parent().find("select").val()
+            byid = true;
+        }
+
         if($(this).text()!="") $(".sideroller").show();
         if($(this).text()=="Katso sanoja"){
-            LoadLyricsByTitle(songtitle);
+            LoadLyricsByTitle(songtitle, byid);
         }
         else if($(this).text()=="Lisää sanat"){
             AddLyrics(songtitle);
@@ -96,13 +103,19 @@ $(document).ready (function(){
      *
      */
     function SaveLyrics(){
-            console.log("moro");
-            $.post(loaderpath + "/savelyrics.php",{
-                songname:$(".sideroller > h2").text(),
-                editedverses:$("[name='editedsong']").val()
-            }).done(function(data){
-                LoadLyricsByTitle($(".sideroller > h2").text());
-                $(".songinput").each(function(){CheckIfLyricsExist($(this),$(this).val())});
+            var queryparams = {songname:$(".sideroller > h2").text(),
+                               editedverses:$("[name='editedsong']").val() };
+            var byid=false;
+            if($(".sideroller h2").attr("id")){
+                console.log("moro");
+                queryparams = {songname:$(".sideroller h2").attr("id"),
+                               editedverses:$("[name='editedsong']").val(),
+                               byid:"yes"};
+                var byid=true;
+            }
+            $.post(loaderpath + "/savelyrics.php",queryparams).done(function(data){
+                LoadLyricsByTitle($(".sideroller > h2").text(), byid);
+                $(".songinput, select").each(function(){CheckIfLyricsExist($(this),$(this).val())});
             }
             );
     }
@@ -110,15 +123,16 @@ $(document).ready (function(){
     //Jquery UI:n autocomplete-pluginin asetukset laulujen nimien täydennystä varten
     var autocompsongtitle = {
                 source: function(request, response){ $.getJSON(loaderpath + "/songtitles.php",{songname:request.term},response);},
-                minLength: 2,
+                minLength: 0,
                 select: function(event,input){CheckIfLyricsExist(event, input.item.value);}};
 
     $(".songinput").autocomplete(autocompsongtitle);
-    $(".songinput").on("change paste keyup",CheckIfLyricsExist);
+    $(".songinput, select").on("change paste keyup",CheckIfLyricsExist);
     //Tarkista jo syötetyistä lauluista, onko niitä tietokannassa
-    $(".songinput").each(function(){CheckIfLyricsExist($(this),$(this).val())});
+    $(".songinput, select").each(function(){CheckIfLyricsExist($(this),$(this).val())});
     $(".lyricsindicator").click(ShowLyricsWindow);
     $(".sideroller").hide();
+    $(".menu").menu({position: { my: "bottom", at: "right-5 top+5" }});
     $(".sideroller > p > a").click(EditLyrics);
     $(".multisongs [type='button']").click(
         /**
