@@ -41,10 +41,12 @@ $songslistcontent->Set("action", "{$_SERVER['PHP_SELF']}?service_id=$id");
 
 $texts = $con->q("SELECT CONCAT(title, titleseparator) FROM liturgicalsongs WHERE role=:role ORDER by ID",Array("role"=>"jumalan_karitsa"),"all");
 $ids = $con->q("SELECT id FROM liturgicalsongs WHERE role=:role ORDER by ID",Array("role"=>"jumalan_karitsa"),"all_flat");
-$jkselect = new Select($templatepath, $texts, "Valitse Jumalan karitsa -hymnin versio", "Valitse Jumalan karitsa -hymnin versio", "Valitse Jumalan karitsa -hymnin versio", $valuedata=$ids);
+$jkselect = new Select($templatepath, $texts, "Valitse Jumalan karitsa -hymnin versio", "Valitse Jumalan karitsa -hymnin versio", "jkselect", $valuedata=$ids);
 $songslistcontent->Set("jkmenu", $jkselect->Output());
 
-$pyhaselect = new Select($templatepath, $con->q("SELECT CONCAT(title, titleseparator) FROM liturgicalsongs WHERE role=:role ORDER by ID",Array("role"=>"pyha"),"all"), "Valitse pyhä-hymnin versio","Valitse pyhä-hymnin versio");
+$texts = $con->q("SELECT CONCAT(title, titleseparator) FROM liturgicalsongs WHERE role=:role ORDER by ID",Array("role"=>"pyha"),"all");
+$ids = $con->q("SELECT id FROM liturgicalsongs WHERE role=:role ORDER by ID",Array("role"=>"pyha"),"all_flat");
+$pyhaselect = new Select($templatepath, $texts, "Valitse pyhä-hymnin versio","Valitse pyhä-hymnin versio","pyhselect",$valuedata=$ids);
 $songslistcontent->Set("pyhmenu", $pyhaselect->Output());
 
 $layout = new Template("$templatepath/layout.tpl");

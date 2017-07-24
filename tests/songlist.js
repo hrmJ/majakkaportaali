@@ -196,9 +196,49 @@ describe("Sanojen katselu ja lisääminen",function(){
 
 });
 
-describe.only("Liturgiset laulut", function(){
+describe("Liturgiset laulut", function(){
   this.timeout( 20000 );
-    it("Käyttäjä klikkaa pudotusvalikkoa valitakseen Jumalan Karitsa -hymin"),(done)=>{
-    }
+    it("Käyttäjä klikkaa pudotusvalikkoa valitakseen Jumalan Karitsa -hymniksi riemumessuversion. ",(done)=>{
+        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait("select")
+        .select("#jkselect", "10").wait(200)
+        .evaluate(function(){
+            return document.querySelector("#jkselect").options[document.querySelector("#jkselect").selectedIndex].textContent;
+        })
+        .then((title)=>{
+            assert.match(title,/iemumessu/);
+            done();
+        }).catch(done);
+    });
+
+    it("Käyttäjä klikkaa pudotusvalikkoa valitakseen pyhähymniksi virren 134. ",(done)=>{
+        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait("select")
+        .select("#pyhselect", "5").wait(200)
+        .evaluate(function(){
+            return document.querySelector("#pyhselect").options[document.querySelector("#pyhselect").selectedIndex].textContent;
+        })
+        .then((title)=>{
+            assert.match(title,/Virsi 134/);
+            done();
+        }).catch(done);
+    });
+
+
+    it("Käyttäjä katsoo virren 134 sanoja",(done)=>{
+        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait("select")
+        .select("#pyhselect", "5").wait(200)
+        .click(".pyhlyr").wait(".sideroller h2")
+        .evaluate(function(){
+            return document.querySelector(".sideroller h2").textContent;
+        })
+        .then((title)=>{
+            assert.match(title,/Virsi 134/);
+            done();
+        }).catch(done);
+    });
+
+    it("Käyttäjä muokkaa virren 134 sanoja, niin että ne sisältävät sanan KUKKULUURUU");
+    it("Käyttäjä lisää uuden laulun (Uusi hieno JK) Jumalan karitsa -hymniksi, lisää siihen sanat ja tallentaa.");
+    it("Uusi hieno JK on yksi vaihtoehdoista select-valitsimessa.");
+    it("Käyttäjä lisää uuden Pyhä-hymnin version jostakin jo olemassa olevasta laulusta (Pyhä ja puhdas vapahtaja)");
 });
 

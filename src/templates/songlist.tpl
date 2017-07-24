@@ -41,12 +41,12 @@
                     <tr>
                         <td>Jumalan karitsa</td>
                         <td>[@jkmenu]</td>
-                        <td class="lyricsindicator"></td>
+                        <td class="lyricsindicator jklyr"></td>
                     </tr>
                     <tr>
                         <td>Pyhä-hymni</td>
                         <td>[@pyhmenu]</td>
-                        <td class="lyricsindicator"></td>
+                        <td class="lyricsindicator pyhlyr"></td>
                     </tr>
                 </tbody>
             </table>
