@@ -10,7 +10,7 @@ const nightmare = new Nightmare({
 });
 
 
-describe.only("Perusnavigointi ", function(){
+describe("Perusnavigointi ", function(){
   this.timeout( 20000 );
     it("Käyttäjä klikkaa menuikonia ja valitsee 'Laulujen syöttö'");
   });
