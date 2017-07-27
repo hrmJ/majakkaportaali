@@ -11,6 +11,29 @@ simppeleillä web-tekniikoilla (css, html, php, js).
 
 Tässä perustiedot siitä, miten projektin saa käyntiin.
 
+## Kansiorakenne
+
+Juuri:
+
+- SRC-kansio
+- BUILD-kansio
+
+## GULP.js
+
+Asennus järjestelmänlaajuisesti
+
+    npm install gulp-cli -g
+
+Pluginit:
+
+    npm install gulp-newer --save-dev
+    npm install gulp-concat --save-dev
+    npm install gulp-deporder --save-dev
+    npm install event-stream --save-dev
+    npm install --save-dev gulp-ruby-sass
+
+
+
 ## SASS
 
 CSS-koodaus on tehty SASS-esiprosessoria ([](http://sass-lang.com/)) käyttäen.
