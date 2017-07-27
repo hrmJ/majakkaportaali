@@ -5,6 +5,7 @@
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <script src="js/jquery-3.2.1.min.js"></script>
 <link rel="stylesheet" href="js/jquery-ui-1.12.1.custom/jquery-ui.min.css">
+<link rel="stylesheet" href="stylesheets/main.css">
 <script src="js/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
 <script src="js/menus.js"></script>
 <script src=[@jsaddress]></script>
@@ -15,12 +16,13 @@
 
 <div class='container'>
     <nav>
-        <div class='sitemenu'>
+        <span class='hamburger hamburger-icon'></span>
+        <div class='dropdown'>
             <ul>
-            <li><div>Yleisnäkymä</div></li>
-            <li><div>Syötä lauluja</div></li>
-            <li><div>Ylläpito</div></li>
-            <li><div>Kirjaudu ulos</div></li>
+            <li>Yleisnäkymä</li>
+            <li>Syötä lauluja</li>
+            <li>Ylläpito</li>
+            <li>Kirjaudu ulos</li>
             </ul> 
         </div>
     </nav>

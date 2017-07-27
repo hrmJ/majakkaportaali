@@ -4,7 +4,8 @@
   "description": "Project for organizing church service volunteers",
   "dependencies": {
     "nightmare": "^2.10.0",
-    "nightwatch": "^0.9.15"
+    "nightwatch": "^0.9.15",
+    "simple-line-icons": "^2.4.1"
   },
   "devDependencies": {
     "mocha": "^3.4.2"

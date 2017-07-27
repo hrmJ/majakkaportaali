@@ -11,6 +11,22 @@ simppeleillä web-tekniikoilla (css, html, php, js).
 
 Tässä perustiedot siitä, miten projektin saa käyntiin.
 
+## SASS
+
+CSS-koodaus on tehty SASS-esiprosessoria ([](http://sass-lang.com/)) käyttäen.
+SASSin voi asentaa ruby-versiona:
+
+    gem install sass
+
+Vaatii tarpeeksi uuden Rubyn (>2.2).
+
+Kun sass on asennettu, sen voi laittaa automaattisesti päivittämään muutokset CSS:ään:
+
+    sass --watch src/sass/:src/stylesheets
+
+## Ikonikuvakkeet
+
+
 ## Projektikansio localhostille
 
 Kannattaa kloonata projektikansio jonnekin aivan muualle ja luoda symbolinen linkki

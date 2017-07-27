@@ -1,0 +1,33 @@
+body {
+  padding: 0px;
+  margin: 0px; }
+
+.container {
+  position: relative; }
+
+nav {
+  position: relative;
+  height: 40px;
+  width: 100%;
+  background: #000000; }
+  nav .dropdown {
+    margin-top: 40px; }
+
+.hamburger-icon {
+  cursor: pointer;
+  border: 0px;
+  position: relative;
+  margin-left: 10px;
+  padding-left: 43.75px; }
+
+.hamburger-icon:before {
+  content: "";
+  position: absolute;
+  top: 8.75px;
+  left: 0;
+  width: 35px;
+  height: 4.375px;
+  border-top: 13.125px double #ffffff;
+  border-bottom: 4.375px solid #ffffff; }
+
+/*# sourceMappingURL=main.css.map */

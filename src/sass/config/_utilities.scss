@@ -1,0 +1,12 @@
+$rootpath: '../';
+$paths: ('icons':$rootpath + "assets/images/icons/");
+
+$hamburger: map-get($paths,"icons") + "hamburger.svg";
+
+$simple-line-font-path        : "";
+$simple-line-font-family      : "desired-name-font-family";
+$simple-line-icon-prefix      : "prefix-";
+
+@mixin pointer{
+    cursor: pointer;
+}

@@ -1,0 +1,15 @@
+
+nav{
+    position:relative;
+    height: $navheight;
+    width:100%;
+    background:$navbg;
+
+    .dropdown{
+        margin-top: $navheight;
+    }
+}
+
+
+@include hamburger-icon($navfg, $navheight - 5px);
+
