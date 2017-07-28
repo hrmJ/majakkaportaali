@@ -1,4 +1,4 @@
-<nav>[@select]</nav>
+<div>[@select]</div>
 <section>
     <form name="listform" action="[@action]" method="POST">
         <table>

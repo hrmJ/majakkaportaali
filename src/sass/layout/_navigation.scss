@@ -7,9 +7,37 @@ nav{
 
     .dropdown{
         margin-top: $navheight;
+        display: none;
+    }
+
+    li{
+        list-style-type:none;
     }
 }
 
 
 @include hamburger-icon($navfg, $navheight - 5px);
 
+
+@media only screen and (min-width: 920px){
+
+    nav{
+        .hamburger{
+            display:none;
+        }
+
+        li {
+            //Näytä menu avattuna vaakasuunnassa, jos näyttö tarpeeksi iso
+            display: inline;
+        }
+
+        li + li {
+            margin-left: 10px;
+        }
+
+        .dropdown{
+            margin-top:0px;
+            display: block;
+        }
+    }
+}

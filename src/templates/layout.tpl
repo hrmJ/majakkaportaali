@@ -14,6 +14,9 @@
 <body>
 
 <div class='container'>
+    <header>
+        <h1>Majakkaportaali</h1>
+    </header>
     <nav>
         <span class='hamburger hamburger-icon'></span>
         <div class='dropdown'>
@@ -25,9 +28,6 @@
             </ul> 
         </div>
     </nav>
-    <header>
-        <h1>Majakkaportaali</h1>
-    </header>
     <main>
     [@content]
     </main>

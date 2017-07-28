@@ -2,7 +2,6 @@
    <article>
         <form name="songlistform" action="[@action]" method="POST">
             <h2>Majakkamessun laulut</h2>
-            <hr>
 
             <h3>Yksittäiset laulut</h3>
             <table>
@@ -19,7 +18,7 @@
                     [@worshipsongs]
                 </tbody>
             </table>
-            <div class="multisongs ws"><input type="button" class="increaser" value="+"> <input type="button" class="decreaser" value="-"></div></div>
+            <div class="multisongs ws"><input type="button" class="increaser" value="+"> <input type="button" class="decreaser" value="-"></div>
 
             <h3>Ehtoollislaulut</h3>
             <table>
@@ -50,7 +49,6 @@
                     </tr>
                 </tbody>
             </table>
-
             <div><input type="submit" name="savesongs" value="Tallenna"></div>
         </form>
     </article> 

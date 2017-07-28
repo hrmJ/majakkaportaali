@@ -3,15 +3,29 @@ body {
   margin: 0px; }
 
 .container {
-  position: relative; }
+  display: flex;
+  flex-flow: row wrap;
+  width: 95%;
+  max-width: 1180px;
+  margin-left: auto;
+  margin-right: auto; }
 
+header {
+  display: none; }
+
+@media only screen and (min-width: 920px) {
+  header {
+    display: block; } }
 nav {
   position: relative;
   height: 40px;
   width: 100%;
-  background: #000000; }
+  background: #ffffff; }
   nav .dropdown {
-    margin-top: 40px; }
+    margin-top: 40px;
+    display: none; }
+  nav li {
+    list-style-type: none; }
 
 .hamburger-icon {
   cursor: pointer;
@@ -27,5 +41,16 @@ nav {
   left: 0;
   width: 35px;
   height: 4.375px;
-  border-top: 13.125px double #ffffff;
-  border-bottom: 4.375px solid #ffffff; }
+  border-top: 13.125px double #000000;
+  border-bottom: 4.375px solid #000000; }
+
+@media only screen and (min-width: 920px) {
+  nav .hamburger {
+    display: none; }
+  nav li {
+    display: inline; }
+  nav li + li {
+    margin-left: 10px; }
+  nav .dropdown {
+    margin-top: 0px;
+    display: block; } }
