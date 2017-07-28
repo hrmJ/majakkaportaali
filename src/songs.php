@@ -52,6 +52,7 @@ $songslistcontent->Set("pyhmenu", $pyhaselect->Output());
 $layout = new Template("$templatepath/layout.tpl");
 $layout->Set("title", "Laulujen syöttö majakkamesuun x.x.xxxx");
 $layout->Set("content", $songslistcontent->Output());
+$layout->Set("byline", "");
 
 
 echo $layout->Output();

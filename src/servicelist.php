@@ -47,6 +47,7 @@ $slist->Set("submit", $subval);
 $layout = new Template("$templatepath/layout.tpl");
 $layout->Set("title", "Majakkaportaali");
 $layout->Set("content", $slist->Output());
+$layout->Set("byline", "Majakkamessut kaudelle xxxx 2017");
 
 echo $layout->Output();
 

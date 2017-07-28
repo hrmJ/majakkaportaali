@@ -29,6 +29,7 @@ $slist->Set("action", $_SERVER["PHP_SELF"] . "?id=" . $_GET["id"]);
 $layout = new Template("$templatepath/layout.tpl");
 $layout->Set("title", "Majakkamessu " . FormatDate($servicemeta["servicedate"]) . ": " . $servicemeta["theme"]);
 $layout->Set("content", $slist->Output());
+$layout->Set("byline", "");
 
 echo $layout->Output();
 

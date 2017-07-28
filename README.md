@@ -24,6 +24,10 @@ Asennus järjestelmänlaajuisesti
 
     npm install gulp-cli -g
 
+Sitten lokaalisti:
+
+    npm install gulp --save-dev
+
 Pluginit:
 
     npm install gulp-newer --save-dev
@@ -31,7 +35,7 @@ Pluginit:
     npm install gulp-deporder --save-dev
     npm install event-stream --save-dev
     npm install --save-dev gulp-ruby-sass
-
+    npm install --save-dev gulp-autoprefixer
 
 
 ## SASS
@@ -42,6 +46,11 @@ SASSin voi asentaa ruby-versiona:
     gem install sass
 
 Vaatii tarpeeksi uuden Rubyn (>2.2).
+
+    sudo apt-add-repository ppa:brightbox/ruby-ng
+    sudo apt-get update
+    sudo apt-get install ruby2.3 ruby2.3-dev
+
 
 Kun sass on asennettu, sen voi laittaa automaattisesti päivittämään muutokset CSS:ään:
 

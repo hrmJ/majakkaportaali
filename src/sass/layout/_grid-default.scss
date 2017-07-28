@@ -1,0 +1,35 @@
+// Perusasettelu ja elementtien rivitys mobile first -periaatteella
+
+body{
+    padding:0px;
+    margin:0px;
+    background: $lightbg;
+}
+
+
+header{
+    display:none;
+}
+
+main{
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+}
+
+
+.container{
+    display: flex;
+    flex-flow: column wrap;
+    width:100%;
+    max-width:1180px;
+    margin-left: auto;
+    margin-right: auto;
+    background: $contbg;
+    min-height: 100vh;
+}
+
+.byline{
+    display:none;
+}
+

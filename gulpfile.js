@@ -7,6 +7,7 @@ var
     deporder = require('gulp-deporder'),
     sass = require('gulp-ruby-sass'),
     es = require('event-stream'),
+    autoprefixer = require('gulp-autoprefixer'),
 
     //development mode?
     devBuild = (process.env.NODE_ENV !== 'production'),
@@ -31,6 +32,10 @@ gulp.task("phputils",function(){
     return gulp.src(folder.src + "php/**/*").pipe(newer(out.phputils)).pipe(gulp.dest(out.phputils));
 });
 
+gulp.task("assets",function(){
+    return gulp.src(folder.src + "assets/**/*").pipe(newer(folder.build + "assets/")).pipe(gulp.dest(folder.build + "assets/"));
+});
+
 gulp.task("phpmain",function(){
     gulp.src(folder.src + "*.php").pipe(newer(out.phpmain)).pipe(gulp.dest(out.phpmain));
 });
@@ -49,6 +54,7 @@ gulp.task("js",function(){
 });
 
 gulp.task("css",function(){
+        gulp.src(folder.src + "sass/**/*.scss")
     	sass(folder.src + "sass/**/*.scss")
 		.on('error', sass.logError)
 		.pipe(gulp.dest(folder.build + "stylesheets/"))
@@ -61,8 +67,9 @@ gulp.task("watch",function(){
     gulp.watch(folder.src + "templates/**/*",["templates"]);
     gulp.watch(folder.src + "js/*.js",["js"]);
     gulp.watch(folder.src + "sass/**/*",["css"]);
+    gulp.watch(folder.src + "assets/**/*",["assets"]);
 
 });
 
-gulp.task('run',['phputils','phpmain','templates','js','css','vendors']);
+gulp.task('run',['phputils','phpmain','templates','js','css','vendors','assets']);
 gulp.task('default',['run','watch']);

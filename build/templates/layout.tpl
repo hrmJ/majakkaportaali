@@ -28,6 +28,7 @@
             </ul> 
         </div>
     </nav>
+    <div class="byline">[@byline]</div>
     <main>
     [@content]
     </main>
