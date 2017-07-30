@@ -1,0 +1,14 @@
+.form-input-container{
+    select{
+        width:100%;
+    }
+}
+
+div + .form-input-container{
+    margin-top:2em;
+}
+
+@media only screen and (min-width: 920px){
+    .form-input-container{
+    }
+}
