@@ -10,15 +10,10 @@ main {
   display: flex;
   flex-flow: column;
   align-items: stretch; }
-  main form {
+  main > * {
     width: 100%;
     display: flex;
     justify-content: center; }
-  main > div, main > section {
-    display: flex;
-    flex-flow: row;
-    justify-content: center;
-    margin-top: 2em; }
 
 .byline {
   display: none; }
@@ -31,7 +26,8 @@ main {
   margin-left: auto;
   margin-right: auto;
   background: #ffffff;
-  min-height: 100vh; }
+  min-height: 100vh;
+  padding-bottom: 3em; }
 
 @media only screen and (min-width: 920px) {
   header {
@@ -68,6 +64,8 @@ nav {
     display: none; }
   nav li {
     list-style-type: none; }
+    nav li a {
+      color: #ffffff; }
 
 .hamburger-icon {
   cursor: pointer;
@@ -96,6 +94,12 @@ nav {
   nav .dropdown {
     margin-top: 0px;
     display: block; } }
+.form-input-container select {
+  width: 100%; }
+
+div + .form-input-container {
+  margin-top: 2em; }
+
 .data-container {
   display: flex;
   flex-flow: column;
@@ -115,6 +119,11 @@ nav {
     padding-right: 0.5em; }
   .datarow + .datarow {
     margin-top: 0.7em; }
+
+.datarow:hover {
+  cursor: pointer;
+  background: #b40000;
+  color: #ffffff; }
 
 .data-wide {
   flex: 0 1 80%; }

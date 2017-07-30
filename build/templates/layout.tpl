@@ -21,8 +21,8 @@
         <span class='hamburger hamburger-icon'></span>
         <div class='dropdown'>
             <ul>
-            <li>Yleisnäkymä</li>
-            <li>Syötä lauluja</li>
+            <li><a href="servicelist.php">Yleisnäkymä</a></li>
+            <li><a href="songs.php">Syötä lauluja</a></li>
             <li>Ylläpito</li>
             <li>Kirjaudu ulos</li>
             </ul> 

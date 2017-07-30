@@ -8,3 +8,7 @@ $contbg: #ffffff;
 $rowstripe:grey;
 $datarowbg: #dbdbdb;
 
+@mixin datahiglight{
+    background: lighten($navbg,10%);
+    color: $navfg;
+}

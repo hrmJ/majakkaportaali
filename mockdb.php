@@ -65,6 +65,10 @@ $con->q("INSERT INTO services (servicedate, theme) VALUES ('2017-03-06', 'Neljä
 $con->q("INSERT INTO services (servicedate, theme) VALUES ('2017-03-13', 'Viides messu')",Array(),"none");
 $con->q("INSERT INTO services (servicedate, theme) VALUES ('2017-03-20', 'Kuudes messu')",Array(),"none");
 
+$con->q("INSERT INTO services (servicedate, theme) VALUES ('2017-04-02', 'Huhtikuussa messuilla on hirveän')",Array(),"none");
+$con->q("INSERT INTO services (servicedate, theme) VALUES ('2017-04-09', 'Pitkät nimet ja tauti sentään kun ne nimet voi olla hiirveän piitkiäääää! Onnetonta!')",Array(),"none");
+$con->q("INSERT INTO services (servicedate, theme) VALUES ('2017-04-16', 'Kuudes messu c')",Array(),"none");
+$con->q("INSERT INTO services (servicedate, theme) VALUES ('2017-04-23', 'Kuudes messu d')",Array(),"none");
 
 
 

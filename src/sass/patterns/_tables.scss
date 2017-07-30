@@ -5,7 +5,7 @@
     display:flex;
     flex-flow:column;
     align-items:stretch;
-    flex: 0 0 90%;
+    flex: 0 0 $tablewidth;
     font-size:$datafontsize;
 }
 
@@ -25,7 +25,11 @@
     + .datarow{
         margin-top:0.7em;
     }
+}
 
+.datarow:hover{
+    @include pointer;
+    @include datahiglight;
 }
 
 .data-wide{
@@ -38,7 +42,8 @@
  
 @media only screen and (min-width: 920px){
     .data-container{
-        flex: 0 0 70%;
+        //Enemmän marginaalia isoille näytöille
+        flex: 0 0 $tablewidth - 20%;
     }
 }
 

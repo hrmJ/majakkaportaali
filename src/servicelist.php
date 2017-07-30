@@ -38,9 +38,13 @@ $slist->Set("select", $select->Output());
 if($filterby!="Yleisnäkymä"){
     $sub = new Submit($templatepath, "filteredchanges","Tallenna","");
     $subval = $sub->Output();
+    $slist->Set("help", "Muista tallentaa muutokset sivun alalaidassa olevalla Tallenna-painikkeella. Pääset takaisin alkunäkymään valitsemalla pudotusvalikosta
+        kohdan 'yleisnäkymä'.");
 }
 else{
     $subval = "";
+    $slist->Set("help", "Klikkaa päivämäärää, niin siirryt tarkempaan messukohtaiseen näkymään. Alla olevasta
+        pudotusvalikosta voit näyttää joka messun vain tietyn vastuun osalta.");
 }
 $slist->Set("submit", $subval);
 

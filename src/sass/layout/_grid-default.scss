@@ -15,18 +15,10 @@ main{
     display: flex;
     flex-flow: column;
     align-items: stretch;
-    form{
-        //Form-tagit on syötettävä johonkin, mutta ne häiritsevät elementtien
-        //järjestelyä
+    > * {
         width:100%;
         display:flex;
         justify-content: center;
-    }
-    >div, >section{
-        display:flex;
-        flex-flow:row;
-        justify-content: center;
-        margin-top:2em;
     }
 }
 
@@ -44,6 +36,7 @@ main{
     margin-right: auto;
     background: $contbg;
     min-height: 100vh;
+    padding-bottom:3em;
 }
 
 
