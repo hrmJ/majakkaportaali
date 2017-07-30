@@ -46,6 +46,7 @@ $slist->Set("submit", $subval);
 
 #Sivun yleinen ulkoasu ja tiedot
 $layout = new Template("$templatepath/layout.tpl");
+$layout->Set("bodyclass", "servicelist");
 $layout->Set("title", "Majakkaportaali");
 $layout->Set("content", $slist->Output());
 $layout->Set("byline", "Majakkamessut kaudelle xxxx 2017");

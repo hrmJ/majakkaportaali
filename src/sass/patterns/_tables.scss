@@ -13,12 +13,13 @@
     display:flex;
     flex-flow: row nowrap;
     justify-content: space-between;
-    flex: 0 0 2em;
-    padding:0.5em;
+    flex: 0 0 3em;
+    align-items: center;
     background: $datarowbg;
     
-    div{
-        padding:0.5em;
+    div:first-child{
+        padding-left: 0.5em;
+        padding-right: 0.5em;
     }
 
     + .datarow{
@@ -28,7 +29,7 @@
 }
 
 .data-wide{
-    flex: 0 0 80%;
+    flex: 0 1 80%;
 }
 
 .data-narrow{

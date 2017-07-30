@@ -50,6 +50,7 @@ $pyhaselect = new Select($templatepath, $texts, "Valitse pyhä-hymnin versio","V
 $songslistcontent->Set("pyhmenu", $pyhaselect->Output());
 
 $layout = new Template("$templatepath/layout.tpl");
+$layout->Set("bodyclass", "songs");
 $layout->Set("title", "Laulujen syöttö majakkamesuun x.x.xxxx");
 $layout->Set("content", $songslistcontent->Output());
 $layout->Set("byline", "");

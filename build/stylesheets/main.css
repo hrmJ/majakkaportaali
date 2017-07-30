@@ -107,16 +107,17 @@ nav {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
-  flex: 0 0 2em;
-  padding: 0.5em;
+  flex: 0 0 3em;
+  align-items: center;
   background: #dbdbdb; }
-  .datarow div {
-    padding: 0.5em; }
+  .datarow div:first-child {
+    padding-left: 0.5em;
+    padding-right: 0.5em; }
   .datarow + .datarow {
     margin-top: 0.7em; }
 
 .data-wide {
-  flex: 0 0 80%; }
+  flex: 0 1 80%; }
 
 .data-narrow {
   flex: 0 0 10%; }

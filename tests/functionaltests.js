@@ -2,14 +2,14 @@ var Nightmare = require('nightmare');
 var assert = require('chai').assert; 
 
 const nightmare = new Nightmare({
-  show: false,
+  show: true,
   typeInterval: 20,
   pollInterval: 50,
   waitTimeout: 10000 // in ms
 });
 
 var waitsmall = 0;
-var waitbig = 0;
+var waitbig = 500;
 
 describe.only("Messulistasivu", function(){
   this.timeout( 20000 );
@@ -31,12 +31,12 @@ describe.only("Messulistasivu", function(){
       }).catch(done);
   });
 
-  it('Käyttäjä suodattaa messulistanäkymää niin, että siinä näkyy vain joka viikon juontaja.', (done) => {
+  it.only('Käyttäjä suodattaa messulistanäkymää niin, että siinä näkyy vain joka viikon juontaja.', (done) => {
     nightmare
       .goto('http://localhost/majakkaportaali/servicelist.php')
       .wait("select").wait(waitbig)
       .select("select", "juontaja").wait(waitbig)
-      .wait("[name=filteredchanges]")
+      .wait("[name=filteredchanges]").wait(waitbig)
       .evaluate(function(){
           return document.querySelector("[name='id_2']").value;
       })
@@ -80,6 +80,20 @@ describe.only("Messulistasivu", function(){
         done();
       }).catch(done);
   });
+
+    it('Ennen helmikuun messuja on otsikko "Helmikuu"'), (done) => {
+        nightmare
+          .goto('http://localhost/majakkaportaali/servicelist.php')
+          .wait("#serviceid_3").wait(waitbig)
+          .wait("h2").wait(waitbig)
+          .evaluate(function(){
+              return document.title;
+          })
+          .then((title) => {
+            assert.match(title, /Majakkamessu/);
+            done();
+          }).catch(done);
+    )};
 
 });
 
