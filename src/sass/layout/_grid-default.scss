@@ -33,3 +33,14 @@ main{
     display:none;
 }
 
+.datarow{
+    display:flex;
+    flex-flow: row wrap;
+    div:first-child{
+        flex: 1;
+    }
+    div:nth-child(2){
+        flex: 3;
+    }
+}
+ 

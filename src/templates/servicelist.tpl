@@ -1,12 +1,7 @@
 <div>[@select]</div>
 <section>
     <form name="listform" action="[@action]" method="POST">
-        <table>
-            <thead></thead>
-            <tbody>
-                [@table]
-            </tbody>
-        </table>
+        <section>[@table]</section>
         <div>[@submit]</div>
     </form>
 </section>

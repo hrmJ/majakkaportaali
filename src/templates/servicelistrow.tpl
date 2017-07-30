@@ -1,4 +1,4 @@
-<tr id="serviceid_[@id]">
-    <td>[@category]</td>
-    <td>[@value]</td>
-</tr>
+<div class="datarow" id="serviceid_[@id]">
+    <div>[@category]</div>
+    <div>[@value]</div>
+</div>

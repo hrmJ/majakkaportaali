@@ -11,16 +11,16 @@ const nightmare = new Nightmare({
 var waitsmall = 0;
 var waitbig = 0;
 
-describe("Messulistasivu", function(){
+describe.only("Messulistasivu", function(){
   this.timeout( 20000 );
 
 
   it('Käyttäjä näkee taulukon ja sen riveillä messujen päivämääriä ja aiheita', (done) => {
     nightmare
       .goto('http://localhost/majakkaportaali/servicelist.php')
-      .wait("table").wait(waitbig)
+      .wait(".datarow").wait(waitbig)
       .evaluate(function(){
-          var tds = document.querySelector("table tr").children;
+          var tds = document.querySelector(".datarow").children;
           return {"date": tds[0].textContent,
                   "theme": tds[1].textContent};
       })
@@ -50,7 +50,7 @@ describe("Messulistasivu", function(){
   it('Käyttäjä suodattaa näkyviin vain juontajat ja vaihtaa juontajan messuun 2', (done) => {
     nightmare
       .goto('http://localhost/majakkaportaali/servicelist.php?filterby=juontaja')
-      .wait("table")
+      .wait(".datarow")
       .type("[name='id_2']","")
       .type("[name='id_2']","Simo Lipsanen").wait(waitsmall)
       .click("[name='filteredchanges']")
@@ -103,7 +103,7 @@ describe("Messudetaljisivu", function(){
   it('Käyttäjä huomaa, että vastuuhenkilöiden nimiä voi muokata. Hän muokkaa nimeä ja nimi on vaihtunut.', (done) => {
     nightmare
       .goto('http://localhost/majakkaportaali/servicedetails.php?id=1')
-      .wait("table").wait(waitsmall)
+      .wait(".datarow").wait(waitsmall)
       .type("[name='liturgi']","")
       .type("[name='liturgi']","Paul Copan")
       .click("[name=savedetails]")

@@ -24,6 +24,14 @@ main {
 .byline {
   display: none; }
 
+.datarow {
+  display: flex;
+  flex-flow: row wrap; }
+  .datarow div:first-child {
+    flex: 1; }
+  .datarow div:nth-child(2) {
+    flex: 3; }
+
 @media only screen and (min-width: 920px) {
   header {
     display: block; }

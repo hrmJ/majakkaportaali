@@ -29,7 +29,7 @@ class ServiceListTest extends TestCase
     {
         $this->slist->Set("table", $this->tablecontent->Output());
         $this->layout->Set("content", $this->slist->Output());
-        $this->assertRegExp('/<tr id=/', $this->layout->Output());
+        $this->assertRegExp('/datarow.* id=/', $this->layout->Output());
     }
 
     public function testCreateSelectForFilteringResponsibilities()

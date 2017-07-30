@@ -1,5 +1,4 @@
 var Nightmare = require('nightmare');
-var jquery = require('jquery');
 var assert = require('chai').assert; 
 
 const nightmare = new Nightmare({

@@ -97,7 +97,7 @@ class TemplateTest extends TestCase
         $layout->Set("title", "Majakkaportaali");
         $layout->Set("content", $slist->Output());
 
-        $this->assertRegExp('/<td>/', $layout->Output());
+        $this->assertRegExp('/<div.*class=.datarow.*>/', $layout->Output());
 
     
     }

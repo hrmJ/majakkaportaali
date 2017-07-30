@@ -1,11 +1,7 @@
 <section>
     <form name="detailsform" action="[@action]" method="POST">
         <h2>[@theme]</h2>
-        <table>
-            <thead></thead>
-            <tbody>
-                [@table]
-            </tbody>
+        <section>[@table]</section>
         </table>
         <div><input type="submit" name="savedetails" value="Tallenna"></div>
     </form>

@@ -1,4 +1,4 @@
-<tr>
-    <td>[@category]</td>
-    <td><input type="text" name="[@name]" value="[@value]"></td>
-</tr>
+<div class="datarow">
+    <div>[@category]</div>
+    <div><input type="text" name="[@name]" value="[@value]"></div>
+</div>
