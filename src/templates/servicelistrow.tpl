@@ -1,4 +1,4 @@
 <div class="datarow" id="serviceid_[@id]">
-    <div>[@category]</div>
-    <div>[@value]</div>
+    <div class="data-narrow">[@category]</div>
+    <div class="data-wide">[@value]</div>
 </div>

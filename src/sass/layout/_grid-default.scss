@@ -13,10 +13,27 @@ header{
 
 main{
     display: flex;
-    flex-flow: column wrap;
-    align-items: center;
+    flex-flow: column;
+    align-items: stretch;
+    form{
+        //Form-tagit on syötettävä johonkin, mutta ne häiritsevät elementtien
+        //järjestelyä
+        width:100%;
+        display:flex;
+        justify-content: center;
+    }
+    >div, >section{
+        display:flex;
+        flex-flow:row;
+        justify-content: center;
+        margin-top:2em;
+    }
 }
 
+
+.byline{
+    display:none;
+}
 
 .container{
     display: flex;
@@ -29,18 +46,4 @@ main{
     min-height: 100vh;
 }
 
-.byline{
-    display:none;
-}
 
-.datarow{
-    display:flex;
-    flex-flow: row wrap;
-    div:first-child{
-        flex: 1;
-    }
-    div:nth-child(2){
-        flex: 3;
-    }
-}
- 

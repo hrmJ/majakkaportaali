@@ -1,4 +1,4 @@
 <div class="datarow">
-    <div>[@category]</div>
-    <div><input type="text" name="[@name]" value="[@value]"></div>
+    <div class="data-narrow">[@category]</div>
+    <div class="data-wide"><input type="text" name="[@name]" value="[@value]"></div>
 </div>

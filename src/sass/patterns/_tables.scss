@@ -1,0 +1,45 @@
+//Taulukon kaltainen mutta joustavampi ratkaisu varsinaisen datan esittämiseen
+
+
+.data-container{
+    display:flex;
+    flex-flow:column;
+    align-items:stretch;
+    flex: 0 0 90%;
+    font-size:$datafontsize;
+}
+
+.datarow{
+    display:flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    flex: 0 0 2em;
+    padding:0.5em;
+    background: $datarowbg;
+    
+    div{
+        padding:0.5em;
+    }
+
+    + .datarow{
+        margin-top:0.7em;
+    }
+
+}
+
+.data-wide{
+    flex: 0 0 80%;
+}
+
+.data-narrow{
+    flex: 0 0 10%;
+}
+ 
+@media only screen and (min-width: 920px){
+    .data-container{
+        flex: 0 0 70%;
+    }
+}
+
+
+

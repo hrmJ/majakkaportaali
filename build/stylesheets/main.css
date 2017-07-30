@@ -8,8 +8,20 @@ header {
 
 main {
   display: flex;
-  flex-flow: column wrap;
-  align-items: center; }
+  flex-flow: column;
+  align-items: stretch; }
+  main form {
+    width: 100%;
+    display: flex;
+    justify-content: center; }
+  main > div, main > section {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    margin-top: 2em; }
+
+.byline {
+  display: none; }
 
 .container {
   display: flex;
@@ -20,17 +32,6 @@ main {
   margin-right: auto;
   background: #ffffff;
   min-height: 100vh; }
-
-.byline {
-  display: none; }
-
-.datarow {
-  display: flex;
-  flex-flow: row wrap; }
-  .datarow div:first-child {
-    flex: 1; }
-  .datarow div:nth-child(2) {
-    flex: 3; }
 
 @media only screen and (min-width: 920px) {
   header {
@@ -95,3 +96,31 @@ nav {
   nav .dropdown {
     margin-top: 0px;
     display: block; } }
+.data-container {
+  display: flex;
+  flex-flow: column;
+  align-items: stretch;
+  flex: 0 0 90%;
+  font-size: 1.1em; }
+
+.datarow {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  flex: 0 0 2em;
+  padding: 0.5em;
+  background: #dbdbdb; }
+  .datarow div {
+    padding: 0.5em; }
+  .datarow + .datarow {
+    margin-top: 0.7em; }
+
+.data-wide {
+  flex: 0 0 80%; }
+
+.data-narrow {
+  flex: 0 0 10%; }
+
+@media only screen and (min-width: 920px) {
+  .data-container {
+    flex: 0 0 70%; } }
