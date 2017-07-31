@@ -23,19 +23,20 @@ class SongListTest extends TestCase
     }
 
 
-    public function testSetSingleSongs()
-    {
-        $this->page->GetSingleSongs();
-        $this->assertArrayHasKey("song_title",$this->page->singlesongsdata[0]);
+    public function testSetSingleSongData(){
+    
+        $this->page->SetSingleSongs();
+        $this->assertRegExp('/name="alkulaulu"/', $this->page->Output());
     }
 
-    public function testWsAndComSongs()
+
+    public function testSetWsAndComSongs()
     {
-        $this->page->GetMultiSongs("ws");
-        $this->assertArrayHasKey("song_title",$this->page->multisongsdata["ws"][0]);
-        $this->page->GetMultiSongs("com");
-        $this->assertArrayHasKey("song_title",$this->page->multisongsdata["com"][0]);
+        $this->page->SetMultiSongs(Array("com","ws"));
+        $this->assertRegExp('/name="ws_1"/', $this->page->Output());
+        $this->assertRegExp('/name="com_1"/', $this->page->Output());
     }
+
 
     public function testSingleSongs()
     {

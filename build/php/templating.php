@@ -346,32 +346,71 @@ class UiMenu extends Template{
 
 /**
  *
- * Laulujen syöttösivun template.
+ * Kokonaisten sivujen (laululista, messulista jne.) template.
  *
- * @param string $type taulukon tyyppi
  *
  */
-class SongPage extends Template{
+class Page extends Template{
 
-    /**
-     *
-     * @param string $path polku templates-kansioon
-     *
-     */
-    public function __construct($path, $id){
-        parent::__construct("$path/songlist.tpl");
-        $this->con = new SongCon("$path/../../config.ini");
-        $this->id = $id;
-        $this->multisongsdata = Array("ws", "com");
+    public function __construct(){
+        parent::__construct("{$this->path}/{$this->type}.tpl");
+        switch($this->type){
+            case "songlist":
+                $this->con = new SongCon("$this->path/../../config.ini");
+                break;
+        }
     }
 
     /**
      *
-     * Hae yksittäisten laulujen data
-     * tai oleta tyhjät, jos dataa ei löydy.
+     * @param Array $data tietokantadata, jota taulukko kuvaa.
+     * @param string $target kohta templatesta, johon data syötetään.
      *
      */
-    public function GetSingleSongs(){
+    public function SetDataTable($data, $target){
+        switch($this->type){
+            case "songlist":
+                $dt = new SongDataTable($this->path, $data);
+                break;
+        }
+        $this->Set($target,$dt->Output());
+    }
+
+}
+
+/**
+ *
+ * Laulujen syöttösivun template.
+ *
+ * @param string $type mistä sivusta on kyse.
+ *
+ */
+class SongPage extends Page{
+
+    public $type = "songlist";
+
+    /**
+     *
+     * @param string $path polku templates-kansioon
+     * @param string $id sen messun id, jonka lauluja käsitellään
+     *
+     */
+    public function __construct($path, $id){
+        $this->path = $path;
+        $this->id = $id;
+        $this->multisongsdata = Array("ws", "com");
+        $this->multisongtargets = Array("ws"=>"worshipsongs", "com"=>"communionsongs");
+        parent::__construct();
+    }
+
+    /**
+     *
+     * Hae yksittäisten laulujen data tai oleta tyhjät, jos dataa ei löydy.
+     * Syötä sen jälkeen arvojen perusteella rakennettu html-esitys datasta
+     * varsinaiseen sivupohjaan.
+     *
+     */
+    public function SetSingleSongs(){
         $this->singlesongsdata = Array($this->con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = 'alkulaulu'",Array("sid"=>$this->id),"row"),
                                  $this->con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = 'paivanlaulu'",Array("sid"=>$this->id),"row"),
                                  $this->con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = 'loppulaulu'",Array("sid"=>$this->id),"row"));
@@ -382,6 +421,7 @@ class SongPage extends Template{
             }
         
         }
+        $this->SetDataTable($this->singlesongsdata, "singlesongs");
     }
 
     /**
@@ -389,12 +429,19 @@ class SongPage extends Template{
      * Hae ylistyslaulujen data
      * tai oleta tyhjät, jos dataa ei löydy.
      *
+     * @param Array $types Taulukko, joka kertoo, mistä lauluista on kyse (ylistys- vai ehtoollis-)
+     *
      */
-    public function GetMultiSongs($type){
-        $this->multisongsdata[$type] = $this->con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = :type ",Array("sid"=>$this->id, "type"=>$type));
-        if(sizeof($this->multisongsdata[$type])==0)
-            $this->multisongsdata[$type] = Array(Array("song_title"=>"","songtype"=>$type));
+    public function SetMultiSongs($types){
+        foreach($types as $type){
+            $this->multisongsdata[$type] = $this->con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = :type ",Array("sid"=>$this->id, "type"=>$type));
+            if(sizeof($this->multisongsdata[$type])==0)
+                $this->multisongsdata[$type] = Array(Array("song_title"=>"","songtype"=>$type));
+            $this->SetDataTable($this->multisongsdata[$type], $this->multisongtargets[$type]);
+        }
     }
+
+
 
 
 }
