@@ -354,11 +354,19 @@ class Page extends Template{
 
     public function __construct(){
         parent::__construct("{$this->path}/{$this->type}.tpl");
+        $this->layout = new Template("{$this->path}/layout.tpl");
+        $byline = "";
         switch($this->type){
             case "songlist":
                 $this->con = new SongCon("$this->path/../../config.ini");
+                $byline = "Laulujen syöttö";
+                $bodyclass = "songs";
+                $title = "Lauluut majakkamessuun xx. (Bändinä x)";
                 break;
         }
+        $this->layout->Set("title", $title);
+        $this->layout->Set("byline", $byline);
+        $this->layout->Set("bodyclass", $bodyclass);
     }
 
     /**
@@ -374,6 +382,17 @@ class Page extends Template{
                 break;
         }
         $this->Set($target,$dt->Output());
+    }
+
+    /**
+     *
+     * Liittää sivun layout-pohjaan ja palauttaa lopputuloksen.
+     *
+     */
+    public function OutputPage(){
+        $this->layout->Set("content",$this->Output());
+        return $this->layout->Output();
+
     }
 
 }
@@ -438,6 +457,24 @@ class SongPage extends Page{
             if(sizeof($this->multisongsdata[$type])==0)
                 $this->multisongsdata[$type] = Array(Array("song_title"=>"","songtype"=>$type));
             $this->SetDataTable($this->multisongsdata[$type], $this->multisongtargets[$type]);
+        }
+    }
+
+
+    /**
+     *
+     * Hakee tietokannasta, mitkä laulut on merkitty Jumalan karitsa- tai Pyhä-versioiksi.
+     * tulostaa select-elementit näiden valitsemista varten
+     *
+     * @param Array $roles Se, mitä liturgisten laulujen tyyppejä messussa on käytössä
+     *
+     */
+    public function SetLiturgicalSongs($roles){
+        foreach($roles as $role){
+            $texts = $this->con->q("SELECT CONCAT(title, titleseparator) FROM liturgicalsongs WHERE role=:role ORDER by ID",Array("role"=>$role),"all");
+            $ids = $this->con->q("SELECT id FROM liturgicalsongs WHERE role=:role ORDER by ID",Array("role"=>$role),"all_flat");
+            $select = new Select($this->path, $texts, "Valitse versio", "Valitse versio", $role . "_select", $valuedata=$ids);
+            $this->Set("{$role}_menu", $select->Output());
         }
     }
 

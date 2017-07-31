@@ -28,12 +28,12 @@
 
             <section>
                <div>Jumalan karitsa</div> 
-               <div>[@jkmenu]</div> 
+               <div>[@jumalan_karitsa_menu]</div> 
                <div class="lyricsindicator jklyr"></div> 
             </section>
             <section>
                <div>Pyhä-hymni</div> 
-               <div>[@pyhmenu]</div> 
+               <div>[@pyha_menu]</div> 
                <div class="lyricsindicator pyhlyr"></div> 
             </section>
 

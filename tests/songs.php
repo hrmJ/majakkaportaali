@@ -38,43 +38,15 @@ class SongListTest extends TestCase
     }
 
 
-    public function testSingleSongs()
+    public function testOutPutPage()
     {
-
-        $songdata = Array(Array("songtype"=>"alkulaulu", "song_title"=>""),
-                          Array("songtype"=>"Päivän laulu", "song_title"=>""));
-
-        $tablecontent = new SongDataTable($this->templatepath, $songdata);
-        $this->songlistcontent->Set("singlesongs", $tablecontent->Output());
-        $this->layout->Set("content", $this->songlistcontent->Output());
-        $this->assertRegExp('/name="alkulaulu"/', $this->layout->Output());
-    }
-    
-    public function testSingleSongsWithDbData()
-    {
-        $id = 2;
-        $singlesongs = $this->con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype in ('alkulaulu','paivanlaulu','loppulaulu')",Array("sid"=>$id));
-        $wssongs = $this->con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = 'ws'",Array("sid"=>$id));
-        $comsongs = $this->con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = 'com'",Array("sid"=>$id));
-        $this->assertTrue(sizeof($singlesongs)>2);
-        $this->assertTrue(sizeof($wssongs)>2);
-        $this->assertTrue(sizeof($comsongs)>2);
-        $this->assertArrayHasKey("songtype", $singlesongs[0]);
-
+        $this->assertRegExp('/Laulujen syöttö/', $this->page->OutputPage());
     }
 
-
-
-    public function testJkMenu()
+    public function testLiturgicalSongs()
     {
-        $select = new Select($this->templatepath, 
-            $this->con->q("SELECT CONCAT(title, titleseparator) FROM liturgicalsongs WHERE role=:role ORDER by ID",Array("role"=>"jumalan_karitsa"),"all"), "Valitse Jumalan karitsa -hymnin versio",
-            "Valitse Jumalan karitsa -hymnin versio",
-            "Valitse Jumalan karitsa -hymnin versio",
-            $valuedata=$this->con->q("SELECT id FROM liturgicalsongs WHERE role=:role ORDER by ID",Array("role"=>"jumalan_karitsa"),"all_flat"));
-        $this->songlistcontent->Set("jkmenu", $select->Output());
-        $this->layout->Set("content", $this->songlistcontent->Output());
-        $this->assertRegExp('/<option.*Jumalan karitsa \(/', $this->layout->Output());
+        $this->page->SetLiturgicalSongs(Array("jumalan_karitsa","pyha"));
+        $this->assertRegExp('/<option.*Jumalan karitsa \(/', $this->page->Output());
     }
 
     public function testSaveSongData()
