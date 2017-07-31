@@ -16,21 +16,22 @@ require("php/songs.php");
 
 $con = new SongCon("../config.ini");
 $templatepath="templates";
-$id = (isset($_GET["service_id"]) ? $_GET["service_id"] : GetIdByDate());
+$id = (isset($_GET["service_id"]) ? $_GET["service_id"] : GetIdByDate($con, date('Y-m-d')));
+
 
 if (isset($_POST["savesongs"]))
     $con->SaveData($id,$_POST);
 
-// Lataa data.
-$singlesongsdata = Array($con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = 'alkulaulu'",Array("sid"=>$id),"row"),
-                         $con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = 'paivanlaulu'",Array("sid"=>$id),"row"),
-                         $con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = 'loppulaulu'",Array("sid"=>$id),"row"));
+$page = new SongPage($templatepath, $id);
+$page->GetSingleSongs();
+$page->GetWsSongs();
+
 
 $wssongsdata = $con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = 'ws'",Array("sid"=>$id));
 $comsongsdata = $con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = 'com'",Array("sid"=>$id));
 
-$singlesongstable = new SongDataTable($templatepath, $singlesongsdata);
-$wssongstable = new SongDataTable($templatepath, $wssongsdata);
+$singlesongstable = new SongDataTable($templatepath, $page->singlesongsdata);
+$wssongstable = new SongDataTable($templatepath, $page->wssongsdata);
 $comsongstable = new SongDataTable($templatepath, $comsongsdata);
 
 $songslistcontent = new Template("$templatepath/songlist.tpl");

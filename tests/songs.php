@@ -19,8 +19,23 @@ class SongListTest extends TestCase
         $this->layout = new Template("$this->templatepath/layout.tpl");
         $this->layout->Set("title", "Laulujen syöttö majakkamesuun x.x.xxxx");
         $this->songlistcontent = new Template("$this->templatepath/songlist.tpl");
+        $this->page = new SongPage($this->templatepath, 10);
     }
 
+
+    public function testSetSingleSongs()
+    {
+        $this->page->GetSingleSongs();
+        $this->assertArrayHasKey("song_title",$this->page->singlesongsdata[0]);
+    }
+
+    public function testWsAndComSongs()
+    {
+        $this->page->GetMultiSongs("ws");
+        $this->assertArrayHasKey("song_title",$this->page->multisongsdata["ws"][0]);
+        $this->page->GetMultiSongs("com");
+        $this->assertArrayHasKey("song_title",$this->page->multisongsdata["com"][0]);
+    }
 
     public function testSingleSongs()
     {
@@ -130,6 +145,39 @@ class SongListTest extends TestCase
         $songs->ProcessEditedLyrics("Virsi 001", "Hoosianna, TAAvetin POIKA\n\n Hoosiaaaanna, joossokijoaisjoi\n Hoosiaanna...alskdjasldkj, hOOoss\n\n", "title");
         $songs->OutputSongInfo("Virsi 001", "title");
         $this->assertRegExp('/TAAvetin POIKA/', $songs->songcontent["verses"]);
+    }
+
+    /***
+     *
+     * Testaa, onnistuuko nykyistä lähimmän päivämäärän hakeminen.
+     *
+     */
+    public function testLoadWithoutId(){
+        $date = new DateTime('2017-01-01');
+        $date = $date->format('Y-m-d');
+        $closestid = GetIdByDate($this->con, $date);
+        $this->assertEquals($closestid,"1");
+
+        $date = new DateTime('2017-02-06');
+        $date = $date->format('Y-m-d');
+        $closestid = GetIdByDate($this->con, $date);
+        $this->assertEquals($closestid,"1");
+
+        $date = new DateTime('2017-03-20');
+        $date = $date->format('Y-m-d');
+        $closestid = GetIdByDate($this->con,$date);
+        $this->assertEquals($closestid,"6");
+
+        $date =  new DateTime('2017-03-21');
+        $date = $date->format('Y-m-d');
+        $closestid = GetIdByDate($this->con,$date);
+        $this->assertEquals($closestid,"7");
+
+        $date = new DateTime('2021-03-21');
+        $date = $date->format('Y-m-d');
+        $closestid = GetIdByDate($this->con,$date);
+        $this->assertEquals($closestid,"10");
+
     }
 
 

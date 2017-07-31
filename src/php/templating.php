@@ -344,5 +344,60 @@ class UiMenu extends Template{
 }
 
 
+/**
+ *
+ * Laulujen syöttösivun template.
+ *
+ * @param string $type taulukon tyyppi
+ *
+ */
+class SongPage extends Template{
+
+    /**
+     *
+     * @param string $path polku templates-kansioon
+     *
+     */
+    public function __construct($path, $id){
+        parent::__construct("$path/songlist.tpl");
+        $this->con = new SongCon("$path/../../config.ini");
+        $this->id = $id;
+        $this->multisongsdata = Array("ws", "com");
+    }
+
+    /**
+     *
+     * Hae yksittäisten laulujen data
+     * tai oleta tyhjät, jos dataa ei löydy.
+     *
+     */
+    public function GetSingleSongs(){
+        $this->singlesongsdata = Array($this->con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = 'alkulaulu'",Array("sid"=>$this->id),"row"),
+                                 $this->con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = 'paivanlaulu'",Array("sid"=>$this->id),"row"),
+                                 $this->con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = 'loppulaulu'",Array("sid"=>$this->id),"row"));
+        $songtypes = Array("alkulaulu","paivanlaulu","loppulaulu");
+        foreach($this->singlesongsdata as $key=> $song){
+            if(!$song){
+                $this->singlesongsdata[$key] = Array("song_title"=>"","songtype"=>$songtypes[$key]);
+            }
+        
+        }
+    }
+
+    /**
+     *
+     * Hae ylistyslaulujen data
+     * tai oleta tyhjät, jos dataa ei löydy.
+     *
+     */
+    public function GetMultiSongs($type){
+        $this->multisongsdata[$type] = $this->con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = :type ",Array("sid"=>$this->id, "type"=>$type));
+        if(sizeof($this->multisongsdata[$type])==0)
+            $this->multisongsdata[$type] = Array(Array("song_title"=>"","songtype"=>$type));
+    }
+
+
+}
+
 ?>
 
