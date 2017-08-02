@@ -23,6 +23,7 @@ class ServiceListTest extends TestCase
         $this->tablecontent = new ServiceListTable($this->templatepath, $this->servicedata);
 
         $this->slist = new Template("$this->templatepath/servicelist.tpl");
+        $this->page = new ServiceListPage($this->templatepath, "Yleisnäkymä");
     }
 
     public function testTemplateClassExists()
@@ -31,6 +32,7 @@ class ServiceListTest extends TestCase
         $this->layout->Set("content", $this->slist->Output());
         $this->assertRegExp('/datarow.* id=/', $this->layout->Output());
     }
+
 
     public function testCreateSelectForFilteringResponsibilities()
     {
@@ -47,17 +49,6 @@ class ServiceListTest extends TestCase
         $this->assertRegExp('/Yleisnäkymä/', $this->layout->Output());
     }
 
-    public function testShowResponsibilitiesFilteredBasic()
-    {
-        $data = FilterContent($this->con,"Yleisnäkymä",$this->season);
-        $this->assertTrue(sizeof($data)>0);
-    }
-
-    public function testShowResponsibilitiesFilteredByJuontaja()
-    {
-        $data = FilterContent($this->con,"juontaja",$this->season);
-        $this->assertTrue(sizeof($data)>0);
-    }
 
     public function testSubmitButton()
     {
@@ -75,6 +66,29 @@ class ServiceListTest extends TestCase
         $this->con->SaveData("liturgi", $fakepost);
         $newdata = $this->con->q("SELECT responsible FROM responsibilities WHERE service_id = '2' AND responsibility = 'liturgi'",Array(),"column");
         $this->assertEquals($newdata,"Mikko Mallikas");
+    }
+
+    public function testInsertSelectToTemplate()
+    {
+        $this->page->InsertResponsibilitySelect();
+        $this->assertRegExp("/<select/",$this->page->Output());
+    }
+
+    public function testSetPageVersion()
+    {
+        $this->page->filterby = "juontaja";
+        $this->page->SetPageVersion();
+        $this->assertRegExp("/Muista tallentaa/",$this->page->Output());
+        $this->page->filterby = "Yleisnäkymä";
+        $this->page->SetPageVersion();
+        $this->assertRegExp("/Klikkaa päivämäärää/",$this->page->Output());
+    }
+
+    public function testGetFilteredContent()
+    {
+        $this->page->filterby = "juontaja";
+        $this->page->FilterContent();
+        $this->assertRegExp("/datarow/",$this->page->Output());
     }
 
 }
