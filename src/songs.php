@@ -13,10 +13,11 @@ require("php/database.php");
 require("php/utilities.php");
 require("php/songs.php");
 
+$con = new SongCon("../config.ini");
 $id = (isset($_GET["service_id"]) ? $_GET["service_id"] : GetIdByDate($con, date('Y-m-d'))); 
 $page = new SongPage("templates", $id);
 if (isset($_POST["savesongs"]))
-    $page->con->SaveData($id,$_POST);
+    $con->SaveData($id,$_POST);
 
 $page->SetSingleSongs();
 $page->SetMultiSongs(Array("ws","com"));
