@@ -8,17 +8,23 @@
 .sideroller{
     display:flex;
     flex-flow:column;
-    flex: 0 0 30%;
+    flex: 3 0 30%;
     margin-left:2em;
 }
 
+.songs .datarow{
+    flex-flow:row nowrap;
+}
 
 .versedata p{
     font-size:0.9em;
 }
 
 .data-middle{
-    flex: 0 2 50%;
+    flex: 0 3 40%;
+    input, select{
+        width:100%;
+    }
 }
 
 .data-left{

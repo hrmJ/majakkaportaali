@@ -7,5 +7,6 @@
 @import 'layout/grid-non-mobile';
 @import 'layout/navigation';
 @import 'layout/forms';
-@import 'layout/_songlist.scss';
+@import 'layout/_songlist-default.scss';
+@import 'layout/_songlist-non-mobile.scss';
 @import 'patterns/tables';
