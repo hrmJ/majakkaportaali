@@ -35,9 +35,6 @@ main {
   align-items: stretch;
   flex: 0 0 90%; }
 
-.songs .innercontent {
-  flex-flow: row; }
-
 @media only screen and (min-width: 920px) {
   header {
     display: block; }
@@ -109,6 +106,34 @@ nav {
 div + .form-input-container {
   margin-top: 2em; }
 
+.songs .innercontent {
+  flex-flow: row;
+  justify-content: space-between; }
+
+.sideroller {
+  display: flex;
+  flex-flow: column;
+  flex: 0 0 30%;
+  margin-left: 2em; }
+
+.versedata p {
+  font-size: 0.9em; }
+
+.data-middle {
+  flex: 0 2 50%; }
+
+.data-left {
+  flex: 0 1 20%; }
+
+.lyricsindicator {
+  flex: 0 0 20%;
+  padding-right: 1em;
+  padding-left: 1em;
+  border-left: 1px solid grey; }
+
+.multisongs {
+  margin-top: 0.73em; }
+
 .data-container {
   display: flex;
   flex-flow: column;
@@ -141,22 +166,3 @@ div + .form-input-container {
 
 .data-narrow {
   flex: 0 0 10%; }
-
-.data-middle {
-  flex: 0 2 50%; }
-
-.data-left {
-  flex: 0 1 20%; }
-
-.lyricsindicator {
-  flex: 0 0 20%;
-  padding-right: 1em;
-  padding-left: 1em;
-  border-left: 1px solid grey; }
-
-.multisongs {
-  margin-top: 0.73em; }
-
-@media only screen and (min-width: 920px) {
-  .data-container {
-    flex: 0 0 70%; } }

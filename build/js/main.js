@@ -127,7 +127,7 @@ function ShowLyricsWindow(){
         byid = true;
     }
 
-    if($(this).text()!="") $(".sideroller").show();
+    if($(this).text()!="") $(".sideroller").show("slide");
     if($(this).text()=="Katso sanoja"){
         LoadLyricsByTitle(songtitle, byid);
     }
@@ -147,7 +147,7 @@ function EditLyrics(){
         $.each($(".versedata").find("p"), function(idx,verse){ verses += "\n\n" + verse.innerHTML.replace(/<br>/g,"\n")});
         $(".versedata").html("");
         $("<textarea name='editedsong'></textarea>").text(verses.trim()).appendTo($(".versedata"));
-        $("<button>Tallenna muutokset</button>").appendTo(".sideroller").click(SaveLyrics);
+        $("<input type='button' value='Tallenna muutokset'>").appendTo(".sideroller").click(SaveLyrics);
     }
 }
 
@@ -160,7 +160,7 @@ function AddLyrics(songtitle){
     $(".versedata").html("");
     $(".sideroller > h2").text(songtitle);
     $("<textarea name='editedsong'></textarea>").appendTo($(".versedata"));
-    $("<button>Tallenna muutokset</button>").appendTo(".sideroller").click(SaveLyrics);
+    $("<input type='button' value='Tallenna muutokset'>").appendTo(".sideroller").click(SaveLyrics);
 }
 
 
