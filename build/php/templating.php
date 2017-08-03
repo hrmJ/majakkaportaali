@@ -348,7 +348,6 @@ class UiMenu extends Template{
  *
  * Kokonaisten sivujen (laululista, messulista jne.) template.
  *
- *
  */
 class Page extends Template{
 
@@ -357,17 +356,27 @@ class Page extends Template{
         $this->layout = new Template("{$this->path}/layout.tpl");
         $byline = "";
         $title = "";
+        $bodyclass = "";
         switch($this->type){
             case "songlist":
                 $this->con = new SongCon("$this->path/../../config.ini");
                 $byline = "Laulujen syöttö";
                 $bodyclass = "songs";
-                $title = "Lauluut majakkamessuun xx. (Bändinä x)";
+                $title = "Laulut majakkamessuun xx. (Bändinä x)";
                 break;
             case "servicelist":
                 $this->con = new ServiceListCon("$this->path/../../config.ini");
                 $byline = "Majakkamessut kaudelle x";
                 $bodyclass = "servicelist";
+                break;
+            case "servicedetails":
+                $this->con = new ServiceDetailsCon("$this->path/../../config.ini");
+                $this->servicemeta = $this->con->q("SELECT theme, servicedate FROM services WHERE id = :id",Array("id"=>$this->id),"row");
+                $this->servicemeta["servicedate"] = FormatDate($this->servicemeta['servicedate']);
+                $byline = "Majakkamessu {$this->servicemeta['servicedate']}";
+                $title = "{$byline}: {$this->servicemeta['theme']}";
+                $this->Set("theme", $this->servicemeta['theme']);
+                $bodyclass = "servicedetails";
                 break;
         }
         $this->layout->Set("title", $title);
@@ -495,6 +504,46 @@ class ServiceListPage extends Page{
     }
 
 }
+
+
+
+/**
+ *
+ * Messunäkymän template
+ *
+ * @param string $type mistä sivutyypistä on kyse.
+ *
+ */
+class DetailsPage extends Page{
+
+    public $type = "servicedetails";
+
+    /**
+     *
+     * @param string $path polku templates-kansioon
+     * @param string $id tarkasteltavan messun id
+     *
+     */
+    public function __construct($path, $id){
+        $this->path = $path;
+        $this->id = $id;
+        parent::__construct();
+    }
+
+    /**
+     *
+     * Luo valitsimen, jolla messuja voi suodattaa vastuiden mukaan
+     *
+     *
+     */
+    public function SetResponsibleData(){
+        $volunteers = $this->con->q("SELECT responsible, responsibility FROM responsibilities WHERE service_id = :id",Array("id"=>$this->id),"all");
+        $tablecontent = new ServiceDetailsTable($this->path, $volunteers);
+        $this->Set("table", $tablecontent->Output());
+    }
+
+}
+
 
 /**
  *

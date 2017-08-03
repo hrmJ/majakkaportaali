@@ -17,6 +17,7 @@ class ServiceDetailsTest extends TestCase
         $this->date = date('Y-m-d');
         $this->season = GetCurrentSeason($this->con);
         $this->layout = new Template("$this->templatepath/layout.tpl");
+        $this->page = new DetailsPage("$this->templatepath", 2);
     }
 
     /**
@@ -62,6 +63,11 @@ class ServiceDetailsTest extends TestCase
         $this->assertEquals($savedname, "Ville Vallaton");
     }
 
+    public function testHasResponsibleData()
+    {
+        $this->page->SetResponsibleData();
+        $this->assertRegExp("/juontaja/",$this->page->Output());
+    }
 
 }
 

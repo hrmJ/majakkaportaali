@@ -11,27 +11,13 @@ require("php/services.php");
 require("php/database.php");
 require("php/utilities.php");
 
-$con = new ServiceDetailsCon("../config.ini");
+$page = new DetailsPage("templates", $_GET["id"]);
 
 if(isset($_POST["savedetails"]))
-    $con->SaveData($_GET["id"], $_POST);
+    $page->con->SaveData($_GET["id"], $_POST);
 
-$volunteers = $con->q("SELECT responsible, responsibility FROM responsibilities WHERE service_id = :id",Array("id"=>$_GET["id"]),"all");
-$servicemeta = $con->q("SELECT theme, servicedate FROM services WHERE id = :id",Array("id"=>$_GET["id"]),"row");
-
-$templatepath="templates";
-$tablecontent = new ServiceDetailsTable($templatepath, $volunteers);
-$slist = new Template("$templatepath/servicedetails.tpl");
-$slist->Set("table", $tablecontent->Output());
-$slist->Set("theme", "Hauska messu");
-$slist->Set("action", $_SERVER["PHP_SELF"] . "?id=" . $_GET["id"]);
-
-$layout = new Template("$templatepath/layout.tpl");
-$layout->Set("bodyclass", "servicedetails");
-$layout->Set("title", "Majakkamessu " . FormatDate($servicemeta["servicedate"]) . ": " . $servicemeta["theme"]);
-$layout->Set("content", $slist->Output());
-$layout->Set("byline", "");
-
-echo $layout->Output();
+$page->SetResponsibleData();
+$page->Set("action", $_SERVER["PHP_SELF"] . "?id=" . $_GET["id"]);
+echo $page->OutputPage();
 
 ?>
