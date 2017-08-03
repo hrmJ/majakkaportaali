@@ -58,7 +58,7 @@ $(document).ready (function(){
             //Säädä viereisen solun teksti riippuen siitä, onko laulua tietokannassa vai ei
             $.getJSON(loaderpath + "/songtitles.php",queryparams,function(data){
                 if(data.length==0) $td.next(".lyricsindicator").text("Lisää sanat");
-                else $td.next(".lyricsindicator").text("Katso sanoja"); if ((val=="") || val.match(/^(Valitse |--------)/)) $td.next(".lyricsindicator").text("");
+                else $td.next(".lyricsindicator").text("Katso sanoja"); if ((val=="") || val.match(/^(Valitse |--------)/)) $td.next(".lyricsindicator").html("&nbsp;");
             });
         } 
 

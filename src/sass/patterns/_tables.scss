@@ -5,21 +5,28 @@
     display:flex;
     flex-flow:column;
     align-items:stretch;
-    flex: 0 0 $tablewidth;
     font-size:$datafontsize;
+}
+
+.songs .data-container{
 }
 
 .datarow{
     display:flex;
     flex-flow: row nowrap;
     justify-content: space-between;
-    flex: 0 0 3em;
+    flex: 0 0 auto;
     align-items: center;
     background: $datarowbg;
     
     div:first-child{
         padding-left: 0.5em;
         padding-right: 0.5em;
+    }
+
+    > div{
+        padding-top: 0.9em;
+        padding-bottom: 0.9em;
     }
 
     + .datarow{
@@ -32,6 +39,7 @@
     @include datahiglight;
 }
 
+
 .data-wide{
     flex: 0 1 80%;
 }
@@ -40,6 +48,21 @@
     flex: 0 0 10%;
 }
  
+.data-middle{
+    flex: 0 2 50%;
+}
+
+.data-left{
+    flex: 0 1 20%;
+}
+
+.lyricsindicator{
+    flex: 0 0 20%;
+    padding-right:1em;
+    padding-left:1em;
+    border-left:1px solid grey;
+}
+
 @media only screen and (min-width: 920px){
     .data-container{
         //Enemmän marginaalia isoille näytöille

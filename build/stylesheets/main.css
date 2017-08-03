@@ -29,6 +29,15 @@ main {
   min-height: 100vh;
   padding-bottom: 3em; }
 
+.innercontent {
+  display: flex;
+  flex-flow: column wrap;
+  align-items: stretch;
+  flex: 0 0 90%; }
+
+.songs .innercontent {
+  flex-flow: row; }
+
 @media only screen and (min-width: 920px) {
   header {
     display: block; }
@@ -104,19 +113,21 @@ div + .form-input-container {
   display: flex;
   flex-flow: column;
   align-items: stretch;
-  flex: 0 0 90%;
   font-size: 1.1em; }
 
 .datarow {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
-  flex: 0 0 3em;
+  flex: 0 0 auto;
   align-items: center;
   background: #dbdbdb; }
   .datarow div:first-child {
     padding-left: 0.5em;
     padding-right: 0.5em; }
+  .datarow > div {
+    padding-top: 0.9em;
+    padding-bottom: 0.9em; }
   .datarow + .datarow {
     margin-top: 0.7em; }
 
@@ -130,6 +141,18 @@ div + .form-input-container {
 
 .data-narrow {
   flex: 0 0 10%; }
+
+.data-middle {
+  flex: 0 2 50%; }
+
+.data-left {
+  flex: 0 1 20%; }
+
+.lyricsindicator {
+  flex: 0 0 20%;
+  padding-right: 1em;
+  padding-left: 1em;
+  border-left: 1px solid grey; }
 
 @media only screen and (min-width: 920px) {
   .data-container {

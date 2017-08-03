@@ -40,3 +40,14 @@ main{
 }
 
 
+.innercontent{
+    display: flex;
+    flex-flow: column wrap;
+    align-items:stretch;
+    flex: 0 0 $tablewidth;
+}
+
+//Laululistassa mahdollista rinnakkain näytettävät elementit
+.songs .innercontent{
+    flex-flow:row;
+}
