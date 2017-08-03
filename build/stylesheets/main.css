@@ -129,7 +129,7 @@ div + .form-input-container {
     padding-top: 0.9em;
     padding-bottom: 0.9em; }
   .datarow + .datarow {
-    margin-top: 0.7em; }
+    margin-top: 0.73em; }
 
 .datarow:hover {
   cursor: pointer;
@@ -153,6 +153,9 @@ div + .form-input-container {
   padding-right: 1em;
   padding-left: 1em;
   border-left: 1px solid grey; }
+
+.multisongs {
+  margin-top: 0.73em; }
 
 @media only screen and (min-width: 920px) {
   .data-container {

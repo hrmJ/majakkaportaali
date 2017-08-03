@@ -49,7 +49,7 @@ gulp.task("vendors",function(){
 });
 
 gulp.task("js",function(){
-    var jsbuild = gulp.src(folder.src + "js/*.js").pipe(deporder()).pipe(concat('main.js'));
+    var jsbuild = gulp.src(folder.src + "js/site/**/*.js").pipe(deporder()).pipe(concat('main.js'));
     return jsbuild.pipe(gulp.dest(folder.build + 'js/'));
 });
 
@@ -65,7 +65,7 @@ gulp.task("watch",function(){
     gulp.watch(folder.src + "php/**/*",["phputils"]);
     gulp.watch(folder.src + "*.php",["phpmain"]);
     gulp.watch(folder.src + "templates/**/*",["templates"]);
-    gulp.watch(folder.src + "js/*.js",["js"]);
+    gulp.watch(folder.src + "js/site/**/*.js",["js"]);
     gulp.watch(folder.src + "sass/**/*",["css"]);
     gulp.watch(folder.src + "assets/**/*",["assets"]);
 

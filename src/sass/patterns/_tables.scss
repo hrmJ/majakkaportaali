@@ -29,8 +29,8 @@
         padding-bottom: 0.9em;
     }
 
-    + .datarow{
-        margin-top:0.7em;
+    + .datarow,{
+        margin-top:$rowtopmargin;
     }
 }
 
@@ -61,6 +61,10 @@
     padding-right:1em;
     padding-left:1em;
     border-left:1px solid grey;
+}
+
+.multisongs{
+    margin-top:$rowtopmargin;
 }
 
 @media only screen and (min-width: 920px){

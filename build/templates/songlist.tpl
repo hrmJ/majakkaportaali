@@ -13,18 +13,24 @@
             <h3>Ylistys- ja rukouslaulut</h3>
 
             <section  class="data-container">
+
             [@worshipsongs]
-            </section>
 
             <div class="multisongs ws"><input type="button" class="increaser" value="+"> <input type="button" class="decreaser" value="-"></div>
+
+            </section>
+
 
             <h3>Ehtoollislaulut</h3>
 
             <section  class="data-container">
+
             [@communionsongs]
-            </section>
 
             <div class="multisongs com"><input type="button" class="increaser" value="+"> <input type="button" class="decreaser" value="-"></div>
+
+            </section>
+
 
             <h3>Liturgiset</h3> 
             <p>Valitse Jumalan karitsa ja Pyhä-hymnin versio. Jos haluat käyttää jotakin
