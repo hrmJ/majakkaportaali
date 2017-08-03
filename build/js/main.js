@@ -69,7 +69,8 @@ function AddMultisongsRow(){
         $newtr.find("input").attr({"value":""}).autocomplete(autocompsongtitle);
         //Syötä uusi rivi taulukkoon
         $newtr.insertAfter($table.find(".datarow").last()).wrapAll("<div class='datarow'></div>");
-        $table.find(".datarow:last-child").find("div:last-child").click(ShowLyricsWindow);
+        $table.find(".datarow").last().find(".lyricsindicator").click(ShowLyricsWindow).html("&nbsp;");
+        $(".songinput, select").on("change paste keyup",CheckIfLyricsExist);
     }
 }
 
