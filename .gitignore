@@ -5,3 +5,4 @@ docs/php/graphs/
 docs/php/reports/
 config.ini
 .sass-cache
+*.*~
