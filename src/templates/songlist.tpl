@@ -1,7 +1,7 @@
 <form name="songlistform" action="[@action]" method="POST">
    <div class="innercontent">
 
-       <section>
+       <section class="side-main">
             <h2>Majakkamessun laulut</h2>
 
             <h3>Yksittäiset laulut</h3>
@@ -57,8 +57,9 @@
         </section> 
 
         <section class='sideroller'>
+            <p><a id="closewordeditlink" href="javascript:void(0);">Sulje sanojen näyttö</a></p>
             <h2></h2>
-            <p><a href="javascript:void(0);">Muokkaa sanoja</a></p>
+            <p><a id="editwordslink" href="javascript:void(0);">Muokkaa sanoja</a></p>
             <div class='versedata'></div>
         </section>
 

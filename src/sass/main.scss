@@ -3,10 +3,13 @@
 @import 'config/colors';
 @import 'config/webfonts';
 @import 'config/dimensions';
+
 @import 'layout/grid-default';
 @import 'layout/grid-non-mobile';
 @import 'layout/navigation';
 @import 'layout/forms';
-@import 'layout/_songlist-default.scss';
-@import 'layout/_songlist-non-mobile.scss';
+@import 'layout/songlist-default.scss';
+@import 'layout/songlist-non-mobile.scss';
+@import 'layout/headings';
+
 @import 'patterns/tables';

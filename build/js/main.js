@@ -112,8 +112,14 @@ function LoadLyricsByTitle(title, byid){
                     $.each(verses,function(i,verse){
                         $(".versedata").append($("<p></p>").html(verse.replace(/\n{1}/g,"<br>")));
                     });
+                //Poista tallennuspainikkeet
+                $(".sideroller input").remove();
+                //Näytä muokkauslinkki
+                $("#editwordslink").parent().show();
                 });
 }
+    //Poista tallennuspainikkeet
+    $(".sideroller input").remove()
 
 /**
  * Näytä sanojen lisäysikkuna, kun käyttäjä klikkaa oikeanpuolimmaista taulukon
@@ -127,13 +133,12 @@ function ShowLyricsWindow(){
         byid = true;
     }
 
+    //Piilota muut kuin laulun sanat, jos pienempi näyttö
+    if(!$("nav .dropdown").is(":visible")) $(".side-main").hide();
+    //Näytä sanojen muokkausikkuna
     if($(this).text()!="") $(".sideroller").show("slide");
-    if($(this).text()=="Katso sanoja"){
-        LoadLyricsByTitle(songtitle, byid);
-    }
-    else if($(this).text()=="Lisää sanat"){
-        AddLyrics(songtitle);
-    }
+    if($(this).text()=="Katso sanoja") LoadLyricsByTitle(songtitle, byid);
+    else if($(this).text()=="Lisää sanat") AddLyrics(songtitle);
 }
 
 /**
@@ -147,7 +152,10 @@ function EditLyrics(){
         $.each($(".versedata").find("p"), function(idx,verse){ verses += "\n\n" + verse.innerHTML.replace(/<br>/g,"\n")});
         $(".versedata").html("");
         $("<textarea name='editedsong'></textarea>").text(verses.trim()).appendTo($(".versedata"));
-        $("<input type='button' value='Tallenna muutokset'>").appendTo(".sideroller").click(SaveLyrics);
+        if($(".sideroller").find("[type=button]").length==0) {
+            $("<input type='button' value='Tallenna muutokset'>").appendTo(".sideroller").click(SaveLyrics)
+        };
+        $("#editwordslink").parent().hide();
     }
 }
 
@@ -160,7 +168,10 @@ function AddLyrics(songtitle){
     $(".versedata").html("");
     $(".sideroller > h2").text(songtitle);
     $("<textarea name='editedsong'></textarea>").appendTo($(".versedata"));
-    $("<input type='button' value='Tallenna muutokset'>").appendTo(".sideroller").click(SaveLyrics);
+    if($(".sideroller").find("[type=button]").length==0) {
+        $("<input type='button' value='Tallenna muutokset'>").appendTo(".sideroller").click(SaveLyrics);
+    }
+    $("#editwordslink").parent().hide();
 }
 
 
@@ -189,7 +200,6 @@ function SaveLyrics(){
 
 
 
-
 /**
  *
  * Interaktio ja layout-muokkaus laululistasivulle.
@@ -205,8 +215,11 @@ $(document).ready (function(){
         $(".lyricsindicator").click(ShowLyricsWindow);
         $(".sideroller").hide();
         $(".menu").menu({position: { my: "bottom", at: "right-5 top+5" }});
-        $(".sideroller > p > a").click(EditLyrics);
+        $("#editwordslink").click(EditLyrics);
+        $("#closewordeditlink").click(function(){$(".sideroller").hide();$(".side-main").show()});
         $(".multisongs [type='button']").click(AddMultisongsRow);
+        //Tavuta laulutyypit soft-hypheneilla.
+        $(".data-left").each(function(){ $(this).html($(this).html().replace(/([^ ])(laul)/,"$1&shy;$2").replace(/ (\d+)/,"&nbsp;$1"))});
     }
 });
 

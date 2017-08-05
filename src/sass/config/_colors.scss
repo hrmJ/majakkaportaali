@@ -6,7 +6,9 @@ $lightbg: #eeebe9;
 $contbg: #ffffff;
 
 $rowstripe:grey;
-$datarowbg: #dbdbdb;
+$datarowbg: darken(#f3f3f3,10%);
+
+$lyricscellbg: #A4B6AA;
 
 @mixin datahiglight{
     background: lighten($navbg,10%);

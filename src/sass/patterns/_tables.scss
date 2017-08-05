@@ -6,6 +6,9 @@
     flex-flow:column;
     align-items:stretch;
     font-size:$datafontsize;
+    @media only screen and (min-width: 920px){
+        //padding-left:3em;
+    }
 }
 
 
@@ -14,8 +17,9 @@
     flex-flow: row nowrap;
     justify-content: space-between;
     flex: 0 0 auto;
-    align-items: center;
+    align-items: stretch;
     background: $datarowbg;
+    border-radius:2px;
     
     div:first-child{
         padding-left: 0.5em;
@@ -23,8 +27,10 @@
     }
 
     > div{
-        padding-top: 0.9em;
-        padding-bottom: 0.9em;
+        padding-top: 0.8em;
+        padding-bottom: 0.8em;
+        display: flex;
+        align-items: center;
     }
 
     + .datarow,{
@@ -35,6 +41,9 @@
 .datarow:hover{
     @include pointer;
     @include datahiglight;
+    .songinput{
+        color:white;
+    }
 }
 
 

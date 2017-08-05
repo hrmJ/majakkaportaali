@@ -13,8 +13,11 @@ $(document).ready (function(){
         $(".lyricsindicator").click(ShowLyricsWindow);
         $(".sideroller").hide();
         $(".menu").menu({position: { my: "bottom", at: "right-5 top+5" }});
-        $(".sideroller > p > a").click(EditLyrics);
+        $("#editwordslink").click(EditLyrics);
+        $("#closewordeditlink").click(function(){$(".sideroller").hide();$(".side-main").show()});
         $(".multisongs [type='button']").click(AddMultisongsRow);
+        //Tavuta laulutyypit soft-hypheneilla.
+        $(".data-left").each(function(){ $(this).html($(this).html().replace(/([^ ])(laul)/,"$1&shy;$2").replace(/ (\d+)/,"&nbsp;$1"))});
     }
 });
 
