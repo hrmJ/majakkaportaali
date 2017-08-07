@@ -1,12 +1,7 @@
 <phpunit bootstrap="tests/bootstrap.php" colors="true">
     <testsuites>
         <testsuite name="unit tests">
-            <file>tests/database.php</file>
-            <file>tests/templates.php</file>
-            <file>tests/utilities.php</file>
-            <file>tests/servicelist.php</file>
-            <file>tests/servicedetails.php</file>
-            <file>tests/songs.php</file>
+            <file>tests/comments.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

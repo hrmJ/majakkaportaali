@@ -94,3 +94,23 @@ CREATE TABLE liturgicalsongs (
   verses text DEFAULT NULL,
   PRIMARY KEY (id)
 ) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
+
+
+
+DROP TABLE IF EXISTS `comments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `comments` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `service_id` int(10) unsigned NOT NULL,
+  `reply_to` int(10) DEFAULT NULL,
+  `content` text DEFAULT NULL,
+  `commentator` varchar(100) DEFAULT NULL,
+  `theme` varchar(100) DEFAULT NULL,
+  `comment_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `service_index` (`service_id`),
+  CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+

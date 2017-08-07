@@ -16,7 +16,7 @@ describe("Laulujen syöttö", function(){
     it("Käyttäjä näkee kentän, johon voi syöttää alkulaulun ja kirjoittaa siihen Taivas varjele. Käyttäjä painaa tallenna, ja arvo on vaihtunut.",(done) => {
         nightmare
           .goto('http://localhost/majakkaportaali/songs.php?service_id=2')
-          .wait("table").wait(800)
+          .wait(".datarow").wait(800)
           .type("[name='alkulaulu']","")
           .type("[name='alkulaulu']","Taivas varjele")
           .click("[value='Tallenna']").wait("[name=alkulaulu]")
@@ -32,9 +32,9 @@ describe("Laulujen syöttö", function(){
     it("Käyttäjä lisää uuden ylistyslaulun painamalla +-nappia. Käyttäjä kirjoittaa laulun nimeksi 'Bless the Lord' ja tallentaa.",(done) => {
         nightmare
           .goto('http://localhost/majakkaportaali/songs.php?service_id=2')
-          .wait("table")
+          .wait(".datarow")
           .click(".multisongs.ws .increaser").wait("[name=ws_4]")
-          .type("[name=ws_4]","").type("[name=ws_4]","Bless the Lord").click("[value='Tallenna']").wait("table")
+          .type("[name=ws_4]","").type("[name=ws_4]","Bless the Lord").click("[value='Tallenna']").wait(".datarow")
           .evaluate(function(){
               return document.querySelector("[name=ws_4]").value;
           })
@@ -47,9 +47,9 @@ describe("Laulujen syöttö", function(){
     it("Käyttäjä poistaa yhden ylistyslaulun",(done) => {
         nightmare
           .goto('http://localhost/majakkaportaali/songs.php?service_id=2')
-          .wait("table")
+          .wait(".datarow")
           .click(".multisongs.ws .decreaser").click(".multisongs.ws .decreaser").wait("[name=ws_2]")
-          .click("[value='Tallenna']").wait("table")
+          .click("[value='Tallenna']").wait(".datarow")
           .evaluate(function(){
               return document.querySelector("[name=ws_3]");
           })
@@ -62,9 +62,9 @@ describe("Laulujen syöttö", function(){
   it("Viimeistä ehtoollislaulua ei voi poistaa",(done)=>{
         nightmare
           .goto('http://localhost/majakkaportaali/songs.php?service_id=2')
-          .wait("table")
+          .wait(".datarow")
           .click(".multisongs.com .decreaser").click(".multisongs.com .decreaser").click(".multisongs.com .decreaser").click(".multisongs.com .decreaser").wait("[name=com_1]")
-          .click("[value='Tallenna']").wait("table")
+          .click("[value='Tallenna']").wait(".datarow")
           .evaluate(function(){
               return document.querySelector("[name=com_1]");
           })
@@ -79,13 +79,13 @@ describe("Laulujen syöttö", function(){
 });
 
 describe("sanojen olemassaolon indikaattori",function(){
-    this.timeout(5000);
+    this.timeout(6000);
     it("Laulurivien kolmannessa solussa ei lue mitään, jos solu on tyhjä", (done)=>{
-        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait("table")
+        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait(".datarow")
         .type("[name='alkulaulu']","").wait(500)
-        .click("[value='Tallenna']").wait("[name='alkulaulu']").wait(2000)
+        .click("[value='Tallenna']").wait("[name='alkulaulu']").wait(500)
         .evaluate(function(){
-            return document.querySelectorAll(".lyricsindicator")[0].textContent;
+            return document.querySelectorAll(".lyricsindicator")[0].textContent.trim();
         })
         .then((tdval)=>{
             assert.equal(tdval,"");
@@ -93,7 +93,7 @@ describe("sanojen olemassaolon indikaattori",function(){
         }).catch(done);
     });
     it("Käyttäjä kirjoittaa 001, ja solussa lukee 'lisää sanat'",(done)=>{
-        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait("table")
+        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait(".datarow")
         .type("[name='alkulaulu']","").type("[name='alkulaulu']","001")
         .evaluate(function(){
             return document.querySelectorAll(".lyricsindicator")[0].textContent;
@@ -104,7 +104,7 @@ describe("sanojen olemassaolon indikaattori",function(){
         }).catch(done);
     });
     it("Käyttäjä kirjoittaa Virsi 001, ja solussa lukee 'katso sanoja'",(done)=>{
-        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait("table")
+        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait(".datarow")
         .type("[name='alkulaulu']","").type("[name='alkulaulu']","Virsi 001")
         .evaluate(function(){
             return document.querySelectorAll(".lyricsindicator")[0].textContent;
@@ -121,9 +121,9 @@ describe("sanojen olemassaolon indikaattori",function(){
 describe("Sanojen katselu ja lisääminen",function(){
     this.timeout(7000);
     it("Käyttäjä klikkaa 'Katso sanoja' -solua ja se tuo näkyviin kyseisen laulun sanat",(done)=>{
-        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait("table")
+        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait(".datarow")
         .type("[name='alkulaulu']","").type("[name='alkulaulu']","Virsi 001")
-        .click("table  tr:first-child td:last-child")
+        .click(".datarow  .lyricsindicator")
         .evaluate(function(){
             return document.querySelector(".sideroller h2").textContent;
         })
@@ -134,9 +134,9 @@ describe("Sanojen katselu ja lisääminen",function(){
     });
 
     it("Käyttäjä klikkaa 'Muokkaa sanoja' -linkkiä ja sanoja voi muokata",(done)=>{
-        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait("table")
+        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait(".datarow")
         .type("[name='alkulaulu']","").type("[name='alkulaulu']","Virsi 001")
-        .click("table  tr:first-child td:last-child")
+        .click(".lyricsindicator")
         .click(".sideroller a")
         .evaluate(function(){
             return document.querySelector(".sideroller textarea").name;
@@ -148,9 +148,9 @@ describe("Sanojen katselu ja lisääminen",function(){
     });
 
     it("Käyttäjä klikkaa 'Muokkaa sanoja' -linkkiä ja sanoja voi muokata",(done)=>{
-        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait("table")
+        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait(".datarow")
         .type("[name='alkulaulu']","").type("[name='alkulaulu']","Virsi 001")
-        .click("table  tr:first-child td:last-child")
+        .click(".lyricsindicator")
         .click(".sideroller a")
         .evaluate(function(){
             return document.querySelector(".sideroller textarea").name;
@@ -162,10 +162,10 @@ describe("Sanojen katselu ja lisääminen",function(){
     });
 
     it("Käyttäjä tallentaa muutoksensa ja tiedot ovat vaihtuneet",(done)=>{
-        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait("table")
+        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait(".datarow")
         .type("[name='alkulaulu']","").type("[name='alkulaulu']","Virsi 001").wait(300)
-        .click("table  tr:first-child td:last-child")
-        .click(".sideroller a")
+        .click(".lyricsindicator")
+        .click("#editwordslink")
         .type(".sideroller textarea", "Kirjoitin uudet sanat.").wait(500)
         .click(".sideroller button").wait(".versedata").wait(1500)
         .evaluate(function(){
@@ -178,10 +178,10 @@ describe("Sanojen katselu ja lisääminen",function(){
     });
 
     it("Käyttäjä painaa lisää saat -linkkiä ja tallentaa sanat uuteen lauluun nimeltä Katson autiota autobaanaa",(done)=>{
-        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait("table")
+        nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait(".datarow")
         .type("[name='alkulaulu']","").type("[name='alkulaulu']","Katson autiota autobaanaa")
-        .click("table  tr:first-child td:last-child")
-        .click(".sideroller a")
+        .click(".lyricsindicator")
+        .click("#editwordslink")
         .type(".sideroller textarea", "Taas saavuin vanhaan autokahvilaan.\n\nSe ennen viimeistä kierrosta laalaalaa..\n\nLaalaalaa.").wait(500)
         .click(".sideroller button").wait(".versedata").wait(300)
         .evaluate(function(){
