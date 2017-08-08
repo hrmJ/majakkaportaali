@@ -214,3 +214,16 @@ h3 {
 
 .data-narrow {
   flex: 0 0 10%; }
+
+.comments {
+  margin-top: 2em; }
+  .comments textarea {
+    width: 100%; }
+  .comments .commentdetails {
+    display: flex;
+    flex-flow: row;
+    justify-content: flex-start; }
+    .comments .commentdetails div {
+      margin-top: 1em;
+      flex: 0 0 20%;
+      margin-right: 1em; }
