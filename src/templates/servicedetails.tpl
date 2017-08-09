@@ -7,8 +7,9 @@
         <section class="comments">
             <div><textarea id="newcomment" placeholder="Lisää huomio tai kommentti..."></textarea></div>
             <div class="commentdetails">
-                <div>[@commentselect]</div>
+                <div>[@commentthemeselect]</div>
                 <div><input type="text" placeholder="Nimesi" id="commentator"></input></div>
+                <div><a href="javascript:void(0)" id="savecomment"> Tallenna kommentti</a></div>
             </div>
         </section>
 

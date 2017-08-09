@@ -39,6 +39,7 @@ class Template{
     */
     public function Set($bookmark, $content){
         $this->values[$bookmark] = $content;
+        return $this;
     }
 
     /**
@@ -540,6 +541,21 @@ class DetailsPage extends Page{
         $volunteers = $this->con->q("SELECT responsible, responsibility FROM responsibilities WHERE service_id = :id",Array("id"=>$this->id),"all");
         $tablecontent = new ServiceDetailsTable($this->path, $volunteers);
         $this->Set("table", $tablecontent->Output());
+        return $this;
+    }
+
+    /**
+     *
+     * Luo valitsimen, jolla messuja voi suodattaa vastuiden mukaan
+     *
+     *
+     */
+    public function SetComments(){
+        $responsibilities = array_merge(Array(Array("Yleinen"),Array("Infoasia")), $this->con->q("SELECT DISTINCT responsibility FROM responsibilities",Array(),"all"));
+        $select = new Select($this->path, $responsibilities, "Kommentin aihe", "Kommentin aihe");
+        $this->Set("commentthemeselect", $select->Output());
+
+        return $this;
     }
 
 }

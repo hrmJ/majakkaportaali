@@ -32,10 +32,11 @@ class Comment{
     protected $content="";
     protected $replyto=NULL;
 
-    public function __construct($con, $sid){
+    public function __construct($con, $sid, $path){
         $this->con = $con;
         $this->time = date('Y-m-d H:i:s');
         $this->service_id = $sid;
+        $this->path = $path;
     }
 
     /**
@@ -97,7 +98,50 @@ class Comment{
         return $this;
     }
 
+    /**
+     *
+     * Lataa kaikki vanhat kommentit tietokannasta
+     *
+     * @param string $commentator 
+     *
+     */
+    public function LoadAll(){
+        $all = $this->con->q("SELECT * FROM comments WHERE reply_to  is NULL",Array(),"all");
+        $commentstring = "";
+        foreach($all as $chain){
+            $tpl = new Template("{$this->path}/comment.tpl");
+            $tpl->Set("content",$chain["content"])
+               ->Set("theme",$chain["theme"])
+               ->Set("commentator",$chain["commentator"])
+               ->Set("id",$chain["id"])
+               ->Set("time",$chain["comment_time"]);
+            //Huom: järjestä vastaukset niin, että tuorein viimeisenä
+            $subchain = $this->con->q("SELECT * FROM comments WHERE reply_to  = :id ORDER by comment_time",Array("id"=>$chain["id"]),"all");
+            if(!$subchain){
+                $tpl->Set("subchain","");
+            }
+            else{
+                $subchainstring = "";
+                foreach($subchain as $reply){
+                    $subtpl = new Template("{$this->path}/comment.tpl");
+                    $subtpl->Set("content",$reply["content"])
+                       ->Set("theme",$reply["theme"])
+                       ->Set("commentator",$reply["commentator"])
+                       ->Set("id",$reply["id"])
+                       ->Set("subchain","")
+                       ->Set("time",$reply["comment_time"]);
+                    $subchainstring .= "\n" . $subtpl->Output();
+                }
+                $tpl->Set("subchain",$subchainstring);
+            }
+            $commentstring .= "\n\n" . $tpl->Output();
+
+        }
+        echo $commentstring;
+    }
 
 }
+
+
 
 ?>

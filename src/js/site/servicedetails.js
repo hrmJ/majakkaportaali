@@ -9,6 +9,7 @@ $(document).ready(function(){
         $("#newcomment").click(function(){
             $(this).animate({"height":"6em"}); 
             $(".commentdetails").show();
+            ScrollToCenter($(".commentdetails"));
         });
     }
 });

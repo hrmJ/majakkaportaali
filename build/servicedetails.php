@@ -16,8 +16,7 @@ $page = new DetailsPage("templates", $_GET["id"]);
 if(isset($_POST["savedetails"]))
     $page->con->SaveData($_GET["id"], $_POST);
 
-$page->SetResponsibleData();
-$page->Set("action", $_SERVER["PHP_SELF"] . "?id=" . $_GET["id"]);
+$page->SetResponsibleData()->SetComments()->Set("action", "{$_SERVER['PHP_SELF']}?id={$page->id}");
 echo $page->OutputPage();
 
 ?>
