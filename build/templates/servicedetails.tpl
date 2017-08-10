@@ -11,6 +11,9 @@
                 <div><input type="text" placeholder="Nimesi" id="commentator"></input></div>
                 <div><a href="javascript:void(0)" id="savecomment"> Tallenna kommentti</a></div>
             </div>
+            <div class="loadedcomments">
+            [@comments]
+            </div>
         </section>
 
     </section>

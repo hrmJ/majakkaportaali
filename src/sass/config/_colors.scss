@@ -10,6 +10,8 @@ $datarowbg: darken(#f3f3f3,10%);
 
 $lyricscellbg: #A4B6AA;
 
+$commentheaderbg: $datarowbg;
+
 @mixin datahiglight{
     background: lighten($navbg,10%);
     color: $navfg;

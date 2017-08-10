@@ -6,6 +6,7 @@
  *
  */
 
+require("php/comments.php");
 require("php/templating.php");
 require("php/services.php");
 require("php/database.php");

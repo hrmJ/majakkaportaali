@@ -546,14 +546,17 @@ class DetailsPage extends Page{
 
     /**
      *
-     * Luo valitsimen, jolla messuja voi suodattaa vastuiden mukaan
-     *
+     * Luo valitsimen, jolla messuja voi suodattaa vastuiden mukaan.
+     * Lataa tämän jälkeen kommentit sivupohjaan
      *
      */
     public function SetComments(){
         $responsibilities = array_merge(Array(Array("Yleinen"),Array("Infoasia")), $this->con->q("SELECT DISTINCT responsibility FROM responsibilities",Array(),"all"));
         $select = new Select($this->path, $responsibilities, "Kommentin aihe", "Kommentin aihe");
         $this->Set("commentthemeselect", $select->Output());
+
+        $comment= new Comment($this->con,$this->id, $this->path);
+        $this->Set("comments", $comment->LoadAll());
 
         return $this;
     }

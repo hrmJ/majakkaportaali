@@ -4,4 +4,6 @@
     <!--subchain begins -->
     [@subchain]
     <!--subchain ends -->
+<div class="answercomment"><a href="javascript:void(0)" class="comment-answer-link">Vastaa kommenttiin</a></div>
 </article>
+

@@ -14,3 +14,40 @@
         }
     }
 }
+
+
+.answercomment{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+}
+
+.comment{
+
+    margin-top:1em;
+    padding: 0.5em;
+    border:1px solid $commentheaderbg;
+
+
+    div:first-of-type{
+        padding: 0.2em;
+        background: $commentheaderbg;
+    }
+
+    div:nth-of-type(2){
+        padding: 0.5em;
+    }
+
+    .comment{
+        border:none;
+        margin-left:3em;
+        div:first-of-type{
+            background: lighten($commentheaderbg,6%);
+        }
+        .answercomment{
+            display:none;
+        }
+    }
+
+}
+

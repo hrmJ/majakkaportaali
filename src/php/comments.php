@@ -106,17 +106,13 @@ class Comment{
      *
      */
     public function LoadAll(){
-        $all = $this->con->q("SELECT * FROM comments WHERE reply_to  is NULL",Array(),"all");
+        $all = $this->con->q("SELECT * FROM comments WHERE reply_to  is NULL AND service_id = :sid ORDER by comment_time",Array("sid"=>$this->service_id),"all");
         $commentstring = "";
         foreach($all as $chain){
             $tpl = new Template("{$this->path}/comment.tpl");
-            $tpl->Set("content",$chain["content"])
-               ->Set("theme",$chain["theme"])
-               ->Set("commentator",$chain["commentator"])
-               ->Set("id",$chain["id"])
-               ->Set("time",$chain["comment_time"]);
-            //Huom: järjestä vastaukset niin, että tuorein viimeisenä
+            $tpl->Set("content",$chain["content"])->Set("theme",$chain["theme"])->Set("commentator",$chain["commentator"])->Set("id",$chain["id"])->Set("time",$chain["comment_time"]);
             $subchain = $this->con->q("SELECT * FROM comments WHERE reply_to  = :id ORDER by comment_time",Array("id"=>$chain["id"]),"all");
+            //Huom: järjestä vastaukset niin, että tuorein viimeisenä;
             if(!$subchain){
                 $tpl->Set("subchain","");
             }
@@ -124,12 +120,7 @@ class Comment{
                 $subchainstring = "";
                 foreach($subchain as $reply){
                     $subtpl = new Template("{$this->path}/comment.tpl");
-                    $subtpl->Set("content",$reply["content"])
-                       ->Set("theme",$reply["theme"])
-                       ->Set("commentator",$reply["commentator"])
-                       ->Set("id",$reply["id"])
-                       ->Set("subchain","")
-                       ->Set("time",$reply["comment_time"]);
+                    $subtpl->Set("content",$reply["content"])->Set("theme",$reply["theme"]) ->Set("commentator",$reply["commentator"])->Set("id",$reply["id"])->Set("subchain","")->Set("time",$reply["comment_time"]);
                     $subchainstring .= "\n" . $subtpl->Output();
                 }
                 $tpl->Set("subchain",$subchainstring);
@@ -137,7 +128,7 @@ class Comment{
             $commentstring .= "\n\n" . $tpl->Output();
 
         }
-        echo $commentstring;
+        return $commentstring;
     }
 
 }

@@ -102,11 +102,11 @@ $con->q("UPDATE responsibilities SET responsible=:res WHERE service_id=:sid AND 
 //Feikkikommentteja
 
 $con->q("INSERT INTO comments (service_id, theme, commentator, content, comment_time) VALUES (2, 'juontaja', 'Ville', 'Olen sitä mieltä, että messussa on tähän merkitty väärä juontaja, mutta täytyy vielä varmistaa','2017-01-01 15:40:22')",Array(),"none");
-$con->q("INSERT INTO comments (service_id, theme, commentator, content, reply_to) VALUES (2, 'juontaja', 'Mirkku', 'Ei ei, kyllä se on ihan oikein', 1)",Array(),"none");
-$con->q("INSERT INTO comments (service_id, theme, commentator, content, reply_to) VALUES (2, 'juontaja', 'Mirkku', 'Ootko Mirkku ihan varma?', 1)",Array(),"none");
-$con->q("INSERT INTO comments (service_id, theme, commentator, content) VALUES (2, 'infoasia', 'Jari', 'Messun jälkeen lumitöitä tarjolla kaikille halukkaille')",Array(),"none");
-$con->q("INSERT INTO comments (service_id, theme, commentator, content) VALUES (2, 'infoasia', 'Jere', 'Raamista ei tällä viikolla.')",Array(),"none");
-$con->q("INSERT INTO comments (service_id, theme, commentator, content) VALUES (2, 'yleinen', 'Jere', 'Tämän viikon aikana on varmaan kerätty muutenkin kaikkea tavaraa, jota voidaan sitten tässä messussa jakaa sitä tarvitseville ja muutenkin pitkälti sanoisin, että pitkä oli tämä kommentti. Selvä. Jees.')",Array(),"none");
+$con->q("INSERT INTO comments (service_id, theme, commentator, content, reply_to, comment_time) VALUES (2, 'juontaja', 'Mirkku', 'Ei ei, kyllä se on ihan oikein', 1, '2017-01-01 17:40:22')",Array(),"none");
+$con->q("INSERT INTO comments (service_id, theme, commentator, content, reply_to, comment_time) VALUES (2, 'juontaja', 'Mirkku', 'Ootko Mirkku ihan varma?', 1, '2017-01-02 11:40:22')",Array(),"none");
+$con->q("INSERT INTO comments (service_id, theme, commentator, content, comment_time) VALUES (2, 'infoasia', 'Jari', 'Messun jälkeen lumitöitä tarjolla kaikille halukkaille', '2017-01-01 15:44:22')",Array(),"none");
+$con->q("INSERT INTO comments (service_id, theme, commentator, content, comment_time) VALUES (2, 'infoasia', 'Jere', 'Raamista ei tällä viikolla.', '2017-03-07 11:40:22')",Array(),"none");
+$con->q("INSERT INTO comments (service_id, theme, commentator, content, comment_time) VALUES (2, 'yleinen', 'Jere', 'Tämän viikon aikana on varmaan kerätty muutenkin kaikkea tavaraa, jota voidaan sitten tässä messussa jakaa sitä tarvitseville ja muutenkin pitkälti sanoisin, että pitkä oli tämä kommentti. Selvä. Jees.', '2017-03-05 15:40:22')",Array(),"none");
 
 echo "Database ready..\n";
 
