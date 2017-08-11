@@ -10,8 +10,13 @@
 require("../database.php");
 require("../songs.php");
 require("../comments.php");
-$songs = new SongData(new SongCon("../../../config.ini"));
-$by = (isset($_GET["byid"]) ? "id" : "title");
-if(isset($_POST["editedverses"]))
-    $songs->ProcessEditedLyrics($_POST["songname"],$_POST["editedverses"],$by);
+
+$comment= new Comment(new DbCon("../../../config.ini"), $_POST["id"], "../../templates");
+$replyto = ($_POST["replyto"]=="0" ? NULL : $_POST["replyto"]);
+$comment
+    ->SetTheme($_POST["theme"])
+    ->SetContent($_POST["content"])
+    ->SetCommentator($_POST["commentator"])
+    ->SetReplyTo($_POST["replyto"])
+    ->Save();
 ?>

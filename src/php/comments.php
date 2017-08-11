@@ -46,7 +46,7 @@ class Comment{
      */
     public function Save(){
         $this->con->q("INSERT INTO comments (service_id, comment_time, theme, commentator, content, reply_to) VALUES (:sid, :ct, :th, :ctor, :ctnt, :rpl)
-                        ",Array("sid"=>2,"ct"=>$this->time,"th"=>$this->theme,"ctor"=>$this->commentator, "ctnt"=>$this->content, "rpl"=>$this->replyto),"none");
+                        ",Array("sid"=>$this->service_id,"ct"=>$this->time,"th"=>$this->theme,"ctor"=>$this->commentator, "ctnt"=>$this->content, "rpl"=>$this->replyto),"none");
     }
 
     /**
@@ -106,7 +106,8 @@ class Comment{
      *
      */
     public function LoadAll(){
-        $all = $this->con->q("SELECT * FROM comments WHERE reply_to  is NULL AND service_id = :sid ORDER by comment_time",Array("sid"=>$this->service_id),"all");
+        //Järjestä ketjut niin, että tuorein ekana
+        $all = $this->con->q("SELECT * FROM comments WHERE reply_to  = 0 AND service_id = :sid ORDER by comment_time DESC",Array("sid"=>$this->service_id),"all");
         $commentstring = "";
         foreach($all as $chain){
             $tpl = new Template("{$this->path}/comment.tpl");
@@ -125,6 +126,9 @@ class Comment{
                 }
                 $tpl->Set("subchain",$subchainstring);
             }
+            $comment_controls = new Template("{$this->path}/comment-insert-controls.tpl");
+            $comment_controls->Set("commentthemeselect", "");
+            $tpl->Set("comment-insert-controls",$comment_controls->Output());
             $commentstring .= "\n\n" . $tpl->Output();
 
         }

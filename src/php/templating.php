@@ -547,16 +547,14 @@ class DetailsPage extends Page{
     /**
      *
      * Luo valitsimen, jolla messuja voi suodattaa vastuiden mukaan.
-     * Lataa tämän jälkeen kommentit sivupohjaan
      *
      */
-    public function SetComments(){
+    public function SetCommentThemeSelect(){
         $responsibilities = array_merge(Array(Array("Yleinen"),Array("Infoasia")), $this->con->q("SELECT DISTINCT responsibility FROM responsibilities",Array(),"all"));
         $select = new Select($this->path, $responsibilities, "Kommentin aihe", "Kommentin aihe");
-        $this->Set("commentthemeselect", $select->Output());
-
-        $comment= new Comment($this->con,$this->id, $this->path);
-        $this->Set("comments", $comment->LoadAll());
+        $comment_controls = new Template("{$this->path}/comment-insert-controls.tpl");
+        $comment_controls->Set("commentthemeselect", "<div>{$select->Output()}</div>");
+        $this->Set("comment-insert-controls",$comment_controls->Output());
 
         return $this;
     }

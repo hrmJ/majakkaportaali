@@ -1,4 +1,5 @@
 var Nightmare = require('nightmare');
+var $ = require('jquery');
 var assert = require('chai').assert; 
 const nightmare = new Nightmare({
   show: false,
@@ -61,6 +62,20 @@ describe.only("Messudetaljisivun lisätoiminnot", function(){
           .type("#newcomment","Nightmare rules!")
           .click("#savecomment").wait(".comments").wait(200)
           .evaluate(function(){
+              return document.querySelector(".comment").textContent;
+          })
+          .then((inputval) => {
+              assert.match(inputval,/Nightmare rules!/)
+              done();
+          }).catch(done);
+    });
+
+    it.only("Käyttäjä painaa vastaa kommenttiin - nappia ja kommentin alle ilmestyy vastauskenttä",(done) => {
+        nightmare
+          .goto('http://localhost/majakkaportaali/servicedetails.php?id=2')
+          .wait(".datarow")
+          .evaluate(function(){
+              $(".comment-answer-link:eq(2)").click();
               return document.querySelector(".comment").textContent;
           })
           .then((inputval) => {
