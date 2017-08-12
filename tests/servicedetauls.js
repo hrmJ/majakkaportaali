@@ -2,22 +2,22 @@ var Nightmare = require('nightmare');
 var $ = require('jquery');
 var assert = require('chai').assert; 
 const nightmare = new Nightmare({
-  show: false,
+  show: true,
   typeInterval: 20,
   pollInterval: 50,
   waitTimeout: 3000 // in ms
 });
 
 
-describe.only("Messudetaljisivun lisätoiminnot", function(){
+describe("Messudetaljisivun lisätoiminnot", function(){
   this.timeout( 4000 );
     it("Käyttäjä kirjoittaa uuden kommentin, ei vielä tallenna",(done) => {
         nightmare
           .goto('http://localhost/majakkaportaali/servicedetails.php?id=2')
           .wait(".datarow").wait(800)
-          .type("#newcomment","").type("#newcomment","tadadaa!")
+          .type(".newcomment","").type(".newcomment","tadadaa!")
           .evaluate(function(){
-              return document.querySelector("#newcomment").value;
+              return document.querySelector(".newcomment").value;
           })
           .then((inputval) => {
               assert.equal(inputval,"tadadaa!")
@@ -29,7 +29,7 @@ describe.only("Messudetaljisivun lisätoiminnot", function(){
         nightmare
           .goto('http://localhost/majakkaportaali/servicedetails.php?id=2')
           .wait(".datarow")
-          .type("#newcomment","")
+          .type(".newcomment","")
           .select("select","juontaja")
           .evaluate(function(){
               return document.querySelector("select").value;
@@ -41,26 +41,14 @@ describe.only("Messudetaljisivun lisätoiminnot", function(){
     });
 
 
-    it("Sivulle latautuu tietokannasta messua koskevia kommentteja",(done) => {
-        nightmare
-          .goto('http://localhost/majakkaportaali/servicedetails.php?id=2')
-          .wait(".datarow").wait(200)
-          .evaluate(function(){
-              return document.querySelector(".comment").textContent;
-          })
-          .then((inputval) => {
-              assert.match(inputval,/että messussa on/)
-              done();
-          }).catch(done);
-    });
 
 
     it("Käyttäjä tallentaa uuden kommentin ja se näkyy ensimmäisenä",(done) => {
         nightmare
-          .goto('http://localhost/majakkaportaali/servicedetails.php?id=2')
+          .goto('http://localhost/majakkaportaali/servicedetails.php?id=4')
           .wait(".datarow")
-          .type("#newcomment","Nightmare rules!")
-          .click("#savecomment").wait(".comments").wait(200)
+          .type(".newcomment","Nightmare rules!").wait(900)
+          .click(".savecomment").wait(".comments").wait(200)
           .evaluate(function(){
               return document.querySelector(".comment").textContent;
           })
@@ -70,18 +58,24 @@ describe.only("Messudetaljisivun lisätoiminnot", function(){
           }).catch(done);
     });
 
-    it.only("Käyttäjä painaa vastaa kommenttiin - nappia ja kommentin alle ilmestyy vastauskenttä",(done) => {
+    it("Käyttäjä painaa vastaa kommenttiin -linkkiä ja tallentaa kommenttiin vastauksen",(done) => {
         nightmare
-          .goto('http://localhost/majakkaportaali/servicedetails.php?id=2')
-          .wait(".datarow")
+          .goto('http://localhost/majakkaportaali/servicedetails.php?id=4')
+          .wait(".comment")
+          .click(".comment .comment-answer-link")
+          .wait(".comment textarea")
+          .type(".comment textarea","Vastaus kommenttiin!")
+          .click(".comment .savecomment").wait(".comment").wait(200)
           .evaluate(function(){
-              $(".comment-answer-link:eq(2)").click();
-              return document.querySelector(".comment").textContent;
+              return $(".comment:eq(0)").find(".comment").text();
           })
           .then((inputval) => {
-              assert.match(inputval,/Nightmare rules!/)
+              assert.match(inputval,/Vastaus kommenttiin!/)
               done();
           }).catch(done);
     });
+
+    it("käyttäjä muokkaa kommenttia");
+    it("käyttäjä poistaa kommentin");
 
 });

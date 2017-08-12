@@ -19,9 +19,8 @@ $page = new SongPage("templates", $id);
 if (isset($_POST["savesongs"]))
     $con->SaveData($id,$_POST);
 
-$page->SetSingleSongs();
-$page->SetMultiSongs(Array("ws","com"));
-$page->SetLiturgicalSongs(Array("jumalan_karitsa","pyha"));
+$page->SetSingleSongs()->SetMultiSongs(Array("ws","com"))->SetLiturgicalSongs(Array("jumalan_karitsa","pyha"));
+$page->SetSongViewElements();
 $page->Set("action", "{$_SERVER['PHP_SELF']}?service_id=$id");
 echo $page->OutputPage();
 

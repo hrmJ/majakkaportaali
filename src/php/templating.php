@@ -606,6 +606,7 @@ class SongPage extends Page{
         
         }
         $this->SetDataTable($this->singlesongsdata, "singlesongs");
+        return $this;
     }
 
     /**
@@ -623,6 +624,21 @@ class SongPage extends Page{
                 $this->multisongsdata[$type] = Array(Array("song_title"=>"","songtype"=>$type));
             $this->SetDataTable($this->multisongsdata[$type], $this->multisongtargets[$type]);
         }
+        return $this;
+    }
+
+    /**
+     *
+     * Lataa laulujen lista -näkymään aakkosellisen listan
+     * mukainen select-elementti ym.
+     *
+     */
+    public function SetSongViewElements(){
+        $alphabets = $this->con->q("SELECT ch FROM (SELECT DISTINCT substring(title FROM 1 FOR 1) as ch FROM songdata) as ll WHERE ch <> ' ' ORDER BY ch",Array(),"all");
+        $alphabets_flat = $this->con->q("SELECT ch FROM (SELECT DISTINCT substring(title FROM 1 FOR 1) as ch FROM songdata) as ll WHERE ch <> ' '",Array(),"all_flat");
+        $select = new Select($this->path, $alphabets, "Etsi alkukirjaimen perusteella", "Etsi alkukirjaimen perusteella", "alphaselect");
+        $this->Set("alphaselect",$select->Output());
+        return $this;
     }
 
 

@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers Template
  */
-class SongListTest extends TestCase
+class SongListTests extends TestCase
 {
 
   protected function setUp()
@@ -151,6 +151,11 @@ class SongListTest extends TestCase
         $closestid = GetIdByDate($this->con,$date);
         $this->assertEquals($closestid,"10");
 
+    }
+
+    public function testAlphabetSelect(){
+        $this->page->SetSongViewElements();
+        $this->assertRegExp('/<option.*>V</', $this->page->Output());
     }
 
 

@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers Template
  */
-class SongListTest extends TestCase
+class CommentTest extends TestCase
 {
   protected function setUp()
     {

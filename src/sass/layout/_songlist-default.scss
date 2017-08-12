@@ -15,6 +15,16 @@
     }
 }
 
+.below-header{
+    span:first-of-type{
+        padding-right:1em;
+    }
+    span + span{
+        padding-left:1em;
+        border-left:1px solid $datarowbg;
+    }
+}
+
 .songs .datarow{
     flex-flow:row nowrap;
 }

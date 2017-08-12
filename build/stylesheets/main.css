@@ -134,6 +134,12 @@ input.songinput {
   .sideroller h2 {
     border: none; }
 
+.below-header span:first-of-type {
+  padding-right: 1em; }
+.below-header span + span {
+  padding-left: 1em;
+  border-left: 1px solid #dadada; }
+
 .songs .datarow {
   flex-flow: row nowrap; }
 
@@ -260,3 +266,6 @@ h3 {
 .commentheader {
   padding: 0.2em;
   background: #dadada; }
+
+.songlistview {
+  display: none; }
