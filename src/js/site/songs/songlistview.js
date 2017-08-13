@@ -31,7 +31,11 @@ SongListView = function(){
      *
      */
     this.LoadData = function(launcher){
-        $.getJSON(loaderpath + "/songtitles.php",{songname:launcher.val(),fullname:"first-letter"},this.InsertData);
+        if(launcher[0].tagName == "LI" && launcher.find("li").length==0){
+            //Jos ei enää alakohtia kirjainlistalla
+            //TODO Virsi x - virsi y
+            $.getJSON(loaderpath + "/songtitles.php",{songname:launcher.text(),fullname:"first-letter"},this.InsertData);
+        }
     };
 
     /**

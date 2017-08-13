@@ -653,13 +653,18 @@ class SongPage extends Page{
         foreach($alphabets as $idx=>$letter){
             $letter_items = $this->con->q("SELECT title FROM songdata WHERE title LIKE :thisletter  ORDER BY title",Array("thisletter"=>"$letter%"),"all_flat");
             $chunks = array_chunk($letter_items, $screenlimit);
-            $alphabets_processed[$letter] = Array();
-            foreach($chunks as $chunk){
-                $alphabets_processed[$letter][] = "$chunk[0] - {$chunk[sizeof($chunk)-1]}";
+            if(sizeof($chunks)==1){
+                $alphabets_processed[$letter] = $letter;
+            }
+            else{
+                $alphabets_processed[$letter] = Array();
+                foreach($chunks as $chunk){
+                    $alphabets_processed[$letter][] = "$chunk[0] - {$chunk[sizeof($chunk)-1]}";
+                }
             }
         }
         $menu = new UiMenu($this->path, $alphabets_processed);
-        $menu->Set("defaulttext","Selaa lauluja alkukirjaimen perusteella");
+        $menu->Set("defaulttext","Selaa lauluja alkukirjaimen perusteella")->Set("id","alpha-select");
         $this->Set("alphaselect",$menu->Output());
         return $this;
     }
