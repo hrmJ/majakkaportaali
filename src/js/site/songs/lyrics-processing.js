@@ -10,7 +10,7 @@ var loaderpath = "php/loaders";
 
 //Jquery UI:n autocomplete-pluginin asetukset laulujen nimien täydennystä varten
 var autocompsongtitle = {
-            source: function(request, response){ $.getJSON(loaderpath + "/songtitles.php",{songname:request.term},response);},
+    source: function(request, response){ $.getJSON(loaderpath + "/songtitles.php",{songname:request.term,fullname:"no"},response);},
             minLength: 0,
             select: function(event,input){CheckIfLyricsExist(event, input.item.value);}};
 
@@ -150,7 +150,6 @@ function SaveLyrics(){
                            editedverses:$("[name='editedsong']").val() };
         var byid=false;
         if($(".sideroller h2").attr("id")){
-            console.log("moro");
             queryparams = {songname:$(".sideroller h2").attr("id"),
                            editedverses:$("[name='editedsong']").val(),
                            byid:"yes"};

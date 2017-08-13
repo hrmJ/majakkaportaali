@@ -1,4 +1,24 @@
 //Laululistan selausikkuna
 .songlistview{
     display:none;
+    .ui-menu{
+        width:$uimenuwidth;
+    }
+    .ui-menu-divider{
+        display:none;
+    }
+}
+
+.songnames-container{
+    display: flex;
+    flex-flow: column wrap;
+    max-height: 500px;
+    width: 90%;
+    justify-content: space-around;
+    align-items: flex-start;
+    align-content:flex-start;
+    div{
+        margin-right:1em;
+        margin-top:0.2em;
+    }
 }

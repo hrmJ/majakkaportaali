@@ -70,8 +70,8 @@
                 Tässä ikkunassa voit selata olemassaolevia lauluja ja asettaa niille roolin messussa.
                 Voit myös lisätä kokonaan uusia lauluja.
                 </p>
-                <section>
-                    [@alphaselect]
+                <div>[@alphaselect]</div>
+                <section class="songnames-container">
                 </section>
         </section>
 

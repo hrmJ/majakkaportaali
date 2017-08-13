@@ -47,17 +47,20 @@ class SongData{
      * laulun nimen ja jonkin sen sisältämän merkkijonon mukaan.
      *
      * @param string $title merkkijono, joka laulun nimestä on löydyttävä 
-     * @param boolean $checkfullname etsitäänkö merkkijonon osilla vai täsmällisellä merkkijonolla
+     * @param string $checkfullname etsitäänkö merkkijonon osilla, täsmällisellä merkkijonolla, vai ensimmäisellä kirjaimella
      *
      */
-    public function OutputSongTitles($title, $checkfullname=false, $by="title"){
-        if ($checkfullname){
+    public function OutputSongTitles($title, $checkfullname="no", $by="title"){
+        if ($checkfullname=="yes"){
             //Jos kyseessä Jumalan karitsa tai pyhä-hymnit, hae eri taulusta
             $from = ($by=="id" ? "liturgicalsongs" : "songdata");
             $this->titleslist = $this->con->q("SELECT title FROM $from WHERE $by = :giventitle ORDER by title",Array("giventitle"=>$title),"all_flat");
         }
-        else{
+        else if($checkfullname=="no"){
             $this->titleslist = $this->con->q("SELECT title FROM songdata WHERE $by LIKE :giventitle ORDER by title",Array("giventitle"=>"%$title%"),"all_flat");
+        }
+        else {
+            $this->titleslist = $this->con->q("SELECT title FROM songdata WHERE $by LIKE :giventitle ORDER by title",Array("giventitle"=>"$title%"),"all_flat");
         }
         echo json_encode($this->titleslist);
     }

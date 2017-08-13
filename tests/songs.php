@@ -155,7 +155,7 @@ class SongListTests extends TestCase
 
     public function testAlphabetSelect(){
         $this->page->SetSongViewElements();
-        $this->assertRegExp('/<option.*>V</', $this->page->Output());
+        $this->assertRegExp('/Virsi \d+ - Virsi \d+/', $this->page->Output());
     }
 
 

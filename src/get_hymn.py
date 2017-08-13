@@ -1,8 +1,10 @@
 import bs4
 import urllib
 import re
+import sys
 
-def GetHymn(no): no = str(no)
+def GetHymn(no): 
+    no = str(no)
     while len(no)<3:
         no = "0" + no
     url = "http://notes.evl.fi/Virsikirja.nsf/pudotusvalikko/{}?OpenDocument".format(no)
@@ -27,6 +29,9 @@ def GetHymn(no): no = str(no)
     print("Wrote hymn no {}".format(no))
     return verses
 
-for idx in range(27,100):
-    GetHymn(idx)
+try:
+    for idx in range(int(sys.argv[1]),int(sys.argv[2])):
+        GetHymn(idx)
+except IndexError:
+    print("Usage: {} <first hymn number> <last hymn number>".format(sys.argv[0]))
 

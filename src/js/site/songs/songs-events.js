@@ -22,6 +22,7 @@ $(document).ready (function(){
         //Sanojen katseluikkuna
         var slv = new SongListView();
         $(".songlistview-toggle").click(function(){slv.Toggle()});
+        $(".songlistview select").change(function(){slv.LoadData($(this))});
     }
 });
 

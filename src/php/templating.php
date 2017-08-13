@@ -328,14 +328,27 @@ class UiMenu extends Template{
      * Jquery Ui:n menu-widgetin mukainen menupohja
      *
      * @param string $path polku templates-kansioon
-     * @param array $data elementit, jotka kuuluvat menuun
+     * @param array $data elementit, jotka kuuluvat menuun. Elementit voivat olla itse taulukoita, jolloin tehdään alemman tason lista. KUITENKIN NIIN, että vain yksi taso (toistaiseksi) mahdollinen. 
      *
      */
     public function __construct($path, $data){
         parent::__construct("$path/uimenu.tpl");
-        foreach($data as $item){
-            $tpl = new Template("$path/uimenurow.tpl");
-            $tpl->Set("item", $item);
+        foreach($data as $key=>$item){
+            if(is_array($item)){
+                $tpl = new Template("$path/uisubmenurow.tpl");
+                $tpl->Set("parentitem",$key);
+                $subitemlist = "";
+                foreach($item as $subitem){
+                    $subtpl = new Template("$path/uimenurow.tpl");
+                    $subtpl->Set("item", $subitem);
+                    $subitemlist .= "\n{$subtpl->Output()}";
+                }
+                $tpl->Set("subitems", $subitemlist);
+            }
+            else{
+                $tpl = new Template("$path/uimenurow.tpl");
+                $tpl->Set("item", $item);
+            }
             $this->rows[] = $tpl;
         }
         $this->Set("menuitems",$this->OutputRows());
@@ -634,10 +647,20 @@ class SongPage extends Page{
      *
      */
     public function SetSongViewElements(){
-        $alphabets = $this->con->q("SELECT ch FROM (SELECT DISTINCT substring(title FROM 1 FOR 1) as ch FROM songdata) as ll WHERE ch <> ' ' ORDER BY ch",Array(),"all");
-        $alphabets_flat = $this->con->q("SELECT ch FROM (SELECT DISTINCT substring(title FROM 1 FOR 1) as ch FROM songdata) as ll WHERE ch <> ' '",Array(),"all_flat");
-        $select = new Select($this->path, $alphabets, "Etsi alkukirjaimen perusteella", "Etsi alkukirjaimen perusteella", "alphaselect");
-        $this->Set("alphaselect",$select->Output());
+        $screenlimit = 50;
+        $alphabets = $this->con->q("SELECT ch FROM (SELECT DISTINCT substring(title FROM 1 FOR 1) as ch FROM songdata) as ll WHERE ch <> ' ' ORDER BY ch",Array(),"all_flat");
+        $alphabets_processed = Array();
+        foreach($alphabets as $idx=>$letter){
+            $letter_items = $this->con->q("SELECT title FROM songdata WHERE title LIKE :thisletter  ORDER BY title",Array("thisletter"=>"$letter%"),"all_flat");
+            $chunks = array_chunk($letter_items, $screenlimit);
+            $alphabets_processed[$letter] = Array();
+            foreach($chunks as $chunk){
+                $alphabets_processed[$letter][] = "$chunk[0] - {$chunk[sizeof($chunk)-1]}";
+            }
+        }
+        $menu = new UiMenu($this->path, $alphabets_processed);
+        $menu->Set("defaulttext","Selaa lauluja alkukirjaimen perusteella");
+        $this->Set("alphaselect",$menu->Output());
         return $this;
     }
 

@@ -4,10 +4,11 @@
  *
  */
 
+var loaderpath = "php/loaders";
 
 /**
  *
- *
+ * Laululistanäkymä
  *
  **/
 SongListView = function(){
@@ -15,13 +16,35 @@ SongListView = function(){
     this.$servicesonglist = $(".side-main");
     var self = this;
     /**
-     * Näytä sanalistanäkymä ja piilota messukohtainen näkymä.
+     * Näyttää sanalistanäkymän ja piilota messukohtaisen näkymän.
      */
     this.Toggle = function(){
-        self.$container.toggle()
         self.$servicesonglist.toggle()
+        self.$container.slideToggle()
     };
-    this.LoadByAlphabet = function(){
-    
+
+    /**
+     *
+     * Lataa suodatetun datan
+     *
+     * @param jQueryDom  launcher elementti, joka 
+     *
+     */
+    this.LoadData = function(launcher){
+        $.getJSON(loaderpath + "/songtitles.php",{songname:launcher.val(),fullname:"first-letter"},this.InsertData);
+    };
+
+    /**
+     *
+     * Syötä filtteröidyt laulut linkeiksi laululistasivulle
+     *
+     * @param Array data ajax-kyselyllä ladattu taulukko laulujen nimistä
+     *
+     */
+    this.InsertData = function(data){
+        $(".songnames-container").html("");
+        $.each(data,function(key, item){
+            $("<div><a href='javascript:void(0)'>" + item + "</a></div>").appendTo(".songnames-container");
+        });
     };
 }

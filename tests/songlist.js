@@ -137,7 +137,7 @@ describe("Sanojen katselu ja lisääminen",function(){
         nightmare.goto('http://localhost/majakkaportaali/songs.php?service_id=2').wait(".datarow")
         .type("[name='alkulaulu']","").type("[name='alkulaulu']","Virsi 001")
         .click(".lyricsindicator")
-        .click(".sideroller a")
+        .click("#editwordslink")
         .evaluate(function(){
             return document.querySelector(".sideroller textarea").name;
         })
@@ -167,7 +167,7 @@ describe("Sanojen katselu ja lisääminen",function(){
         .click(".lyricsindicator")
         .click("#editwordslink")
         .type(".sideroller textarea", "Kirjoitin uudet sanat.").wait(500)
-        .click(".sideroller button").wait(".versedata").wait(1500)
+        .click(".sideroller [type='button']").wait(".versedata").wait(1500)
         .evaluate(function(){
             return document.querySelector(".versedata").textContent;
         })
@@ -183,7 +183,7 @@ describe("Sanojen katselu ja lisääminen",function(){
         .click(".lyricsindicator")
         .click("#editwordslink")
         .type(".sideroller textarea", "Taas saavuin vanhaan autokahvilaan.\n\nSe ennen viimeistä kierrosta laalaalaa..\n\nLaalaalaa.").wait(500)
-        .click(".sideroller button").wait(".versedata").wait(300)
+        .click(".sideroller [type='button']").wait(".versedata").wait(300)
         .evaluate(function(){
             return document.querySelector(".versedata").textContent;
         })
