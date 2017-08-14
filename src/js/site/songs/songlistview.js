@@ -32,9 +32,14 @@ SongListView = function(){
      */
     this.LoadData = function(launcher){
         if(launcher[0].tagName == "LI" && launcher.find("li").length==0){
-            //Jos ei enää alakohtia kirjainlistalla
-            //TODO Virsi x - virsi y
-            $.getJSON(loaderpath + "/songtitles.php",{songname:launcher.text(),fullname:"first-letter"},this.InsertData);
+            //Etsi jquery UI-menun alin listataso
+            if(launcher.find("span").length>0){
+                //Jos kirjainjaettu alakohtiin, suodata niiden mukaan (esim. virsi 001-virsi 051)
+                $.getJSON(loaderpath + "/songtitles.php",{songname:"",firstspan:launcher.find("span:eq(0)").text(),lastspan:launcher.find("span:eq(1)").text()},this.InsertData);
+            }
+            else{
+                $.getJSON(loaderpath + "/songtitles.php",{songname:launcher.text(),fullname:"first-letter"},this.InsertData);
+            }
         }
     };
 
@@ -50,5 +55,6 @@ SongListView = function(){
         $.each(data,function(key, item){
             $("<div><a href='javascript:void(0)'>" + item + "</a></div>").appendTo(".songnames-container");
         });
+        $(".songnames-container a").click(function(){LoadLyricsByTitle($(this).text(),false)});
     };
 }

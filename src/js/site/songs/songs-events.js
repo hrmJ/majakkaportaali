@@ -19,10 +19,6 @@ $(document).ready (function(){
         //Tavuta laulutyypit soft-hypheneilla.
         $(".data-left").each(function(){ $(this).html($(this).html().replace(/([^ ])(laul)/,"$1&shy;$2").replace(/ (\d+)/,"&nbsp;$1"))});
 
-        //Sanojen katseluikkuna
-        var slv = new SongListView();
-        $(".songlistview-toggle").click(function(){slv.Toggle()});
-        $("#alpha-select li").click(function(){slv.LoadData($(this))});
     }
 });
 

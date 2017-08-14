@@ -226,6 +226,7 @@ function LoadLyricsByTitle(title, byid){
         if(byid) queryparams = {songname:title,byid:"yes"};
         $.getJSON(loaderpath + "/songcontent.php", queryparams,
                 function(data){
+                    console.log("lkj")
                     $(".sideroller > h2").text(data.title);
                     verses = data.verses.split(new RegExp(/\n{2,}/));
                     $(".versedata").html("");
@@ -354,9 +355,14 @@ SongListView = function(){
      */
     this.LoadData = function(launcher){
         if(launcher[0].tagName == "LI" && launcher.find("li").length==0){
-            //Jos ei enää alakohtia kirjainlistalla
-            //TODO Virsi x - virsi y
-            $.getJSON(loaderpath + "/songtitles.php",{songname:launcher.text(),fullname:"first-letter"},this.InsertData);
+            //Etsi jquery UI-menun alin listataso
+            if(launcher.find("span").length>0){
+                //Jos kirjainjaettu alakohtiin, suodata niiden mukaan (esim. virsi 001-virsi 051)
+                $.getJSON(loaderpath + "/songtitles.php",{songname:"",firstspan:launcher.find("span:eq(0)").text(),lastspan:launcher.find("span:eq(1)").text()},this.InsertData);
+            }
+            else{
+                $.getJSON(loaderpath + "/songtitles.php",{songname:launcher.text(),fullname:"first-letter"},this.InsertData);
+            }
         }
     };
 
@@ -372,6 +378,7 @@ SongListView = function(){
         $.each(data,function(key, item){
             $("<div><a href='javascript:void(0)'>" + item + "</a></div>").appendTo(".songnames-container");
         });
+        $(".songnames-container a").click(function(){LoadLyricsByTitle($(this).text(),false)});
     };
 }
 
@@ -396,10 +403,6 @@ $(document).ready (function(){
         //Tavuta laulutyypit soft-hypheneilla.
         $(".data-left").each(function(){ $(this).html($(this).html().replace(/([^ ])(laul)/,"$1&shy;$2").replace(/ (\d+)/,"&nbsp;$1"))});
 
-        //Sanojen katseluikkuna
-        var slv = new SongListView();
-        $(".songlistview-toggle").click(function(){slv.Toggle()});
-        $("#alpha-select li").click(function(){slv.LoadData($(this))});
     }
 });
 

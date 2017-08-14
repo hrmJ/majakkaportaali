@@ -659,7 +659,7 @@ class SongPage extends Page{
             else{
                 $alphabets_processed[$letter] = Array();
                 foreach($chunks as $chunk){
-                    $alphabets_processed[$letter][] = "$chunk[0] - {$chunk[sizeof($chunk)-1]}";
+                    $alphabets_processed[$letter][] = "<span>$chunk[0]</span> - <span>{$chunk[sizeof($chunk)-1]}</span>";
                 }
             }
         }

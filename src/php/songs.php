@@ -51,16 +51,21 @@ class SongData{
      *
      */
     public function OutputSongTitles($title, $checkfullname="no", $by="title"){
-        if ($checkfullname=="yes"){
-            //Jos kyseessä Jumalan karitsa tai pyhä-hymnit, hae eri taulusta
-            $from = ($by=="id" ? "liturgicalsongs" : "songdata");
-            $this->titleslist = $this->con->q("SELECT title FROM $from WHERE $by = :giventitle ORDER by title",Array("giventitle"=>$title),"all_flat");
-        }
-        else if($checkfullname=="no"){
-            $this->titleslist = $this->con->q("SELECT title FROM songdata WHERE $by LIKE :giventitle ORDER by title",Array("giventitle"=>"%$title%"),"all_flat");
-        }
-        else {
-            $this->titleslist = $this->con->q("SELECT title FROM songdata WHERE $by LIKE :giventitle ORDER by title",Array("giventitle"=>"$title%"),"all_flat");
+        switch($checkfullname){
+            case "yes": 
+                //Jos kyseessä Jumalan karitsa tai pyhä-hymnit, hae eri taulusta
+                $from = ($by=="id" ? "liturgicalsongs" : "songdata");
+                $this->titleslist = $this->con->q("SELECT title FROM $from WHERE $by = :giventitle ORDER by title",Array("giventitle"=>$title),"all_flat");
+                break;
+            case "no":
+                $this->titleslist = $this->con->q("SELECT title FROM songdata WHERE $by LIKE :giventitle ORDER by title",Array("giventitle"=>"%$title%"),"all_flat");
+                break;
+            case  "first-letter":
+                $this->titleslist = $this->con->q("SELECT title FROM songdata WHERE $by LIKE :giventitle ORDER by title",Array("giventitle"=>"$title%"),"all_flat");
+                break;
+            case  "spans":
+                $this->titleslist = $this->con->q("SELECT title FROM songdata WHERE title between :span1 AND :span2 ORDER by title",Array("span1"=>$this->firstspan,"span2"=>$this->lastspan),"all_flat");
+                break;
         }
         echo json_encode($this->titleslist);
     }
@@ -73,6 +78,7 @@ class SongData{
      */
     public function OutputSongInfo($title, $by){
         $from = ($by=="id" ? "liturgicalsongs" : "songdata");
+        var_dump($title);
         $row = $this->con->q("SELECT title, verses FROM $from WHERE $by = :giventitle ORDER by title",Array("giventitle"=>$title),"row");
         $this->songcontent = Array("title"=>$row["title"],"verses"=>$row["verses"]);
         echo json_encode($this->songcontent);

@@ -70,6 +70,7 @@ function LoadLyricsByTitle(title, byid){
         if(byid) queryparams = {songname:title,byid:"yes"};
         $.getJSON(loaderpath + "/songcontent.php", queryparams,
                 function(data){
+                    console.log("lkj")
                     $(".sideroller > h2").text(data.title);
                     verses = data.verses.split(new RegExp(/\n{2,}/));
                     $(".versedata").html("");
