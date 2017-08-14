@@ -70,7 +70,6 @@ function LoadLyricsByTitle(title, byid){
         if(byid) queryparams = {songname:title,byid:"yes"};
         $.getJSON(loaderpath + "/songcontent.php", queryparams,
                 function(data){
-                    console.log("lkj")
                     $(".sideroller > h2").text(data.title);
                     verses = data.verses.split(new RegExp(/\n{2,}/));
                     $(".versedata").html("");
@@ -163,4 +162,14 @@ function SaveLyrics(){
         );
 }
 
+/**
+ *
+ * Sulje sanojen hallintaikkuna
+ *
+ */
+function CloseWordEdit(){
+    $(".sideroller").hide()
+    var show_this = $(".sideroller").hasClass("songlistview-is-on")  ? ".songlistview" : ".side-main";
+    $(show_this).show();
+}
 

@@ -78,7 +78,6 @@ class SongData{
      */
     public function OutputSongInfo($title, $by){
         $from = ($by=="id" ? "liturgicalsongs" : "songdata");
-        var_dump($title);
         $row = $this->con->q("SELECT title, verses FROM $from WHERE $by = :giventitle ORDER by title",Array("giventitle"=>$title),"row");
         $this->songcontent = Array("title"=>$row["title"],"verses"=>$row["verses"]);
         echo json_encode($this->songcontent);

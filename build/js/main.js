@@ -226,7 +226,6 @@ function LoadLyricsByTitle(title, byid){
         if(byid) queryparams = {songname:title,byid:"yes"};
         $.getJSON(loaderpath + "/songcontent.php", queryparams,
                 function(data){
-                    console.log("lkj")
                     $(".sideroller > h2").text(data.title);
                     verses = data.verses.split(new RegExp(/\n{2,}/));
                     $(".versedata").html("");
@@ -319,6 +318,16 @@ function SaveLyrics(){
         );
 }
 
+/**
+ *
+ * Sulje sanojen hallintaikkuna
+ *
+ */
+function CloseWordEdit(){
+    $(".sideroller").hide()
+    var show_this = $(".sideroller").hasClass("songlistview-is-on")  ? ".songlistview" : ".side-main";
+    $(show_this).show();
+}
 
 
 /**
@@ -342,8 +351,10 @@ SongListView = function(){
      * Näyttää sanalistanäkymän ja piilota messukohtaisen näkymän.
      */
     this.Toggle = function(){
+        $(".sideroller").hide();
         self.$servicesonglist.toggle()
-        self.$container.slideToggle()
+        self.$container.toggle()
+        $(".sideroller").toggleClass("songlistview-is-on");
     };
 
     /**
@@ -378,8 +389,24 @@ SongListView = function(){
         $.each(data,function(key, item){
             $("<div><a href='javascript:void(0)'>" + item + "</a></div>").appendTo(".songnames-container");
         });
-        $(".songnames-container a").click(function(){LoadLyricsByTitle($(this).text(),false)});
+        $(".songnames-container a").click(function(){LoadLyricsByTitle($(this).text(),false);
+                                           self.ToggleLyricsView()});
     };
+
+    /**
+     *
+     * Näytä ikkuna sanojen katselemista varten (ja mobiilitilassa sulje muut ikkunat)
+     *
+     *
+     */
+    this.ToggleLyricsView = function(){
+        //Piilota muut kuin laulun sanat, jos pienempi näyttö
+        if(!$("nav .dropdown").is(":visible")) self.$container.hide();
+        //Lisää sanannäyttödiviin luokka sen tunnistamiseksi, että kutsuttu laulujen nimi-näkymästä
+        $(".sideroller").show("slide");
+    };
+
+    
 }
 
 /**
@@ -398,11 +425,15 @@ $(document).ready (function(){
         $(".sideroller").hide();
         $(".menu").menu({position: { my: "bottom", at: "right-5 top+5" }});
         $("#editwordslink").click(EditLyrics);
-        $("#closewordeditlink").click(function(){$(".sideroller").hide();$(".side-main").show()});
+        $("#closewordeditlink").click(CloseWordEdit);
         $(".multisongs [type='button']").click(AddMultisongsRow);
         //Tavuta laulutyypit soft-hypheneilla.
         $(".data-left").each(function(){ $(this).html($(this).html().replace(/([^ ])(laul)/,"$1&shy;$2").replace(/ (\d+)/,"&nbsp;$1"))});
 
+        //Sanojen katseluikkuna
+        var slv = new SongListView();
+        $(".songlistview-toggle").click(function(){slv.Toggle()});
+        $("#alpha-select li").click(function(){slv.LoadData($(this))});
     }
 });
 

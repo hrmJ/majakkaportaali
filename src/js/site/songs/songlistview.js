@@ -19,8 +19,10 @@ SongListView = function(){
      * Näyttää sanalistanäkymän ja piilota messukohtaisen näkymän.
      */
     this.Toggle = function(){
+        $(".sideroller").hide();
         self.$servicesonglist.toggle()
-        self.$container.slideToggle()
+        self.$container.toggle()
+        $(".sideroller").toggleClass("songlistview-is-on");
     };
 
     /**
@@ -55,6 +57,22 @@ SongListView = function(){
         $.each(data,function(key, item){
             $("<div><a href='javascript:void(0)'>" + item + "</a></div>").appendTo(".songnames-container");
         });
-        $(".songnames-container a").click(function(){LoadLyricsByTitle($(this).text(),false)});
+        $(".songnames-container a").click(function(){LoadLyricsByTitle($(this).text(),false);
+                                           self.ToggleLyricsView()});
     };
+
+    /**
+     *
+     * Näytä ikkuna sanojen katselemista varten (ja mobiilitilassa sulje muut ikkunat)
+     *
+     *
+     */
+    this.ToggleLyricsView = function(){
+        //Piilota muut kuin laulun sanat, jos pienempi näyttö
+        if(!$("nav .dropdown").is(":visible")) self.$container.hide();
+        //Lisää sanannäyttödiviin luokka sen tunnistamiseksi, että kutsuttu laulujen nimi-näkymästä
+        $(".sideroller").show("slide");
+    };
+
+    
 }
