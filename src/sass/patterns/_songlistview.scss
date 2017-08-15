@@ -20,8 +20,63 @@
 
     margin-top:2em;
 
-    div{
+    > div:not(.songname-select){
         margin-right:1em;
         margin-top:0.2em;
     }
 }
+
+//Kelluva valikko
+
+.songname-select{
+    position:absolute;
+
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-around;
+    align-items: center;
+
+    padding:0.5em;
+
+    z-index:10;
+    background: white;
+    border:1px solid darken($datarowbg, 10%);
+    @include shadow;
+}
+
+.songname-select-option{
+    flex: 0 0 1.2em;
+    background: white;
+    width:100%;
+    margin-top:0.5em;
+    padding:0.2em;
+}
+
+.songname-select-option:hover{
+    @include pointer;
+    background:black;
+    color:white;
+}
+
+.songrole-select{
+    position:absolute;
+    background:white;
+    z-index:20;
+    @include shadow;
+    display:flex;
+    flex-flow:row wrap;
+    width:300px;
+    
+    div{
+        color:black;
+        margin:0.3em;
+    }
+}
+
+//Ei-aktiivisen sisällön hämärrin
+.blurcover{
+    position:absolute;
+    background:$blurcolor;
+    z-index:1;
+}
+

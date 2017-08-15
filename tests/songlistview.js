@@ -9,7 +9,7 @@ const nightmare = new Nightmare({
 });
 
 
-describe.only("Laululistaikkuna", function(){
+describe("Laululistaikkuna", function(){
   this.timeout( 5000 );
     it("avautuu, kun käyttäjä painaa 'Selaa laulujen listaa'",(done) => {
         nightmare
@@ -41,20 +41,8 @@ describe.only("Laululistaikkuna", function(){
     });
 
 
-    it("Käyttäjä hakee laulua nimellä",(done) => {
-        nightmare
-          .goto('http://localhost/majakkaportaali/songs.php?id=2')
-          .wait(".songlistview-toggle")
-          .click(".songlistview-toggle")
-          .select(".songlistview select","V").wait(600)
-          .evaluate(function(){
-              return $(".songnames-container").text();
-          })
-          .then((songlist) => {
-              assert.match(songlist,/Virsi 00/)
-              done();
-          }).catch(done);
-    });
-
+    it("Käyttäjä hakee laulua nimellä");
+    it("Käyttäjä klikkaa laulua ja valitsee avautuvasta menusta *katso sanoja*");
+    it("Käyttäjä klikkaa laulua ja valitsee avautuvasta menusta *käytä tässä messussa*");
 
 });
