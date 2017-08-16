@@ -376,9 +376,9 @@ SongListView = function(){
         self.$servicesonglist.toggle()
         self.$container.toggle()
         $(".sideroller").toggleClass("songlistview-is-on");
-        if(!$("#number-of-songs").text()){
-            $.
-        }
+        //if(!$("#number-of-songs").text()){
+        //    $.
+        //}
     };
 
 
