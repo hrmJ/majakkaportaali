@@ -52,22 +52,23 @@
     padding:0.2em;
 }
 
-.songname-select-option:hover{
+.songname-select-option:hover, .songrole-select div:hover{
     @include pointer;
     background:black;
     color:white;
 }
 
+//Käytä laulua -valikko
 .songrole-select{
     position:absolute;
-    background:white;
     z-index:20;
-    @include shadow;
     display:flex;
     flex-flow:row wrap;
-    width:300px;
     
     div{
+        background:white;
+        padding:0.4em;
+        margin:0.5em;
         color:black;
         margin:0.3em;
     }

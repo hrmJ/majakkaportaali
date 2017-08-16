@@ -44,5 +44,7 @@ describe("Laululistaikkuna", function(){
     it("Käyttäjä hakee laulua nimellä");
     it("Käyttäjä klikkaa laulua ja valitsee avautuvasta menusta *katso sanoja*");
     it("Käyttäjä klikkaa laulua ja valitsee avautuvasta menusta *käytä tässä messussa*");
+    it("Käyttäjä klikkaa peruuta-nappia, ja roolinvalintavalikko häviää");
+    it("Käyttäjä näkee viestin jossa kerrotaan, että laulu on onnistuneesti asetettu alkulauluksi");
 
 });

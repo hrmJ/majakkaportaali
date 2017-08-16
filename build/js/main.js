@@ -35,6 +35,16 @@ $(document).ready(function(){
 
 //Yleisluontoisia apufunktioita
 //
+//
+
+
+/**
+ *
+ * Skrollaa jokin elementti keskelle ruutua
+ *
+ * @param object $el jquery-olio, joka halutaan keskelle
+ *
+ */
 function ScrollToCenter($el){
   //https://stackoverflow.com/questions/18150090/jquery-scroll-element-to-the-middle-of-the-screen-instead-of-to-the-top-with-a
   var elOffset = $el.offset().top;
@@ -51,6 +61,17 @@ function ScrollToCenter($el){
   var speed = 700;
   $('html, body').animate({scrollTop:offset}, speed);
 
+}
+
+/**
+ *
+ * Sumenna tausta esim. kelluvan valikon alta
+ *
+ *
+ */
+function BlurContent(){
+    $(".blurcover").remove();
+    $("<div class='blurcover'></div>").css({height:$("body").height(),width:$("body").width()}).prependTo($("body"));
 }
 
 /**
@@ -368,27 +389,14 @@ SongListView = function(){
      */
     this.SelectAction = function(launcher){
         //Lisää himmennin muulle näytölle
-        $("<div class='blurcover'></div>").css({height:$("body").height(),width:$("body").width()}).prependTo($("body"));
+        BlurContent();
         //Tallenna laulun nimi käyttöä varten
         self.active_launcher = launcher;
         launcher.parent()
             .addClass("songname-select")
-            .append($("<div class='songname-select-option'>Katso sanoja</div>").click(function(){
-                //Lataa sanojen katseluikkuna
-                LoadLyricsByTitle(self.active_launcher.text(),false);
-                self.ToggleLyricsView();
-                self.HideActionSelectors();
-            }
-            ))
-            .append($("<div class='songname-select-option'>Käytä laulua</div>").click(function(){
-                //Valitse, mikä rooli laululle annetaan messussa
-                var $roleselector = $("<div class='songrole-select'></div>")
-                                    .css(self.GetActiveLauncherPosition($(this)))
-                                    .prependTo(self.active_launcher);
-               $(".data-left").each(function(){
-                   $("<div>" + $(this).text() + "</div>").appendTo($roleselector);
-               })
-            }))
+            .append($("<div class='songname-select-option'>Katso sanoja</div>").click(self.ToggleLyricsView))
+            .append($("<div class='songname-select-option'>Käytä laulua</div>").click(self.ToggleRoleSelect))
+            .find("a,div").wrapAll("<div class='option-container'></div>")
             .slideDown("slow");
     };
 
@@ -398,10 +406,16 @@ SongListView = function(){
      * sijainti + elementin pituus
      *
      */
-    this.GetActiveLauncherPosition = function(el){
-        console.log(el);
-        var par = self.active_launcher.parent()
-        var pos = {left:"3px", top:"-2px"}
+    this.GetActiveLauncherPosition = function(){
+        var par = ($(".songname-select"));
+        if(($(".container").width() - (par.position().left + par.width()))<300){
+            var pos = {left:-par.position().left + "px", top:"-50px", width:$(".container").width()}
+            //Pienellä näytöllä piilota alta pois valintalinkit
+            $(".option-container").hide();
+        }
+        else{
+            var pos = {left:par.width()+40+"px", top:"-50px", width:"300px"}
+        }
         return pos;
     }
 
@@ -409,10 +423,13 @@ SongListView = function(){
      *
      * Piilota kaikki kelluvat valitsinikkunat
      *
+     * @param boolean removeblur poistetaanko taustan himmennys
+     *
      */
-    this.HideActionSelectors = function(){
-        $(".blurcover").remove();
+    this.HideActionSelectors = function(removeblur){
+        if(removeblur) $(".blurcover").remove();
         $(".songname-select-option").remove();
+        $(".songrole-select").remove();
         $(".songnames-container div").removeClass("songname-select");
     }
 
@@ -459,13 +476,35 @@ SongListView = function(){
      *
      */
     this.ToggleLyricsView = function(){
+        LoadLyricsByTitle(self.active_launcher.text(),false);
+        self.HideActionSelectors(true);
         //Piilota muut kuin laulun sanat, jos pienempi näyttö
         if(!$("nav .dropdown").is(":visible")) self.$container.hide();
         //Lisää sanannäyttödiviin luokka sen tunnistamiseksi, että kutsuttu laulujen nimi-näkymästä
         $(".sideroller").show();
     };
 
+    /**
+     * 
+     * Avaa ikkuna ja valitse, mikä rooli laululle annetaan messussa.
+     *
+     */
+    this.ToggleRoleSelect = function(){
+        var $roleselector = $("<div class='songrole-select'></div>").css(self.GetActiveLauncherPosition()).prependTo($(".songname-select"));
+        $(".data-left").each(function(){ $("<div>" + $(this).text() + "</div>").appendTo($roleselector).click(self.SetSongRole)});
+    };
     
+    /**
+     * 
+     * Aseta laululle rooli
+     *
+     */
+    this.SetSongRole = function(){
+        //Vaihda uusi laulu tekstikenttään
+        $('.data-left:contains("' + $(this).text().trim() + '")').next().find("input").val(self.active_launcher.text());
+        self.HideActionSelectors(true);
+    };
+
 }
 
 
