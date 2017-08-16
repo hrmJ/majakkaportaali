@@ -376,12 +376,15 @@ SongListView = function(){
         self.$servicesonglist.toggle()
         self.$container.toggle()
         $(".sideroller").toggleClass("songlistview-is-on");
+        if(!$("#number-of-songs").text()){
+            $.
+        }
     };
 
 
     /**
      *
-     * Näytä valitsin, jossa käyttäjä voi päättää, haluaako katsoa
+     * Näyttä valitsimen, jossa käyttäjä voi päättää, haluaako katsoa
      * laulun sanoa vai käyttää laulua esim. alkulauluna
      *
      * @param object launcher linkki, joka ikkunan käynnistää
@@ -402,7 +405,7 @@ SongListView = function(){
 
     /**
      *
-     * Palauta mäppinä css:ää varten tapahtuman käynnistäneen elementin
+     * Palauttaa mäppinä css:ää varten tapahtuman käynnistäneen elementin
      * sijainti + elementin pituus
      *
      */
@@ -421,7 +424,7 @@ SongListView = function(){
 
     /**
      *
-     * Piilota kaikki kelluvat valitsinikkunat
+     * Piilottaa kaikki kelluvat valitsinikkunat
      *
      * @param boolean removeblur poistetaanko taustan himmennys
      *
@@ -435,9 +438,9 @@ SongListView = function(){
 
     /**
      *
-     * Lataa suodatetun datan
+     * Lataa suodatetut laulujen nimet
      *
-     * @param jQueryDom  launcher elementti, joka 
+     * @param jQueryDom  launcher elementti, joka käynnistää latauksen
      *
      */
     this.LoadData = function(launcher){
