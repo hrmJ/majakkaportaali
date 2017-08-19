@@ -32,7 +32,6 @@ function ScrollToCenter($el){
  *
  * Sumenna tausta esim. kelluvan valikon alta
  *
- *
  */
 function BlurContent(){
     $(".blurcover").remove();
