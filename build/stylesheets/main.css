@@ -329,3 +329,8 @@ h3 {
   position: absolute;
   background: rgba(128, 128, 128, 0.8);
   z-index: 1; }
+
+.my-lightbox {
+  position: absolute;
+  background: grey;
+  z-index: 1; }

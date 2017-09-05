@@ -25,12 +25,25 @@ class PresentationTest extends TestCase
     /**
      * Testaa, että pohjaolio on määritelty ja sitä pystyy käyttämään.
      */
-    public function testLoadFirstSong()
+    public function testRepresentSong()
     {
-        $this->mytemplate = new Template("");
-        $this->assertTrue(get_class($this->mytemplate) == "Template", "Ei onnistuttu luomaan template-oliota");
+        $this->mytemplate = new PresentationSong($this->templatepath, "Ukko Nooa");
+        $this->assertTrue(get_class($this->mytemplate) == "PresentationSong", "Ei onnistuttu luomaan template-oliota");
+        $this->assertRegExp('/.*oli kunnon mies.*/', $this->mytemplate->songdata["verses"]);
+        $this->mytemplate->Set("title",$this->mytemplate->songdata["title"])
+                         ->Set("lyricsby",$this->mytemplate->songdata["lyrics"])
+                         ->Set("composer",$this->mytemplate->songdata["composer"])
+                         ->Set("verses", $this->mytemplate->SetVerses());
+        $this->assertRegExp('/.*oli kunnon mies.*/', $this->mytemplate->Output());
     }
 
+    /**
+     * Testaa luoda kaikki messun X laulut dioiksi.
+     */
+    public function testRepresentAllSongsInService()
+    {
+
+    }
 
 }
 

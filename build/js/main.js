@@ -67,12 +67,33 @@ function ScrollToCenter($el){
  *
  * Sumenna tausta esim. kelluvan valikon alta
  *
- *
  */
 function BlurContent(){
     $(".blurcover").remove();
     $("<div class='blurcover'></div>").css({height:$("body").height(),width:$("body").width()}).prependTo($("body"));
 }
+
+/**
+ * Periytymisen järjestämistä helpottava funktio.
+ * https://stackoverflow.com/questions/4152931/javascript-inheritance-call-super-constructor-or-use-prototype-chain
+ *
+ * @param function base olio, joka peritään
+ * @param function sub olio, joka perii
+ *
+ */
+function extend(base, sub) {
+  var origProto = sub.prototype;
+  sub.prototype = Object.create(base.prototype);
+  for (var key in origProto)  {
+     sub.prototype[key] = origProto[key];
+  }
+  // The constructor property was set wrong, let's fix it
+  Object.defineProperty(sub.prototype, 'constructor', { 
+    enumerable: false, 
+    value: sub 
+  });
+}
+
 
 /**
 *
@@ -174,6 +195,101 @@ $(document).ready(function(){
         LoadComments();
     }
 });
+
+/**
+ * Tapahtumat, jotka liittyvät messurakenteen määrittelyyn
+ */
+
+var adder = undefined;
+
+$(document).ready(function(){
+    if($("body").hasClass("service_structure")){
+
+        /**
+         *
+         * Valitse, mitä sisältöä ryhdytään lisäämään. 
+         * Valintamenun  (jqueryui menu) callback.
+         *
+         */
+        function SelectTheContentToAdd(e, u){
+            if(u.item.find("span").length==0){
+                switch(u.item.text()){
+                    //case "Yksittäinen dia":
+                    //    break;
+                    default:
+                        adder = new SingleSlideAdder(u.item.parents(".structural-element-add"));
+                        break;
+                }
+                adder.ShowWindow();
+            }
+        }
+
+        $(".menu").menu({ position: { my: "bottom", at: "right-5 top+5" }, select: SelectTheContentToAdd});
+
+    }
+    }
+);
+
+/**
+ *
+ * Olio, jolla lisätään uusia esitykseen liittyviä messun rakenneosia.
+ *
+ * @param object $container jquery-oliona se div, jonka sisältä valittiin syöttää uusi elementti
+ *
+ */
+var StructuralElementAdder = function($container){
+        this.$lightbox = $("<div class='my-lightbox structural-element-adder'></div>");
+        this.$container = $container;
+}
+
+StructuralElementAdder.prototype = {
+
+    /**
+     *  Näytä ikkuna, jossa käyttäjä voi valita lisättävän messun osan tyypin
+     *
+     */
+    ShowWindow: function(){
+        var self = this;
+        this.$container.prepend(this.$lightbox.append($("<div><button id='savebutton'>Tallenna</button></div>")));
+        $("#savebutton").click(function(){self.SaveAndClose();});
+    },
+
+    /**
+     * Nollaa lisäysvalikon sisältö ja syötä uusi sisältö.
+     *
+     * @param object $el jquery-olio, joka syötetään  lightbox-ikkunan sisään
+     *
+     */
+    SetLightBox: function($el){
+        this.$lightbox.html("").prepend($el);
+    },
+
+    /**
+     *  Sulje lisäysvalikkoikkuna ja tallenna muutokset
+     */
+    SaveAndClose: function(){
+        this.$lightbox.html("");
+    },
+
+}
+
+
+/**
+ *
+ * Yksittäisen diasisällön lisäävä olio.
+ *
+ * @param object $container jquery-oliona se div, jonka sisältä valittiin syöttää uusi elementti
+ *
+ */
+var SingleSlideAdder = function($container){
+    StructuralElementAdder.call(this, $container);
+    this.SetLightBox($("<div><textarea id='singleslidetext'></textarea></div>"));
+    return this;
+}
+
+
+
+extend(StructuralElementAdder, SingleSlideAdder);
 
 /**
  *

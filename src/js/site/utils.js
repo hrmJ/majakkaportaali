@@ -37,3 +37,25 @@ function BlurContent(){
     $(".blurcover").remove();
     $("<div class='blurcover'></div>").css({height:$("body").height(),width:$("body").width()}).prependTo($("body"));
 }
+
+/**
+ * Periytymisen järjestämistä helpottava funktio.
+ * https://stackoverflow.com/questions/4152931/javascript-inheritance-call-super-constructor-or-use-prototype-chain
+ *
+ * @param function base olio, joka peritään
+ * @param function sub olio, joka perii
+ *
+ */
+function extend(base, sub) {
+  var origProto = sub.prototype;
+  sub.prototype = Object.create(base.prototype);
+  for (var key in origProto)  {
+     sub.prototype[key] = origProto[key];
+  }
+  // The constructor property was set wrong, let's fix it
+  Object.defineProperty(sub.prototype, 'constructor', { 
+    enumerable: false, 
+    value: sub 
+  });
+}
+

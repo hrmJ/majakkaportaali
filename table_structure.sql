@@ -10,8 +10,7 @@ CREATE TABLE `seasons` (
   `startdate` date DEFAULT NULL,
   `enddate` date DEFAULT NULL,
   `theme` varchar(100) DEFAULT NULL,
-  `comments` text,
-  `name` varchar(100) DEFAULT NULL,
+  `comments` text, `name` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE utf8_general_ci;
 
@@ -113,4 +112,31 @@ CREATE TABLE `comments` (
   CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table presentation_content``
+--
+
+
+--
+-- Table structure for table presentation_content``
+--
+
+CREATE TABLE presentation_structure (
+  id int(10) unsigned NOT NULL AUTO_INCREMENT,
+  slot_name varchar(300) DEFAULT NULL,
+  PRIMARY KEY (id)
+) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
+
+CREATE TABLE presentation_content (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `service_id` int(10) unsigned NOT NULL,
+  `content_type` varchar(100) DEFAULT NULL,
+  `content` text DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `service_index` (`service_id`),
+  CONSTRAINT `presentation_content_ibfk_1` FOREIGN KEY (`slot_id`) REFERENCES `presentation_structure` (`id`) ON DELETE CASCADE
+) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
+
 

@@ -378,6 +378,11 @@ class Page extends Template{
                 $bodyclass = "songs";
                 $title = "Laulut majakkamessuun xx. (Bändinä x)";
                 break;
+            case "service_structure":
+                $this->con = new DbCon("$this->path/../../config.ini");
+                $byline = "Messurakenne";
+                $bodyclass = "service_structure";
+                break;
             case "servicelist":
                 $this->con = new ServiceListCon("$this->path/../../config.ini");
                 $byline = "Majakkamessut kaudelle x";
@@ -691,6 +696,8 @@ class SongPage extends Page{
 
 
 }
+
+
 
 ?>
 
