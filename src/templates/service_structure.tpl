@@ -10,4 +10,10 @@
             </div>
         </div>
     </section>
+    <div class="hidden">
+        <div class="singleslide slidemodel">
+            <div><input type="text" placeholder="Esityksen rakenteessa näkyvä tunniste "></input></div>
+            <div><textarea class='singleslidetext'></textarea></div>
+        </div>
+    <div>
 </div>

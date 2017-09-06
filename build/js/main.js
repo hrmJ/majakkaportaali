@@ -261,7 +261,7 @@ StructuralElementAdder.prototype = {
      *
      */
     SetLightBox: function($el){
-        this.$lightbox.html("").prepend($el);
+        this.$lightbox.html("").prepend($(this.slideclass).clone(true));
     },
 
     /**
@@ -283,7 +283,8 @@ StructuralElementAdder.prototype = {
  */
 var SingleSlideAdder = function($container){
     StructuralElementAdder.call(this, $container);
-    this.SetLightBox($("<div><textarea id='singleslidetext'></textarea></div>"));
+    this.slideclass = ".singleslide";
+    this.SetLightBox();
     return this;
 }
 

@@ -115,27 +115,28 @@ CREATE TABLE `comments` (
 
 
 --
--- Table structure for table presentation_content``
---
-
-
---
--- Table structure for table presentation_content``
+-- Table structure for table presentation_structure``
 --
 
 CREATE TABLE presentation_structure (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
   slot_name varchar(300) DEFAULT NULL,
+  slot_type varchar(300) DEFAULT NULL,
   PRIMARY KEY (id)
 ) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
 
+--
+-- Table structure for table presentation_content``
+--
+
 CREATE TABLE presentation_content (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `service_id` int(10) unsigned NOT NULL,
+  `slot_id` int(10) unsigned NOT NULL,
   `content_type` varchar(100) DEFAULT NULL,
+  `new_slide` varchar(100) DEFAULT NULL,
   `content` text DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `service_index` (`service_id`),
+  KEY `service_index` (`slot_id`),
   CONSTRAINT `presentation_content_ibfk_1` FOREIGN KEY (`slot_id`) REFERENCES `presentation_structure` (`id`) ON DELETE CASCADE
 ) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
 

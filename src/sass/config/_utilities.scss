@@ -6,6 +6,9 @@ $paths: ('icons':$rootpath + "assets/images/icons/",
 $hamburger: map-get($paths,"icons") + "hamburger.svg";
 $contpadding: 3em;
 
+.hidden{
+    display:none;
+}
 
 @mixin pointer{
     cursor: pointer;

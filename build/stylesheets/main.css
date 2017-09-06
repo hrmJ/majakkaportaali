@@ -1,4 +1,7 @@
 @import url("https://fonts.googleapis.com/css?family=Lustria|Noto+Serif");
+.hidden {
+  display: none; }
+
 body {
   color: #666666;
   font-family: "Roboto", sans-serif; }
@@ -334,3 +337,6 @@ h3 {
   position: absolute;
   background: grey;
   z-index: 1; }
+
+.slidemodel {
+  display: flex; }

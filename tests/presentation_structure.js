@@ -19,7 +19,7 @@ describe.only("Messun rakenne", function(){
     nightmare
       .goto('http://localhost/majakkaportaali/service_structure.php').wait(700)
       .wait(".structural-element-add")
-      .click(".structural-element-add ul li li")
+      .click(".structural-element-add ul li li li")
       .evaluate(function(){
           return document.querySelector(".structural-element-adder");
       })
@@ -47,7 +47,7 @@ describe.only("Messun rakenne", function(){
   });
 
 
-  it('Tallenna yksittäisen dian lisäys tietokantaan ja sulje lisäysikkuna', (done) => {
+  it('Sulje lisäysikkuna', (done) => {
     nightmare
       .goto('http://localhost/majakkaportaali/service_structure.php').wait(100)
       .wait(".structural-element-add")
@@ -62,6 +62,24 @@ describe.only("Messun rakenne", function(){
       })
       .then((adderwindow_html) => {
           assert.equal(adderwindow_html,"");
+          done();
+      }).catch(done);
+  });
+
+  it('Kun käyttäjä kirjoittaa ät-merkin, oikealle avautuu valikko, josta voi valita messuvastuita', (done) => {
+    nightmare
+      .goto('http://localhost/majakkaportaali/service_structure.php').wait(100)
+      .wait(".structural-element-add")
+      .click(".structural-element-add ul li li")
+      .wait(".structural-element-adder textarea")
+      .type(".structural-element-adder textarea","")
+      .type(".structural-element-adder textarea","Tässä messussa juontajana on @ ja lapsia kaitsee pyhisvastaava @")
+      .wait("#savebutton")
+      .evaluate(function(){
+          return document.querySelector(".injectselect");
+      })
+      .then((injectselect) => {
+          assert.isNotNull(injectselect,"Valintaikkuna ei ilmestynyt");
           done();
       }).catch(done);
   });
