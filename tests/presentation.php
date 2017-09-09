@@ -37,13 +37,6 @@ class PresentationTest extends TestCase
         $this->assertRegExp('/.*oli kunnon mies.*/', $this->mytemplate->Output());
     }
 
-    /**
-     * Testaa luoda kaikki messun X laulut dioiksi.
-     */
-    public function testRepresentAllSongsInService()
-    {
-
-    }
 
 }
 

@@ -40,6 +40,10 @@ gulp.task("phpmain",function(){
     gulp.src(folder.src + "*.php").pipe(newer(out.phpmain)).pipe(gulp.dest(out.phpmain));
 });
 
+gulp.task("htmlmain",function(){
+    gulp.src(folder.src + "*.html").pipe(newer(out.phpmain)).pipe(gulp.dest(out.phpmain));
+});
+
 gulp.task("templates",function(){
     gulp.src(folder.src + "templates/**/*").pipe(newer(out.templates)).pipe(gulp.dest(out.templates));
 });
@@ -64,6 +68,7 @@ gulp.task("watch",function(){
 
     gulp.watch(folder.src + "php/**/*",["phputils"]);
     gulp.watch(folder.src + "*.php",["phpmain"]);
+    gulp.watch(folder.src + "*.html",["htmlmain"]);
     gulp.watch(folder.src + "templates/**/*",["templates"]);
     gulp.watch(folder.src + "js/site/**/*.js",["js"]);
     gulp.watch(folder.src + "sass/**/*",["css"]);
@@ -71,5 +76,5 @@ gulp.task("watch",function(){
 
 });
 
-gulp.task('run',['phputils','phpmain','templates','js','css','vendors','assets']);
+gulp.task('run',['phputils','phpmain','templates','js','css','vendors','assets','htmlmain']);
 gulp.task('default',['run','watch']);

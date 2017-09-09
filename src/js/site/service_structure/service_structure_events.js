@@ -19,7 +19,7 @@ $(document).ready(function(){
                     //case "Yksittäinen dia":
                     //    break;
                     default:
-                        adder = new SingleSlideAdder(u.item.parents(".structural-element-add"));
+                        adder = new InfoSlideAdder(u.item.parents(".structural-element-add"));
                         break;
                 }
                 adder.ShowWindow();

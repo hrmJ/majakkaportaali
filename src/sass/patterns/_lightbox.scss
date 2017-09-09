@@ -1,6 +1,8 @@
 // lightbox-tyyppinen ikkuna
 .my-lightbox{
     position:absolute;
-    background:grey;
+    background:$lightboxbg;
     z-index:1;
+    @include shadow;
+    padding:1em;
 }

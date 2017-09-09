@@ -10,5 +10,9 @@ include("src/php/presentation_song.php");
 include("src/php/utilities.php");
 include("src/php/service_structure_page.php");
 include("src/php/structural_unit.php");
+include("src/php/service_data_loader.php");
+include("src/php/slideloader.php");
+include("src/php/slide.php");
+include("src/php/segment.php");
 
 ?>

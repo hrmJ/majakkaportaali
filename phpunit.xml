@@ -3,6 +3,7 @@
         <testsuite name="unit tests">
             <file>tests/presentation.php</file>
             <file>tests/service_structure.php</file>
+            <file>tests/slides.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

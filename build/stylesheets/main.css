@@ -34,7 +34,7 @@ main {
   margin-left: auto;
   margin-right: auto;
   background: #ffffff;
-  min-height: 100vh;
+  min-height: 170vh;
   padding-bottom: 3em; }
 
 .innercontent {
@@ -335,8 +335,43 @@ h3 {
 
 .my-lightbox {
   position: absolute;
-  background: grey;
-  z-index: 1; }
+  background: #C5CEC7;
+  z-index: 1;
+  -moz-box-shadow: 2px 2px 8px 4px #5f5f5f;
+  -webkit-box-shadow: 2px 2px 8px 4px #5f5f5f;
+  box-shadow: 2px 2px 8px 4px #5f5f5f;
+  padding: 1em; }
+
+.structural-element-add {
+  position: relative; }
 
 .slidemodel {
+  left: -10px; }
+
+.slidemodel-flex {
+  margin-top: 1em;
+  padding-top: 1em;
+  border-top: 1px solid #dadada;
   display: flex; }
+  .slidemodel-flex > div:first-of-type {
+    flex: 2 1 60%; }
+  .slidemodel-flex > div:nth-of-type(2) {
+    flex: 1 1 40%; }
+  .slidemodel-flex > div textarea {
+    width: 90%;
+    min-height: 7em; }
+
+.slidemodel-flex-column > div {
+  width: 100%; }
+  .slidemodel-flex-column > div input[type='text'] {
+    width: 100%; }
+
+.preview-window {
+  position: absolute;
+  z-index: 3;
+  border: 1px solid black;
+  -moz-box-shadow: 2px 2px 8px 4px #5f5f5f;
+  -webkit-box-shadow: 2px 2px 8px 4px #5f5f5f;
+  box-shadow: 2px 2px 8px 4px #5f5f5f;
+  padding: 1em;
+  background: white; }

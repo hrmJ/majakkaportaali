@@ -1,0 +1,36 @@
+//Esityksen rakenteen suunnittelussa käytettävät elementit
+
+.structural-element-add{
+    position:relative;
+}
+
+.slidemodel{
+    left:-10px;
+}
+
+.slidemodel-flex{
+    margin-top:1em;
+    padding-top:1em;
+    border-top:1px solid $datarowbg;
+    display:flex;
+    >div:first-of-type{
+        flex:2 1 60%;
+    }
+    >div:nth-of-type(2){
+        flex:1 1 40%;
+    }
+    >div textarea{
+        width:90%;
+        min-height:7em;
+    }
+}
+
+.slidemodel-flex-column{
+    >div{
+        width:100%;
+        input[type='text']{
+            width:100%;
+        }
+    }
+}
+

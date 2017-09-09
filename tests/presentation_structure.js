@@ -3,7 +3,7 @@ var Nightmare = require('nightmare');
 var assert = require('chai').assert; 
 
 const nightmare = new Nightmare({
-  show: false,
+  show: true,
   typeInterval: 20,
   pollInterval: 50,
   waitTimeout: 10000 // in ms
@@ -76,13 +76,33 @@ describe.only("Messun rakenne", function(){
       .type(".structural-element-adder textarea","Tässä messussa juontajana on @ ja lapsia kaitsee pyhisvastaava @")
       .wait("#savebutton")
       .evaluate(function(){
-          return document.querySelector(".injectselect");
+          return document.querySelector(".injected-data select");
       })
       .then((injectselect) => {
           assert.isNotNull(injectselect,"Valintaikkuna ei ilmestynyt");
           done();
       }).catch(done);
   });
+
+  it.only('Kun käyttäjä poistaa ät-merkin, oikealta poistetaan select-elementti', (done) => {
+    nightmare
+      .goto('http://localhost/majakkaportaali/service_structure.php').wait(100)
+      .wait(".structural-element-add")
+      .click(".structural-element-add ul li li")
+      .wait(".structural-element-adder textarea")
+      .type(".structural-element-adder textarea","")
+      .type(".structural-element-adder textarea","Tässä messussa juontajana on @ ja lapsia kaitsee pyhisvastaava @")
+      .type(".structural-element-adder textarea","")
+      .wait("#savebutton")
+      .evaluate(function(){
+          return document.querySelector(".injected-data select");
+      })
+      .then((injectselect) => {
+          assert.isNull(injectselect,"Valintaikkuna ei ilmestynyt");
+          done();
+      }).catch(done);
+  });
+
 
 });
 
