@@ -47,6 +47,15 @@ class StructureTest extends TestCase
   }
 
 
+
+  /**
+   * Ajax-lataa messudataa 
+   */
+  public function testSaveInfoSegment(){
+      $loader= new InfoSegmentLoader("config.ini", Array("maintext"=>"TEkstiä","header"=>"Otsikko","genheader"=>"Mjakkamssu","subgenheader"=>"hyvä aihe","slideclass"=>"infosegment","slot_number"=>1));
+      $this->AssertTrue($loader->content_id>0);
+  }
+
 }
 
 

@@ -3,7 +3,7 @@
 .preview-window{
     position:absolute;
     z-index:3;
-    border:1px solid black;
+    border:none;
     @include shadow;
     padding:1em;
     background:white;

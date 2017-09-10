@@ -115,15 +115,34 @@ CREATE TABLE `comments` (
 
 
 --
+-- Table structure for table infosegment
+--
+
+CREATE TABLE infosegments (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `maintext` varchar(100) DEFAULT NULL,
+  `header` varchar(300) DEFAULT NULL,
+  `genheader` varchar(300) DEFAULT NULL,
+  `subgenheader` varchar(300) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
+
+
+--
 -- Table structure for table presentation_structure``
 --
 
 CREATE TABLE presentation_structure (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
   slot_name varchar(300) DEFAULT NULL,
+  slot_number int(3) DEFAULT NULL,
   slot_type varchar(300) DEFAULT NULL,
+  id_in_type_table varchar(300) DEFAULT NULL,
+  content_id int(10) unsigned NOT NULL,
   PRIMARY KEY (id)
 ) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
+
+
 
 --
 -- Table structure for table presentation_content``

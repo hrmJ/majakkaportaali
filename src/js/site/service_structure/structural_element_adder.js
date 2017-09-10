@@ -7,7 +7,7 @@
  */
 var StructuralElementAdder = function($container){
         this.$lightbox = $("<div class='my-lightbox structural-element-adder'></div>");
-        this.$preview_window = $("<div class='preview-window'><iframe></iframe></div>");
+        this.$preview_window = $("<div class='preview-window'><iframe scrolling='no' frameBorder='0'></iframe><button>Sulje esikatselu</button></div>");
         this.$container = $container;
         this.previewparams = {};
         this.previewhtml = "";
@@ -46,12 +46,19 @@ StructuralElementAdder.prototype = {
      */
     SetPreviewWindow: function($el){
         this.$preview_window.css({"width":$(".innercontent").width(),"top":  $("nav .dropdown").is(":visible") ? "-250px" : "-50px"}).show();
+        this.$preview_window.find("iframe").attr({"width":$(".innercontent").width()-30 + "px", "height":($(".innercontent").width()-30)/4*3+"px","border":"0"}).show();
     },
 
     /**
      *  Sulje lisäysvalikkoikkuna ja tallenna muutokset
      */
     SaveAndClose: function(){
+        this.SetPreviewParams();
+        $.post("php/loaders/save_structure_slide.php",this.previewparams,function(html){
+            self.previewhtml = html;
+            console.log(html);
+            $(".preview-window iframe").attr({"src":"slides.html"});
+        });
         this.$lightbox.html("").hide();
     },
 
@@ -61,7 +68,6 @@ StructuralElementAdder.prototype = {
      *
      */
     InjectServiceData: function(){
-        console.log("lkj");
         var atsings = this.$lightbox.find(".slidetext").val().match(/@/g);
         var number_of_atsings = atsings ? atsings.length : 0;
         if(this.$lightbox.find("select").length<number_of_atsings){
@@ -88,9 +94,10 @@ StructuralElementAdder.prototype = {
         this.SetPreviewParams();
         this.$container.prepend(this.$preview_window);
         this.SetPreviewWindow();
-        var params = {1:this.previewparams};
-        $.post("php/loaders/slides.php",params,function(html){
+        this.$preview_window.find("button").click(function(){self.$preview_window.hide()});
+        $.post("php/loaders/slides_preview.php",this.previewparams,function(html){
             self.previewhtml = html;
+            console.log(html);
             $(".preview-window iframe").attr({"src":"slides.html"});
         });
     },
@@ -125,9 +132,15 @@ InfoSlideAdder.prototype = {
      * Muodosta dia esikatselua varten
      */
     SetPreviewParams: function(){
+        var self = this;
+        var maintext = this.$lightbox.find(".slidetext").val();
+        //korvaa ät-merkit halutuilla arvoilla
+        this.$lightbox.find("select").each(function(){maintext = maintext.replace(/@/," [" + $(this).val() + "] ")});
         this.previewparams = {
-            slideclass: ".infocontent",
-            maintext:this.$lightbox.find(".slidetext").val(),
+            slideclass: "infosegment",
+            maintext:maintext,
+            genheader: self.$lightbox.find("[type='checkbox']").get(0).checked ? "Majakkamessu" : "",
+            subgenheader: self.$lightbox.find("[type='checkbox']").get(0).checked ? "Messun aihe" : "",
             header:this.$lightbox.find(".slide-header").val()};
     }
 }
