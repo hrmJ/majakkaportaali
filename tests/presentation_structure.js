@@ -3,7 +3,7 @@ var Nightmare = require('nightmare');
 var assert = require('chai').assert; 
 
 const nightmare = new Nightmare({
-  show: true,
+  show: false,
   typeInterval: 20,
   pollInterval: 50,
   waitTimeout: 10000 // in ms
@@ -84,11 +84,11 @@ describe.only("Messun rakenne", function(){
       }).catch(done);
   });
 
-  it.only('Kun käyttäjä poistaa ät-merkin, oikealta poistetaan select-elementti', (done) => {
+  it.skip('Kun käyttäjä poistaa ät-merkin, oikealta poistetaan select-elementti', (done) => {
     nightmare
       .goto('http://localhost/majakkaportaali/service_structure.php').wait(100)
       .wait(".structural-element-add")
-      .click(".structural-element-add ul li li")
+      .click(".structural-element-add ul li li li")
       .wait(".structural-element-adder textarea")
       .type(".structural-element-adder textarea","")
       .type(".structural-element-adder textarea","Tässä messussa juontajana on @ ja lapsia kaitsee pyhisvastaava @")
@@ -103,6 +103,19 @@ describe.only("Messun rakenne", function(){
       }).catch(done);
   });
 
+  it.only('Käyttäjä muokkaa olemassaolevan segmentin nimeä', (done) => {
+    nightmare
+      .goto('http://localhost/majakkaportaali/service_structure.php').wait(100)
+      .wait(".slot")
+      .click(".slot .edit-link")
+      .evaluate(function(){
+          return document.querySelector(".injected-data select");
+      })
+      .then((injectselect) => {
+          assert.isNull(injectselect,"Valintaikkuna ei ilmestynyt");
+          done();
+      }).catch(done);
+  });
 
 });
 

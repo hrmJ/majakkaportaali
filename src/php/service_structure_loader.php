@@ -16,6 +16,7 @@ class ServiceStructureLoader{
             $this->con->q($this->insertquery, $this->segment_vals,"none");
             $this->content_id = $this->con->q("SELECT max(id) FROM {$this->table}",Array(),"column");
         }
+        return $this;
     }
 
     /**
@@ -24,6 +25,7 @@ class ServiceStructureLoader{
     public function SetSlotData(){
         $this->con->q("DELETE FROM presentation_structure WHERE slot_number = :no",Array("no"=>$this->slot_number),"none");
         $this->con->q("INSERT INTO presentation_structure (content_id, slot_number, slot_type) VALUES (:cid,:sno,:ctype)",Array("cid"=>$this->content_id,"sno"=>$this->slot_number,"ctype"=>$this->content_type),"none");
+        return $this;
     }
 
 }
@@ -33,10 +35,10 @@ class ServiceStructureLoader{
  * Infodian syöttävä olio
  *
  */
-class InfoSegmentLoader extends ServiceStructureLoader{
+class InfoSegmentSaver extends ServiceStructureLoader{
 
     /**
-     * @param string $path polku tietokantakonfiguraatioon
+     * @param string $path polku config.ini-tiedostoon
      * @param Array $postvals $_POST-taulukon arvot, joiden perusteella informaatio syötetään
      */
     public function __construct($path, $postvals){
@@ -47,9 +49,8 @@ class InfoSegmentLoader extends ServiceStructureLoader{
         $this->segment_vals = Array("mt"=>$postvals["maintext"],"h"=>$postvals["header"],"gh"=>$postvals["genheader"],"sgh"=>$postvals["subgenheader"]);
         $this->idquery = "SELECT id FROM infosegments WHERE  maintext = :mt AND  header = :h AND  genheader = :gh AND subgenheader = :sgh";
         $this->insertquery = "INSERT INTO infosegments (maintext, header, genheader, subgenheader) values (:mt, :h, :gh, :sgh)";
-        $this->SetContentId();
-        $this->SetSlotData();
     }
+
 
 }
 

@@ -199,4 +199,29 @@ class BibleLoader extends ServiceDataLoader{
 }
 
 
+/**
+ * Infodiasisällön lataaja
+ */
+class InfoSegmentLoader extends ServiceDataLoader{
+
+    /**
+     * @param string $path polku tietokantakonfiguraatioon
+     * @param int $id haettavan infosegmentin id infosegments-taulussa
+     */
+    public function __construct($path,$id){
+        $this->id = $id;
+        parent::__construct($path);
+    }
+
+    /**
+     * hakee kaikkien laulujen nimet tietokannasta ja tulostaa ne filtteröitynä
+     * laulun nimen tai jonkin sen sisältämän merkkijonon mukaan.
+     */
+    public function LoadInfoSlide(){
+        $this->data = $this->con->q("SELECT maintext,header,genheader,subgenheader FROM infosegments WHERE id = :slide_id",Array("slide_id"=>$this->id),"row");
+    }
+
+}
+
+
 ?>

@@ -4,7 +4,9 @@
         <p>Tällä sivulla voit määritellä messun rakenteen tai tarkemmin
         sanottuna sen, millaisena rakenne näyttäytyy diaesityksessä</p>
         <div>
+            <div class='structural-slots'>
             [@units]
+            </div>
             <div class='structural-element-add'>
                 [@addermenu]
             </div>
@@ -15,7 +17,7 @@
             <h2>Lisää infodia</h2>
             <div class="slidemodel-flex-column">
                 <div>
-                    <input type="text" placeholder="Esityksen rakenteessa näkyvä tunniste "></input>
+                    <input type="text" class="segment-name" placeholder="Esityksen rakenteessa näkyvä tunniste "></input>
                 </div>
                 <div>
                      <p>Dian otsikko:  <input type="text" class="slide-header" placeholder="Jos et halua otsikkoa, jätä tyhjäksi"></input></p>

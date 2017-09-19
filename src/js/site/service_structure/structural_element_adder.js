@@ -55,9 +55,7 @@ StructuralElementAdder.prototype = {
     SaveAndClose: function(){
         this.SetPreviewParams();
         $.post("php/loaders/save_structure_slide.php",this.previewparams,function(html){
-            self.previewhtml = html;
             console.log(html);
-            $(".preview-window iframe").attr({"src":"slides.html"});
         });
         this.$lightbox.html("").hide();
     },
@@ -68,7 +66,7 @@ StructuralElementAdder.prototype = {
      *
      */
     InjectServiceData: function(){
-        var atsings = this.$lightbox.find(".slidetext").val().match(/@/g);
+        var atsings = this.$lightbox.find(".infoslidetext").val().match(/@/g);
         var number_of_atsings = atsings ? atsings.length : 0;
         if(this.$lightbox.find("select").length<number_of_atsings){
             //Laske ät-merkkien määrä ja vertaa select-elementtien määrään
@@ -107,7 +105,8 @@ StructuralElementAdder.prototype = {
      */
     SetPreviewContent: function(){
         $(".preview-window iframe").contents().find("main").html(this.previewhtml);
-    }
+    },
+
 
 }
 
@@ -142,6 +141,23 @@ InfoSlideAdder.prototype = {
             genheader: self.$lightbox.find("[type='checkbox']").get(0).checked ? "Majakkamessu" : "",
             subgenheader: self.$lightbox.find("[type='checkbox']").get(0).checked ? "Messun aihe" : "",
             header:this.$lightbox.find(".slide-header").val()};
+    },
+
+    /**
+     * Hae dian sisältötiedot tietokannasta
+     *
+     * @param int id haettavan sisällön id infosegments-taulussa
+     */
+    LoadParams: function(id){
+        var self = this;
+        $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"infosegment","id":id},function(data){
+            self.$lightbox.find(".slide-header").val(data.header);
+            self.$lightbox.find(".infoslidetext").val(data.maintext);
+            self.$lightbox.find(".segment-name").val("TODO");
+            if(data.genheader != "")
+                self.$lightbox.find("[value='show-upper-header']").get(0).checked=true;
+            console.log(data)}
+        );
     }
 }
 

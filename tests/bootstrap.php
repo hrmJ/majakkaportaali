@@ -14,6 +14,7 @@ include("src/php/service_data_loader.php");
 include("src/php/slideloader.php");
 include("src/php/slide.php");
 include("src/php/segment.php");
+include("src/php/slot.php");
 include("src/php/service_structure_loader.php");
 
 ?>

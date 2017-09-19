@@ -342,6 +342,9 @@ h3 {
   box-shadow: 2px 2px 8px 4px #5f5f5f;
   padding: 1em; }
 
+.slot {
+  position: relative; }
+
 .structural-element-add {
   position: relative; }
   .structural-element-add ul {

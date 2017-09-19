@@ -202,29 +202,48 @@ $(document).ready(function(){
 
 var adder = undefined;
 
+/**
+ * Lisää kaikkiin messun segmentteihin muokkaus- ja poisto-ominaisuudet
+ */
+function UpdateAdderEvents(){
+    $(".edit-link").click(function(){
+        switch($(this).parents(".slot").find(".slot_type").val()){
+            default:
+                console.log($(this).parents(".slot").find(".slot_type").val());
+                adder = new InfoSlideAdder($(this).parents(".slot"));
+                break;
+        }
+        adder.LoadParams($(this).parents(".slot").find(".content_id").val());
+        adder.ShowWindow();
+    });
+    $(".remove-link").click(function(){console.log("ssssssremove") });
+}
+
+/**
+ *
+ * Valitse, mitä sisältöä ryhdytään lisäämään. 
+ * Valintamenun  (jqueryui menu) callback.
+ *
+ */
+function SelectTheContentToAdd(e, u){
+    if(u.item.find("span").length==0){
+        switch(u.item.text()){
+            //case "Yksittäinen dia":
+            //    break;
+            default:
+                adder = new InfoSlideAdder(u.item.parents(".structural-element-add"));
+                break;
+        }
+        adder.ShowWindow();
+    }
+}
+
+
 $(document).ready(function(){
     if($("body").hasClass("service_structure")){
 
-        /**
-         *
-         * Valitse, mitä sisältöä ryhdytään lisäämään. 
-         * Valintamenun  (jqueryui menu) callback.
-         *
-         */
-        function SelectTheContentToAdd(e, u){
-            if(u.item.find("span").length==0){
-                switch(u.item.text()){
-                    //case "Yksittäinen dia":
-                    //    break;
-                    default:
-                        adder = new InfoSlideAdder(u.item.parents(".structural-element-add"));
-                        break;
-                }
-                adder.ShowWindow();
-            }
-        }
-
         $(".menu").menu({ position: { my: "bottom", at: "right-5 top+5" }, select: SelectTheContentToAdd});
+        UpdateAdderEvents();
 
     }
     }
@@ -286,6 +305,9 @@ StructuralElementAdder.prototype = {
      */
     SaveAndClose: function(){
         this.SetPreviewParams();
+        $.post("php/loaders/save_structure_slide.php",this.previewparams,function(html){
+            console.log(html);
+        });
         this.$lightbox.html("").hide();
     },
 
@@ -295,7 +317,7 @@ StructuralElementAdder.prototype = {
      *
      */
     InjectServiceData: function(){
-        var atsings = this.$lightbox.find(".slidetext").val().match(/@/g);
+        var atsings = this.$lightbox.find(".infoslidetext").val().match(/@/g);
         var number_of_atsings = atsings ? atsings.length : 0;
         if(this.$lightbox.find("select").length<number_of_atsings){
             //Laske ät-merkkien määrä ja vertaa select-elementtien määrään
@@ -334,7 +356,8 @@ StructuralElementAdder.prototype = {
      */
     SetPreviewContent: function(){
         $(".preview-window iframe").contents().find("main").html(this.previewhtml);
-    }
+    },
+
 
 }
 
@@ -369,6 +392,23 @@ InfoSlideAdder.prototype = {
             genheader: self.$lightbox.find("[type='checkbox']").get(0).checked ? "Majakkamessu" : "",
             subgenheader: self.$lightbox.find("[type='checkbox']").get(0).checked ? "Messun aihe" : "",
             header:this.$lightbox.find(".slide-header").val()};
+    },
+
+    /**
+     * Hae dian sisältötiedot tietokannasta
+     *
+     * @param int id haettavan sisällön id infosegments-taulussa
+     */
+    LoadParams: function(id){
+        var self = this;
+        $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"infosegment","id":id},function(data){
+            self.$lightbox.find(".slide-header").val(data.header);
+            self.$lightbox.find(".infoslidetext").val(data.maintext);
+            self.$lightbox.find(".segment-name").val("TODO");
+            if(data.genheader != "")
+                self.$lightbox.find("[value='show-upper-header']").get(0).checked=true;
+            console.log(data)}
+        );
     }
 }
 

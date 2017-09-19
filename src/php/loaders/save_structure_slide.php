@@ -10,18 +10,12 @@ require("../database.php");
 require("../templating.php");
 require("../slide.php");
 require("../segment.php");
-require("../service_data_loader.php");
-
+require("../service_structure_loader.php");
 switch($_POST["slideclass"]){
     case "infosegment":
-        $segment_values = Array($_POST["maintext"],$_POST["header"],$_POST["genheader"],$_POST["subgenheader"]);
-        //1. Testaa, onko tällaista infodiaa jo olemassa tietokannassa
-        $id = $con->q("SELECT id FROM infosegments WHERE  maintext = ? AND  header = ? AND  genheader = ? AND subgenheader = ?)",$segment_values,"row");
-        if(!$id){
-            //Jos ei, syötä uusi rivi
-            $con->q("INSERT INTO infosegments (maintext, header, genheader, subgenheader) values (?, ?, ?, ?)", $segment_values, "none");
-            $id = $con->q("SELECT id FROM infosegments WHERE  maintext = ? AND  header = ? AND  genheader = ? AND subgenheader = ?)",$segment_values,"row");
-        }
+        $params = Array("maintext"=>$_POST["maintext"],"header"=>$_POST["header"],"genheader"=>$_POST["genheader"],"subgenheader"=>$_POST["subgenheader"],"slideclass"=>$_POST["slideclass"],"slot_number"=>1);
+        $loader= new InfoSegmentSaver("../../../config.ini", $params);
+        $loader->SetContentId()->SetSlotData();
         break;
 }
 
