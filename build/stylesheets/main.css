@@ -343,7 +343,12 @@ h3 {
   padding: 1em; }
 
 .slot {
-  position: relative; }
+  position: relative;
+  display: flex;
+  border: 1px solid #dadada;
+  padding: 0.5em;
+  margin-bottom: 0.5em;
+  justify-content: space-between; }
 
 .structural-element-add {
   position: relative; }

@@ -24,7 +24,7 @@ class ServiceStructureLoader{
      */
     public function SetSlotData(){
         $this->con->q("DELETE FROM presentation_structure WHERE slot_number = :no",Array("no"=>$this->slot_number),"none");
-        $this->con->q("INSERT INTO presentation_structure (content_id, slot_number, slot_type) VALUES (:cid,:sno,:ctype)",Array("cid"=>$this->content_id,"sno"=>$this->slot_number,"ctype"=>$this->content_type),"none");
+        $this->con->q("INSERT INTO presentation_structure (content_id, slot_number, slot_type, slot_name) VALUES (:cid,:sno,:ctype,:sname)",Array("cid"=>$this->content_id,"sno"=>$this->slot_number,"ctype"=>$this->content_type,"sname"=>$this->slot_name),"none");
         return $this;
     }
 
@@ -44,6 +44,7 @@ class InfoSegmentSaver extends ServiceStructureLoader{
     public function __construct($path, $postvals){
         $this->con = new DbCon($path);
         $this->slot_number = $postvals["slot_number"];
+        $this->slot_name = $postvals["slot_name"];
         $this->content_type = $postvals["slideclass"];
         $this->table = "{$postvals["slideclass"]}s";
         $this->segment_vals = Array("mt"=>$postvals["maintext"],"h"=>$postvals["header"],"gh"=>$postvals["genheader"],"sgh"=>$postvals["subgenheader"]);

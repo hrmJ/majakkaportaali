@@ -209,7 +209,6 @@ function UpdateAdderEvents(){
     $(".edit-link").click(function(){
         switch($(this).parents(".slot").find(".slot_type").val()){
             default:
-                console.log($(this).parents(".slot").find(".slot_type").val());
                 adder = new InfoSlideAdder($(this).parents(".slot"));
                 break;
         }
@@ -270,10 +269,12 @@ StructuralElementAdder.prototype = {
      *  Näytä ikkuna, jossa käyttäjä voi valita lisättävän messun osan tyypin
      */
     ShowWindow: function(){
-        var self = this;
+        var self = this
         this.$container
+            .prepend(this.$lightbox.append($("<div><button id='cancelbutton'>Sulje tallentamatta</button></div>")))
             .prepend(this.$lightbox.append($("<div><button id='savebutton'>Tallenna</button></div>")))
             .prepend(this.$lightbox.append($("<div><button id='previewbutton'>Esikatsele</button></div>")));
+        $("#cancelbutton").click(function(){ self.$lightbox.html("").hide(); });
         $("#savebutton").click(function(){self.SaveAndClose();});
         $("#previewbutton").click(function(){self.PreviewSlide()});
         $(".slidetext").on("change paste keyup",function(){self.InjectServiceData()});
@@ -306,7 +307,7 @@ StructuralElementAdder.prototype = {
     SaveAndClose: function(){
         this.SetPreviewParams();
         $.post("php/loaders/save_structure_slide.php",this.previewparams,function(html){
-            console.log(html);
+            //TODO: lataa uusi sisältö näkyviin
         });
         this.$lightbox.html("").hide();
     },
@@ -391,6 +392,8 @@ InfoSlideAdder.prototype = {
             maintext:maintext,
             genheader: self.$lightbox.find("[type='checkbox']").get(0).checked ? "Majakkamessu" : "",
             subgenheader: self.$lightbox.find("[type='checkbox']").get(0).checked ? "Messun aihe" : "",
+            slot_number: self.slot_number==undefined ? $(".slot").length + 1 : self.slot_number,
+            slot_name:this.$lightbox.find(".segment-name").val() ,
             header:this.$lightbox.find(".slide-header").val()};
     },
 
@@ -400,14 +403,15 @@ InfoSlideAdder.prototype = {
      * @param int id haettavan sisällön id infosegments-taulussa
      */
     LoadParams: function(id){
+        this.slot_number = this.$container.find(".slot-number").text();
         var self = this;
         $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"infosegment","id":id},function(data){
             self.$lightbox.find(".slide-header").val(data.header);
             self.$lightbox.find(".infoslidetext").val(data.maintext);
-            self.$lightbox.find(".segment-name").val("TODO");
+            self.$lightbox.find(".segment-name").val(data.);
             if(data.genheader != "")
                 self.$lightbox.find("[value='show-upper-header']").get(0).checked=true;
-            console.log(data)}
+            }
         );
     }
 }

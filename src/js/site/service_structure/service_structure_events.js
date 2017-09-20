@@ -11,7 +11,6 @@ function UpdateAdderEvents(){
     $(".edit-link").click(function(){
         switch($(this).parents(".slot").find(".slot_type").val()){
             default:
-                console.log($(this).parents(".slot").find(".slot_type").val());
                 adder = new InfoSlideAdder($(this).parents(".slot"));
                 break;
         }
