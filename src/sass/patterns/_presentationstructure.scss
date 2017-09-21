@@ -1,17 +1,5 @@
 //Esityksen rakenteen suunnittelussa käytettävät elementit
 
-.slot{
-    position:relative;
-    display:flex;
-    border:1px solid $datarowbg;
-    padding:0.5em;
-    margin-bottom:0.5em;
-    justify-content:space-between;
-    >div{
-        
-    }
-}
-
 .structural-element-add{
     position:relative;
     ul{
@@ -49,3 +37,34 @@
     }
 }
 
+.slot{
+    position:relative;
+    display:flex;
+    border:1px solid $datarowbg;
+    padding:0.5em;
+    margin-bottom:0px;
+    justify-content:space-between;
+    @include pointer;
+
+    >div{
+        
+    }
+}
+
+.drop-target{
+    width:100%;
+    height:1em;
+}
+
+.drop-highlight{
+    margin:0.5em;
+    border:1px dashed darken($datarowbg,20);
+    padding:0.5em;
+}
+
+.drop-hide{
+    *{
+        color:lighten($datarowbg,5);
+        border:lighten($datarowbg,5);
+    }
+}

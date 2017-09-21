@@ -36,14 +36,17 @@ class StructurePage extends Page{
         $slotstring = "";
         foreach($slots as $slot){
             $newslot = new Template("{$this->path}/slot.tpl");
-            $newslot->Set("name",(empty($slot["slot_name"]) ? "Nimetön segmentti" : $slot["slot_name"]))
+            $name = (empty($slot["slot_name"]) ? "Nimetön segmentti" : $slot["slot_name"]);
+            $newslot->Set("name",$name)
                 ->Set("number", $slot["slot_number"])
                 ->Set("content_id",$slot["content_id"])
                 ->Set("slot_type",FormatSlotName($slot["slot_type"]))
                 ->Set("slot_type_orig",$slot["slot_type"])
+                ->Set("slot_name_orig",$name)
                 ->Set("slot_id",$slot["id"]);
             $slotstring .= "\n\n{$newslot->Output()}";
         }
+        $this->slotstring = $slotstring;
         $this->Set("units", $slotstring);
     }
 

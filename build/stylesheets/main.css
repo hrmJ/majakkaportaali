@@ -342,14 +342,6 @@ h3 {
   box-shadow: 2px 2px 8px 4px #5f5f5f;
   padding: 1em; }
 
-.slot {
-  position: relative;
-  display: flex;
-  border: 1px solid #dadada;
-  padding: 0.5em;
-  margin-bottom: 0.5em;
-  justify-content: space-between; }
-
 .structural-element-add {
   position: relative; }
   .structural-element-add ul {
@@ -375,6 +367,28 @@ h3 {
   width: 100%; }
   .slidemodel-flex-column > div input[type='text'] {
     width: 100%; }
+
+.slot {
+  position: relative;
+  display: flex;
+  border: 1px solid #dadada;
+  padding: 0.5em;
+  margin-bottom: 0px;
+  justify-content: space-between;
+  cursor: pointer; }
+
+.drop-target {
+  width: 100%;
+  height: 1em; }
+
+.drop-highlight {
+  margin: 0.5em;
+  border: 1px dashed #a7a7a7;
+  padding: 0.5em; }
+
+.drop-hide * {
+  color: #e6e6e6;
+  border: #e6e6e6; }
 
 .preview-window {
   position: absolute;

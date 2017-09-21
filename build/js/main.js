@@ -201,6 +201,7 @@ $(document).ready(function(){
  */
 
 var adder = undefined;
+var currently_dragged_no = undefined;
 
 /**
  * Lisää kaikkiin messun segmentteihin muokkaus- ja poisto-ominaisuudet
@@ -216,6 +217,40 @@ function UpdateAdderEvents(){
         adder.ShowWindow();
     });
     $(".remove-link").click(function(){console.log("ssssssremove") });
+    //slottien siirtely
+    $(".slot").on("dragstart",function(){ 
+        $(".slot").addClass("drop-hide");
+        $(this).removeClass("drop-hide");
+        currently_dragged_no = $(this).find(".slot-number").text();
+    });
+    $(".drop-target")
+        .on("dragover",function(event){
+            event.preventDefault();  
+            event.stopPropagation();
+            $(this).addClass("drop-highlight").text("Siirrä tähän");
+        })
+        .on("dragleave",function(event){
+            event.preventDefault();  
+            event.stopPropagation();
+            $(this).text("").removeClass("drop-highlight");
+        })
+        .on("drop",function(event){
+            event.preventDefault();  
+            event.stopPropagation();
+            var prevno = $(this).prev().find(".slot-number").text();
+            $(".slot").each(function(){
+                var thisno = $(this).find(".slot-number").text();
+                if(thisno>prevno & thisno < currently_dragged_no){
+                    console.log(thisno *1 + 1);
+                }
+                else if(thisno>prevno & thisno > currently_dragged_no){
+                    console.log(thisno *1);
+                }
+                else if(thisno == currently_dragged_no){
+                    console.log("WILL BE: " + (prevno *1 + 1));
+                }
+            })
+        });
 }
 
 /**
@@ -302,12 +337,12 @@ StructuralElementAdder.prototype = {
     },
 
     /**
-     *  Sulje lisäysvalikkoikkuna ja tallenna muutokset
+     *  Sulkee lisäysvalikkoikkunan ja tallentaa muutokset. Lataa myös tehdyt muutokset sivulle näkyviin.
      */
     SaveAndClose: function(){
         this.SetPreviewParams();
         $.post("php/loaders/save_structure_slide.php",this.previewparams,function(html){
-            //TODO: lataa uusi sisältö näkyviin
+            $(".structural-slots").load("php/loaders/loadslots.php",UpdateAdderEvents);
         });
         this.$lightbox.html("").hide();
     },
@@ -404,11 +439,12 @@ InfoSlideAdder.prototype = {
      */
     LoadParams: function(id){
         this.slot_number = this.$container.find(".slot-number").text();
+        this.slot_name = this.$container.find(".slot_name_orig").val();
         var self = this;
         $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"infosegment","id":id},function(data){
             self.$lightbox.find(".slide-header").val(data.header);
             self.$lightbox.find(".infoslidetext").val(data.maintext);
-            self.$lightbox.find(".segment-name").val(data.);
+            self.$lightbox.find(".segment-name").val(self.slot_name);
             if(data.genheader != "")
                 self.$lightbox.find("[value='show-upper-header']").get(0).checked=true;
             }

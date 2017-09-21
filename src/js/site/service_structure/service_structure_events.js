@@ -3,6 +3,7 @@
  */
 
 var adder = undefined;
+var currently_dragged_no = undefined;
 
 /**
  * Lisää kaikkiin messun segmentteihin muokkaus- ja poisto-ominaisuudet
@@ -18,6 +19,40 @@ function UpdateAdderEvents(){
         adder.ShowWindow();
     });
     $(".remove-link").click(function(){console.log("ssssssremove") });
+    //slottien siirtely
+    $(".slot").on("dragstart",function(){ 
+        $(".slot").addClass("drop-hide");
+        $(this).removeClass("drop-hide");
+        currently_dragged_no = $(this).find(".slot-number").text();
+    });
+    $(".drop-target")
+        .on("dragover",function(event){
+            event.preventDefault();  
+            event.stopPropagation();
+            $(this).addClass("drop-highlight").text("Siirrä tähän");
+        })
+        .on("dragleave",function(event){
+            event.preventDefault();  
+            event.stopPropagation();
+            $(this).text("").removeClass("drop-highlight");
+        })
+        .on("drop",function(event){
+            event.preventDefault();  
+            event.stopPropagation();
+            var prevno = $(this).prev().find(".slot-number").text();
+            $(".slot").each(function(){
+                var thisno = $(this).find(".slot-number").text();
+                if(thisno>prevno & thisno < currently_dragged_no){
+                    console.log(thisno *1 + 1);
+                }
+                else if(thisno>prevno & thisno > currently_dragged_no){
+                    console.log(thisno *1);
+                }
+                else if(thisno == currently_dragged_no){
+                    console.log("WILL BE: " + (prevno *1 + 1));
+                }
+            })
+        });
 }
 
 /**

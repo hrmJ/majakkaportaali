@@ -108,11 +108,35 @@ describe.only("Messun rakenne", function(){
       .goto('http://localhost/majakkaportaali/service_structure.php').wait(100)
       .wait(".slot")
       .click(".slot .edit-link")
+      .wait(".segment-name")
+      .type(".segment-name","")
+      .type(".segment-name","tadaa, uusi nimi")
+      .click("#savebutton")
+      .wait(".slot")
       .evaluate(function(){
-          return document.querySelector(".injected-data select");
+          return document.querySelector(".slot .slot-name").textContent;
       })
-      .then((injectselect) => {
-          assert.isNull(injectselect,"Valintaikkuna ei ilmestynyt");
+      .then((firstslot) => {
+          assert.equal(firstslot,"tadaa, uusi nimi");
+          done();
+      }).catch(done);
+  });
+
+  it.skip('Käyttäjä liikuttaa segmentin nro 3 segmentiksi nro 1', (done) => {
+    nightmare
+      .goto('http://localhost/majakkaportaali/service_structure.php').wait(100)
+      .wait(".slot")
+      .click(".slot .edit-link")
+      .wait(".segment-name")
+      .type(".segment-name","")
+      .type(".segment-name","tadaa, uusi nimi")
+      .click("#savebutton")
+      .wait(".slot")
+      .evaluate(function(){
+          return document.querySelector(".slot .slot-name").textContent;
+      })
+      .then((firstslot) => {
+          assert.equal(firstslot,"tadaa, uusi nimi");
           done();
       }).catch(done);
   });
