@@ -141,5 +141,7 @@ describe.only("Messun rakenne", function(){
       }).catch(done);
   });
 
+  it("Rakenteesta voi poistaa elementin");
+
 });
 
