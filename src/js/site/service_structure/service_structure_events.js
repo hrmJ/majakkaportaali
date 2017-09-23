@@ -44,25 +44,25 @@ function UpdateAdderEvents(){
             var prevno = $(this).prev().find(".slot-number").text();
             if(prevno=="") prevno = 0;
             var newids = [];
+            console.log("PREVNO: " + prevno);
             $(".slot").each(function(){
                 //console.log($(this).text());
                 var thisno = $(this).find(".slot-number").text()*1;
                 var id = $(this).find(".slot_id").val()*1;
                 var newno = thisno*1;
-                if(thisno == currently_dragged_no) newno = prevno*1 + 1;
-                else if(thisno==prevno) newno = thisno;
+                if(thisno == currently_dragged_no){
+                    newno = prevno*1 + 1;
+                    if(prevno > currently_dragged_no)
+                        newno -= 1;
+                }
+                else if(thisno>currently_dragged_no && thisno > prevno) newno = thisno;
+                else if(thisno>currently_dragged_no && thisno <= prevno) newno = thisno -1;
                 else if(thisno>prevno && thisno != currently_dragged_no) newno = thisno*1 +1;
+                else if(thisno==prevno && thisno >currently_dragged_no) newno = thisno*1 -1;
+                else if(thisno==prevno) newno = thisno;
                 newids.push({"slot_id":id,"newnumber":newno});
                 });
-            if(currently_dragged_no==1){
-                //Jos siirretään ekaa segmenttiä
-                for(i=0;i<newids.length;i++){
-                    newids[i].newnumber -= 1;
-                }
-            }
-            $.post("php/loaders/save_structure_slide.php",{"slideclass":"update_numbers","newids":newids}, function(data){
-                $(".structural-slots").load("php/loaders/loadslots.php",UpdateAdderEvents);
-            });
+            $.post("php/loaders/save_structure_slide.php",{"slideclass":"update_numbers","newids":newids}, function(data){ $(".structural-slots").load("php/loaders/loadslots.php",UpdateAdderEvents); });
         });
 }
 

@@ -17,6 +17,12 @@ switch($_POST["slideclass"]){
         $loader= new InfoSegmentSaver("../../../config.ini", $params);
         $loader->SetContentId()->SetSlotData();
         break;
+    case "update_numbers":
+        $con= new DbCon("../../../config.ini");
+        foreach($_POST["newids"] as $idpair){
+            $con->q("UPDATE presentation_structure SET slot_number = :newnumber WHERE id = :slot_id",$idpair,"none");
+        }
+        break;
 }
 
 ?>
