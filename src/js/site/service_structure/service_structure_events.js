@@ -9,6 +9,7 @@ var currently_dragged_no = undefined;
  * Lisää kaikkiin messun segmentteihin muokkaus- ja poisto-ominaisuudet
  */
 function UpdateAdderEvents(){
+    $(".slot:last-of-type").after("<div class='drop-target'></div>");
     $(".edit-link").click(function(){
         switch($(this).parents(".slot").find(".slot_type").val()){
             default:
@@ -19,11 +20,12 @@ function UpdateAdderEvents(){
         adder.ShowWindow();
     });
     $(".remove-link").click(function(){console.log("ssssssremove") });
+
     //slottien siirtely
     $(".slot").on("dragstart",function(){ 
         $(".slot").addClass("drop-hide");
         $(this).removeClass("drop-hide");
-        currently_dragged_no = $(this).find(".slot-number").text();
+        currently_dragged_no = $(this).find(".slot-number").text() * 1;
     });
     $(".drop-target")
         .on("dragover",function(event){
@@ -40,18 +42,27 @@ function UpdateAdderEvents(){
             event.preventDefault();  
             event.stopPropagation();
             var prevno = $(this).prev().find(".slot-number").text();
+            if(prevno=="") prevno = 0;
+            var newids = [];
             $(".slot").each(function(){
-                var thisno = $(this).find(".slot-number").text();
-                if(thisno>prevno & thisno < currently_dragged_no){
-                    console.log(thisno *1 + 1);
+                //console.log($(this).text());
+                var thisno = $(this).find(".slot-number").text()*1;
+                var id = $(this).find(".slot_id").val()*1;
+                var newno = thisno*1;
+                if(thisno == currently_dragged_no) newno = prevno*1 + 1;
+                else if(thisno==prevno) newno = thisno;
+                else if(thisno>prevno && thisno != currently_dragged_no) newno = thisno*1 +1;
+                newids.push({"slot_id":id,"newnumber":newno});
+                });
+            if(currently_dragged_no==1){
+                //Jos siirretään ekaa segmenttiä
+                for(i=0;i<newids.length;i++){
+                    newids[i].newnumber -= 1;
                 }
-                else if(thisno>prevno & thisno > currently_dragged_no){
-                    console.log(thisno *1);
-                }
-                else if(thisno == currently_dragged_no){
-                    console.log("WILL BE: " + (prevno *1 + 1));
-                }
-            })
+            }
+            $.post("php/loaders/save_structure_slide.php",{"slideclass":"update_numbers","newids":newids}, function(data){
+                $(".structural-slots").load("php/loaders/loadslots.php",UpdateAdderEvents);
+            });
         });
 }
 
