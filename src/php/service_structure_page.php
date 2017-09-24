@@ -73,6 +73,8 @@ function FormatSlotName($name){
     switch($name){
         case "infosegment":
             return "Infodia";
+        case "songsegment":
+            return "Laulu";
     }
 }
 

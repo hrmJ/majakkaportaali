@@ -8,10 +8,11 @@ class ServiceDataLoader{
 
     /**
      * @param string $path polku tietokantakonfiguraatioon
+     * @param int $id haettavan segmentin id sisältötaulussa
      */
-    public function __construct($path){
+    public function __construct($path,$id){
+        $this->id = $id;
         $this->con = new DbCon($path);
-        return $this;
     }
 
 
@@ -205,20 +206,27 @@ class BibleLoader extends ServiceDataLoader{
 class InfoSegmentLoader extends ServiceDataLoader{
 
     /**
-     * @param string $path polku tietokantakonfiguraatioon
-     * @param int $id haettavan infosegmentin id infosegments-taulussa
-     */
-    public function __construct($path,$id){
-        $this->id = $id;
-        parent::__construct($path);
-    }
-
-    /**
      * hakee kaikkien laulujen nimet tietokannasta ja tulostaa ne filtteröitynä
      * laulun nimen tai jonkin sen sisältämän merkkijonon mukaan.
      */
     public function LoadInfoSlide(){
         $this->data = $this->con->q("SELECT maintext,header,genheader,subgenheader FROM infosegments WHERE id = :slide_id",Array("slide_id"=>$this->id),"row");
+    }
+
+}
+
+
+/**
+ * Lauludiasisällön lataaja
+ */
+class SongSegmentLoader extends ServiceDataLoader{
+
+    /**
+     * hakee kaikkien laulujen nimet tietokannasta ja tulostaa ne filtteröitynä
+     * laulun nimen tai jonkin sen sisältämän merkkijonon mukaan.
+     */
+    public function LoadSongSlide(){
+        $this->data = $this->con->q("SELECT songdescription, restrictedto, singlename, multiname from songsegments WHERE id = :slide_id",Array("slide_id"=>$this->id),"row");
     }
 
 }

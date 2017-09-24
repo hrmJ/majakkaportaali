@@ -210,8 +210,11 @@ function UpdateAdderEvents(){
     $(".slot:last-of-type").after("<div class='drop-target'></div>");
     $(".edit-link").click(function(){
         switch($(this).parents(".slot").find(".slot_type").val()){
-            default:
+            case "infosegment":
                 adder = new InfoSlideAdder($(this).parents(".slot"));
+                break;
+            case "songsegment":
+                adder = new SongSlideAdder($(this).parents(".slot"));
                 break;
         }
         adder.LoadParams($(this).parents(".slot").find(".content_id").val());
@@ -445,7 +448,29 @@ SongSlideAdder.prototype = {
             songdescription: this.$lightbox.find(".songdescription").val(),
             slot_number: self.slot_number==undefined ? $(".slot").length + 1 : self.slot_number,
             slot_name:this.$lightbox.find(".segment-name").val()};
+    console.log(this.previewparams);
     },
+
+
+    /**
+     * Hae dian sisältötiedot tietokannasta
+     *
+     * @param int id haettavan sisällön id songsegments-taulussa
+     */
+    LoadParams: function(id){
+        this.slot_number = this.$container.find(".slot-number").text();
+        this.slot_name = this.$container.find(".slot_name_orig").val();
+        var self = this;
+        $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"songsegment","id":id},function(data){
+            if(data.multiname != ""){
+                self.$lightbox.find("[value='multisong']").get(0).checked=true;
+                self.$lightbox.find(".multisongheader").val(data.multiname).show();
+            }
+            self.$lightbox.find(".segment-name").val(self.slot_name);
+            self.$lightbox.find(".songdescription").val(data.songdescription);
+            }
+        );
+    }
 }
 
 /**
@@ -491,7 +516,9 @@ InfoSlideAdder.prototype = {
         this.slot_number = this.$container.find(".slot-number").text();
         this.slot_name = this.$container.find(".slot_name_orig").val();
         var self = this;
+        console.log("lkj");
         $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"infosegment","id":id},function(data){
+            console.log("aaaa");
             self.$lightbox.find(".slide-header").val(data.header);
             self.$lightbox.find(".infoslidetext").val(data.maintext);
             self.$lightbox.find(".segment-name").val(self.slot_name);

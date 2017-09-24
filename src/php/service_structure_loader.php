@@ -13,7 +13,7 @@ class ServiceStructureLoader{
     public function SetContentId(){
         $this->content_id = $this->con->q($this->idquery,$this->segment_vals,"column");
         if(!$this->content_id){
-            $this->con->q($this->insertquery, $this->insert_vals,"none");
+            $this->con->q($this->insertquery, $this->segment_vals,"none");
             $this->content_id = $this->con->q("SELECT max(id) FROM {$this->table}",Array(),"column");
         }
         return $this;
@@ -48,9 +48,8 @@ class SongSegmentSaver extends ServiceStructureLoader{
         $this->slot_name = $postvals["slot_name"];
         $this->content_type = $postvals["slideclass"];
         $this->table = "{$postvals["slideclass"]}s";
-        $this->segment_vals = Array("sname"=>$this->slot_name);
-        $this->insert_vals = Array("desc"=>$postvals["description"],"restr"=>$postvals["restricted_to"],"sname"=>$this->slot_name,"mname"=>$postvals["multiname"]);
-        $this->idquery = "SELECT id FROM songsegments WHERE singlename  = :sname LIMIT 1";
+        $this->segment_vals = Array("desc"=>$postvals["description"],"restr"=>$postvals["restricted_to"],"sname"=>$this->slot_name,"mname"=>$postvals["multiname"]);
+        $this->idquery = "SELECT id FROM songsegments WHERE singlename  = :sname and multiname = :mname and songdescription = :desc and restrictedto = :restr LIMIT 1";
         $this->insertquery = "INSERT INTO songsegments (songdescription, restrictedto, singlename, multiname) values (:desc, :restr, :sname, :mname)";
     }
 
@@ -75,7 +74,6 @@ class InfoSegmentSaver extends ServiceStructureLoader{
         $this->content_type = $postvals["slideclass"];
         $this->table = "{$postvals["slideclass"]}s";
         $this->segment_vals = Array("mt"=>$postvals["maintext"],"h"=>$postvals["header"],"gh"=>$postvals["genheader"],"sgh"=>$postvals["subgenheader"]);
-        $this->insert_vals = $this->segment_vals;
         $this->idquery = "SELECT id FROM infosegments WHERE  maintext = :mt AND  header = :h AND  genheader = :gh AND subgenheader = :sgh";
         $this->insertquery = "INSERT INTO infosegments (maintext, header, genheader, subgenheader) values (:mt, :h, :gh, :sgh)";
     }

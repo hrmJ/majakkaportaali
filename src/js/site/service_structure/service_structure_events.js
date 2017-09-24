@@ -12,8 +12,11 @@ function UpdateAdderEvents(){
     $(".slot:last-of-type").after("<div class='drop-target'></div>");
     $(".edit-link").click(function(){
         switch($(this).parents(".slot").find(".slot_type").val()){
-            default:
+            case "infosegment":
                 adder = new InfoSlideAdder($(this).parents(".slot"));
+                break;
+            case "songsegment":
+                adder = new SongSlideAdder($(this).parents(".slot"));
                 break;
         }
         adder.LoadParams($(this).parents(".slot").find(".content_id").val());
