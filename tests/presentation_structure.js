@@ -3,7 +3,7 @@ var Nightmare = require('nightmare');
 var assert = require('chai').assert; 
 
 const nightmare = new Nightmare({
-  show: false,
+  show: true,
   typeInterval: 20,
   pollInterval: 50,
   waitTimeout: 10000 // in ms
@@ -29,7 +29,7 @@ describe.only("Messun rakenne", function(){
       }).catch(done);
   });
 
-  it('Valitse yksittäisen dian lisäys ja syötä tekstiä', (done) => {
+  it('Valitse infodian lisäys ja syötä tekstiä', (done) => {
     nightmare
       .goto('http://localhost/majakkaportaali/service_structure.php').wait(700)
       .wait(".structural-element-add")
@@ -103,7 +103,7 @@ describe.only("Messun rakenne", function(){
       }).catch(done);
   });
 
-  it.only('Käyttäjä muokkaa olemassaolevan segmentin nimeä', (done) => {
+  it('Käyttäjä muokkaa olemassaolevan segmentin nimeä', (done) => {
     nightmare
       .goto('http://localhost/majakkaportaali/service_structure.php').wait(100)
       .wait(".slot")
@@ -137,6 +137,39 @@ describe.only("Messun rakenne", function(){
       })
       .then((firstslot) => {
           assert.equal(firstslot,"tadaa, uusi nimi");
+          done();
+      }).catch(done);
+  });
+
+  it('Syöttää laulun ja antaa sille nimeksi Alkulaulu', (done) => {
+    nightmare
+      .goto('http://localhost/majakkaportaali/service_structure.php').wait(700)
+      .wait(".menu")
+      .click("#addsongmenu").wait(200)
+      .type(".segment-name","Alkulaulu")
+      .evaluate(function(){
+          return document.querySelector(".segment-name").value;
+      })
+      .then((text) => {
+          assert.equal(text,"Alkulaulu")
+          done();
+      }).catch(done);
+  });
+
+
+  it.only('Syöttää laulun ja valitsee, että kyseisen tyyppisiä lauluja voi olla monta. Asettaa laulujen yläotsikoksi: Ylistyslaulut', (done) => {
+    nightmare
+      .goto('http://localhost/majakkaportaali/service_structure.php').wait(700)
+      .wait(".menu")
+      .click("#addsongmenu").wait(200)
+      .click("[value='multisong']")
+      .wait(".multisongheader")
+      .type(".multisongheader","Ylistyslaulut")
+      .evaluate(function(){
+          return document.querySelector(".multisongheader").value;
+      })
+      .then((text) => {
+          assert.equal(text,"Ylistyslaulut")
           done();
       }).catch(done);
   });

@@ -44,5 +44,23 @@
                 </div>
             </div>
         </div>
+
+
+        <div class="songslide slidemodel">
+            <h2>Lisää lauludia</h2>
+            <div class="slidemodel-flex-column">
+                <div>
+                    <input type="text" class="segment-name" placeholder="Laulun nimi"></input>
+                </div>
+                <div>
+                    <input type="checkbox" value="multisong">Useita lauluja?</input>
+                </div>
+                <div><input type='text' class='multisongheader hidden' placeholder='Anna yhteinen otsikko kaikille lauluille'></input></div>
+                <div class="slidemodel-flex">
+                    <div><textarea class='songslidetext songdescription' placeholder="Kirjoita kuvaus siitä, minkälaisia lauluja tässä yleensä pitäisi olla"></textarea></div>
+                </div>
+            </div>
+        </div>
+
     <div>
 </div>

@@ -275,11 +275,14 @@ function SelectTheContentToAdd(e, u){
         switch(u.item.text()){
             //case "Yksittäinen dia":
             //    break;
-            default:
+            case "Laulu":
+                adder = new SongSlideAdder(u.item.parents(".structural-element-add"));
+                break;
+            case "Infodia":
                 adder = new InfoSlideAdder(u.item.parents(".structural-element-add"));
                 break;
         }
-        adder.ShowWindow();
+        if (adder != undefined) adder.ShowWindow();
     }
 }
 
@@ -289,6 +292,9 @@ $(document).ready(function(){
 
         $(".menu").menu({ position: { my: "bottom", at: "right-5 top+5" }, select: SelectTheContentToAdd});
         UpdateAdderEvents();
+
+        //Vain testaamista varten: lisäillään vähän id:itä
+        $(".menu").find("li").each(function(){if($(this).text()=="Laulu")$(this).attr({"id":"addsongmenu"});});
 
     }
     }
@@ -318,12 +324,15 @@ StructuralElementAdder.prototype = {
         var self = this
         this.$container
             .prepend(this.$lightbox.append($("<div><button id='cancelbutton'>Sulje tallentamatta</button></div>")))
-            .prepend(this.$lightbox.append($("<div><button id='savebutton'>Tallenna</button></div>")))
-            .prepend(this.$lightbox.append($("<div><button id='previewbutton'>Esikatsele</button></div>")));
+            .prepend(this.$lightbox.append($("<div><button id='savebutton'>Tallenna</button></div>")));
+        if(this.slideclass==".infoslide"){
+            this.$container.prepend(this.$lightbox.append($("<div><button id='previewbutton'>Esikatsele</button></div>")));
+            $("#previewbutton").click(function(){self.PreviewSlide()});
+        }
         $("#cancelbutton").click(function(){ self.$lightbox.html("").hide(); });
         $("#savebutton").click(function(){self.SaveAndClose();});
-        $("#previewbutton").click(function(){self.PreviewSlide()});
         $(".slidetext").on("change paste keyup",function(){self.InjectServiceData()});
+        $("[value='multisong']").click(function(){self.$container.find(".multisongheader").toggle(); });
     },
 
     /**
@@ -411,6 +420,36 @@ StructuralElementAdder.prototype = {
 
 /**
  *
+ * Laulusisällön lisäävä olio.
+ *
+ * @param object $container jquery-oliona se div, jonka sisältä valittiin syöttää uusi elementti
+ *
+ */
+var SongSlideAdder = function($container){
+    StructuralElementAdder.call(this, $container);
+    this.slideclass = ".songslide";
+    this.SetLightBox();
+    return this;
+}
+
+SongSlideAdder.prototype = {
+    /**
+     * Kerää tallennusta varten tarvittavat tiedot
+     */
+    SetPreviewParams: function(){
+        var self = this;
+        this.previewparams = {
+            multiname: this.$lightbox.find(".multisongheader").val(),
+            restricted_to: "",
+            slideclass: "songsegment",
+            songdescription: this.$lightbox.find(".songdescription").val(),
+            slot_number: self.slot_number==undefined ? $(".slot").length + 1 : self.slot_number,
+            slot_name:this.$lightbox.find(".segment-name").val()};
+    },
+}
+
+/**
+ *
  * Yksittäisen diasisällön lisäävä olio.
  *
  * @param object $container jquery-oliona se div, jonka sisältä valittiin syöttää uusi elementti
@@ -465,6 +504,7 @@ InfoSlideAdder.prototype = {
 
 
 extend(StructuralElementAdder, InfoSlideAdder);
+extend(StructuralElementAdder, SongSlideAdder);
 
 /**
  *

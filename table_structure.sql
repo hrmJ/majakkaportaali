@@ -115,6 +115,20 @@ CREATE TABLE `comments` (
 
 
 --
+-- Table structure for table songsegment
+--
+
+CREATE TABLE songsegments (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `songdescription` TEXT DEFAULT NULL,
+  `restrictedto` TEXT DEFAULT NULL,
+  `singlename` varchar(100) DEFAULT NULL,
+  `multiname` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
+
+
+--
 -- Table structure for table infosegment
 --
 

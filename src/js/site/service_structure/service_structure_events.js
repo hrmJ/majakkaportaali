@@ -77,11 +77,14 @@ function SelectTheContentToAdd(e, u){
         switch(u.item.text()){
             //case "Yksittäinen dia":
             //    break;
-            default:
+            case "Laulu":
+                adder = new SongSlideAdder(u.item.parents(".structural-element-add"));
+                break;
+            case "Infodia":
                 adder = new InfoSlideAdder(u.item.parents(".structural-element-add"));
                 break;
         }
-        adder.ShowWindow();
+        if (adder != undefined) adder.ShowWindow();
     }
 }
 
@@ -91,6 +94,9 @@ $(document).ready(function(){
 
         $(".menu").menu({ position: { my: "bottom", at: "right-5 top+5" }, select: SelectTheContentToAdd});
         UpdateAdderEvents();
+
+        //Vain testaamista varten: lisäillään vähän id:itä
+        $(".menu").find("li").each(function(){if($(this).text()=="Laulu")$(this).attr({"id":"addsongmenu"});});
 
     }
     }

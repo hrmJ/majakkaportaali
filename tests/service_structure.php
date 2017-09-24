@@ -50,7 +50,17 @@ class StructureTest extends TestCase
    * Ajax-lataa messudataa 
    */
   public function testSaveInfoSegment(){
-      $loader= new InfoSegmentSaver("config.ini", Array("maintext"=>"TEkstiä","header"=>"Otsikko","genheader"=>"Mjakkamssu","subgenheader"=>"hyvä aihe","slideclass"=>"infosegment","slot_number"=>1));
+      $loader= new InfoSegmentSaver("config.ini", Array("maintext"=>"TEkstiä","header"=>"Otsikko","genheader"=>"Mjakkamssu","subgenheader"=>"hyvä aihe","slideclass"=>"infosegment","slot_number"=>1,"slot_name"=>"alkuinfo"));
+      $loader->SetContentId()->SetSlotData();
+      $this->AssertTrue($loader->content_id>0);
+  }
+
+
+  /**
+   * Tallenna laulusegmentti
+   */
+  public function testSaveSongSegment(){
+      $loader= new SongSegmentSaver("config.ini", Array("slideclass"=>"songsegment","slot_number"=>1,"description"=>"Tämä laulutaan aluksi","restricted_to"=>"","slot_name"=>"testilaulu","multiname"=>""));
       $loader->SetContentId()->SetSlotData();
       $this->AssertTrue($loader->content_id>0);
   }

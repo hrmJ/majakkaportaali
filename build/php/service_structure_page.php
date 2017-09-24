@@ -58,7 +58,7 @@ class StructurePage extends Page{
      *
      */
     public function InsertElementAdder(){
-        $this->addermenu = new UiMenu($this->path, Array("Yksittäinen dia"=>Array("Infodia","Kuva"),"Laulu","Monta laulua"));
+        $this->addermenu = new UiMenu($this->path, Array("Yksittäinen dia"=>Array("Infodia","Kuva","Otsikko"),"Laulu"));
         $this->addermenu->Set("defaulttext","Uusi messuelementti")->Set("id","");
         $this->Set("addermenu",$this->addermenu->Output());
         return $this;
