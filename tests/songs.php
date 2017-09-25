@@ -23,31 +23,12 @@ class SongListTests extends TestCase
     }
 
 
-    public function testSetSingleSongData(){
-    
-        $this->page->SetSingleSongs();
-        $this->assertRegExp('/name="alkulaulu"/', $this->page->Output());
-    }
-
-
-    public function testSetWsAndComSongs()
-    {
-        $this->page->SetMultiSongs(Array("com","ws"));
-        $this->assertRegExp('/name="ws_1"/', $this->page->Output());
-        $this->assertRegExp('/name="com_1"/', $this->page->Output());
-    }
-
 
     public function testOutPutPage()
     {
         $this->assertRegExp('/Laulujen syöttö/', $this->page->OutputPage());
     }
 
-    public function testLiturgicalSongs()
-    {
-        $this->page->SetLiturgicalSongs(Array("jumalan_karitsa","pyha"));
-        $this->assertRegExp('/<option.*Jumalan karitsa \(/', $this->page->Output());
-    }
 
     public function testSaveSongData()
     {
@@ -153,8 +134,13 @@ class SongListTests extends TestCase
 
     }
 
-    public function testAlphabetSelect(){
-        $this->page->SetSongViewElements();
+    //public function testAlphabetSelect(){
+    //    $this->page->SetSongViewElements();
+    //    $this->assertRegExp('/Virsi \d+ - Virsi \d+/', $this->page->Output());
+    //}
+
+    public function testLoadSongTypes(){
+        $this->page->LoadSongTypes();
         $this->assertRegExp('/Virsi \d+ - Virsi \d+/', $this->page->Output());
     }
 

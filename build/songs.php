@@ -12,6 +12,7 @@ require("php/services.php");
 require("php/database.php");
 require("php/utilities.php");
 require("php/songs.php");
+require("php/songpage.php");
 
 $con = new SongCon("../config.ini");
 $id = (isset($_GET["service_id"]) ? $_GET["service_id"] : GetIdByDate($con, date('Y-m-d'))); 
