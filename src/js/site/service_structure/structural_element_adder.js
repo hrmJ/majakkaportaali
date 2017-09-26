@@ -31,6 +31,14 @@ StructuralElementAdder.prototype = {
         $("#savebutton").click(function(){self.SaveAndClose();});
         $(".slidetext").on("change paste keyup",function(){self.InjectServiceData()});
         $("[value='multisong']").click(function(){self.$container.find(".multisongheader").toggle(); });
+        $("[value='restrictedsong']").click(function(){
+            //Aseta autocomplete-mahdollisuus etsiä lauluja rajoitettuun listaan
+            self.$container.find(".restrictionlist")
+                .toggle()
+                .autocomplete({ source: function(request, response){ $.getJSON(loaderpath + "/songtitles.php",{songname:request.term,fullname:"no"},response);},
+                                minLength: 0,
+                                select: function(event,input){console.log(input.item.value)}});
+        });
     },
 
     /**

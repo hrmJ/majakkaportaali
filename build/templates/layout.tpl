@@ -30,7 +30,7 @@
     </nav>
     <div class="byline">[@byline]</div>
     <main>
-    [@content]
+        [@content]
     </main>
 </div>
 

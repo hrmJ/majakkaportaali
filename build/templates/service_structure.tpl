@@ -54,8 +54,18 @@
                 </div>
                 <div>
                     <input type="checkbox" value="multisong">Useita lauluja?</input>
+                    <input type='text' class='multisongheader hidden' placeholder='Anna yhteinen otsikko kaikille lauluille'></input>
                 </div>
-                <div><input type='text' class='multisongheader hidden' placeholder='Anna yhteinen otsikko kaikille lauluille'></input></div>
+                <div "slidemodel-flex">
+                    <div>
+                        <input type="checkbox" value="restrictedsong">Käytä rajattua laulujen listaa avoimen kentän sijasta?</input>
+                        <input type='text' class='restrictionlist hidden' placeholder='Anna yhteinen otsikko kaikille lauluille'></input>
+                    </div>
+                    <div id="autocomptarget">
+                        <!-- Tänne tulostetaan selattavia lauluja laulujen rajausta varten -->
+                    </div>
+                </div>
+                <div> </div>
                 <div class="slidemodel-flex">
                     <div><textarea class='songslidetext songdescription' placeholder="Kirjoita kuvaus siitä, minkälaisia lauluja tässä yleensä pitäisi olla"></textarea></div>
                 </div>

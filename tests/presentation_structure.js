@@ -176,5 +176,7 @@ describe.only("Messun rakenne", function(){
 
   it("Rakenteesta voi poistaa elementin");
 
+  it("Syöttää lauluelementin, jossa rajoitettu mahdolliset laulut");
+
 });
 

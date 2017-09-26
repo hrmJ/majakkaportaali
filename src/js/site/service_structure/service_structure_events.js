@@ -6,7 +6,8 @@ var adder = undefined;
 var currently_dragged_no = undefined;
 
 /**
- * Lisää kaikkiin messun segmentteihin muokkaus- ja poisto-ominaisuudet
+ * Lisää kaikkiin messun segmentteihin muokkaus- ja poisto-ominaisuudet.
+ * Lisäksi mahdollistaa segmenttien uudelleenjärjestelyn raahaamalla.
  */
 function UpdateAdderEvents(){
     $(".slot:last-of-type").after("<div class='drop-target'></div>");
@@ -22,7 +23,16 @@ function UpdateAdderEvents(){
         adder.LoadParams($(this).parents(".slot").find(".content_id").val());
         adder.ShowWindow();
     });
-    $(".remove-link").click(function(){console.log("ssssssremove") });
+
+    //slottien poisto
+    $(".remove-link").click(function(){
+        $.post("php/loaders/save_structure_slide.php",
+            {"removeslide":"y,","id":$(this).parents(".slot").find(".slot_id").val()}, 
+            function(data){ 
+                console.log(data);
+                $(".structural-slots").load("php/loaders/loadslots.php",UpdateAdderEvents);
+            });
+    });
 
     //slottien siirtely
     $(".slot").on("dragstart",function(){ 
@@ -67,6 +77,7 @@ function UpdateAdderEvents(){
                 });
             $.post("php/loaders/save_structure_slide.php",{"slideclass":"update_numbers","newids":newids}, function(data){ $(".structural-slots").load("php/loaders/loadslots.php",UpdateAdderEvents); });
         });
+
 }
 
 /**
@@ -97,6 +108,7 @@ $(document).ready(function(){
 
         $(".menu").menu({ position: { my: "bottom", at: "right-5 top+5" }, select: SelectTheContentToAdd});
         UpdateAdderEvents();
+
 
         //Vain testaamista varten: lisäillään vähän id:itä
         $(".menu").find("li").each(function(){if($(this).text()=="Laulu")$(this).attr({"id":"addsongmenu"});});

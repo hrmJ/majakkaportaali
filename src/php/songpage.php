@@ -117,10 +117,23 @@ class SongPage extends Page{
      *
      */
     public function LoadSongTypes(){
-    
-    
-    
-    
+        $allsongtypes = "";
+        $slots = $this->con->q("SELECT slot_name, content_id FROM presentation_structure WHERE slot_type = :st ORDER by slot_number ",Array("st"=>"songsegment"),"all");
+        foreach($slots as $slot){
+            $details = $this->con->q("SELECT id, songdescription, restrictedto, singlename, multiname FROM songsegments WHERE id = :cid",Array("cid"=>$slot["content_id"]),"row");
+            $multi = ($details["multiname"] == "" ? false: true);
+            if($multi){
+                $output = new Template("{$this->path}/multisong.tpl");
+                $output->Set("multisongheader",$details["multiname"]);
+            }
+            else{
+                $output = new Template("{$this->path}/singlesong.tpl");
+            }
+            $output->Set("category",$slot["slot_name"])->Set("name","")->Set("value","");
+            $allsongtypes.=$output->Output();
+        }
+        $this->Set("songs",$allsongtypes);
+
     }
 
 

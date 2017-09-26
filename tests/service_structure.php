@@ -37,14 +37,15 @@ class StructureTest extends TestCase
       $this->AssertRegExp("/Yksittäinen dia/", $page->addermenu->Output());
   }
 
-  /**
-   * Ajax-lataa messudataa 
-   */
-  public function testLoadDataForInjection(){
-      $loader= new ServiceLoader("config.ini");
-      $loader->LoadResponsibilities();
-      $this->AssertTrue(sizeof($loader->data)>0);
-  }
+//
+//  /**
+//   * Ajax-lataa messudataa 
+//   */
+//  public function testLoadDataForInjection(){
+//      $loader= new ServiceLoader("config.ini");
+//      $loader->LoadResponsibilities();
+//      $this->AssertTrue(sizeof($loader->data)>0);
+//  }
 
   /**
    * Ajax-lataa messudataa 

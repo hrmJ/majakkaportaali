@@ -12,6 +12,10 @@
 }
 
 
+.multisong-container{
+    margin-top:$rowtopmargin;
+}
+
 .datarow{
     display:flex;
     flex-flow: row nowrap;
@@ -27,13 +31,13 @@
     }
 
     > div{
-        padding-top: 0.8em;
-        padding-bottom: 0.8em;
+        padding-top: 0.2em;
+        padding-bottom: 0.2em;
         display: flex;
         align-items: center;
     }
 
-    + .datarow,{
+    + .datarow, .multisongcontainer{
         margin-top:$rowtopmargin;
     }
 }

@@ -19,7 +19,7 @@ var autocompsongtitle = {
  * Lisää uusi rivi laulujen listaan tai poista viimeisin rivi.
  */
 function AddMultisongsRow(){
-    var $table = $(this).parent().parent(".data-container");
+    var $table = $(this).parent().parent(".multisong-container");
     if($(this).hasClass('decreaser')){
         //Poista viimeisin, jos painettu miinuspainiketta ja jos vähintään 1 jäljellä
         if($table.find(".datarow").length>1) $table.find(".datarow").last().remove();

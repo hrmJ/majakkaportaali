@@ -6,6 +6,13 @@ body {
   color: #666666;
   font-family: "Roboto", sans-serif; }
 
+#autocomptarget {
+  display: block;
+  position: relative; }
+
+.ui-autocomplete {
+  position: absolute; }
+
 body {
   padding: 0px;
   margin: 0px;
@@ -193,6 +200,9 @@ h3 {
   align-items: stretch;
   font-size: 1em; }
 
+.multisong-container {
+  margin-top: 0.73em; }
+
 .datarow {
   display: flex;
   flex-flow: row nowrap;
@@ -205,11 +215,11 @@ h3 {
     padding-left: 0.5em;
     padding-right: 0.5em; }
   .datarow > div {
-    padding-top: 0.8em;
-    padding-bottom: 0.8em;
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
     display: flex;
     align-items: center; }
-  .datarow + .datarow {
+  .datarow + .datarow, .datarow .multisongcontainer {
     margin-top: 0.73em; }
 
 .datarow:hover {
