@@ -59,7 +59,7 @@
                 <div "slidemodel-flex">
                     <div>
                         <input type="checkbox" value="restrictedsong">Käytä rajattua laulujen listaa avoimen kentän sijasta?</input>
-                        <input type='text' class='restrictionlist hidden' placeholder='Anna yhteinen otsikko kaikille lauluille'></input>
+                        <input type='text' class='restrictionlist hidden' placeholder='Kirjoita hyväksyttyjen laulujen nimet pilkulla erotettuna'></input>
                     </div>
                     <div id="autocomptarget">
                         <!-- Tänne tulostetaan selattavia lauluja laulujen rajausta varten -->

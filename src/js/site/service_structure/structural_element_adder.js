@@ -31,14 +31,8 @@ StructuralElementAdder.prototype = {
         $("#savebutton").click(function(){self.SaveAndClose();});
         $(".slidetext").on("change paste keyup",function(){self.InjectServiceData()});
         $("[value='multisong']").click(function(){self.$container.find(".multisongheader").toggle(); });
-        $("[value='restrictedsong']").click(function(){
-            //Aseta autocomplete-mahdollisuus etsiä lauluja rajoitettuun listaan
-            self.$container.find(".restrictionlist")
-                .toggle()
-                .autocomplete({ source: function(request, response){ $.getJSON(loaderpath + "/songtitles.php",{songname:request.term,fullname:"no"},response);},
-                                minLength: 0,
-                                select: function(event,input){console.log(input.item.value)}});
-        });
+        if(this.slideclass==".songslide") this.AddAutoComplete();
+
     },
 
     /**
@@ -120,6 +114,54 @@ StructuralElementAdder.prototype = {
         $(".preview-window iframe").contents().find("main").html(this.previewhtml);
     },
 
+
+    /**
+     * Aseta autocomplete-mahdollisuus etsiä lauluja rajoitettuun listaan
+     * Käytetään hyväksi jquery ui:n skriptiä useista autocomplete-arvoista (https://jqueryui.com/autocomplete/#multiple)
+     */
+    AddAutoComplete: function(){
+        var self = this;
+        function split( val ) {
+          return val.split( /,\s*/ );
+        }
+        function extractLast( term ) {
+          return split( term ).pop();
+        }
+        $("[value='restrictedsong']").click(function(){
+            self.$container.find(".restrictionlist")
+                .toggle()
+                // don't navigate away from the field on tab when selecting an item
+                .on( "keydown", function( event ) {
+                  if ( event.keyCode === $.ui.keyCode.TAB &&
+                      $( this ).autocomplete( "instance" ).menu.active ) {
+                    event.preventDefault();
+                  }
+                })
+                .autocomplete({ source: 
+                                function(request, response){ 
+                                    var data = undefined;
+                                    $.getJSON(loaderpath + "/songtitles.php",{songname:extractLast(request.term),fullname:"no"},response);
+                                },
+                                minLength: 0,
+                                select: function(event,input){
+                                    console.log(input.item.value)},
+                                focus: function() {
+                                  // prevent value inserted on focus
+                                  return false;
+                                },
+                                select: function( event, ui ) {
+                                  var terms = split( this.value );
+                                  // remove the current input
+                                  terms.pop();
+                                  // add the selected item
+                                  terms.push( ui.item.value );
+                                  // add placeholder to get the comma-and-space at the end
+                                  terms.push( "" );
+                                  this.value = terms.join( ", " );
+                                  return false;
+                                } });
+        });
+        },
 
 }
 
