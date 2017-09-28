@@ -49,8 +49,8 @@ class SongPage extends Page{
 
     /**
      *
-     * Hae ylistyslaulujen data
-     * tai oleta tyhjät, jos dataa ei löydy.
+     * Hae niitten laulujen data, joita on useampia.
+     * Tai oleta tyhjät, jos dataa ei löydy.
      *
      * @param Array $types Taulukko, joka kertoo, mistä lauluista on kyse (ylistys- vai ehtoollis-)
      *

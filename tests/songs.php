@@ -141,7 +141,7 @@ class SongListTests extends TestCase
 
     public function testLoadSongTypes(){
         $this->page->LoadSongTypes();
-        $this->assertRegExp("/data-container/",$this->page->Output());
+        $this->assertRegExp("/datarow/",$this->page->Output());
     }
 
 

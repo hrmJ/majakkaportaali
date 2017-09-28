@@ -17,7 +17,7 @@ class ServiceListTest extends TestCase
         $this->season = GetCurrentSeason($this->con);
         $this->layout = new Template("$this->templatepath/layout.tpl");
         $this->layout->Set("title", "Majakkaportaali");
-        $this->responsibilities = $this->con->q("SELECT DISTINCT responsibility FROM responsibilities", Array());
+        $this->responsibilities = $this->con->q("SELECT DISTINCT responsibility FROM responsibilities", Array(),"all_flat");
 
         $this->servicedata = $this->con->q("SELECT servicedate, theme, id FROM services WHERE servicedate >= :startdate AND servicedate <= :enddate ORDER BY servicedate", Array("startdate"=>$this->season["startdate"], "enddate"=>$this->season["enddate"]));
         $this->tablecontent = new ServiceListTable($this->templatepath, $this->servicedata);
@@ -36,8 +36,8 @@ class ServiceListTest extends TestCase
 
     public function testCreateSelectForFilteringResponsibilities()
     {
-        $select = new Select($this->templatepath, $this->responsibilities, "Yleisnäkymä","Yleisnäkymä");
-        $this->assertRegExp('/<option.*juontaja/', $select->Output());
+        $select = new Select($this->templatepath, $this->responsibilities);
+        $this->assertRegExp('/<option.*juontaja/', $select->OutputSelect());
     }
 
     public function testLayoutIncludesSelect()

@@ -11,6 +11,8 @@ require("php/utilities.php");
 require("php/templating.php");
 require("php/database.php"); 
 require("php/services.php");
+require("php/select.php");
+require("php/service_list_page.php");
 
 $templatepath="templates";
 

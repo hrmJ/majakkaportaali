@@ -127,40 +127,38 @@ StructuralElementAdder.prototype = {
         function extractLast( term ) {
           return split( term ).pop();
         }
-        $("[value='restrictedsong']").click(function(){
-            self.$container.find(".restrictionlist")
-                .toggle()
-                // don't navigate away from the field on tab when selecting an item
-                .on( "keydown", function( event ) {
-                  if ( event.keyCode === $.ui.keyCode.TAB &&
-                      $( this ).autocomplete( "instance" ).menu.active ) {
-                    event.preventDefault();
-                  }
-                })
-                .autocomplete({ source: 
-                                function(request, response){ 
-                                    var data = undefined;
-                                    $.getJSON(loaderpath + "/songtitles.php",{songname:extractLast(request.term),fullname:"no"},response);
-                                },
-                                minLength: 0,
-                                select: function(event,input){
-                                    console.log(input.item.value)},
-                                focus: function() {
-                                  // prevent value inserted on focus
-                                  return false;
-                                },
-                                select: function( event, ui ) {
-                                  var terms = split( this.value );
-                                  // remove the current input
-                                  terms.pop();
-                                  // add the selected item
-                                  terms.push( ui.item.value );
-                                  // add placeholder to get the comma-and-space at the end
-                                  terms.push( "" );
-                                  this.value = terms.join( ", " );
-                                  return false;
-                                } });
-        });
+        $("[value='restrictedsong']").click(function(){ self.$container.find(".restrictionlist").toggle() });
+        self.$container.find(".restrictionlist")
+            // don't navigate away from the field on tab when selecting an item
+            .on( "keydown", function( event ) {
+              if ( event.keyCode === $.ui.keyCode.TAB &&
+                  $( this ).autocomplete( "instance" ).menu.active ) {
+                event.preventDefault();
+              }
+            })
+            .autocomplete({ source: 
+                            function(request, response){ 
+                                var data = undefined;
+                                $.getJSON(loaderpath + "/songtitles.php",{songname:extractLast(request.term),fullname:"no"},response);
+                            },
+                            minLength: 0,
+                            select: function(event,input){
+                                console.log(input.item.value)},
+                            focus: function() {
+                              // prevent value inserted on focus
+                              return false;
+                            },
+                            select: function( event, ui ) {
+                              var terms = split( this.value );
+                              // remove the current input
+                              terms.pop();
+                              // add the selected item
+                              terms.push( ui.item.value );
+                              // add placeholder to get the comma-and-space at the end
+                              terms.push( "" );
+                              this.value = terms.join( ", " );
+                              return false;
+                            } });
         },
 
 }
@@ -188,7 +186,7 @@ SongSlideAdder.prototype = {
         var self = this;
         this.previewparams = {
             multiname: this.$lightbox.find(".multisongheader").val(),
-            restricted_to: "",
+            restricted_to: this.$lightbox.find(".restrictionlist").val(),
             slideclass: "songsegment",
             songdescription: this.$lightbox.find(".songdescription").val(),
             slot_number: self.slot_number==undefined ? $(".slot").length + 1 : self.slot_number,
@@ -210,6 +208,10 @@ SongSlideAdder.prototype = {
             if(data.multiname != ""){
                 self.$lightbox.find("[value='multisong']").get(0).checked=true;
                 self.$lightbox.find(".multisongheader").val(data.multiname).show();
+            }
+            if(data.restrictedto != ""){
+                self.$lightbox.find("[value='restrictedsong']").get(0).checked=true;
+                self.$lightbox.find(".restrictionlist").val(data.restrictedto).show();
             }
             self.$lightbox.find(".segment-name").val(self.slot_name);
             self.$lightbox.find(".songdescription").val(data.songdescription);
@@ -261,9 +263,7 @@ InfoSlideAdder.prototype = {
         this.slot_number = this.$container.find(".slot-number").text();
         this.slot_name = this.$container.find(".slot_name_orig").val();
         var self = this;
-        console.log("lkj");
         $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"infosegment","id":id},function(data){
-            console.log("aaaa");
             self.$lightbox.find(".slide-header").val(data.header);
             self.$lightbox.find(".infoslidetext").val(data.maintext);
             self.$lightbox.find(".segment-name").val(self.slot_name);

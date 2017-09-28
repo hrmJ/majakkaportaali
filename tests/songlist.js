@@ -235,6 +235,8 @@ describe("Liturgiset laulut", function(){
         }).catch(done);
     });
 
+    it("Käyttäjä valitsee pyhä-hymniksi x:n");
+
     it("Käyttäjä muokkaa virren 134 sanoja, niin että ne sisältävät sanan KUKKULUURUU");
     it("Käyttäjä lisää uuden laulun (Uusi hieno JK) Jumalan karitsa -hymniksi, lisää siihen sanat ja tallentaa.");
     it("Uusi hieno JK on yksi vaihtoehdoista select-valitsimessa.");

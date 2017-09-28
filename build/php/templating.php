@@ -244,48 +244,6 @@ class ServiceDetailsTable extends DataTable{
 }
 
 
-/**
- *
- * Taulukko yksittäisen messun responsibilitynkantajien kuvaamista varten.
- *
- * @param string $type taulukon tyyppi
- *
- */
-class Select extends Template{
-
-    /**
-     *
-     * @param string $path polku templates-kansioon
-     * @param array $optiondata taulukko arvoista, jotka syötetään select-elementin riveiksi
-     * @param string $selected se arvo, joka valitaan, kun elementti luodaan
-     * @param string $label select-elementin ensimmäinen, otsikkona toimiva  arvo
-     * @param array $valuedata option-elementin value-attribuutin arvot taulukkona
-     *
-     */
-    public function __construct($path, $optiondata, $selected, $label, $id="", $valuedata=Array()){
-        parent::__construct("$path/select.tpl");
-        $optiondata = array_merge(Array(Array($label),Array("------------")), $optiondata);
-        if($valuedata)
-            $valuedata = array_merge(Array("",""), $valuedata);
-        $options="";
-        foreach($optiondata as $key=>$option){
-            $tpl = new Template("$path/option.tpl");
-            $tpl->Set("content",$option[0]);
-            if($option[0]==$selected)
-                $tpl->Set("selected","selected");
-            else
-                $tpl->Set("selected","");
-            if(sizeof($optiondata)==sizeof($valuedata))
-                $tpl->Set("value",$valuedata[$key]);
-            else
-                $tpl->Set("value",$option[0]);
-            $options .= $tpl->Output();
-        }
-        $this->Set("content",$options);
-        $this->Set("id",$id);
-    }
-
-}
 
 /**
  *
@@ -352,6 +310,7 @@ class UiMenu extends Template{
             $this->rows[] = $tpl;
         }
         $this->Set("menuitems",$this->OutputRows());
+        return $this;
     }
 
 
@@ -436,148 +395,7 @@ class Page extends Template{
 
 }
 
-/**
- *
- * Perusnäkymän template.
- *
- * @param string $type mistä sivutyypistä on kyse.
- *
- */
 
-
-
-class ServiceListPage extends Page{
-
-    public $type = "servicelist";
-
-    /**
-     *
-     * @param string $path polku templates-kansioon
-     * @param string $filterby vastuu, jonka mukaan suodatetaan.
-     *
-     */
-    public function __construct($path, $filterby){
-        $this->path = $path;
-        $this->filterby = $filterby;
-        parent::__construct();
-    }
-
-    /**
-     *
-     * Luo valitsimen, jolla messuja voi suodattaa vastuiden mukaan
-     *
-     *
-     */
-    public function InsertResponsibilitySelect(){
-        $responsibilities = $this->con->q("SELECT DISTINCT responsibility FROM responsibilities", Array());
-        $select = new Select($this->path, $responsibilities, $this->filterby, "Yleisnäkymä","respfilter");
-        $this->Set("select", $select->Output());
-    }
-
-    /**
-     *
-     * Asettaa sivulle submit-elementin ja tietoja riippuen siitä, onko
-     * kyseessä yleisnäkymä vai vastuun perusteella suodatettu näkymä
-     *
-     */
-    public function SetPageVersion(){
-        $subval = "";
-        if($this->filterby!="Yleisnäkymä"){
-            $sub = new Submit($this->path, "filteredchanges","Tallenna","");
-            $subval = $sub->Output();
-            $this->Set("help", "Muista tallentaa muutokset sivun alalaidassa olevalla Tallenna-painikkeella. Pääset takaisin alkunäkymään valitsemalla pudotusvalikosta kohdan 'yleisnäkymä'.");
-        }
-        else{
-            $this->Set("help", "Klikkaa päivämäärää, niin siirryt tarkempaan messukohtaiseen näkymään. Alla olevasta pudotusvalikosta voit näyttää joka messun vain tietyn vastuun osalta.");
-        }
-        $this->Set("submit", $subval);
-    }
-
-    /**
-     *
-     * Hae messulistan näkymä. Joko päivämäärät ja teemat listaava näkymä
-     * tai vastuun mukaan suodatettu näkymä. Jos valittu vastuun mukaan suodatettu,
-     * otetaan huomioon, että 
-     *
-     */
-    public function FilterContent(){
-        $season = GetCurrentSeason($this->con);
-        $dates_and_themes = $this->con->q("SELECT servicedate, theme, id FROM services WHERE servicedate >= :startdate AND servicedate <= :enddate ORDER BY servicedate", Array("startdate"=>$season["startdate"], "enddate"=>$season["enddate"]));
-        if($this->filterby!="Yleisnäkymä"){
-            $serviceids = $this->con->q("SELECT id FROM services WHERE servicedate >= :startdate AND servicedate <= :enddate ORDER BY servicedate", Array("startdate"=>$season["startdate"], "enddate"=>$season["enddate"]));
-            $filteredids = Array();
-            foreach($serviceids as $sid){
-                $sid[0];
-                $filteredids[] = $sid["id"];
-            }
-            $responsibles =  $this->con->q("SELECT service_id, responsible FROM responsibilities WHERE responsibility = ? AND service_id IN (" .  implode(",", array_fill(0, sizeof($filteredids), "?")) . ") ORDER BY service_id", array_merge(Array($this->filterby),$filteredids));
-            $servicedata = Array();
-            foreach($responsibles as $key=> $responsible){
-                $servicedata[] = Array("servicedate"=>$dates_and_themes[$key]["servicedate"],"theme"=>"<input type='text' name='id_{$dates_and_themes[$key]["id"]}' value='{$responsible["responsible"]}'>","id"=>$dates_and_themes[$key]["id"]);
-            }
-        }
-        else
-            $servicedata = $dates_and_themes;
-        $tablecontent = new ServiceListTable($this->path, $servicedata);
-        $this->Set("table", $tablecontent->Output());
-    }
-
-}
-
-
-
-/**
- *
- * Messunäkymän template
- *
- * @param string $type mistä sivutyypistä on kyse.
- *
- */
-class DetailsPage extends Page{
-
-    public $type = "servicedetails";
-
-    /**
-     *
-     * @param string $path polku templates-kansioon
-     * @param string $id tarkasteltavan messun id
-     *
-     */
-    public function __construct($path, $id){
-        $this->path = $path;
-        $this->id = $id;
-        parent::__construct();
-    }
-
-    /**
-     *
-     * Luo valitsimen, jolla messuja voi suodattaa vastuiden mukaan
-     *
-     *
-     */
-    public function SetResponsibleData(){
-        $volunteers = $this->con->q("SELECT responsible, responsibility FROM responsibilities WHERE service_id = :id",Array("id"=>$this->id),"all");
-        $tablecontent = new ServiceDetailsTable($this->path, $volunteers);
-        $this->Set("table", $tablecontent->Output());
-        return $this;
-    }
-
-    /**
-     *
-     * Luo valitsimen, jolla messuja voi suodattaa vastuiden mukaan.
-     *
-     */
-    public function SetCommentThemeSelect(){
-        $responsibilities = array_merge(Array(Array("Yleinen"),Array("Infoasia")), $this->con->q("SELECT DISTINCT responsibility FROM responsibilities",Array(),"all"));
-        $select = new Select($this->path, $responsibilities, "Kommentin aihe", "Kommentin aihe");
-        $comment_controls = new Template("{$this->path}/comment-insert-controls.tpl");
-        $comment_controls->Set("commentthemeselect", "<div>{$select->Output()}</div>");
-        $this->Set("comment-insert-controls",$comment_controls->Output());
-
-        return $this;
-    }
-
-}
 
 
 

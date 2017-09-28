@@ -34,7 +34,6 @@ function LoadComments(){
         $(".commentator").val("");
         $(".newcomment:eq(0)").height("3em");
         $(".comment comment-insert-controls").hide()
-        $(".comment comment-insert-controls").hide()
         $(".commentdetails").hide()
         $("select").prop('selectedIndex',0);
         $(".comment-answer-link")
@@ -43,7 +42,9 @@ function LoadComments(){
             //Muuta vastauslinkin tekstiä ketjujen osalta
             if($(this).parent().parent().find(".comment").length>0) $(this).text("Jatka viestiketjua");
         });
-        $(".savecomment").click(SaveComment);
+        //Huom! Varmistetan, ettei tallennustapahtuma tule sidotuksi kahdesti
+        $(".savecomment").unbind("click",SaveComment);
+        $(".savecomment").bind("click",SaveComment);
         $(".newcomment:eq(0)").click(ExpandCommentField);
     });
 }
@@ -54,6 +55,7 @@ function LoadComments(){
  *
  */
 function SaveComment(){
+    console.log("raz!");
     $container = $(this).parent().parent().parent();
     var theme = "";
     var replyto = 0;
@@ -80,7 +82,6 @@ function SaveComment(){
  *
  */
 function CreateCommentAnswerField(){
-    console.log("l");
     $(this).parent().next().slideDown().children().show();
 }
 

@@ -12,7 +12,7 @@ const nightmare = new Nightmare({
 var waitsmall = 0;
 var waitbig = 500;
 
-describe.only("Messun rakenne", function(){
+describe("Messun rakenne", function(){
   this.timeout( 5000 );
 
   it('Näytä syötettävien elementtien valikko', (done) => {
@@ -157,7 +157,7 @@ describe.only("Messun rakenne", function(){
   });
 
 
-  it.only('Syöttää laulun ja valitsee, että kyseisen tyyppisiä lauluja voi olla monta. Asettaa laulujen yläotsikoksi: Ylistyslaulut', (done) => {
+  it('Syöttää laulun ja valitsee, että kyseisen tyyppisiä lauluja voi olla monta. Asettaa laulujen yläotsikoksi: Ylistyslaulut', (done) => {
     nightmare
       .goto('http://localhost/majakkaportaali/service_structure.php').wait(700)
       .wait(".menu")

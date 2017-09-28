@@ -77,13 +77,14 @@ class StructureTest extends TestCase
   }
 
   /**
-   * Lataa kaikki olemassaolevat slotit.
+   * Lataa infodia
    */
   public function testLoadInfoslide(){
       $loader= new InfoSegmentLoader("config.ini", 1);
       $loader->LoadInfoSlide();
       $this->AssertTrue(array_key_exists("genheader",$loader->data));
   }
+
 
 }
 
