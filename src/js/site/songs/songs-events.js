@@ -4,6 +4,15 @@
  *
  */
 
+function AddCustomSongPicker(text){
+    if (text == "Jokin muu") {
+        var button = $('<input type="submit" onclick="selectOther(this)" value="Valitse"/>');
+        var input = $('<input  type="text" value="" placeholder="Kirjoita laulun nimi...">');
+        return $('<span></span>').append(input).append(button)[0].outerHTML;
+    }
+    return text;
+}
+
 $(document).ready (function(){
     if($("body").hasClass("songs")){
         $(".songinput").autocomplete(autocompsongtitle);
@@ -23,6 +32,8 @@ $(document).ready (function(){
         var slv = new SongListView();
         $(".songlistview-toggle").click(function(){slv.Toggle()});
         $("#alpha-select li").click(function(){slv.LoadData($(this))});
+        //Rajoitetuille lauluvalinnoille modattu jquery ui -selectmenu
+        $("select").select_withtext();
     }
 });
 

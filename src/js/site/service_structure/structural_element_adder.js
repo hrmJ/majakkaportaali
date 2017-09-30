@@ -142,8 +142,6 @@ StructuralElementAdder.prototype = {
                                 $.getJSON(loaderpath + "/songtitles.php",{songname:extractLast(request.term),fullname:"no"},response);
                             },
                             minLength: 0,
-                            select: function(event,input){
-                                console.log(input.item.value)},
                             focus: function() {
                               // prevent value inserted on focus
                               return false;

@@ -8,7 +8,19 @@
      { 
          _renderItem: function( ul, item ) {
             if(item.label=="Jokin muu"){
-                var wrapper = $("<div class='other-option'>").append($("<input type='text' placeholder='Jokin muu...'>"))
+                var $input = $("<input type='text' placeholder='Jokin muu...'>")
+                var self = this;
+                var thisitem = item;
+                $input.autocomplete( {
+                    source: function(request, response){ $.getJSON(loaderpath + "/songtitles.php",{songname:request.term,fullname:"no"},response);},
+                    minLength: 2,
+                    select: function(event,input){
+                        $(self.element).find("[value='Jokin muu']").before("<option>" +  input.item.value +"</option>");
+                        self.refresh();
+                    },
+                });
+
+                var wrapper = $("<div class='other-option'>").append($input);
             }
             else{
                 var wrapper = $("<div>").text(item.label)
@@ -20,15 +32,16 @@
             var self = this;
             $.each(this.menuItems,function(idx,el){
                 if($(el).hasClass("other-option")){
+                    //Siivoa tekstikenttään liittyvät tapahtumat
                     $(el).unbind('mousedown');
                     $(el).unbind('keydown');
                     $(el).unbind('click');
                     $(el).click(function(){return false;});
                     $(el).bind("keydown", function(event){});
                     $(el).bind('mousedown', function() {
+                        //Fokus pitää asettaa erikseen
                         $(this).find('input:eq(0)').focus();
                     });
-                    console.log(self.menu)
                 }
             });
             if ( this.options.disabled ) {
@@ -59,39 +72,6 @@
 
             this._trigger( "open", event );
         },
-
-	_select: function( item, event ) {
-		var oldIndex = this.element[ 0 ].selectedIndex;
-
-		// Change native select element
-		this.element[ 0 ].selectedIndex = item.index;
-		this.buttonItem.replaceWith( this.buttonItem = this._renderButtonItem( item ) );
-		this._setAria( item );
-		this._trigger( "select", event, { item: item } );
-
-		if ( item.index !== oldIndex ) {
-			this._trigger( "change", event, { item: item } );
-		}
-
-        this.close( event );
-	},
-
-	_documentClick: {
-		mousedown: function( event ) {
-            if($(event.target).find("input[type='text']").length>0 || $(event.target).attr("type")=="text"){
-                //Jos kyseessä tekstikentän sisältävä elementti
-                return;
-            }
-			if ( !this.isOpen ) {
-				return;
-			}
-
-			if ( !$( event.target ).closest( ".ui-selectmenu-menu, #" +
-					$.ui.escapeSelector( this.ids.button ) ).length ) {
-				this.close( event );
-			}
-		}
-	},
 
 
 	_drawMenu: function() {
@@ -165,109 +145,10 @@
 		};
 
         this.menuInstance._keydown = function(){
-        
-		var match, prev, character, skip,
-			preventDefault = true;
-
-		switch ( event.keyCode ) {
-		case $.ui.keyCode.PAGE_UP:
-			this.previousPage( event );
-			break;
-		case $.ui.keyCode.PAGE_DOWN:
-			this.nextPage( event );
-			break;
-		case $.ui.keyCode.UP:
-			this.previous( event );
-			break;
-		case $.ui.keyCode.DOWN:
-			this.next( event );
-			break;
-		case $.ui.keyCode.LEFT:
-			this.collapse( event );
-			break;
-		case $.ui.keyCode.RIGHT:
-			if ( this.active && !this.active.is( ".ui-state-disabled" ) ) {
-				this.expand( event );
-			}
-			break;
-		case $.ui.keyCode.ENTER:
-		case $.ui.keyCode.ESCAPE:
-			this.collapse( event );
-			break;
-		default:
-			preventDefault = false;
-			prev = this.previousFilter || "";
-			skip = false;
-
-			// Support number pad values
-			character = event.keyCode >= 96 && event.keyCode <= 105 ?
-				( event.keyCode - 96 ).toString() : String.fromCharCode( event.keyCode );
-
-			clearTimeout( this.filterTimer );
-
-			if ( character === prev ) {
-				skip = true;
-			} else {
-				character = prev + character;
-			}
-
-			match = this._filterMenuItems( character );
-			match = skip && match.index( this.active.next() ) !== -1 ?
-				this.active.nextAll( ".ui-menu-item" ) :
-				match;
-
-			// If no matches on the current filter, reset to the last character pressed
-			// to move down the menu to the first item that starts with that character
-			if ( !match.length ) {
-				character = String.fromCharCode( event.keyCode );
-				match = this._filterMenuItems( character );
-			}
-
-			if ( match.length ) {
-				this.focus( event, match );
-				this.previousFilter = character;
-				this.filterTimer = this._delay( function() {
-					delete this.previousFilter;
-				}, 1000 );
-			} else {
-				delete this.previousFilter;
-			}
-		}
-
-		if ( preventDefault ) {
-			event.preventDefault();
-		}
-        
-        }
+            //Poistetaan jquery ui:n menuun liittyvät näppäimistötapahtumat, jotta tekstikentässä voisi kirjoittaa rauhassa
+        };
 
 
-	},
-
-	_buttonEvents: {
-
-		// Prevent text selection from being reset when interacting with the selectmenu (#10144)
-		mousedown: function() {
-			var selection;
-
-			if ( window.getSelection ) {
-				selection = window.getSelection();
-				if ( selection.rangeCount ) {
-					this.range = selection.getRangeAt( 0 );
-				}
-
-			// Support: IE8
-			} else {
-				this.range = document.selection.createRange();
-			}
-		},
-
-		click: function( event ) {
-			this._setSelection();
-			this._toggle( event );
-		},
-
-		keydown: function( event ) {
-		}
 	},
 
      }

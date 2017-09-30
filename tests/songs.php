@@ -145,6 +145,11 @@ class SongListTests extends TestCase
     }
 
 
+   public function testLoadRestrictedSong(){
+       $this->page->LoadSongTypes();
+       $this->assertRegExp("/select/",$this->page->Output());
+   }
+
 }
 
 

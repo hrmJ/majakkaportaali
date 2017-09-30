@@ -113,18 +113,24 @@ class SongPage extends Page{
     }
 
     /**
-     * Lataa tietokannasta kaikki messussa käytössä olevat laulutyypit (määritelty service_structure.php-sivulla)
+     * Lataa tietokannasta kaikki messussa käytössä olevat laulutyypit
+     * (määritelty service_structure.php-sivulla)
      *
      */
     public function LoadSongTypes(){
         $allsongtypes = "";
         $slots = $this->con->q("SELECT slot_name, content_id FROM presentation_structure WHERE slot_type = :st ORDER by slot_number ",Array("st"=>"songsegment"),"all");
         foreach($slots as $slot){
-            $details = $this->con->q("SELECT id, songdescription, restrictedto, singlename, multiname FROM songsegments WHERE id = :cid",Array("cid"=>$slot["content_id"]),"row");
-            $multi = ($details["multiname"] == "" ? false: true);
-            if($multi){
+            $this->details = $this->con->q("SELECT id, songdescription, restrictedto, singlename, multiname FROM songsegments WHERE id = :cid",Array("cid"=>$slot["content_id"]),"row");
+            $multi = ($this->details["multiname"] == "" ? false: true);
+            $restr = ($this->details["restrictedto"] == "" ? false: true);
+            if($restr){
+                $output = new Template("{$this->path}/restrictedsong.tpl");
+                $output->Set("select",$this->CreateSongSelect());
+            }
+            else if($multi){
                 $output = new Template("{$this->path}/multisong.tpl");
-                $output->Set("multisongheader",$details["multiname"]);
+                $output->Set("multisongheader",$this->details["multiname"]);
             }
             else{
                 $output = new Template("{$this->path}/singlesong.tpl");
@@ -136,6 +142,19 @@ class SongPage extends Page{
 
     }
 
+    /**
+     *
+     * Luo select-elementti, jolla valitaan rajatusta määrästä lauluja.
+     *
+     */
+    public function CreateSongSelect(){
+        $songs = explode(",", trim($this->details["restrictedto"]," ,"));
+        foreach($songs as $idx=>$song){
+            $songs[$idx]=trim($song);
+        }
+        $select = new Select($this->path,(array_merge(Array("Valitse","------------"),$songs,Array("Jokin muu"))));
+        return $select->OutputSelect();
+    }
 
 
 }
