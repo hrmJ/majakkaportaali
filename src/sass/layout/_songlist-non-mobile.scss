@@ -1,20 +1,9 @@
 
 @media only screen and (min-width: 920px){
-
-
-    .data-middle{
-        flex: 0 2 50%;
-        input,select{
-            width:auto;
+    .songlistview{
+        max-width:none;
+        .menu{
+            max-width:none;
         }
     }
-
-    .data-left{
-        flex: 0 1 20%;
-    }
-
-    .lyricsindicator{
-        flex: 0 0 20%;
-    }
-
 }

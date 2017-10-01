@@ -1,20 +1,6 @@
 <form name="songlistform" action="[@action]" method="POST">
    <div class="innercontent">
 
-       <section class="side-main">
-            <h2>Majakkamessun laulut</h2>
-
-            <div class="below-header">
-                <span><a href="javascript:void(0)" class="songlistview-toggle">Selaa laulujen listaa</a></span>
-                <span>Lue ohjeet</span>
-            </div>
-
-            [@songs]
-
-            <div><input type="submit" name="savesongs" value="Tallenna"></div>
-
-        </section> 
-
         <!-- Erillinen laulujen selausnäkymä -->
 
         <section class='songlistview'>
@@ -28,6 +14,21 @@
                 <section class="songnames-container">
                 </section>
         </section>
+
+
+       <section class="side-main">
+            <h2>Majakkamessun laulut</h2>
+
+            <div class="below-header">
+                <span><a href="javascript:void(0)" class="songlistview-toggle">Selaa laulujen listaa</a></span>
+                <span>Lue ohjeet</span>
+            </div>
+
+            [@songs]
+
+            <div><input type="submit" name="savesongs" value="Tallenna"></div>
+
+        </section> 
 
         <!-- Sivuikkuna sanojen katselua ja muokkausta varten -->
 

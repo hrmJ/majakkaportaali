@@ -10,9 +10,12 @@
 }
 
 .songnames-container{
-    display: flex;
-    flex-flow: column wrap;
     max-height: 500px;
+    overflow:auto;
+    @media only screen and (min-width: 920px){
+        display: flex;
+        flex-flow: column wrap;
+    }
     width: 90%;
     justify-content: space-around;
     align-items: flex-start;
@@ -81,3 +84,6 @@
     z-index:1;
 }
 
+.songlistview >div:first-of-type{
+    margin-bottom:1em;
+}

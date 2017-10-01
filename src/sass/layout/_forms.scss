@@ -8,18 +8,6 @@ div + .form-input-container{
     margin-top:2em;
 }
 
-input.songinput {
-    padding: 10px;
-    border: none;
-    border-bottom: dashed 2px grey;
-    transition: border 0.3s;
-    background:transparent;
-    :focus,.focus, :hover{
-      border-bottom: solid 2px white;
-      color: white;
-    }
-}
-
 
 @media only screen and (min-width: 920px){
     .form-input-container{

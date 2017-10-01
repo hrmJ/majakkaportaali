@@ -13,6 +13,7 @@ var loaderpath = "php/loaders";
  **/
 SongListView = function(){
     this.$container = $(".songlistview");
+    this.$lyricswindow = $(".sideroller");
     this.$servicesonglist = $(".side-main");
     var self = this;
     /**
@@ -20,12 +21,14 @@ SongListView = function(){
      */
     this.Toggle = function(){
         $(".sideroller").hide();
-        self.$servicesonglist.toggle()
         self.$container.toggle()
         $(".sideroller").toggleClass("songlistview-is-on");
-        //if(!$("#number-of-songs").text()){
-        //    $.
-        //}
+        $(".below-header").toggle();
+        if(!$("nav .dropdown").is(":visible")) {
+            this.$container.find("h2").toggle();
+            this.$container.find("p").toggle();
+            this.$servicesonglist.find("h2").toggle();
+        }
     };
 
 
@@ -53,7 +56,7 @@ SongListView = function(){
     /**
      *
      * Palauttaa mäppinä css:ää varten tapahtuman käynnistäneen elementin
-     * sijainti + elementin pituus
+     * sijainnin + elementin pituuden
      *
      */
     this.GetActiveLauncherPosition = function(){
@@ -129,7 +132,10 @@ SongListView = function(){
         LoadLyricsByTitle(self.active_launcher.text(),false);
         self.HideActionSelectors(true);
         //Piilota muut kuin laulun sanat, jos pienempi näyttö
-        if(!$("nav .dropdown").is(":visible")) self.$container.hide();
+        if(!$("nav .dropdown").is(":visible")) {
+            self.$container.hide();
+            self.$servicesonglist.hide();
+        }
         //Lisää sanannäyttödiviin luokka sen tunnistamiseksi, että kutsuttu laulujen nimi-näkymästä
         $(".sideroller").show();
     };

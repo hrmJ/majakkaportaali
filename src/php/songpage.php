@@ -140,6 +140,8 @@ class SongPage extends Page{
         }
         $this->Set("songs",$allsongtypes);
 
+        return $this;
+
     }
 
     /**

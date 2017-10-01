@@ -21,9 +21,7 @@ $page = new SongPage("templates", $id);
 if (isset($_POST["savesongs"]))
     $con->SaveData($id,$_POST);
 
-$page->LoadSongTypes();
-$page->Set("action", "{$_SERVER['PHP_SELF']}?service_id=$id");
-echo $page->OutputPage();
+echo $page->LoadSongTypes()->SetSongViewElements()->Set("action", "{$_SERVER['PHP_SELF']}?service_id=$id")->OutputPage();
 
 ?>
 

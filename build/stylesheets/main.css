@@ -57,7 +57,7 @@ main {
 
   .container {
     margin-top: 10px;
-    width: 65%;
+    width: 75%;
     -moz-box-shadow: 2px 2px 8px 4px #5f5f5f;
     -webkit-box-shadow: 2px 2px 8px 4px #5f5f5f;
     box-shadow: 2px 2px 8px 4px #5f5f5f; }
@@ -122,25 +122,25 @@ nav {
 div + .form-input-container {
   margin-top: 2em; }
 
-input.songinput {
-  padding: 10px;
-  border: none;
-  border-bottom: dashed 2px grey;
-  transition: border 0.3s;
-  background: transparent; }
-  input.songinput :focus, input.songinput .focus, input.songinput :hover {
-    border-bottom: solid 2px white;
-    color: white; }
-
 .songs .innercontent {
   flex-flow: row;
   justify-content: space-between; }
 
+.side-main {
+  flex: 1 11 100%; }
+
+.songlistview {
+  flex: 1 10 10%;
+  margin-right: 1em;
+  max-width: 9em; }
+  .songlistview .menu {
+    max-width: 8em; }
+
 .sideroller {
   display: flex;
   flex-flow: column;
-  flex: 3 0 30%;
-  margin-left: 2em; }
+  flex: 1 2 30%;
+  margin-left: 1em; }
   .sideroller h2 {
     border: none; }
 
@@ -150,40 +150,11 @@ input.songinput {
   padding-left: 1em;
   border-left: 1px solid #dadada; }
 
-.songs .datarow {
-  flex-flow: row nowrap; }
-
-.versedata p {
-  font-size: 0.9em; }
-
-.data-middle {
-  flex: 0 3 40%; }
-  .data-middle input, .data-middle select {
-    width: 100%; }
-
-.data-left {
-  flex: 0 1 23%; }
-
-.lyricsindicator {
-  flex: 0 0 20%;
-  padding-right: 1em;
-  padding-left: 1em;
-  background: #A4B6AA; }
-
-.multisongs {
-  margin-top: 0.73em; }
-
 @media only screen and (min-width: 920px) {
-  .data-middle {
-    flex: 0 2 50%; }
-    .data-middle input, .data-middle select {
-      width: auto; }
-
-  .data-left {
-    flex: 0 1 20%; }
-
-  .lyricsindicator {
-    flex: 0 0 20%; } }
+  .songlistview {
+    max-width: none; }
+    .songlistview .menu {
+      max-width: none; } }
 h1, h2, h3, h4 {
   font-family: "Lustria", serif; }
 
@@ -199,9 +170,6 @@ h3 {
   flex-flow: column;
   align-items: stretch;
   font-size: 1em; }
-
-.multisong-container {
-  margin-top: 0.73em; }
 
 .datarow {
   display: flex;
@@ -288,14 +256,17 @@ h3 {
     display: none; }
 
 .songnames-container {
-  display: flex;
-  flex-flow: column wrap;
   max-height: 500px;
+  overflow: auto;
   width: 90%;
   justify-content: space-around;
   align-items: flex-start;
   align-content: flex-start;
   margin-top: 2em; }
+  @media only screen and (min-width: 920px) {
+    .songnames-container {
+      display: flex;
+      flex-flow: column wrap; } }
   .songnames-container > div:not(.songname-select) {
     margin-right: 1em;
     margin-top: 0.2em; }
@@ -342,6 +313,37 @@ h3 {
   position: absolute;
   background: rgba(128, 128, 128, 0.8);
   z-index: 1; }
+
+.songlistview > div:first-of-type {
+  margin-bottom: 1em; }
+
+.multisong-container {
+  margin-top: 0.73em;
+  padding: 0.3em;
+  border: 1px solid #dadada;
+  margin-bottom: 1em; }
+
+.songslot {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 1em auto 1em auto; }
+  .songslot > div:nth-of-type(2) {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center; }
+    .songslot > div:nth-of-type(2) > div:first-of-type {
+      flex: 0 0 70%; }
+
+.lyricsindicator {
+  background: #A4B6AA;
+  padding: 0.2em;
+  flex: 1 1 25%;
+  margin-left: 1em; }
+
+.songinput {
+  width: 100%; }
 
 .my-lightbox {
   position: absolute;

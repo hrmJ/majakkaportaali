@@ -16,25 +16,25 @@ var autocompsongtitle = {
 
 
 /**
- * Lisää uusi rivi laulujen listaan tai poista viimeisin rivi.
+ * Lisää uuden rivin laulujen listaan tai poistaa viimeisimmän rivin.
  */
 function AddMultisongsRow(){
     var $table = $(this).parent().parent(".multisong-container");
     if($(this).hasClass('decreaser')){
         //Poista viimeisin, jos painettu miinuspainiketta ja jos vähintään 1 jäljellä
-        if($table.find(".datarow").length>1) $table.find(".datarow").last().remove();
+        if($table.find(".songslot").length>1) $table.find(".songslot").last().remove();
     }
     else{
         //Kopioi taulukon viimeinen rivi
-        var $tr = $table.find(".datarow").last().clone(true);
+        var $tr = $table.find(".songslot").last().clone(true);
         //Muuta kopioidun rivin numero niin, että se on yhden suurempi kuin alkuperäisessä rivissä
-        var number = $tr.find(".data-left").text().replace(/([^\d+]+ ?)(\d+)/,"$2")*1;
+        var number = $tr.find("div:eq(0)").text().replace(/([^\d+]+ ?)(\d+)/,"$2")*1;
         var $newtr = $($tr.html().replace(new RegExp(number,"g"), number +1 ));
         //Tyhjennä itse laulun nimi ja lisää mukaan automaattiseen täydennykseen
         $newtr.find("input").attr({"value":""}).autocomplete(autocompsongtitle);
         //Syötä uusi rivi taulukkoon
-        $newtr.insertAfter($table.find(".datarow").last()).wrapAll("<div class='datarow'></div>");
-        $table.find(".datarow").last().find(".lyricsindicator").click(ShowLyricsWindow).html("&nbsp;");
+        $newtr.insertAfter($table.find(".songslot").last()).wrapAll("<div class='songslot'></div>");
+        $table.find(".songslot").last().find(".lyricsindicator").click(ShowLyricsWindow).html("&nbsp;");
         $(".songinput, select").on("change paste keyup",CheckIfLyricsExist);
     }
 }
@@ -87,7 +87,7 @@ function LoadLyricsByTitle(title, byid){
     $(".sideroller input").remove()
 
 /**
- * Näytä sanojen lisäysikkuna, kun käyttäjä klikkaa oikeanpuolimmaista taulukon
+ * Näyttää sanojen lisäysikkunan, kun käyttäjä klikkaa oikeanpuolimmaista taulukon
  * solua.
  */
 function ShowLyricsWindow(){
@@ -101,7 +101,7 @@ function ShowLyricsWindow(){
     //Piilota muut kuin laulun sanat, jos pienempi näyttö
     if(!$("nav .dropdown").is(":visible")) $(".side-main").hide();
     //Näytä sanojen muokkausikkuna
-    if($(this).text()!="") $(".sideroller").show("slide");
+    if($(this).text()!="") $(".sideroller").show();
     if($(this).text()=="Katso sanoja") LoadLyricsByTitle(songtitle, byid);
     else if($(this).text()=="Lisää sanat") AddLyrics(songtitle);
 }
@@ -164,12 +164,12 @@ function SaveLyrics(){
 
 /**
  *
- * Sulje sanojen hallintaikkuna
+ * Sulkee sanojen hallintaikkunan
  *
  */
 function CloseWordEdit(){
     $(".sideroller").hide()
-    var show_this = $(".sideroller").hasClass("songlistview-is-on")  ? ".songlistview" : ".side-main";
-    $(show_this).show();
+    $(".side-main").show().find("h2").show();
+    if($(".sideroller").hasClass("songlistview-is-on"))  $(".songlistview").show();
 }
 
