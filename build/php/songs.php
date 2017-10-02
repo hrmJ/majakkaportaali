@@ -100,6 +100,8 @@ class SongData{
             $this->con->q("UPDATE $from SET verses = :versedata WHERE $by = :giventitle",Array("giventitle"=>$title, "versedata"=>$verses),"none");
     }
 
+
+
 }
 
 ?>

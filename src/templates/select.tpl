@@ -1,3 +1,3 @@
-<select id="[@id]">
+<select id="[@id]" class="[@class]">
 [@content]
 </select>

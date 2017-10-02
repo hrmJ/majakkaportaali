@@ -1,4 +1,4 @@
-<div class="multisong-container">
+<div class="multisong-container slot-parent">
     <h3>[@multisongheader]</h3>
     <div class="songslot">
         <div>[@category]</div>

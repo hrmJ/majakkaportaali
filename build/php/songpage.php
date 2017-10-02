@@ -41,7 +41,6 @@ class SongPage extends Page{
             if(!$song){
                 $this->singlesongsdata[$key] = Array("song_title"=>"","songtype"=>$songtypes[$key]);
             }
-
         }
         $this->SetDataTable($this->singlesongsdata, "singlesongs");
         return $this;
@@ -155,6 +154,7 @@ class SongPage extends Page{
             $songs[$idx]=trim($song);
         }
         $select = new Select($this->path,(array_merge(Array("Valitse","------------"),$songs,Array("Jokin muu"))));
+        $select->SetClass("songinput");
         return $select->OutputSelect();
     }
 

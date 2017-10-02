@@ -1,4 +1,4 @@
-<div class="songslot">
+<div class="songslot slot-parent">
     <div>[@category]</div>
     <div>
         <div>[@select]</div>

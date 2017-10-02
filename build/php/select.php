@@ -7,6 +7,7 @@
  * $options Array taulukko, johon tallennetaan valittavat elementit 
  * $optionvalues Array taulukko, johon tallennetaan valintojen arvot
  * $id string elementin id-attribuutin arvo
+ * $class string elementin class-attribuutin arvo
  *
  */
 class Select extends Template{
@@ -14,6 +15,7 @@ class Select extends Template{
     private $options = Array();
     private $optionvalues = Array();
     private $id = "";
+    private $class = "";
 
     /**
      *
@@ -48,13 +50,25 @@ class Select extends Template{
 
     /**
      *
-     * Korvaa option-elementtien id-attribuutin arvo halutulla
+     * Aseta select-elementille id
      *
      * @param string $id uusi id
      *
      */
     public function SetId($id){
         $this->id = $id;
+        return $this;
+    }
+
+    /**
+     *
+     * Aseta select-elementille luokka
+     *
+     * @param string $class uusi luokka
+     *
+     */
+    public function SetClass($class){
+        $this->class = $class;
         return $this;
     }
 
@@ -88,7 +102,7 @@ class Select extends Template{
             $option->Set("value",$this->optionvalues[$idx])->Set("selected",$selected);
             $outstring .= "\n{$option->Output()}";
         }
-        return $this->Set("id",$this->id)->Set("content",$outstring)->Output();
+        return $this->Set("id",$this->id)->Set("class",$this->class)->Set("content",$outstring)->Output();
     }
 }
 

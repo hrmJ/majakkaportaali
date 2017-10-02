@@ -4,14 +4,6 @@
  *
  */
 
-function AddCustomSongPicker(text){
-    if (text == "Jokin muu") {
-        var button = $('<input type="submit" onclick="selectOther(this)" value="Valitse"/>');
-        var input = $('<input  type="text" value="" placeholder="Kirjoita laulun nimi...">');
-        return $('<span></span>').append(input).append(button)[0].outerHTML;
-    }
-    return text;
-}
 
 $(document).ready (function(){
     if($("body").hasClass("songs")){
@@ -34,6 +26,22 @@ $(document).ready (function(){
         $("#alpha-select li").click(function(){slv.LoadData($(this))});
         //Rajoitetuille lauluvalinnoille modattu jquery ui -selectmenu
         $("select").select_withtext();
+
+        //Laulujen tallennus
+        $("[value='Tallenna']").click(function(event){
+            event.preventDefault();
+            var id = window.location.search.replace(/.*service_id=(\d+)/,"$1")*1;
+            $(".slot-parent").each(function(){ 
+                $(this).find(".songinput").each(function(idx,el){
+                    $.post("php/loaders/save_service_song.php",{
+                        "service_id":id,
+                        "songtype":$(el).parents(".songslot").find("div:eq(0)").text().trim(),
+                        "multisong_position":idx+1,
+                        "song_title":$(el).val()},function(data){ console.log(data); });
+                })
+            });
+        })
+
     }
 });
 

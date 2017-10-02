@@ -59,6 +59,7 @@ CREATE TABLE servicesongs (
   service_id int(10) unsigned NOT NULL,
   song_title varchar(200) NOT NULL,
   songtype varchar(100) DEFAULT NULL,
+  multisong_position int(2) unsigned NOT NULL, -- se, kuinka mones ylistyslaulu tms kyseessä on
   PRIMARY KEY (id),
   KEY service_index (service_id),
   CONSTRAINT servicesongs_ibfk_1 FOREIGN KEY (service_id) REFERENCES services (id) ON DELETE CASCADE
