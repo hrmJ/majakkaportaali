@@ -158,6 +158,22 @@ CREATE TABLE presentation_structure (
 ) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
 
 
+--
+-- Table structure for table presentation_structure``
+-- Messukohtaiset rakenteet
+--
+
+CREATE TABLE service_specific_presentation_structure (
+  id int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `service_id` int(10) unsigned NOT NULL,
+  slot_name varchar(300) DEFAULT NULL,
+  slot_number int(3) DEFAULT NULL,
+  slot_type varchar(300) DEFAULT NULL,
+  id_in_type_table varchar(300) DEFAULT NULL,
+  content_id int(10) unsigned NOT NULL,
+  PRIMARY KEY (id)
+) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
+
 
 --
 -- Table structure for table presentation_content``

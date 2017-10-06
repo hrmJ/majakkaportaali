@@ -30,76 +30,32 @@ class SongListTests extends TestCase
     }
 
 
-    public function testSaveSongData()
-    {
-        $id = 2;
-        $fakepost = Array("alkulaulu"=>"Panhuilun solinaa", "paivanlaulu"=> "Jos kerran on niin...", "loppulaulu"=> "loppu nyt!", "ws_1"=> "Ultimate worship 1", "ws_2"=> "Ultimate ws 2", "ws_3"=> "Virsimuurista valo välähtää", "com_1"=> "Virsi 006", "com_2"=> "Virsi 002", "com_3"=> "Virsi 018", "savesongs"=> "Tallenna");
-        $this->con->SaveData($id, $fakepost);
-        $songs = $this->con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = 'ws'",Array("sid"=>$id));
 
-        $wssongs_in_db = Array();
-        foreach($songs as $song){
-            if($song["songtype"]=="ws"){
-                $wssongs_in_db[] = $song["song_title"];
-            }
-        }
-        $this->assertEquals("Ultimate worship 1", $wssongs_in_db[0]);
-        $this->assertEquals("Virsimuurista valo välähtää", $wssongs_in_db[2]);
+    //public function testLoadListOfSongs(){
+    //    $songs = new SongData($this->con);
+    //    $songs->OutputSongTitles("irsi");
+    //    $this->assertTrue(sizeof($songs->titleslist)>10);
+    //}
 
-        $fakepost["ws_3"] = "Kiva laulu";
-        $this->con->SaveData($id, $fakepost);
-        $songs = $this->con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = 'ws'",Array("sid"=>$id));
+    //public function testLoadSongInfo(){
+    //    $songs = new SongData($this->con);
+    //    $songs->OutputSongInfo("Virsi 001", "title");
+    //    $this->assertArrayHasKey("verses",$songs->songcontent);
+    //}
 
-        $wssongs_in_db = Array();
-        foreach($songs as $song){
-            if($song["songtype"]=="ws"){
-                $wssongs_in_db[] = $song["song_title"];
-            }
-        }
-        $this->assertEquals("Kiva laulu", $wssongs_in_db[2]);
+    //public function testAddLyrics(){
+    //    $songs = new SongData($this->con);
+    //    $songs->ProcessEditedLyrics("Ihan uusi laulu", "Heippa vaan, laalaalaa", "title");
+    //    $songs->OutputSongInfo("Ihan uusi laulu", "title");
+    //    $this->assertRegExp('/Heippa vaan/', $songs->songcontent["verses"]);
+    //}
 
-        $fakepost["ws_4"] = "Uusi laulu";
-        $this->con->SaveData($id, $fakepost);
-        $songs = $this->con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = 'ws'",Array("sid"=>$id));
-
-        $wssongs_in_db = Array();
-        foreach($songs as $song){
-            if($song["songtype"]=="ws"){
-                $wssongs_in_db[] = $song["song_title"];
-            }
-        }
-        $this->assertEquals("Uusi laulu", $wssongs_in_db[3]);
-
-        $alkulaulu = $this->con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = 'alkulaulu'",Array("sid"=>$id),"column");
-        $this->assertEquals("Panhuilun solinaa", $alkulaulu);
-
-    }
-
-    public function testLoadListOfSongs(){
-        $songs = new SongData($this->con);
-        $songs->OutputSongTitles("irsi");
-        $this->assertTrue(sizeof($songs->titleslist)>10);
-    }
-
-    public function testLoadSongInfo(){
-        $songs = new SongData($this->con);
-        $songs->OutputSongInfo("Virsi 001", "title");
-        $this->assertArrayHasKey("verses",$songs->songcontent);
-    }
-
-    public function testAddLyrics(){
-        $songs = new SongData($this->con);
-        $songs->ProcessEditedLyrics("Ihan uusi laulu", "Heippa vaan, laalaalaa", "title");
-        $songs->OutputSongInfo("Ihan uusi laulu", "title");
-        $this->assertRegExp('/Heippa vaan/', $songs->songcontent["verses"]);
-    }
-
-    public function testEditLyrics(){
-        $songs = new SongData($this->con);
-        $songs->ProcessEditedLyrics("Virsi 001", "Hoosianna, TAAvetin POIKA\n\n Hoosiaaaanna, joossokijoaisjoi\n Hoosiaanna...alskdjasldkj, hOOoss\n\n", "title");
-        $songs->OutputSongInfo("Virsi 001", "title");
-        $this->assertRegExp('/TAAvetin POIKA/', $songs->songcontent["verses"]);
-    }
+    //public function testEditLyrics(){
+    //    $songs = new SongData($this->con);
+    //    $songs->ProcessEditedLyrics("Virsi 001", "Hoosianna, TAAvetin POIKA\n\n Hoosiaaaanna, joossokijoaisjoi\n Hoosiaanna...alskdjasldkj, hOOoss\n\n", "title");
+    //    $songs->OutputSongInfo("Virsi 001", "title");
+    //    $this->assertRegExp('/TAAvetin POIKA/', $songs->songcontent["verses"]);
+    //}
 
     /***
      *
@@ -140,6 +96,7 @@ class SongListTests extends TestCase
     //}
 
     public function testLoadSongTypes(){
+        $this->page->id = 2;
         $this->page->LoadSongTypes();
         $this->assertRegExp("/songslot/",$this->page->Output());
     }

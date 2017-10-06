@@ -27,45 +27,6 @@ class SongPage extends Page{
 
     /**
      *
-     * Hae yksittäisten laulujen data tai oleta tyhjät, jos dataa ei löydy.
-     * Syötä sen jälkeen arvojen perusteella rakennettu html-esitys datasta
-     * varsinaiseen sivupohjaan.
-     *
-     */
-    public function SetSingleSongs(){
-        $this->singlesongsdata = Array($this->con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = 'alkulaulu'",Array("sid"=>$this->id),"row"),
-                                 $this->con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = 'paivanlaulu'",Array("sid"=>$this->id),"row"),
-                                 $this->con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = 'loppulaulu'",Array("sid"=>$this->id),"row"));
-        $songtypes = Array("alkulaulu","paivanlaulu","loppulaulu");
-        foreach($this->singlesongsdata as $key=> $song){
-            if(!$song){
-                $this->singlesongsdata[$key] = Array("song_title"=>"","songtype"=>$songtypes[$key]);
-            }
-        }
-        $this->SetDataTable($this->singlesongsdata, "singlesongs");
-        return $this;
-    }
-
-    /**
-     *
-     * Hae niitten laulujen data, joita on useampia.
-     * Tai oleta tyhjät, jos dataa ei löydy.
-     *
-     * @param Array $types Taulukko, joka kertoo, mistä lauluista on kyse (ylistys- vai ehtoollis-)
-     *
-     */
-    public function SetMultiSongs($types){
-        foreach($types as $type){
-            $this->multisongsdata[$type] = $this->con->q("SELECT song_title, songtype FROM servicesongs WHERE service_id = :sid AND songtype = :type ",Array("sid"=>$this->id, "type"=>$type));
-            if(sizeof($this->multisongsdata[$type])==0)
-                $this->multisongsdata[$type] = Array(Array("song_title"=>"","songtype"=>$type));
-            $this->SetDataTable($this->multisongsdata[$type], $this->multisongtargets[$type]);
-        }
-        return $this;
-    }
-
-    /**
-     *
      * Lataa laulujen lista -näkymään aakkosellisen listan
      * mukainen select-elementti ym.
      *
@@ -93,54 +54,51 @@ class SongPage extends Page{
         return $this;
     }
 
-
-    /**
-     *
-     * Hakee tietokannasta, mitkä laulut on merkitty Jumalan karitsa- tai Pyhä-versioiksi.
-     * tulostaa select-elementit näiden valitsemista varten
-     *
-     * @param Array $roles Se, mitä liturgisten laulujen tyyppejä messussa on käytössä
-     *
-     */
-    public function SetLiturgicalSongs($roles){
-        foreach($roles as $role){
-            $texts = $this->con->q("SELECT CONCAT(title, titleseparator) FROM liturgicalsongs WHERE role=:role ORDER by ID",Array("role"=>$role),"all");
-            $ids = $this->con->q("SELECT id FROM liturgicalsongs WHERE role=:role ORDER by ID",Array("role"=>$role),"all_flat");
-            $select = new Select($this->path, $texts, "Valitse versio", "Valitse versio", $role . "_select", $valuedata=$ids);
-            $this->Set("{$role}_menu", $select->Output());
-        }
-    }
-
     /**
      * Lataa tietokannasta kaikki messussa käytössä olevat laulutyypit
-     * (määritelty service_structure.php-sivulla)
+     * (määritelty service_structure.php-sivulla) ja syötä sivupohjaan
+     * niiden mukaiset slotit lauluille.
      *
      */
     public function LoadSongTypes(){
         $allsongtypes = "";
+        //Hae ensin kaikki lauluslotit rakenteesta (TODO: messukohtaisesti)
         $slots = $this->con->q("SELECT slot_name, content_id FROM presentation_structure WHERE slot_type = :st ORDER by slot_number ",Array("st"=>"songsegment"),"all");
         foreach($slots as $slot){
+            //Hae jokaisen lauluslotin tarkemmat yksityiskohdat ja se, onko kyseessä monta laulua samasta tyypistä vai ainoastaan yksi laulu
             $this->details = $this->con->q("SELECT id, songdescription, restrictedto, singlename, multiname FROM songsegments WHERE id = :cid",Array("cid"=>$slot["content_id"]),"row");
             $multi = ($this->details["multiname"] == "" ? false: true);
             $restr = ($this->details["restrictedto"] == "" ? false: true);
             if($restr){
-                $output = new Template("{$this->path}/restrictedsong.tpl");
-                $output->Set("select",$this->CreateSongSelect());
+                $container = new Template("{$this->path}/restrictedsong.tpl");
+                $container->Set("select",$this->CreateSongSelect());
             }
             else if($multi){
-                $output = new Template("{$this->path}/multisong.tpl");
-                $output->Set("multisongheader",$this->details["multiname"]);
+                $container = new Template("{$this->path}/multisong.tpl");
+                $container->Set("multisongheader",$this->details["multiname"]);
+                $titles = $this->con->q("SELECT song_title FROM servicesongs WHERE service_id = :id AND songtype = :stype ORDER BY multisong_position",Array("id"=>$this->id,"stype"=>$this->details["singlename"]),"all_flat");
+                if(!$titles)
+                    $titles = Array("");
+                $songslots = "";
+                foreach($titles as $title){
+                    $output = new Template("{$this->path}/singlesong.tpl");
+                    $output->Set("category",$slot["slot_name"])->Set("name","")->Set("value",$title)->Set("isparent","");
+                    $songslots  .= "\n" . $output->Output();
+                }
+                $container->Set("songslots",$songslots);
             }
             else{
-                $output = new Template("{$this->path}/singlesong.tpl");
+                $container = new Template("{$this->path}/singlesong.tpl");
+                $title = $this->con->q("SELECT song_title FROM servicesongs WHERE service_id = :id AND songtype = :stype",Array("id"=>$this->id,"stype"=>$this->details["singlename"]),"column");
+                if(!$title)
+                    $title = "";
+                $container->Set("value",$title)->Set("isparent","slot-parent");
             }
-            $output->Set("category",$slot["slot_name"])->Set("name","")->Set("value","");
-            $allsongtypes.=$output->Output();
+            $allsongtypes.= $container->Set("category",$slot["slot_name"])->Output();
         }
         $this->Set("songs",$allsongtypes);
 
         return $this;
-
     }
 
     /**

@@ -7,6 +7,10 @@ Projektin tarkoitus tehdä seurakuntavastuiden jakamisesta ja viestinnästä hel
 Portaalin data sijaitsee MySQL-tietokannassa, käyttöliittymä on toteutettu
 simppeleillä web-tekniikoilla (css, html, php, js).
 
+# Laulut
+
+HUOM! Täytyy painottaa, että tällä hetkellä tunnistus yksinomaan song_title-sarakkeen kautta eikkä id:n!
+
 # Kehitysympäristön pystyttäminen
 
 Tässä perustiedot siitä, miten projektin saa käyntiin.

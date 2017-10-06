@@ -107,8 +107,6 @@ class DbCon{
      *
      */
     public function SaveData($identifier, $values){
-        if($this->type=="song")
-            $this->q("DELETE FROM servicesongs WHERE service_id = :sid",Array("sid"=>$identifier),"none");
         foreach($values as $valuekey => $item){
             switch($this->type){
                 case "details":
@@ -116,17 +114,6 @@ class DbCon{
                     break;
                 case "list":
                     $this->q("UPDATE responsibilities SET responsible = :responsible WHERE service_id = :id AND responsibility = :responsibility",Array("id"=>str_replace("id_","",$valuekey),"responsible"=>$item,"responsibility"=>$identifier),"none");
-                    break;
-                case "song":
-                    $underscore = strpos($valuekey,"_");
-                    if($underscore){
-                        $songtype = substr($valuekey,0,$underscore);
-                        $songnumber = substr($valuekey,$underscore+1);
-                        $this->q("INSERT INTO servicesongs (song_title, songtype, service_id) VALUES (:title, :type, :sid)",Array("title"=>$item,"type"=>$songtype,"sid"=>$identifier),"none");
-                    }
-                    else{
-                        $this->q("INSERT INTO servicesongs (song_title, songtype, service_id) VALUES (:title, :type, :sid)",Array("title"=>$item,"type"=>$valuekey,"sid"=>$identifier),"none");
-                    }
                     break;
             }
         }
