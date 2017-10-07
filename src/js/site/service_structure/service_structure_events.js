@@ -44,6 +44,7 @@ function UpdateAdderEvents(){
         .on("dragover",function(event){
             event.preventDefault();  
             event.stopPropagation();
+            console.log("moro")
             $(this).addClass("drop-highlight").text("Siirrä tähän");
         })
         .on("dragleave",function(event){
