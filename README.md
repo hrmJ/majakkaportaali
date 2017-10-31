@@ -15,7 +15,77 @@ HUOM! Täytyy painottaa, että tällä hetkellä tunnistus yksinomaan song_title
 
 Tässä perustiedot siitä, miten projektin saa käyntiin.
 
-## Kansiorakenne
+
+## Serveriympäristön pystyttäminen
+
+### Vaihtoehto 1 Virtuaalikone
+
+Luodaan virtualbox + vagrant -yhdistelmällä virtuaaliserveri
+
+1. Asenna VirtualBox
+2. Asenna vagrant
+3. Kloonaa homestead improved (https://github.com/Swader/homestead_improved hi_majakkaportaali)
+4. Mene hi_majakkaportaali-kansioon ja  aja sieltä käsin `bin/folderfix.sh`
+5. kloonaa tämän kansion sisään majakkaportaali
+
+    git clone https://github.com/hrmJ/majakkaportaali
+
+Tämän jälkeen virtuaalikone pitäisi käynnistää komentamalla homestead-kansiossa `vagrant up`
+mutta on mahdollista, että varsinaisen koneen BIOSista on ensin käytävä säätämässä virtuaaliajoa säätelevät
+asetukset kohtaan "enabled". Tämän jälkeen kone on oikeasti *sammutettava* (rebuuttaus ei riitä)
+ja käynnistettävä uudestaan. Sitten vagrant up -komennon pitäisi toimia.
+
+Tämän jälkeen muokataan hi_majakkaportaali-kansiossa homestead.yaml-tiedostoa,
+niin että siinä lukee:
+
+    sites:
+        - map: majakkaportaali.app
+          to: /home/vagrant/Code/majakkaportaali/build
+
+Vagrant-koneelle voi ssh:oida itsensä komentamalla hi_majakkaportaali-kansion sisältä *vagrant ssh*.
+
+Seuraava askel on lisätä homestead-kone hosts-listaan (linuxissa /etc/hosts):
+
+    192.168.10.10 majakkaportaali.app
+
+Tämän jälkeen aja vielä hi_majakkaportaali-kansiossa vagrant provision, ja
+kokeile mennä selaimella osoitteeseen majakkaportaali.app.
+
+## MySql-kirjautuminen virtuaalikoneella
+
+
+    mysql -u homestead -psecret
+
+
+### Sensitiivinen tieto ini-tiedostoon
+
+Tallenna sensitiivinen tieto src-kansion ulkopuolelle config.ini-tiedostoon. Tämä
+tiedosto pitää myös jättää pois versionhallinnasta lisäämällä se .gitignore-tiedostoon
+(näin oletuksena onkin, mutta voit varmuuden vuoksi tarkistaa .gitignore:n sisällön)
+
+
+    vagrant ssh
+    cd Code/majakkaportaali
+    vim config.ini
+
+Tiedoston sisältö (ala kirjoittaa painamalla `i`)
+
+    un = homestead
+    pw = secret
+    dbname = majakkaportaali
+    hostname = localhost
+
+
+Poistu kirjoitustilasta painamalla Esc-näppäintä. Tallenna kirjoittamalla :wq ja painamalla Enter.
+
+
+
+Luo testidata tietokantaan:
+
+    php mockdb.php
+
+
+## Projektin kansiorakenne
 
 Juuri:
 
@@ -60,28 +130,7 @@ Kun sass on asennettu, sen voi laittaa automaattisesti päivittämään muutokse
 
     sass --watch src/sass/:src/stylesheets
 
-## Ikonikuvakkeet
 
-
-## Projektikansio localhostille
-
-Kannattaa kloonata projektikansio jonnekin aivan muualle ja luoda symbolinen linkki
-silla /var/www/html/-kansioon.
-
-    cd /var/www/html/
-    ln -s ~/projects/majakkaportaali/src majakkaportaali #Huom: linkkaa nimenomaan src-kansio
-
-## Sensitiivinen tieto ini-tiedostoon
-
-Tallenna sensitiivinen tieto src-kansion ulkopuolelle config.ini-tiedostoon. Tämä
-tiedosto pitää myös jättää pois versionhallinnasta lisäämällä se .gitignore-tiedostoon
-
-Tiedoston sisältö
-
-    un = [käyttäjätunnus]
-    pw = [salasana]
-    dbname = [tietokannan nimi]
-    host = localhost
 
 
 ##  Testityökalut
@@ -128,7 +177,7 @@ Asennus on simppeli, lataa vain paketti, jonka valinnaan mukaan voi kopioida /us
 
 ## Javascript (functional tests)
 
-Testaaminen tapahtuu Nightmare-sovelluksen avulla.
+Testaaminen tapahtuu Nightmare-sovelluksen avulla (electronia käyttävä npm-moduuli).
 
 Aja `npm test` projektin juurikansiossa.
 

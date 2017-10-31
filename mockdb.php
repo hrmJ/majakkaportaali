@@ -12,9 +12,16 @@ function InsertLiturgical($con, $file, $role, $titleseparator){
 require("src/php/database.php");
 
 echo "Deleting and creating database majakkaportaali\n";
-$con = new DbCon("config.ini",False);
-$commandstart = "mysql -u{$con->username} -p{$con->password} -h {$con->hostname} ";  
+
+$config = parse_ini_file("config.ini");
+$hostname = $config["hostname"];
+$username = $config["un"];
+$password = $config["pw"];
+
+$commandstart = "mysql -u{$username} -p{$password} -h {$hostname} ";  
 $output = shell_exec($commandstart . "< 'table_structure.sql'");
+
+$con = new DbCon("config.ini",False);
 
 echo "Inserting mock data..\n";
 $con->Connect();
