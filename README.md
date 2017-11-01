@@ -42,11 +42,17 @@ niin että siinä lukee:
         - map: majakkaportaali.app
           to: /home/vagrant/Code/majakkaportaali/build
 
+Lisäksi jos halutaan diatoiminnot (ks [lauludiat-repo](https://github.com/hrmJ/lauludiat))
+
+        - map: lauludiat.app
+          to: /home/vagrant/Code/lauludiat/build
+
 Vagrant-koneelle voi ssh:oida itsensä komentamalla hi_majakkaportaali-kansion sisältä *vagrant ssh*.
 
 Seuraava askel on lisätä homestead-kone hosts-listaan (linuxissa /etc/hosts):
 
     192.168.10.10 majakkaportaali.app
+    192.168.10.10 lauludiat.app
 
 Tämän jälkeen aja vielä hi_majakkaportaali-kansiossa vagrant provision, ja
 kokeile mennä selaimella osoitteeseen majakkaportaali.app.
@@ -85,53 +91,82 @@ Luo testidata tietokantaan:
     php mockdb.php
 
 
+## Lisätoimintojen asentaminen
+
+### Raamattu sword-moduulina
+
+Nämä ohjeet opastavat asentamaan mysql-muotoisen version Raamatusta sword-moduulien [ks. lisää täältä]()
+avulla
+
+TODO: tee skripti, joka hoitaa tämän kaiken
+
+1. Lataa raamattumoduuli virtuaalikoneelle (ks. kaikki käännökset: https://www.crosswire.org/sword/modules/ModDisp.jsp?modType=Bibles)
+
+    vagrant ssh
+    cd ~
+    mkdir sword_modules 
+    wget https://www.crosswire.org/ftpmirror/pub/sword/packages/rawzip/FinPR92.zip
+    #pura ja muokkaa kansiorakennetta hieman
+    unzip  FinPR92.zip -d sword_modules/FinPR92 #Raamatun lataava skripti olettaa sijainniksi tämän
+    mv sword_modules/modules/texts/ztext/finpr92/ sword_modules/
+
+2. Luo sitten config.ini tiedosto myös lauludiat-repon juureen
+
+    cd ~/Code/lauludiat
+    vim config.ini
+
+Mene taas vimin kirjoitusmoodiin painamalla i ja kirjoita tai kopioi seuraavat:
+
+TODO: KORJAA niin että php ei sekoa samasta konffitiedostosta!
+
+    [DB]
+    un = homestead
+    pw = secret
+    dbname = majakkaportaali
+    hostname = localhost
+
+poistu kirjoitusmoodista ja tallenna painamalla Esc ja tämän jälkeen :wq
+
+3. Asenna sqlalchemy ja pymysql virtuaalikoneelle ja 
+
+    sudo apt-get install python3-sqlalchemy python3-pymysql
+
+4. Siirry raamattuskriptin kansioon ja aja getbibledata-skripti
+
+    cd ~/Code/lauludiat/utilities/bible/
+    python3 getbibledata.py 
+    #
+
+## GULP.js ja SASS
+
+
+Asenna tarpeeksi uusi ruby-versio SASSia varten:
+
+    sudo apt-add-repository ppa:brightbox/ruby-ng
+    sudo apt-get update
+    sudo apt-get install ruby2.3 ruby2.3-dev
+    # Ja itse SASS
+    sudo gem install sass
+
+
+Asenna Nodejs virtuaalikoneelle:
+
+    sudo apt-get update
+    sudo apt-get install nodejs
+    sudo npm install gulp-cli -g
+
+Mene projektin juurikansioon (`cd ~/Code/majakkaportaali`) ja aja 
+`npm install --save-dev`. Tämä asentaa gulp.js:ää varten kehitystyössä tarvittavat pluginit.
+Lisäksi asennetaan automaattisessa testauksessa käytettävät pluginit, joskin näitä on pakko
+käyttää isäntäkoneelta käsin, joten asennus virtuaalikoneelle periaatteessa turhaa. (TODO muokkaa ohjeet).
+    
+
 ## Projektin kansiorakenne
 
 Juuri:
 
 - SRC-kansio
 - BUILD-kansio
-
-## GULP.js
-
-Asennus järjestelmänlaajuisesti
-
-    npm install gulp-cli -g
-
-Sitten lokaalisti:
-
-    npm install gulp --save-dev
-
-Pluginit:
-
-    npm install gulp-newer --save-dev
-    npm install gulp-concat --save-dev
-    npm install gulp-deporder --save-dev
-    npm install event-stream --save-dev
-    npm install --save-dev gulp-ruby-sass
-    npm install --save-dev gulp-autoprefixer
-
-
-## SASS
-
-CSS-koodaus on tehty SASS-esiprosessoria ([](http://sass-lang.com/)) käyttäen.
-SASSin voi asentaa ruby-versiona:
-
-    gem install sass
-
-Vaatii tarpeeksi uuden Rubyn (>2.2).
-
-    sudo apt-add-repository ppa:brightbox/ruby-ng
-    sudo apt-get update
-    sudo apt-get install ruby2.3 ruby2.3-dev
-
-
-Kun sass on asennettu, sen voi laittaa automaattisesti päivittämään muutokset CSS:ään:
-
-    sass --watch src/sass/:src/stylesheets
-
-
-
 
 ##  Testityökalut
 
