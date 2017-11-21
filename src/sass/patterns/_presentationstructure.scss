@@ -8,6 +8,7 @@
 }
 
 .slidemodel{
+    position:relative;
     left:-10px;
 }
 
@@ -67,4 +68,9 @@
         color:lighten($datarowbg,5);
         border:lighten($datarowbg,5);
     }
+}
+
+//Div, jonka sisällä select-emenetti jolla määritellään dian luokka
+.class-adder{
+    position:relative;
 }

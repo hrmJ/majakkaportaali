@@ -44,8 +44,28 @@ StructuralElementAdder.prototype = {
     SetLightBox: function($el){
         this.$lightbox.html("").prepend($(this.slideclass).clone(true));
         this.$lightbox.css({"width":$(".innercontent").width(),"top":  $("nav .dropdown").is(":visible") ? "-250px" : "-50px"}).show();
+        this.SetSlideClasses();
     },
 
+
+    /**
+     *
+     * Lataa käytössä olevta messuosiot / dialuokat select-valikkoon
+     *
+     */
+    SetSlideClasses: function(){
+        var self = this;
+        $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"list_all","id":""},function(data){
+            $.each(data,function(idx, thisclass){
+                self.$lightbox.find("select").append("<option value='" + thisclass + "'>" + thisclass.replace(".","") + "</option>");
+            });
+            //Lisää vielä mahdollisuus lisätä uusi luokka
+            self.$lightbox.find("select").append("<option value='Uusi luokka'>Uusi luokka</option>");
+        });
+        //lisää muokattu jquery ui -selectmenu mahdollistamaan uusien dialuokkien luomisen
+        this.$lightbox.find("select").select_withtext();
+        this.$lightbox.find("select").on("selectmenuchange",function(){console.log("moro")});
+    },
 
     /**
      * Nollaa esikatseluikkunan sisältö ja syötä uusi sisältö.
@@ -189,7 +209,6 @@ SongSlideAdder.prototype = {
             songdescription: this.$lightbox.find(".songdescription").val(),
             slot_number: self.slot_number==undefined ? $(".slot").length + 1 : self.slot_number,
             slot_name:this.$lightbox.find(".segment-name").val()};
-    console.log(this.previewparams);
     },
 
 

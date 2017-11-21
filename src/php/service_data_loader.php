@@ -25,6 +25,14 @@ class ServiceDataLoader{
         echo json_encode($this->data);
     }
 
+    /**
+     * Hakee kaikki eri luokat (= messun osiot), jotka tässä portaalissa ovat käytössä
+     */
+    function LoadSlideClasses(){
+        $this->data =  $this->con->q("SELECT DISTINCT classname FROM styles WHERE classname <> :not_this", Array("not_this"=>"sample"),"all_flat");
+    }
+
+
 }
 
 /**
@@ -60,6 +68,7 @@ class ServiceLoader extends ServiceDataLoader{
     function LoadResponsibilities(){
         $this->data =  $this->con->q("SELECT DISTINCT responsibility FROM responsibilities", Array(),"all_flat");
     }
+
 
 
     /**

@@ -22,6 +22,10 @@ switch($_GET["slideclass"]){
         $loader= new SongSegmentLoader("../../../config.ini", $_GET["id"]);
         $loader->LoadSongSlide();
         break;
+    case "list_all":
+        $loader= new ServiceDataLoader("../../../config.ini", $_GET["id"]);
+        $loader->LoadSlideClasses();
+        break;
 }
 
 echo $loader->OutputData();

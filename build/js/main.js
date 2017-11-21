@@ -206,7 +206,32 @@ $(document).ready(function(){
  $.widget("custom.select_withtext", $.ui.selectmenu, 
      { 
          _renderItem: function( ul, item ) {
-            if(item.label=="Jokin muu"){
+            if(item.label=="Uusi luokka"){
+                //TODO: abstract this, so that these options can be set appropriately and don't have to be hard coded.
+                var $input = $("<input type='text' placeholder='Uusi luokka...'>");
+                $input.on("keydown",function(){
+                    var $div = $(this).parents(".other-option");
+                    if ($div.find("button").length==0){
+                        $("<button>Lisää</button>")
+                            .click(function(){
+                                //Lisää äsken lisätty uusi arvo KAIKKIIN tällä sivulla oleviin select-elementteihin, joissa addedclass-nimi
+                                var newval = $(this).parents(".other-option").find("input").val();
+                                $("<option value=" + newval + "> " + newval + "</option>")
+                                    .insertBefore($("select[name='addedclass']").find("option:last-child"));
+                                $("select[name='addedclass']").each(function(){
+                                    try{
+                                        $(this).select_withtext("refresh");
+                                    }
+                                    catch(e){
+                                        $(this).select_withtext();
+                                    }
+                                });
+                            })
+                            .appendTo($div);
+                    }
+                });
+            }
+             else if(item.label=="Jokin muu"){
                 var $input = $("<input type='text' placeholder='Jokin muu...'>")
                 var self = this;
                 var thisitem = item;
@@ -218,12 +243,10 @@ $(document).ready(function(){
                         self.refresh();
                     },
                 });
+            }
 
-                var wrapper = $("<div class='other-option'>").append($input);
-            }
-            else{
-                var wrapper = $("<div>").text(item.label)
-            }
+            var wrapper = (["Uusi luokka","Jokin muu"].indexOf(item.label)>-1 ? $("<div class='other-option'>").append($input) : $("<div>").text(item.label));
+
             return $("<li>").append(wrapper).appendTo(ul);
         },
         open: function( event ) {
@@ -408,6 +431,7 @@ function UpdateAdderEvents(){
         .on("dragover",function(event){
             event.preventDefault();  
             event.stopPropagation();
+            console.log("moro")
             $(this).addClass("drop-highlight").text("Siirrä tähän");
         })
         .on("dragleave",function(event){
@@ -527,8 +551,28 @@ StructuralElementAdder.prototype = {
     SetLightBox: function($el){
         this.$lightbox.html("").prepend($(this.slideclass).clone(true));
         this.$lightbox.css({"width":$(".innercontent").width(),"top":  $("nav .dropdown").is(":visible") ? "-250px" : "-50px"}).show();
+        this.SetSlideClasses();
     },
 
+
+    /**
+     *
+     * Lataa käytössä olevta messuosiot / dialuokat select-valikkoon
+     *
+     */
+    SetSlideClasses: function(){
+        var self = this;
+        $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"list_all","id":""},function(data){
+            $.each(data,function(idx, thisclass){
+                self.$lightbox.find("select").append("<option value='" + thisclass + "'>" + thisclass.replace(".","") + "</option>");
+            });
+            //Lisää vielä mahdollisuus lisätä uusi luokka
+            self.$lightbox.find("select").append("<option value='Uusi luokka'>Uusi luokka</option>");
+        });
+        //lisää muokattu jquery ui -selectmenu mahdollistamaan uusien dialuokkien luomisen
+        this.$lightbox.find("select").select_withtext();
+        this.$lightbox.find("select").on("selectmenuchange",function(){console.log("moro")});
+    },
 
     /**
      * Nollaa esikatseluikkunan sisältö ja syötä uusi sisältö.
@@ -672,7 +716,6 @@ SongSlideAdder.prototype = {
             songdescription: this.$lightbox.find(".songdescription").val(),
             slot_number: self.slot_number==undefined ? $(".slot").length + 1 : self.slot_number,
             slot_name:this.$lightbox.find(".segment-name").val()};
-    console.log(this.previewparams);
     },
 
 

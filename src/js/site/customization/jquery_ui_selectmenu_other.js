@@ -7,7 +7,32 @@
  $.widget("custom.select_withtext", $.ui.selectmenu, 
      { 
          _renderItem: function( ul, item ) {
-            if(item.label=="Jokin muu"){
+            if(item.label=="Uusi luokka"){
+                //TODO: abstract this, so that these options can be set appropriately and don't have to be hard coded.
+                var $input = $("<input type='text' placeholder='Uusi luokka...'>");
+                $input.on("keydown",function(){
+                    var $div = $(this).parents(".other-option");
+                    if ($div.find("button").length==0){
+                        $("<button>Lisää</button>")
+                            .click(function(){
+                                //Lisää äsken lisätty uusi arvo KAIKKIIN tällä sivulla oleviin select-elementteihin, joissa addedclass-nimi
+                                var newval = $(this).parents(".other-option").find("input").val();
+                                $("<option value=" + newval + "> " + newval + "</option>")
+                                    .insertBefore($("select[name='addedclass']").find("option:last-child"));
+                                $("select[name='addedclass']").each(function(){
+                                    try{
+                                        $(this).select_withtext("refresh");
+                                    }
+                                    catch(e){
+                                        $(this).select_withtext();
+                                    }
+                                });
+                            })
+                            .appendTo($div);
+                    }
+                });
+            }
+             else if(item.label=="Jokin muu"){
                 var $input = $("<input type='text' placeholder='Jokin muu...'>")
                 var self = this;
                 var thisitem = item;
@@ -19,12 +44,10 @@
                         self.refresh();
                     },
                 });
+            }
 
-                var wrapper = $("<div class='other-option'>").append($input);
-            }
-            else{
-                var wrapper = $("<div>").text(item.label)
-            }
+            var wrapper = (["Uusi luokka","Jokin muu"].indexOf(item.label)>-1 ? $("<div class='other-option'>").append($input) : $("<div>").text(item.label));
+
             return $("<li>").append(wrapper).appendTo(ul);
         },
         open: function( event ) {
