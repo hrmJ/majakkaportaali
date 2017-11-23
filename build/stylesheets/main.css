@@ -355,10 +355,10 @@ h3 {
   padding: 1em; }
 
 .other-option {
-  display: flex;
   justify-content: space-between; }
   .other-option input {
-    max-width: 100px; }
+    max-width: 100px;
+    margin-right: 5px; }
 
 .structural-element-add {
   position: relative; }

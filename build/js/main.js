@@ -570,6 +570,7 @@ StructuralElementAdder.prototype = {
             self.$lightbox.find("select").append("<option value='Uusi luokka'>Uusi luokka</option>");
         });
         //lisää muokattu jquery ui -selectmenu mahdollistamaan uusien dialuokkien luomisen
+        this.$lightbox.find("select").val(this.$container.find(".addedclass").val());
         this.$lightbox.find("select").select_withtext();
         this.$lightbox.find("select").on("selectmenuchange",function(){console.log("moro")});
     },
@@ -587,8 +588,16 @@ StructuralElementAdder.prototype = {
      *  Sulkee lisäysvalikkoikkunan ja tallentaa muutokset. Lataa myös tehdyt muutokset sivulle näkyviin.
      */
     SaveAndClose: function(){
+        var self = this;
         this.SetPreviewParams();
+        if(this.$lightbox.find("select[name='addedclass']").length>0){
+            //Tallenna myös dian luokka, jos asetetu
+            this.previewparams.addedclass = this.$lightbox.find("select[name='addedclass']").val();
+        }
         $.post("php/loaders/save_structure_slide.php",this.previewparams,function(html){
+            console.log("nyt...");
+            $("body").append(html);
+            console.log("...meni");
             $(".structural-slots").load("php/loaders/loadslots.php",UpdateAdderEvents);
         });
         this.$lightbox.html("").hide();
@@ -714,7 +723,7 @@ SongSlideAdder.prototype = {
             restricted_to: this.$lightbox.find(".restrictionlist").val(),
             slideclass: "songsegment",
             songdescription: this.$lightbox.find(".songdescription").val(),
-            slot_number: self.slot_number==undefined ? $(".slot").length + 1 : self.slot_number,
+            slot_number: self.slot_number==undefined ? $(".slot").length + 1 : self.slot_number*1,
             slot_name:this.$lightbox.find(".segment-name").val()};
     },
 
@@ -727,6 +736,7 @@ SongSlideAdder.prototype = {
     LoadParams: function(id){
         this.slot_number = this.$container.find(".slot-number").text();
         this.slot_name = this.$container.find(".slot_name_orig").val();
+        this.addedclass = this.$container.find(".addedclass").val();
         var self = this;
         $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"songsegment","id":id},function(data){
             if(data.multiname != ""){

@@ -7,5 +7,6 @@
     <input type="hidden" class="content_id" value="[@content_id]"></input>
     <input type="hidden" class="slot_id" value="[@slot_id]"></input>
     <input type="hidden" class="slot_type" value="[@slot_type_orig]"></input>
+    <input type="hidden" class="addedclass" value="[@addedclass]"></input>
     <input type="hidden" class="slot_name_orig" value="[@slot_name_orig]"></input>
 </div>
