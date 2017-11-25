@@ -10,7 +10,7 @@ class ServiceDataLoader{
      * @param string $path polku tietokantakonfiguraatioon
      * @param int $id haettavan segmentin id sisältötaulussa
      */
-    public function __construct($path,$id){
+    public function __construct($path,$id=Null){
         $this->id = $id;
         $this->con = new DbCon($path);
     }

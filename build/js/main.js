@@ -570,12 +570,12 @@ StructuralElementAdder.prototype = {
             $.each(data,function(idx, thisclass){
                 if([".Laulu",".Raamatunteksti"].indexOf(thisclass)==-1){
                     var selectme = (selectedclass == thisclass.replace(".","") ? " selected " : "");
-                    self.$lightbox.find("select").append("<option value='" + thisclass + "' " + selectme + ">" + thisclass.replace(".","") + "</option>");
+                    self.$lightbox.find("select[name='addedclass']").append("<option value='" + thisclass + "' " + selectme + ">" + thisclass.replace(".","") + "</option>");
                 }
             });
             //Lisää vielä mahdollisuus lisätä uusi luokka
-            self.$lightbox.find("select").append("<option value='Uusi luokka'>Uusi luokka</option>");
-            self.$lightbox.find("select").select_withtext();
+            self.$lightbox.find("select[name='addedclass']").append("<option value='Uusi luokka'>Uusi luokka</option>");
+            self.$lightbox.find("select[name='addedclass']").select_withtext();
             //self.$lightbox.find("select").on("selectmenuchange",function(){console.log("moro")});
         });
         //lisää muokattu jquery ui -selectmenu mahdollistamaan uusien dialuokkien luomisen
@@ -602,6 +602,7 @@ StructuralElementAdder.prototype = {
         }
         $.post("php/loaders/save_structure_slide.php",this.previewparams,function(html){
             $(".structural-slots").load("php/loaders/loadslots.php",UpdateAdderEvents);
+            $("body").prepend(html);
         });
         this.$lightbox.html("").hide();
     },
@@ -614,16 +615,16 @@ StructuralElementAdder.prototype = {
     InjectServiceData: function(){
         var atsings = this.$lightbox.find(".infoslidetext").val().match(/@/g);
         var number_of_atsings = atsings ? atsings.length : 0;
-        if(this.$lightbox.find("select").length<number_of_atsings){
+        if(this.$lightbox.find(".resp_select").length<number_of_atsings){
             //Laske ät-merkkien määrä ja vertaa select-elementtien määrään
-            var $select = $("<select></select>");
+            var $select = $("<select class='resp_select'></select>");
             $.getJSON("php/loaders/load_data_for_injection.php",{fetch:"responsibilities"},
                 function(data){$.each(data,function(idx,el){ $select.append("<option>" + el + "</option>")})});
             $select.appendTo(this.$lightbox.find(".injected-data"));
         }
-        else if(this.$lightbox.find("select").length>number_of_atsings){
-            while (this.$lightbox.find("select").length>number_of_atsings){
-                this.$lightbox.find("select:last-of-type").remove();
+        else if(this.$lightbox.find(".resp_select").length>number_of_atsings){
+            while (this.$lightbox.find(".resp_select").length>number_of_atsings){
+                this.$lightbox.find(".resp_select:last-of-type").remove();
                 atsings = this.$lightbox.find(".slidetext").val().match(/@/g);
                 number_of_atsings = atsings ? atsings.length : 0;
             }

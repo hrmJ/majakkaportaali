@@ -1,3 +1,4 @@
+<html>
 <?php
 /**
  *
@@ -26,6 +27,7 @@ else{
             break;
         case "infosegment":
             $params = Array("maintext"=>$_POST["maintext"],"header"=>$_POST["header"],"genheader"=>$_POST["genheader"],"subgenheader"=>$_POST["subgenheader"],"slideclass"=>$_POST["slideclass"],"slot_number"=>$_POST["slot_number"],"slot_name"=>$_POST["slot_name"], "addedclass"=>$_POST["addedclass"]);
+            var_dump($params);
             $loader= new InfoSegmentSaver("../../../config.ini", $params);
             $loader->SetContentId()->SetSlotData();
             break;
@@ -40,9 +42,12 @@ else{
 
     if($_POST["slideclass"]!="update_numbers"){
         //Päivitä diaesityksen tyylit uusien dialuokkien varalta
-        UpdateAndAddClasses($loader->con,$_POST["addedclass"]);
+        var_dump($_POST);
+        if(isset($_POST["addedclass"])
+            UpdateAndAddClasses($loader->con,$_POST["addedclass"]);
     }
 }
 
 ?>
 
+</html>
