@@ -46,18 +46,3 @@ else{
 
 ?>
 
-<html>
-
-<body>
-
-<h1>Moro</h1>
-
-<?php
-
-
-
-?>
-
-</body>
-
-</html>

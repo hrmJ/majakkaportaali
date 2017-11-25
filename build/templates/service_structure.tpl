@@ -17,7 +17,7 @@
             <h2>Lisää tekstidia</h2>
             <div class="slidemodel-flex-column">
                 <div class="class-adder">
-                    <span>Valitse dian tyyppi: </span> <select name="addedclass"> </select>
+                    <span>Valitse dian tyyppi: </span> <span class="addedclass_span"></span>
                 </div>
                 <div>
                     <input type="text" class="segment-name" placeholder="Dian tunniste"></input>

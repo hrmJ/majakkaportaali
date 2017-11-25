@@ -523,7 +523,7 @@ var StructuralElementAdder = function($container){
 StructuralElementAdder.prototype = {
 
     /**
-     *  Näytä ikkuna, jossa käyttäjä voi valita lisättävän messun osan tyypin
+     *  Näytä ikkuna, jossa käyttäjä voi muokata messun rakenteeseen lisättävää diaa
      */
     ShowWindow: function(){
         var self = this
@@ -562,17 +562,23 @@ StructuralElementAdder.prototype = {
      */
     SetSlideClasses: function(){
         var self = this;
+        var selectedclass = self.$container.find(".addedclass").val();
+        //Poistetaan kokonaan edellisellä avauksella näkyvissä ollut select
+        self.$lightbox.find("select").remove();
+        self.$lightbox.find(".addedclass_span").append("<select name='addedclass'>");
         $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"list_all","id":""},function(data){
             $.each(data,function(idx, thisclass){
-                self.$lightbox.find("select").append("<option value='" + thisclass + "'>" + thisclass.replace(".","") + "</option>");
+                if([".Laulu",".Raamatunteksti"].indexOf(thisclass)==-1){
+                    var selectme = (selectedclass == thisclass.replace(".","") ? " selected " : "");
+                    self.$lightbox.find("select").append("<option value='" + thisclass + "' " + selectme + ">" + thisclass.replace(".","") + "</option>");
+                }
             });
             //Lisää vielä mahdollisuus lisätä uusi luokka
             self.$lightbox.find("select").append("<option value='Uusi luokka'>Uusi luokka</option>");
+            self.$lightbox.find("select").select_withtext();
+            //self.$lightbox.find("select").on("selectmenuchange",function(){console.log("moro")});
         });
         //lisää muokattu jquery ui -selectmenu mahdollistamaan uusien dialuokkien luomisen
-        this.$lightbox.find("select").val(this.$container.find(".addedclass").val());
-        this.$lightbox.find("select").select_withtext();
-        this.$lightbox.find("select").on("selectmenuchange",function(){console.log("moro")});
     },
 
     /**
@@ -595,9 +601,6 @@ StructuralElementAdder.prototype = {
             this.previewparams.addedclass = this.$lightbox.find("select[name='addedclass']").val();
         }
         $.post("php/loaders/save_structure_slide.php",this.previewparams,function(html){
-            console.log("nyt...");
-            $("body").append(html);
-            console.log("...meni");
             $(".structural-slots").load("php/loaders/loadslots.php",UpdateAdderEvents);
         });
         this.$lightbox.html("").hide();
