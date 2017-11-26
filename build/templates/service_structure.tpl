@@ -14,7 +14,7 @@
     </section>
     <div class="hidden">
         <div class="infoslide slidemodel">
-            <h2 class="subwindow-opener slide-section-controller">Dian perustiedot</h2>
+            <h2 class="subwindow-opener slide-section-controller">Otsikot ja luokka</h2>
             <div class="slidemodel-flex-column controller-subwindow">
                 <div class="class-adder">
                     <div>Luokka:</div> <div class="addedclass_span"></div>
@@ -29,22 +29,26 @@
                     <input type="checkbox" value="show-upper-header">Näytä koko messun otsikko</input>
                 </div>
             </div>
-            <div class="slidemodel-flex">
+            <h2 class="subwindow-opener slide-section-controller">Kuvat</h2>
+            <div class="slidemodel-flex controller-subwindow">
             </div>
-            <div class="slidemodel-flex">
-                <div>
-                    <h3>Dian varsinainen teksti</h3>
-                    <div><textarea class='infoslidetext slidetext' placeholder="Kirjoita diassa leipätekstinä näytettävä informaatio tähän."></textarea></div>
-                </div>
-                <div>
-                    <h3>Upota messudataa</h3>
-                    <p>Voit lisätä diaan tietoja kyseisen päivän messusta. Tämä tapahtuu kirjoittamalla
-                    tekstikenttään @-merkki, minkä jälkeen tämän tekstin alle ilmestyy pudotusvalikko, josta voit
-                    valita syötettävän tiedon. Ensimmäinen pudotusvalikko vastaa ensimmäistä @-merkkiä, toinen
-                    toista ja niin edelleen.
-                    </p>
-                    <div class="injected-data">
-                    
+            <h2 class="subwindow-opener slide-section-controller">Teksti</h2>
+            <div class="controller-subwindow">
+                <div class="slidemodel-flex">
+                    <div>
+                        <h3>Dian varsinainen teksti</h3>
+                        <div><textarea class='infoslidetext slidetext' placeholder="Kirjoita diassa leipätekstinä näytettävä informaatio tähän."></textarea></div>
+                    </div>
+                    <div>
+                        <h3>Upota messudataa</h3>
+                        <p>Voit lisätä diaan tietoja kyseisen päivän messusta. Tämä tapahtuu kirjoittamalla
+                        tekstikenttään @-merkki, minkä jälkeen tämän tekstin alle ilmestyy pudotusvalikko, josta voit
+                        valita syötettävän tiedon. Ensimmäinen pudotusvalikko vastaa ensimmäistä @-merkkiä, toinen
+                        toista ja niin edelleen.
+                        </p>
+                        <div class="injected-data">
+                        
+                        </div>
                     </div>
                 </div>
             </div>

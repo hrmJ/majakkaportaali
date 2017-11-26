@@ -13,9 +13,6 @@
 }
 
 .slidemodel-flex{
-    margin-top:1em;
-    padding-top:1em;
-    border-top:1px solid $datarowbg;
     display:flex;
     >div:first-of-type{
         flex:2 1 60%;
@@ -86,3 +83,8 @@
     background:white;
 }
 
+.button-container{
+    > button + button{
+        margin-left:2em;
+    }
+}

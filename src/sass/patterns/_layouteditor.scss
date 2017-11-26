@@ -37,6 +37,10 @@
             }
     }
 
+    h3{
+        font-size:1em;
+        font-weight:normal;
+    }
 
 
     h2 + div, h3 + div{
@@ -149,4 +153,6 @@
 
 .subwindow-opener + div{
     display:none;
+    padding-bottom:1em;
 }
+

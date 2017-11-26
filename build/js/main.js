@@ -536,15 +536,12 @@ StructuralElementAdder.prototype = {
      */
     ShowWindow: function(){
         var self = this
-        this.$container
-            .prepend(this.$lightbox.append($("<div><button id='cancelbutton'>Sulje tallentamatta</button></div>")))
-            .prepend(this.$lightbox.append($("<div><button id='savebutton'>Tallenna</button></div>")));
-        if(this.slideclass==".infoslide"){
-            this.$container.prepend(this.$lightbox.append($("<div><button id='previewbutton'>Esikatsele</button></div>")));
-            $("#previewbutton").click(function(){self.PreviewSlide()});
-        }
-        $("#cancelbutton").click(function(){ self.$lightbox.html("").hide(); });
-        $("#savebutton").click(function(){self.SaveAndClose();});
+        var $buttons = $("<div class='button-container'>")
+        $("<button>Sulje tallentamatta</button>").click(function(){ self.$lightbox.html("").hide(); $(".blurcover").remove();}).appendTo($buttons);
+        $("<button>Tallenna</button>").click(function(){ self.SaveAndClose(); }).appendTo($buttons);
+        if(this.slideclass==".infoslide") $("<button>Esikatsele</button>").click(function(){ self.PreviewSlide(); }).appendTo($buttons);
+        this.$lightbox.append($buttons);
+        this.$container.prepend(this.$lightbox);
         $(".slidetext").on("change paste keyup",function(){self.InjectServiceData()});
         $("[value='multisong']").click(function(){self.$container.find(".multisongheader").toggle(); });
         if(this.slideclass==".songslide") this.AddAutoComplete();
@@ -558,6 +555,7 @@ StructuralElementAdder.prototype = {
      *
      */
     SetLightBox: function($el){
+        BlurContent();
         this.$lightbox.html("").prepend($(this.slideclass).clone(true));
         this.$lightbox.css({"width":$(".innercontent").width(),"top":  $("nav .dropdown").is(":visible") ? "-250px" : "-50px"}).show();
         this.SetSlideClasses();
@@ -614,6 +612,7 @@ StructuralElementAdder.prototype = {
             $("body").prepend(html);
         });
         this.$lightbox.html("").hide();
+        $(".blurcover").remove();
     },
 
     /**

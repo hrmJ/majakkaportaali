@@ -346,7 +346,7 @@ h3 {
 
 .my-lightbox {
   position: absolute;
-  background: #C5CEC7;
+  background: white;
   z-index: 1;
   -moz-box-shadow: 2px 2px 8px 4px #5f5f5f;
   -webkit-box-shadow: 2px 2px 8px 4px #5f5f5f;
@@ -383,6 +383,9 @@ h3 {
     color: white; }
     .slidemodel h2.opened::before {
       content: '\25BC'; }
+  .slidemodel h3 {
+    font-size: 1em;
+    font-weight: normal; }
   .slidemodel h2 + div, .slidemodel h3 + div {
     padding-left: 1em; }
   .slidemodel .adjuster-parent:last-child {
@@ -441,7 +444,8 @@ h3 {
   flex: 1 1 35%; }
 
 .subwindow-opener + div {
-  display: none; }
+  display: none;
+  padding-bottom: 1em; }
 
 .structural-element-add {
   position: relative; }
@@ -453,9 +457,6 @@ h3 {
   left: -10px; }
 
 .slidemodel-flex {
-  margin-top: 1em;
-  padding-top: 1em;
-  border-top: 1px solid #dadada;
   display: flex; }
   .slidemodel-flex > div:first-of-type {
     flex: 2 1 60%; }
@@ -504,6 +505,9 @@ h3 {
 .slide-section-controller {
   padding: 0.2em;
   background: white; }
+
+.button-container > button + button {
+  margin-left: 2em; }
 
 .preview-window {
   position: absolute;
