@@ -63,7 +63,7 @@ StructuralElementAdder.prototype = {
         $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"list_all","id":""},function(data){
             $.each(data,function(idx, thisclass){
                 if([".Laulu",".Raamatunteksti"].indexOf(thisclass)==-1){
-                    var selectme = (selectedclass == thisclass.replace(".","") ? " selected " : "");
+                    var selectme = (selectedclass.replace(".","") == thisclass.replace(".","") ? " selected " : "");
                     self.$lightbox.find("select[name='addedclass']").append("<option value='" + thisclass + "' " + selectme + ">" + thisclass.replace(".","") + "</option>");
                 }
             });
