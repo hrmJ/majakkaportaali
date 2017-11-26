@@ -59,3 +59,19 @@ function extend(base, sub) {
   });
 }
 
+
+/**
+ *
+ * Luo esikatselukuvan esimerkiksi taustakuvalle tai muulle ulkoasussa muokatttavalle elementille.
+ *
+ * @param object $div elementti, jonka sisällä esikatselu toteutetaan
+ * @param string  filename, tarkasteltavan elementin tiedostonimi
+ *
+ */
+function Preview($div, filename){
+    $("<img>").attr({"src":"assets/" + filename,
+        "height":"100%",
+        "width":"100%",
+        "object-fit":"contain",
+    }).appendTo($div.find(".preview").html(""));
+}

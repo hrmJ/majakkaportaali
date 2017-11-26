@@ -29,8 +29,12 @@
                     <input type="checkbox" value="show-upper-header">Näytä koko messun otsikko</input>
                 </div>
             </div>
-            <h2 class="subwindow-opener slide-section-controller">Kuvat</h2>
-            <div class="slidemodel-flex controller-subwindow">
+            <h2 class="subwindow-opener slide-section-controller">Kuva</h2>
+            <div class="slidemodel-flex controller-subwindow img-adder with-preview">
+                <div class="with-preview">
+                    <div class="img-select-parent"></div>
+                    <div class="preview"></div>
+                </div>
             </div>
             <h2 class="subwindow-opener slide-section-controller">Teksti</h2>
             <div class="controller-subwindow">

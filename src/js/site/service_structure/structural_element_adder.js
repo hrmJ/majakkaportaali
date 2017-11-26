@@ -23,7 +23,10 @@ StructuralElementAdder.prototype = {
         var $buttons = $("<div class='button-container'>")
         $("<button>Sulje tallentamatta</button>").click(function(){ self.$lightbox.html("").hide(); $(".blurcover").remove();}).appendTo($buttons);
         $("<button>Tallenna</button>").click(function(){ self.SaveAndClose(); }).appendTo($buttons);
-        if(this.slideclass==".infoslide") $("<button>Esikatsele</button>").click(function(){ self.PreviewSlide(); }).appendTo($buttons);
+        if(this.slideclass==".infoslide"){
+            $("<button>Esikatsele</button>").click(function(){ self.PreviewSlide(); }).appendTo($buttons)
+            this.AddImageLoader();
+        };
         this.$lightbox.append($buttons);
         this.$container.prepend(this.$lightbox);
         $(".slidetext").on("change paste keyup",function(){self.InjectServiceData()});
@@ -308,15 +311,22 @@ InfoSlideAdder.prototype = {
      *
      */
     AddImageLoader: function(){
+        var self = this;
         this.$lightbox.find(".img-select").remove();
-        this.$lightbox.find("").remove();
+        $sel = $("<select class='img-select'>")
+            .on("change",function(){ 
+                Preview($(this).parents(".with-preview"),"images/" + $(this).val())}
+            );
         $.getJSON("php/loaders/load_assets.php",{"asset_type":"backgrounds"},
+                //Luo ensin lista tallennetuista kuvista. 
                 function(data){
-                    $.each(data, function(idx,bgname){
-                        $("<option>").text(bgname).appendTo("#general-bg-select") ;
+                    $.each(data, function(idx,imgname){
+                        $("<option>").text(imgname).appendTo($sel);
                         } 
                     );
+                    self.$lightbox.find(".img-select-parent").append($sel);
                 });
+        
     }
 
 }
