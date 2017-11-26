@@ -14,20 +14,22 @@
     </section>
     <div class="hidden">
         <div class="infoslide slidemodel">
-            <h2>Lisää tekstidia</h2>
-            <div class="slidemodel-flex-column">
+            <h2 class="subwindow-opener slide-section-controller">Dian perustiedot</h2>
+            <div class="slidemodel-flex-column controller-subwindow">
                 <div class="class-adder">
-                    <span>Valitse dian tyyppi: </span> <span class="addedclass_span"></span>
+                    <div>Luokka:</div> <div class="addedclass_span"></div>
                 </div>
                 <div>
-                    <input type="text" class="segment-name" placeholder="Dian tunniste"></input>
+                    <div>Tunniste:</div> <div><input type="text" class="segment-name"></input></div>
                 </div>
                 <div>
-                     <p>Dian otsikko:  <input type="text" class="slide-header" placeholder="Jos et halua otsikkoa, jätä tyhjäksi"></input></p>
+                     <div>Otsikko:</div> <div><input type="text" class="slide-header" placeholder="Jos et halua otsikkoa, jätä tyhjäksi"></input></div>
                 </div>
                 <div>
                     <input type="checkbox" value="show-upper-header">Näytä koko messun otsikko</input>
                 </div>
+            </div>
+            <div class="slidemodel-flex">
             </div>
             <div class="slidemodel-flex">
                 <div>
@@ -52,6 +54,9 @@
         <div class="songslide slidemodel">
             <h2>Lisää lauludia</h2>
             <div class="slidemodel-flex-column">
+                <div class="class-adder">
+                    <span>Valitse dian tyyppi: </span> <span class="addedclass_span"></span>
+                </div>
                 <div>
                     <input type="text" class="segment-name" placeholder="Laulun nimi"></input>
                 </div>

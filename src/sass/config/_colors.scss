@@ -1,6 +1,6 @@
 
 $navfg: #ffffff;
-$navbg: #810000;
+$navbg: lighten(black,15%);
 
 $lightbg: #eeebe9;
 $contbg: #ffffff;
@@ -11,6 +11,7 @@ $blurcolor:rgba(128, 128, 128, 0.8);
 
 $lyricscellbg: #A4B6AA;
 $lightboxbg: #C5CEC7;
+$layout_editor_font: #655c5c;
 
 $commentheaderbg: $datarowbg;
 

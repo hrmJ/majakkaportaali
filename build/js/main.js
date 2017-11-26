@@ -1,10 +1,19 @@
 /**
  *
- * Valikoihin liittyvä js.
+ * Valikoihin liittyvä js. Koko sivustolla käytössä olevat tapahtumat.
  *
  */
 $(document).ready(function(){
     $(".hamburger").click(function(){$(this).next(".dropdown").slideToggle();});
+
+    //Aseta taittovalikot toimintakuntoon
+    $(".controller-subwindow").hide()
+    $(".subwindow-opener").click(function(){ 
+        //Avaa tai sulje tarkemmat fonttien muokkaussäätimet ym
+        $(this).next().slideToggle(); 
+        $(this).toggleClass("opened");
+    });
+
 });
 
 /**
@@ -482,7 +491,7 @@ function SelectTheContentToAdd(e, u){
             case "Laulu":
                 adder = new SongSlideAdder(u.item.parents(".structural-element-add"));
                 break;
-            case "Infodia":
+            default:
                 adder = new InfoSlideAdder(u.item.parents(".structural-element-add"));
                 break;
         }
@@ -564,7 +573,7 @@ StructuralElementAdder.prototype = {
         var self = this;
         var selectedclass = self.$container.find(".addedclass").val();
         //Poistetaan kokonaan edellisellä avauksella näkyvissä ollut select
-        self.$lightbox.find("select").remove();
+        self.$lightbox.find("select[name='addedclass']").remove();
         self.$lightbox.find(".addedclass_span").append("<select name='addedclass'>");
         $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"list_all","id":""},function(data){
             $.each(data,function(idx, thisclass){
@@ -781,7 +790,7 @@ InfoSlideAdder.prototype = {
         var self = this;
         var maintext = this.$lightbox.find(".slidetext").val();
         //korvaa ät-merkit halutuilla arvoilla
-        this.$lightbox.find("select").each(function(){maintext = maintext.replace(/@/," [" + $(this).val() + "] ")});
+        this.$lightbox.find(".resp_select").each(function(){maintext = maintext.replace(/@/," [" + $(this).val() + "] ")});
         this.previewparams = {
             slideclass: "infosegment",
             maintext:maintext,
@@ -809,7 +818,24 @@ InfoSlideAdder.prototype = {
                 self.$lightbox.find("[value='show-upper-header']").get(0).checked=true;
             }
         );
+    },
+
+    /**
+     * Lataa näkyviin tietokantaan tallennetut kuvat valittavaksi esitykseen lisäämistä varten.
+     *
+     */
+    AddImageLoader: function(){
+        this.$lightbox.find(".img-select").remove();
+        this.$lightbox.find("").remove();
+        $.getJSON("php/loaders/load_assets.php",{"asset_type":"backgrounds"},
+                function(data){
+                    $.each(data, function(idx,bgname){
+                        $("<option>").text(bgname).appendTo("#general-bg-select") ;
+                        } 
+                    );
+                });
     }
+
 }
 
 

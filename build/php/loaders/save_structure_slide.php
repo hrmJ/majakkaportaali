@@ -42,9 +42,7 @@ else{
 
     if($_POST["slideclass"]!="update_numbers"){
         //Päivitä diaesityksen tyylit uusien dialuokkien varalta
-        var_dump($_POST);
-        if(isset($_POST["addedclass"])
-            UpdateAndAddClasses($loader->con,$_POST["addedclass"]);
+        UpdateAndAddClasses($loader->con,$_POST["addedclass"]);
     }
 }
 

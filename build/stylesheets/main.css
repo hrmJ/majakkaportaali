@@ -79,7 +79,7 @@ nav {
   position: relative;
   height: 40px;
   width: 100%;
-  background: #810000;
+  background: #262626;
   color: #ffffff; }
   nav .dropdown {
     margin-top: 40px;
@@ -156,11 +156,10 @@ div + .form-input-container {
     .songlistview .menu {
       max-width: none; } }
 h1, h2, h3, h4 {
-  font-family: "Lustria", serif; }
+  font-family: "Roboto", sans-serif; }
 
 h2 {
-  padding-bottom: 0.5em;
-  border-bottom: 1px solid grey; }
+  padding-bottom: 0.5em; }
 
 h3 {
   color: #4d4d4d; }
@@ -192,7 +191,7 @@ h3 {
 
 .datarow:hover {
   cursor: pointer;
-  background: #b40000;
+  background: #404040;
   color: #ffffff; }
   .datarow:hover .songinput {
     color: white; }
@@ -360,6 +359,90 @@ h3 {
     max-width: 100px;
     margin-right: 5px; }
 
+.ui-selectmenu-menu, .ui-selectmenu-button {
+  font-size: 0.8em; }
+
+.slidemodel {
+  color: #655c5c; }
+  .slidemodel .contentadder-open > div + div {
+    margin-top: 1em; }
+  .slidemodel h2 {
+    margin: 0 0 0.6em 0;
+    padding: 0.2em;
+    font-size: 1em;
+    color: #655c5c;
+    font-weight: normal; }
+    .slidemodel h2::before {
+      content: '\25BA'; }
+    .slidemodel h2:hover {
+      cursor: pointer;
+      background: #737373;
+      color: white; }
+  .slidemodel h2.opened {
+    background: #737373;
+    color: white; }
+    .slidemodel h2.opened::before {
+      content: '\25BC'; }
+  .slidemodel h2 + div, .slidemodel h3 + div {
+    padding-left: 1em; }
+  .slidemodel .adjuster-parent:last-child {
+    margin-bottom: 1em; }
+  .slidemodel section.single-controller {
+    margin: 0 0 0 0; }
+
+.with-preview {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  padding-top: 0.4em;
+  padding-bottom: 0.4em; }
+  .with-preview div:first-of-type {
+    flex: 1 1 40%;
+    margin-right: 0.4em; }
+
+.changer-parent {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: center; }
+  .changer-parent > div:first-of-type {
+    flex: 0 1 40%; }
+  .changer-parent div + div {
+    margin-left: 0.2em;
+    flex: 1 1 auto; }
+  .changer-parent + .changer-parent {
+    margin-top: 0.5em; }
+
+.radio-flex {
+  display: flex;
+  justify-content: space-between; }
+
+.select-flex {
+  display: flex;
+  justify-content: space-between;
+  color: white; }
+
+.changertype-numeric .adjuster-parent, .changertype-color .adjuster-parent, .changertype-select .adjuster-parent {
+  display: flex;
+  align-items: center; }
+  .changertype-numeric .adjuster-parent div:nth-child(1), .changertype-color .adjuster-parent div:nth-child(1), .changertype-select .adjuster-parent div:nth-child(1) {
+    flex: 1 1 20%;
+    font-size: 0.8em; }
+  .changertype-numeric .adjuster-parent div:nth-child(2), .changertype-color .adjuster-parent div:nth-child(2), .changertype-select .adjuster-parent div:nth-child(2) {
+    flex: 1 1 75%; }
+  .changertype-numeric .adjuster-parent + div, .changertype-color .adjuster-parent + div, .changertype-select .adjuster-parent + div {
+    margin-top: 1em; }
+
+.changer-label {
+  font-size: 0.8em;
+  margin-bottom: 0.6em; }
+
+.changertype-numericcolor .adjuster-parent div:nth-child(2) {
+  flex: 1 1 35%; }
+
+.subwindow-opener + div {
+  display: none; }
+
 .structural-element-add {
   position: relative; }
   .structural-element-add ul {
@@ -382,10 +465,16 @@ h3 {
     width: 90%;
     min-height: 7em; }
 
-.slidemodel-flex-column > div {
-  width: 100%; }
-  .slidemodel-flex-column > div input[type='text'] {
-    width: 100%; }
+.slidemodel-flex-column {
+  display: flex;
+  flex-flow: column; }
+  .slidemodel-flex-column > div {
+    flex: 1 1;
+    display: flex; }
+    .slidemodel-flex-column > div div:first-child {
+      width: 8em; }
+  .slidemodel-flex-column > div + div {
+    margin-top: 1em; }
 
 .slot {
   position: relative;
@@ -411,6 +500,10 @@ h3 {
 
 .class-adder {
   position: relative; }
+
+.slide-section-controller {
+  padding: 0.2em;
+  background: white; }
 
 .preview-window {
   position: absolute;

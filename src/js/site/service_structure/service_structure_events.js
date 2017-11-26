@@ -95,7 +95,7 @@ function SelectTheContentToAdd(e, u){
             case "Laulu":
                 adder = new SongSlideAdder(u.item.parents(".structural-element-add"));
                 break;
-            case "Infodia":
+            default:
                 adder = new InfoSlideAdder(u.item.parents(".structural-element-add"));
                 break;
         }
