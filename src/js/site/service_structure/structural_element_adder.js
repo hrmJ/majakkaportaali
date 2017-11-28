@@ -63,7 +63,9 @@ StructuralElementAdder.prototype = {
         $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"list_all","id":""},function(data){
             $.each(data,function(idx, thisclass){
                 if([".Laulu",".Raamatunteksti"].indexOf(thisclass)==-1){
-                    var selectme = (selectedclass.replace(".","") == thisclass.replace(".","") ? " selected " : "");
+                    if(selectedclass){
+                        var selectme = (selectedclass.replace(".","") == thisclass.replace(".","") ? " selected " : "");
+                    }
                     self.$lightbox.find("select[name='addedclass']").append("<option value='" + thisclass + "' " + selectme + ">" + thisclass.replace(".","") + "</option>");
                 }
             });
@@ -96,7 +98,6 @@ StructuralElementAdder.prototype = {
         }
         $.post("php/loaders/save_structure_slide.php",this.previewparams,function(html){
             $(".structural-slots").load("php/loaders/loadslots.php",UpdateAdderEvents);
-            $("body").prepend(html);
         });
         this.$lightbox.html("").hide();
         $(".blurcover").remove();
