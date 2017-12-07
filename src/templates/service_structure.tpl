@@ -41,6 +41,8 @@
                         <select class="img-pos-select">
                             <option value="left">Tekstin vasemmalla puolella</option>
                             <option value="right">Tekstin oikealla puolella</option>
+                            <option value="top">Tekstin yläpuolella</option>
+                            <option value="bottom">Tekstin alapuolella</option>
                             <option value="wholescreen">Koko ruutu</option>
                         </select>
                     </div>

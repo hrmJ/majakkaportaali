@@ -338,7 +338,6 @@ InfoSlideAdder.prototype = {
                     );
                     self.$lightbox.find(".img-select-parent").append($sel);
                 });
-        
     }
 
 }
