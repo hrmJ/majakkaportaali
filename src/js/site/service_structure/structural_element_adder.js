@@ -32,7 +32,6 @@ StructuralElementAdder.prototype = {
         $(".slidetext").on("change paste keyup",function(){self.InjectServiceData()});
         $("[value='multisong']").click(function(){self.$container.find(".multisongheader").toggle(); });
         if(this.slideclass==".songslide") this.AddAutoComplete();
-
     },
 
     /**
@@ -98,6 +97,7 @@ StructuralElementAdder.prototype = {
         }
         $.post("php/loaders/save_structure_slide.php",this.previewparams,function(html){
             $(".structural-slots").load("php/loaders/loadslots.php",UpdateAdderEvents);
+            $("body").prepend(html);
         });
         this.$lightbox.html("").hide();
         $(".blurcover").remove();
@@ -302,6 +302,7 @@ InfoSlideAdder.prototype = {
         this.slot_name = this.$container.find(".slot_name_orig").val();
         var self = this;
         $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"infosegment","id":id},function(data){
+            console.log(data);
             self.$lightbox.find(".slide-header").val(data.header);
             self.$lightbox.find(".infoslidetext").val(data.maintext);
             self.$lightbox.find(".segment-name").val(self.slot_name);

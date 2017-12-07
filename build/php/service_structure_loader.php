@@ -16,6 +16,10 @@ class ServiceStructureLoader{
             $this->con->q($this->insertquery, $this->insert_query_vals,"none");
             $this->content_id = $this->con->q("SELECT max(id) FROM {$this->table}",Array(),"column");
         }
+        else{
+            $this->update_query_vals["thisid"] = $this->content_id;
+            $this->con->q($this->updatequery, $this->update_query_vals,"none");
+        }
         return $this;
     }
 
@@ -51,8 +55,10 @@ class SongSegmentSaver extends ServiceStructureLoader{
         $this->addedclass = $postvals["addedclass"];
         $this->segment_vals = Array("desc"=>$postvals["description"],"restr"=>$postvals["restricted_to"],"sname"=>$this->slot_name,"mname"=>$postvals["multiname"]);
         $this->insert_query_vals  = $this->segment_vals;
+        $this->update_query_vals  = $this->segment_vals;
         $this->idquery = "SELECT id FROM songsegments WHERE singlename  = :sname and multiname = :mname and songdescription = :desc and restrictedto = :restr LIMIT 1";
         $this->insertquery = "INSERT INTO songsegments (songdescription, restrictedto, singlename, multiname) values (:desc, :restr, :sname, :mname)";
+        $this->updatequery = "UPDATE songsegments SET songdescription = :desc, restrictedto = :restr, singlename = :sname, multiname=:mname WHERE id = :thisid";
     }
 
 
@@ -84,8 +90,11 @@ class InfoSegmentSaver extends ServiceStructureLoader{
         }
         $this->segment_vals = Array("mt"=>$postvals["maintext"],"h"=>$postvals["header"],"gh"=>$postvals["genheader"],"sgh"=>$postvals["subgenheader"]);
         $this->insert_query_vals = Array("mt"=>$postvals["maintext"],"h"=>$postvals["header"],"gh"=>$postvals["genheader"],"sgh"=>$postvals["subgenheader"], "imgname"=>$this->imgname, "imgpos"=>$this->imgpos);
+        $this->update_query_vals = $this->insert_query_vals;
+
         $this->idquery = "SELECT id FROM infosegments WHERE  maintext = :mt AND  header = :h AND  genheader = :gh AND subgenheader = :sgh";
         $this->insertquery = "INSERT INTO infosegments (maintext, header, genheader, subgenheader, imgname, imgposition) values (:mt, :h, :gh, :sgh, :imgname, :imgpos)";
+        $this->updatequery = "UPDATE infosegments set maintext = :mt, header = :h, genheader = :gh, subgenheader = :sgh, imgname = :imgname,  imgposition = :imgpos WHERE id = :thisid";
     }
 
 

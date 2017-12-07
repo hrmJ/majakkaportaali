@@ -36,7 +36,6 @@ else{
                 $con->q("UPDATE presentation_structure SET slot_number = :newnumber WHERE id = :slot_id",$idpair,"none");
             }
             break;
-
     }
 
     if($_POST["slideclass"]!="update_numbers"){
