@@ -130,7 +130,7 @@ CREATE TABLE songsegments (
 
 --
 -- Table structure for table infosegment
---
+-- 
 
 CREATE TABLE infosegments (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -138,6 +138,8 @@ CREATE TABLE infosegments (
   `header` varchar(300) DEFAULT NULL,
   `genheader` varchar(300) DEFAULT NULL,
   `subgenheader` varchar(300) DEFAULT NULL,
+  `imgname` varchar(300) DEFAULT NULL,
+  `imgposition` varchar(300) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
 

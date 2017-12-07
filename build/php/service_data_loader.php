@@ -219,7 +219,7 @@ class InfoSegmentLoader extends ServiceDataLoader{
      * laulun nimen tai jonkin sen sisältämän merkkijonon mukaan.
      */
     public function LoadInfoSlide(){
-        $this->data = $this->con->q("SELECT maintext,header,genheader,subgenheader FROM infosegments WHERE id = :slide_id",Array("slide_id"=>$this->id),"row");
+        $this->data = $this->con->q("SELECT maintext,header,genheader,subgenheader, imgname, imgposition FROM infosegments WHERE id = :slide_id",Array("slide_id"=>$this->id),"row");
     }
 
 }

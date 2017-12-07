@@ -51,6 +51,11 @@ main {
   flex: 0 0 90%;
   width: 95%; }
 
+.basic-flex {
+  display: flex; }
+  .basic-flex > div {
+    margin-right: 1em; }
+
 @media only screen and (min-width: 920px) {
   header {
     display: block; }
@@ -399,7 +404,7 @@ h3 {
   justify-content: space-between;
   padding-top: 0.4em;
   padding-bottom: 0.4em; }
-  .with-preview div:first-of-type {
+  .with-preview > div:first-of-type {
     flex: 1 1 40%;
     margin-right: 0.4em; }
 

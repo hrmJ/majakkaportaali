@@ -285,6 +285,8 @@ InfoSlideAdder.prototype = {
             subgenheader: self.$lightbox.find("[type='checkbox']").get(0).checked ? "Messun aihe" : "",
             slot_number: self.slot_number==undefined ? $(".slot").length + 1 : self.slot_number,
             slot_name:this.$lightbox.find(".segment-name").val() ,
+            imgname:this.$lightbox.find(".img-select").val() ,
+            imgpos:this.$lightbox.find(".img-pos-select").val() ,
             header:this.$lightbox.find(".slide-header").val()};
     },
 
@@ -294,6 +296,8 @@ InfoSlideAdder.prototype = {
      * @param int id haettavan sisällön id infosegments-taulussa
      */
     LoadParams: function(id){
+        //Huolehdi siitä, että kuvanvalintavalikko on näkyvissä ennen tietojen lataamista
+        this.AddImageLoader();
         this.slot_number = this.$container.find(".slot-number").text();
         this.slot_name = this.$container.find(".slot_name_orig").val();
         var self = this;
@@ -301,10 +305,16 @@ InfoSlideAdder.prototype = {
             self.$lightbox.find(".slide-header").val(data.header);
             self.$lightbox.find(".infoslidetext").val(data.maintext);
             self.$lightbox.find(".segment-name").val(self.slot_name);
-            if(data.genheader != "")
+            self.$lightbox.find(".img-select").val(data.imgname);
+            self.$lightbox.find(".img-pos-select").val(data.imgposition);
+            if(data.genheader != ""){
                 self.$lightbox.find("[value='show-upper-header']").get(0).checked=true;
             }
-        );
+            var used_img = self.$lightbox.find(".img-select").val();
+            if(used_img!="Ei kuvaa"){
+                Preview(self.$lightbox.find(".img-select").parents(".with-preview"),"images/" + used_img);
+            }
+        });
     },
 
     /**
@@ -314,7 +324,7 @@ InfoSlideAdder.prototype = {
     AddImageLoader: function(){
         var self = this;
         this.$lightbox.find(".img-select").remove();
-        $sel = $("<select class='img-select'>")
+        $sel = $("<select class='img-select'><option>Ei kuvaa</option></select>")
             .on("change",function(){ 
                 Preview($(this).parents(".with-preview"),"images/" + $(this).val())}
             );

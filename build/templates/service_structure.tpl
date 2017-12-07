@@ -35,6 +35,16 @@
                     <div class="img-select-parent"></div>
                     <div class="preview"></div>
                 </div>
+                <div class="basic-flex">
+                    <div>Kuvan sijainti</div>
+                    <div>
+                        <select class="img-pos-select">
+                            <option value="left">Tekstin vasemmalla puolella</option>
+                            <option value="right">Tekstin oikealla puolella</option>
+                            <option value="wholescreen">Koko ruutu</option>
+                        </select>
+                    </div>
+                </div>
             </div>
             <h2 class="subwindow-opener slide-section-controller">Teksti</h2>
             <div class="controller-subwindow">

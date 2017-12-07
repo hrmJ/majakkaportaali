@@ -48,4 +48,10 @@ main{
     width:95%;
 }
 
+.basic-flex{
+    display:flex;
+    > div {
+        margin-right:1em;
+    }
+}
 
