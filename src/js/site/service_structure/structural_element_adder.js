@@ -342,6 +342,55 @@ InfoSlideAdder.prototype = {
 
 }
 
+/**
+ *
+ * Raamattusisällön lisäävä olio.
+ *
+ * @param object $container jquery-oliona se div, jonka sisältä valittiin syöttää uusi elementti
+ *
+ */
+var BibleSlideAdder = function($container){
+    StructuralElementAdder.call(this, $container);
+    this.slideclass = ".bibleslide";
+    this.SetLightBox();
+    return this;
+}
+
+BibleSlideAdder.prototype = {
+    /**
+     * Kerää tallennusta varten tarvittavat tiedot
+     */
+    SetPreviewParams: function(){
+        var self = this;
+        this.previewparams = {
+            slideclass: "biblesegment",
+            slot_number: self.slot_number==undefined ? $(".slot").length + 1 : self.slot_number*1,
+            slot_name:this.$lightbox.find(".segment-name").val()};
+    },
+
+
+    /**
+     * Hae dian sisältötiedot tietokannasta
+     *
+     * @param int id haettavan sisällön id songsegments-taulussa
+     */
+    LoadParams: function(id){
+        this.slot_number = this.$container.find(".slot-number").text();
+        this.slot_name = this.$container.find(".slot_name_orig").val();
+        this.addedclass = this.$container.find(".addedclass").val();
+        var self = this;
+        $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"biblesegment","id":id},function(data){
+            self.$lightbox.find(".segment-name").val(self.slot_name);
+            self.$lightbox.find(".songdescription").val(data.songdescription);
+            }
+        );
+    }
+}
+
 
 extend(StructuralElementAdder, InfoSlideAdder);
 extend(StructuralElementAdder, SongSlideAdder);
+extend(StructuralElementAdder, BibleSlideAdder);
+
+
+

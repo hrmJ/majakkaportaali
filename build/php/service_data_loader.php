@@ -215,8 +215,7 @@ class BibleLoader extends ServiceDataLoader{
 class InfoSegmentLoader extends ServiceDataLoader{
 
     /**
-     * hakee kaikkien laulujen nimet tietokannasta ja tulostaa ne filtteröitynä
-     * laulun nimen tai jonkin sen sisältämän merkkijonon mukaan.
+     * Hakee tietokannasta id:n perusteella dian tiedot
      */
     public function LoadInfoSlide(){
         $this->data = $this->con->q("SELECT maintext,header,genheader,subgenheader, imgname, imgposition FROM infosegments WHERE id = :slide_id",Array("slide_id"=>$this->id),"row");
@@ -231,10 +230,23 @@ class InfoSegmentLoader extends ServiceDataLoader{
 class SongSegmentLoader extends ServiceDataLoader{
 
     /**
-     * hakee kaikkien laulujen nimet tietokannasta ja tulostaa ne filtteröitynä
-     * laulun nimen tai jonkin sen sisältämän merkkijonon mukaan.
+     * Hakee tietokannasta id:n perusteella dian tiedot
      */
     public function LoadSongSlide(){
+        $this->data = $this->con->q("SELECT songdescription, restrictedto, singlename, multiname from songsegments WHERE id = :slide_id",Array("slide_id"=>$this->id),"row");
+    }
+
+}
+
+/**
+ * Raamattusisällön lataaja
+ */
+class BibleSegmentLoader extends ServiceDataLoader{
+
+    /**
+     * Hakee tietokannasta id:n perusteella dian tiedot
+     */
+    public function LoadBibleSlide(){
         $this->data = $this->con->q("SELECT songdescription, restrictedto, singlename, multiname from songsegments WHERE id = :slide_id",Array("slide_id"=>$this->id),"row");
     }
 

@@ -115,6 +115,23 @@ CREATE TABLE `comments` (
 
 
 --
+-- Table structure for table biblesegment
+--
+
+CREATE TABLE biblesegments (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `start_book` varchar(100) DEFAULT NULL,
+  `start_chap` int(10) DEFAULT NULL,
+  `start_verse` int(10) DEFAULT NULL,
+  `end_book` varchar(100) DEFAULT NULL,
+  `end_chap` int(10) DEFAULT NULL,
+  `end_verse` int(10) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
+
+
+
+--
 -- Table structure for table songsegment
 --
 

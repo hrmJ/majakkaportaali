@@ -19,6 +19,9 @@ function UpdateAdderEvents(){
             case "songsegment":
                 adder = new SongSlideAdder($(this).parents(".slot"));
                 break;
+            case "biblesegment":
+                adder = new BibleSlideAdder($(this).parents(".slot"));
+                break;
         }
         adder.LoadParams($(this).parents(".slot").find(".content_id").val());
         adder.ShowWindow();
@@ -44,7 +47,6 @@ function UpdateAdderEvents(){
         .on("dragover",function(event){
             event.preventDefault();  
             event.stopPropagation();
-            console.log("moro")
             $(this).addClass("drop-highlight").text("Siirrä tähän");
         })
         .on("dragleave",function(event){
@@ -94,6 +96,9 @@ function SelectTheContentToAdd(e, u){
             //    break;
             case "Laulu":
                 adder = new SongSlideAdder(u.item.parents(".structural-element-add"));
+                break;
+            case "Raamatunkohta":
+                adder = new BibleSlideAdder(u.item.parents(".structural-element-add"));
                 break;
             default:
                 adder = new InfoSlideAdder(u.item.parents(".structural-element-add"));

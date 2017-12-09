@@ -514,6 +514,9 @@ h3 {
 .button-container > button + button {
   margin-left: 2em; }
 
+.bibleslide > div {
+  margin-bottom: 2em; }
+
 .preview-window {
   position: absolute;
   z-index: 3;

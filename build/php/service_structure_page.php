@@ -59,7 +59,7 @@ class StructurePage extends Page{
      *
      */
     public function InsertElementAdder(){
-        $this->addermenu = new UiMenu($this->path, Array("Laulu", "Muu"));
+        $this->addermenu = new UiMenu($this->path, Array("Laulu", "Raamatunkohta", "Muu"));
         $this->addermenu->Set("defaulttext","Uusi messuelementti")->Set("id","");
         $this->Set("addermenu",$this->addermenu->Output());
         return $this;
@@ -76,6 +76,8 @@ function FormatSlotName($name){
             return "Infodia";
         case "songsegment":
             return "Laulu";
+        case "biblesegment":
+            return "Raamatunkohta";
     }
 }
 

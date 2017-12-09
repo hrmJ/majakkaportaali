@@ -75,7 +75,7 @@
             <h2>Lisää lauludia</h2>
             <div class="slidemodel-flex-column">
                 <div class="class-adder">
-                    <span>Valitse dian tyyppi: </span> <span class="addedclass_span"></span>
+                    <span>Valitse dian luokka: </span> <span class="addedclass_span"></span>
                 </div>
                 <div>
                     <input type="text" class="segment-name" placeholder="Laulun nimi"></input>
@@ -99,6 +99,21 @@
                 </div>
             </div>
         </div>
+
+
+        <div class="bibleslide slidemodel">
+            <div class="">
+                <div class="class-adder">
+                    <span>Valitse dian luokka: </span> <span class="addedclass_span"></span>
+                </div>
+            </div>
+            <div class="">
+                <div class="">
+                    <span>Dian tunniste (esim. "Päivän evankeliumi")</span> <span class=""><input type="text" class="segment-name" placeholder=""></input></span>
+                </div>
+            </div>
+        </div>
+
 
     <div>
 </div>
