@@ -30,6 +30,11 @@ else{
             $loader= new InfoSegmentSaver("../../../config.ini", $params);
             $loader->SetContentId()->SetSlotData();
             break;
+        case "biblesegment":
+            $params = Array("maintext"=>$_POST["maintext"],"header"=>$_POST["header"],"genheader"=>$_POST["genheader"],"subgenheader"=>$_POST["subgenheader"],"slideclass"=>$_POST["slideclass"],"slot_number"=>$_POST["slot_number"],"slot_name"=>$_POST["slot_name"], "addedclass"=>$_POST["addedclass"],"imgname"=>$_POST["imgname"], "imgpos"=>$_POST["imgpos"]);
+            $loader= new InfoSegmentSaver("../../../config.ini", $params);
+            $loader->SetContentId()->SetSlotData();
+            break;
         case "update_numbers":
             $con= new DbCon("../../../config.ini");
             foreach($_POST["newids"] as $idpair){
