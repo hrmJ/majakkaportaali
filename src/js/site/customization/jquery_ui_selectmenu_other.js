@@ -17,7 +17,7 @@
                             .click(function(){
                                 //Lisää äsken lisätty uusi arvo KAIKKIIN tällä sivulla oleviin select-elementteihin, joissa addedclass-nimi
                                 var newval = $(this).parents(".other-option").find("input").val();
-                                $("<option value=" + newval + "> " + newval + "</option>")
+                                $("<option value='" + newval + "'> " + newval + "</option>")
                                     .insertBefore($("select[name='addedclass']").find("option:last-child"));
                                 $("select[name='addedclass']").each(function(){
                                     try{
