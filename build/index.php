@@ -4,7 +4,7 @@
  * ja messukohtaista näkymää.
  */
 
-echo "TEST";
+
 
 
 ?>

@@ -110,14 +110,12 @@ TODO: tee skripti, joka hoitaa tämän kaiken
     unzip  FinPR92.zip -d sword_modules/FinPR92 #Raamatun lataava skripti olettaa sijainniksi tämän
     mv sword_modules/modules/texts/ztext/finpr92/ sword_modules/
 
-2. Luo sitten config.ini tiedosto myös lauludiat-repon juureen
+2. Luo sitten config_py.ini tiedosto myös lauludiat-repon juureen
 
     cd ~/Code/lauludiat
-    vim config.ini
+    vim config_py.ini
 
 Mene taas vimin kirjoitusmoodiin painamalla i ja kirjoita tai kopioi seuraavat:
-
-TODO: KORJAA niin että php ei sekoa samasta konffitiedostosta!
 
     [DB]
     un = homestead

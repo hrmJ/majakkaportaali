@@ -31,12 +31,14 @@ $(document).ready (function(){
         $("[value='Tallenna']").click(function(event){
             event.preventDefault();
             var id = window.location.search.replace(/.*service_id=(\d+)/,"$1")*1;
+            if(!id){
+                alert("Messun id:tä ei ole määritetty! Palaa yleisnäkymään ja siirry sitä kautta laulunsyöttösivulle.");
+            }
             //Tyhjennä ensin kaikki tähän messuun liittyvä informaatio ennen kuin 
             $.post("php/loaders/save_service_song.php",{"cleansongs":"yes","service_id":id},function(data){console.log(data)});
             //Tallenna sitten yksittäin jokainen laulu
             $(".slot-parent").each(function(){ 
                 $(this).find(".songinput").each(function(idx,el){
-                    console.log(idx);
                     $.post("php/loaders/save_service_song.php",{
                         "service_id":id,
                         "songtype":$(el).parents(".songslot").find("div:eq(0)").text().trim(),
