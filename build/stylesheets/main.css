@@ -56,6 +56,10 @@ main {
   .basic-flex > div {
     margin-right: 1em; }
 
+.some-margin {
+  margin-bottom: 1em;
+  margin-top: 1em; }
+
 @media only screen and (min-width: 920px) {
   header {
     display: block; }
@@ -450,6 +454,9 @@ h3 {
 
 .subwindow-opener + div {
   display: none;
+  padding-bottom: 1em; }
+
+.controller-subwindow {
   padding-bottom: 1em; }
 
 .structural-element-add {

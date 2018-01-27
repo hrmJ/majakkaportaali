@@ -72,15 +72,25 @@
 
 
         <div class="songslide slidemodel">
-            <h2>Lisää lauludia</h2>
-            <div class="slidemodel-flex-column">
+            <h2 class = "subwindow-opener">Laulun nimi ja luokka</h2>
+            <section class="slidemodel-flex-column controller-subwindow">
                 <div class="class-adder">
-                    <span>Valitse dian luokka: </span> <span class="addedclass_span"></span>
+                    <div>Dian luokka: </div> <div class="addedclass_span"></div>
                 </div>
                 <div>
-                    <input type="text" class="segment-name" placeholder="Laulun nimi"></input>
+                    <div>Laulun nimi: </div>
+                    <div><input type="text" class="segment-name" placeholder="Esim. alkulaulu"></input></div>
                 </div>
-                <div>
+            </section>
+            <h2 class = "subwindow-opener">Tarkempi kuvaus</h2>
+            <section class="slidemodel-flex-column controller-subwindow">
+                <div class="slidemodel-flex">
+                    <div><textarea class='songslidetext songdescription' placeholder="Kirjoita kuvaus siitä, minkälaisia lauluja tässä yleensä pitäisi olla"></textarea></div>
+                </div>
+            </section>
+            <h2 class="subwindow-opener">Lisävalinnat</h2>
+            <section class="controller-subwindow">
+                <div class="some-margin">
                     <input type="checkbox" value="multisong">Useita lauluja?</input>
                     <input type='text' class='multisongheader hidden' placeholder='Anna yhteinen otsikko kaikille lauluille'></input>
                 </div>
@@ -94,17 +104,14 @@
                     </div>
                 </div>
                 <div> </div>
-                <div class="slidemodel-flex">
-                    <div><textarea class='songslidetext songdescription' placeholder="Kirjoita kuvaus siitä, minkälaisia lauluja tässä yleensä pitäisi olla"></textarea></div>
-                </div>
+            </section>
             </div>
-        </div>
 
 
         <div class="bibleslide slidemodel">
             <div class="">
                 <div class="class-adder">
-                    <span>Valitse dian luokka: </span> <span class="addedclass_span"></span>
+                    <div>Valitse dian luokka: </div> <div class="addedclass_span"></div>
                 </div>
             </div>
             <div class="">
