@@ -7,26 +7,30 @@
  $.widget("custom.select_withtext", $.ui.selectmenu, 
      { 
          _renderItem: function( ul, item ) {
-            if(item.label=="Uusi luokka"){
+            var custom_labels = ["Uusi luokka", "Uusi tunniste"];
+            if(custom_labels.indexOf(item.label) > -1){
                 //TODO: abstract this, so that these options can be set appropriately and don't have to be hard coded.
-                var $input = $("<input type='text' placeholder='Uusi luokka...'>");
+                var $input = $("<input type='text' placeholder='" + item.label + "...'>");
                 $input.on("keydown",function(){
                     var $div = $(this).parents(".other-option");
                     if ($div.find("button").length==0){
                         $("<button>Lisää</button>")
                             .click(function(){
                                 //Lisää äsken lisätty uusi arvo KAIKKIIN tällä sivulla oleviin select-elementteihin, joissa addedclass-nimi
+                                console.log($(this));
+                                //Etsi id nappia lähimmästä ul-elementistä
+                                //Tämä on sama kuin select-emementillä (ilman menu-liitettä)
+                                var $select = $("#" + $(this).parents("ul").attr("id").replace("-menu",""));
+                                //var newval = $select.parents(".other-option").find("input").val();
                                 var newval = $(this).parents(".other-option").find("input").val();
                                 $("<option value='" + newval + "'> " + newval + "</option>")
-                                    .insertBefore($("select[name='addedclass']").find("option:last-child"));
-                                $("select[name='addedclass']").each(function(){
-                                    try{
-                                        $(this).select_withtext("refresh");
-                                    }
-                                    catch(e){
-                                        $(this).select_withtext();
-                                    }
-                                });
+                                    .insertBefore($select.find("option:last-child"));
+                                try{
+                                    $select.select_withtext("refresh");
+                                }
+                                catch(e){
+                                    $(this).select_withtext();
+                                }
                             })
                             .appendTo($div);
                     }
@@ -45,8 +49,9 @@
                     },
                 });
             }
+             
 
-            var wrapper = (["Uusi luokka","Jokin muu"].indexOf(item.label)>-1 ? $("<div class='other-option'>").append($input) : $("<div>").text(item.label));
+            var wrapper = (["Uusi luokka","Jokin muu","Uusi tunniste"].indexOf(item.label)>-1 ? $("<div class='other-option'>").append($input) : $("<div>").text(item.label));
 
             return $("<li>").append(wrapper).appendTo(ul);
         },

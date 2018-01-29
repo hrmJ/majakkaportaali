@@ -70,7 +70,7 @@ StructuralElementAdder.prototype = {
             });
             //Lisää vielä mahdollisuus lisätä uusi luokka
             self.$lightbox.find("select[name='addedclass']").append("<option value='Uusi luokka'>Uusi luokka</option>");
-            self.$lightbox.find("select[name='addedclass']").select_withtext();
+            self.$lightbox.find("select[name='addedclass'],select[name='header_select']").select_withtext();
             //self.$lightbox.find("select").on("selectmenuchange",function(){console.log("moro")});
         });
         //lisää muokattu jquery ui -selectmenu mahdollistamaan uusien dialuokkien luomisen
