@@ -121,108 +121,6 @@ function Preview($div, filename){
 }
 
 /**
-*
-* Sisältää javascript-koodin 
-* kommenttien prosessoimista varten
-*
-*/
-
-var loaderpath = "php/loaders";
-
-
-/**
- *
- * Laajenna näkyviin uuden kommentin kirjoituskenttä
- *
- */
-function ExpandCommentField(){
-    $(this).animate({"height":"6em"}); 
-    var $details = $(this).parent().parent().find(".commentdetails:eq(0)");
-    $details.show();
-    ScrollToCenter($details);
-}
-
-
-
-/**
- *
- * Lataa kaikki kommentit tietokannasta dokumenttiin
- *
- */
-function LoadComments(){
-    $.post(loaderpath + "/loadcomments.php", {id:$("#service_id").val()}, function(data){
-        $(".loadedcomments").html(data);
-        $(".newcomment").val("");
-        $(".commentator").val("");
-        $(".newcomment:eq(0)").height("3em");
-        $(".comment comment-insert-controls").hide()
-        $(".commentdetails").hide()
-        $("select").prop('selectedIndex',0);
-        $(".comment-answer-link")
-            .click(CreateCommentAnswerField)
-            .each(function(){
-            //Muuta vastauslinkin tekstiä ketjujen osalta
-            if($(this).parent().parent().find(".comment").length>0) $(this).text("Jatka viestiketjua");
-        });
-        //Huom! Varmistetan, ettei tallennustapahtuma tule sidotuksi kahdesti
-        $(".savecomment").unbind("click",SaveComment);
-        $(".savecomment").bind("click",SaveComment);
-        $(".newcomment:eq(0)").click(ExpandCommentField);
-    });
-}
-
-/**
- *
- * Tallenna syötetty kommentti
- *
- */
-function SaveComment(){
-    console.log("raz!");
-    $container = $(this).parent().parent().parent();
-    var theme = "";
-    var replyto = 0;
-    var id = $container.parent().attr("id");
-    if(id){
-        replyto = id.replace(/c_/,"");
-    }
-    if($container.find("select").length>0){
-        theme = $container.find("select").get(0).selectedIndex>1 ? $container.find("select").val() : "";
-    }
-    var queryparams = {id:$("#service_id").val(),
-                       theme: theme,
-                       content:$container.find(".newcomment").val(),
-                       commentator:$container.find(".commentator").val(),
-                       replyto:replyto
-                      };
-    $.post(loaderpath + "/savecomment.php",queryparams).done(LoadComments);
-}
-
-/**
- *
- * Syötä tekstikenttä kommenttiin tai viestiketjuun
- * vastaamista varten.
- *
- */
-function CreateCommentAnswerField(){
-    $(this).parent().next().slideDown().children().show();
-}
-
-
-
-/**
-*
-* Sisältää javascript-koodin messudetaljisivulla näytettäviä
-* kommentteja varten
-*
-*/
-$(document).ready(function(){
-    if($("body").hasClass("servicedetails")){
-        //Kommentit
-        LoadComments();
-    }
-});
-
-/**
  *
  * Jquery ui:n selectmenu-pluginin muokkaus niin, että
  * mahdollista valita myös tekstikenttä.
@@ -407,6 +305,108 @@ $(document).ready(function(){
 );
 
 /**
+*
+* Sisältää javascript-koodin 
+* kommenttien prosessoimista varten
+*
+*/
+
+var loaderpath = "php/loaders";
+
+
+/**
+ *
+ * Laajenna näkyviin uuden kommentin kirjoituskenttä
+ *
+ */
+function ExpandCommentField(){
+    $(this).animate({"height":"6em"}); 
+    var $details = $(this).parent().parent().find(".commentdetails:eq(0)");
+    $details.show();
+    ScrollToCenter($details);
+}
+
+
+
+/**
+ *
+ * Lataa kaikki kommentit tietokannasta dokumenttiin
+ *
+ */
+function LoadComments(){
+    $.post(loaderpath + "/loadcomments.php", {id:$("#service_id").val()}, function(data){
+        $(".loadedcomments").html(data);
+        $(".newcomment").val("");
+        $(".commentator").val("");
+        $(".newcomment:eq(0)").height("3em");
+        $(".comment comment-insert-controls").hide()
+        $(".commentdetails").hide()
+        $("select").prop('selectedIndex',0);
+        $(".comment-answer-link")
+            .click(CreateCommentAnswerField)
+            .each(function(){
+            //Muuta vastauslinkin tekstiä ketjujen osalta
+            if($(this).parent().parent().find(".comment").length>0) $(this).text("Jatka viestiketjua");
+        });
+        //Huom! Varmistetan, ettei tallennustapahtuma tule sidotuksi kahdesti
+        $(".savecomment").unbind("click",SaveComment);
+        $(".savecomment").bind("click",SaveComment);
+        $(".newcomment:eq(0)").click(ExpandCommentField);
+    });
+}
+
+/**
+ *
+ * Tallenna syötetty kommentti
+ *
+ */
+function SaveComment(){
+    console.log("raz!");
+    $container = $(this).parent().parent().parent();
+    var theme = "";
+    var replyto = 0;
+    var id = $container.parent().attr("id");
+    if(id){
+        replyto = id.replace(/c_/,"");
+    }
+    if($container.find("select").length>0){
+        theme = $container.find("select").get(0).selectedIndex>1 ? $container.find("select").val() : "";
+    }
+    var queryparams = {id:$("#service_id").val(),
+                       theme: theme,
+                       content:$container.find(".newcomment").val(),
+                       commentator:$container.find(".commentator").val(),
+                       replyto:replyto
+                      };
+    $.post(loaderpath + "/savecomment.php",queryparams).done(LoadComments);
+}
+
+/**
+ *
+ * Syötä tekstikenttä kommenttiin tai viestiketjuun
+ * vastaamista varten.
+ *
+ */
+function CreateCommentAnswerField(){
+    $(this).parent().next().slideDown().children().show();
+}
+
+
+
+/**
+*
+* Sisältää javascript-koodin messudetaljisivulla näytettäviä
+* kommentteja varten
+*
+*/
+$(document).ready(function(){
+    if($("body").hasClass("servicedetails")){
+        //Kommentit
+        LoadComments();
+    }
+});
+
+/**
  *
  * Messun rakenne-elementtien muokkaukseen liittyvät tapahtumat:
  * Elementtien poisto ja muokkaus sekä siirto.
@@ -587,8 +587,32 @@ StructuralElementAdder.prototype = {
         this.$lightbox.html("").prepend($(this.slideclass).clone(true));
         this.$lightbox.css({"width":$(".innercontent").width(),"top":  $("nav .dropdown").is(":visible") ? "-250px" : "-50px"}).show();
         this.SetSlideClasses();
+        this.SetHeaderTemplates();
     },
 
+
+    /**
+     * Tulostaa käyttäjän määrittämät ylätunnisteet
+     *
+     */
+    SetHeaderTemplates: function(){
+        var self = this;
+        $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"headernames","id":""}, function(headernames){
+            var $sel = self.$lightbox.find("select[name='header_select']");
+            try{
+                $sel.select_withtext("destroy").html("");
+            }
+            catch(e){
+                $sel.select_withtext().html("");
+            }
+            headernames.unshift("Ei ylätunnistetta");
+            headernames.push("Uusi tunniste");
+            $.each(headernames,function(idx,el){
+                $("<option></option>").text(el).appendTo($sel);
+            });
+            self.$lightbox.find("select[name='header_select']").select_withtext();
+        });
+    },
 
     /**
      *
@@ -612,7 +636,7 @@ StructuralElementAdder.prototype = {
             });
             //Lisää vielä mahdollisuus lisätä uusi luokka
             self.$lightbox.find("select[name='addedclass']").append("<option value='Uusi luokka'>Uusi luokka</option>");
-            self.$lightbox.find("select[name='addedclass'],select[name='header_select']").select_withtext();
+            self.$lightbox.find("select[name='addedclass']").select_withtext();
             //self.$lightbox.find("select").on("selectmenuchange",function(){console.log("moro")});
         });
         //lisää muokattu jquery ui -selectmenu mahdollistamaan uusien dialuokkien luomisen

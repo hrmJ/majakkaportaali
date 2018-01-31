@@ -115,6 +115,25 @@ $con->q("INSERT INTO comments (reply_to, service_id, theme, commentator, content
 $con->q("INSERT INTO comments (reply_to, service_id, theme, commentator, content, comment_time) VALUES (0, 2, 'infoasia', 'Jere', 'Raamista ei tällä viikolla.', '2017-03-07 11:40:22')",Array(),"none");
 $con->q("INSERT INTO comments (reply_to, service_id, theme, commentator, content, comment_time) VALUES (0, 2, 'yleinen', 'Jere', 'Tämän viikon aikana on varmaan kerätty muutenkin kaikkea tavaraa, jota voidaan sitten tässä messussa jakaa sitä tarvitseville ja muutenkin pitkälti sanoisin, että pitkä oli tämä kommentti. Selvä. Jees.', '2017-03-05 15:40:22')",Array(),"none");
 
+
+// Messusisältöä
+//
+//
+//
+
+
+$con->q("INSERT INTO songsegments (songdescription, singlename) VALUES (:sd,:sn)",Array("sd"=>"Tää on se laulu, joka lauletaan aina aluksi", "sn"=>"Alkulaulu"),"none");
+$con->q("INSERT INTO infosegments (maintext, header, imgname, imgposition) VALUES (:mt,:h,:i,:ipos)",Array("mt"=>'Tervetuloa kaikki tähän hienoon messuun, jossa tapahtuu paljon ja kaikenlaista.',"h"=>"Tervetuloa!","i"=>'Ubuntu-MATE-Snowflake.jpg',"ipos"=>"left"),"none");
+$con->q("INSERT INTO infosegments (maintext, header) VALUES (:mt,:h)",Array("mt"=>"Lähtekää rauhassa ja palvelkaa Herraa iloiten!","h"=>"Tervemenoa!"),"none");
+$con->q("INSERT INTO presentation_structure (slot_name, slot_number, slot_type, addedclass, content_id) VALUES (:sn,:snu,:st,:ac,:cid)",Array("sn"=>'alkuinfo',"snu"=>1,"st"=>'infosegment',"ac"=>'.Teksti',"cid"=>1),"none");
+$con->q("INSERT INTO presentation_structure (slot_name, slot_number, slot_type, addedclass, content_id) VALUES (:sn,:snu,:st,:ac,:cid)",Array("sn"=>'alkulaulu',"snu"=>2,"st"=>'songsegment',"ac"=>'.Teksti',"cid"=>1),"none");
+$con->q("INSERT INTO presentation_structure (slot_name, slot_number, slot_type, addedclass, content_id) VALUES (:sn,:snu,:st,:ac,:cid)",Array("sn"=>'loppuinfo',"snu"=>3,"st"=>'infosegment',"ac"=>'.Teksti',"cid"=>2),"none");
+
+//slide header templates
+
+$con->q("INSERT INTO headers (template_name, maintext) VALUES (:tn,:mt)",Array("tn"=>"perus","mt"=>"Majakkamessu silloin ja silloin. Aiheena se ja se."),"none");
+
+
 echo "Database ready..\n";
 
 ?>

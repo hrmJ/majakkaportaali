@@ -32,6 +32,14 @@ class ServiceDataLoader{
         $this->data =  $this->con->q("SELECT DISTINCT classname FROM styles WHERE classname <> :not_this", Array("not_this"=>"sample"),"all_flat");
     }
 
+    /**
+     * Hakee kaikki tietokantaan tallennetut ylätunnisteet
+     */
+    function LoadSlideHeaders(){
+        $this->data =  $this->con->q("SELECT DISTINCT template_name FROM headers", Array(),"all_flat");
+    }
+
+
 
 }
 

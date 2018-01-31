@@ -72,8 +72,6 @@
             <div class="controller-subwindow">
                 <div>
                     <select name="header_select">
-                        <option>Ei ylätunnistetta</option>
-                        <option>Uusi tunniste</option>
                     </select>
                 </div>
                 <div class="slidemodel-flex">

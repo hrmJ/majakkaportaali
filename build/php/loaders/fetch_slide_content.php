@@ -15,7 +15,6 @@ require("../service_data_loader.php");
 
 switch($_GET["slideclass"]){
     case "infosegment":
-        $loader= new InfoSegmentLoader("../../../config.ini", $_GET["id"]);
         $loader->LoadInfoSlide();
         break;
     case "songsegment":
@@ -29,6 +28,10 @@ switch($_GET["slideclass"]){
     case "list_all":
         $loader= new ServiceDataLoader("../../../config.ini", $_GET["id"]);
         $loader->LoadSlideClasses();
+        break;
+    case "headernames":
+        $loader= new ServiceDataLoader("../../../config.ini", $_GET["id"]);
+        $loader->LoadSlideHeaders();
         break;
 }
 

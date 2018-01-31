@@ -160,6 +160,20 @@ CREATE TABLE infosegments (
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
 
+--
+-- Table structure for table headers
+-- Nämä  ovat diaesitykseen mahdollisesit tulostettavia 
+-- ylätunnisteita
+-- 
+
+CREATE TABLE headers (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `template_name` varchar(100) DEFAULT NULL,
+  `maintext` varchar(100) DEFAULT NULL,
+  `imgname` varchar(300) DEFAULT NULL,
+  `imgposition` varchar(300) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
 
 --
 -- Table structure for table presentation_structure``
@@ -172,6 +186,7 @@ CREATE TABLE presentation_structure (
   slot_type varchar(300) DEFAULT NULL,
   id_in_type_table varchar(300) DEFAULT NULL,
   addedclass varchar(300) DEFAULT NULL,
+  header_id int(10) DEFAULT NULL,
   content_id int(10) unsigned NOT NULL,
   PRIMARY KEY (id)
 ) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
@@ -193,6 +208,7 @@ CREATE TABLE service_specific_presentation_structure (
   addedclass varchar(300) DEFAULT NULL,
   PRIMARY KEY (id)
 ) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
+
 
 
 --

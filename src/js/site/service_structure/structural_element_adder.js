@@ -45,8 +45,32 @@ StructuralElementAdder.prototype = {
         this.$lightbox.html("").prepend($(this.slideclass).clone(true));
         this.$lightbox.css({"width":$(".innercontent").width(),"top":  $("nav .dropdown").is(":visible") ? "-250px" : "-50px"}).show();
         this.SetSlideClasses();
+        this.SetHeaderTemplates();
     },
 
+
+    /**
+     * Tulostaa käyttäjän määrittämät ylätunnisteet
+     *
+     */
+    SetHeaderTemplates: function(){
+        var self = this;
+        $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"headernames","id":""}, function(headernames){
+            var $sel = self.$lightbox.find("select[name='header_select']");
+            try{
+                $sel.select_withtext("destroy").html("");
+            }
+            catch(e){
+                $sel.select_withtext().html("");
+            }
+            headernames.unshift("Ei ylätunnistetta");
+            headernames.push("Uusi tunniste");
+            $.each(headernames,function(idx,el){
+                $("<option></option>").text(el).appendTo($sel);
+            });
+            self.$lightbox.find("select[name='header_select']").select_withtext();
+        });
+    },
 
     /**
      *
@@ -70,7 +94,7 @@ StructuralElementAdder.prototype = {
             });
             //Lisää vielä mahdollisuus lisätä uusi luokka
             self.$lightbox.find("select[name='addedclass']").append("<option value='Uusi luokka'>Uusi luokka</option>");
-            self.$lightbox.find("select[name='addedclass'],select[name='header_select']").select_withtext();
+            self.$lightbox.find("select[name='addedclass']").select_withtext();
             //self.$lightbox.find("select").on("selectmenuchange",function(){console.log("moro")});
         });
         //lisää muokattu jquery ui -selectmenu mahdollistamaan uusien dialuokkien luomisen
