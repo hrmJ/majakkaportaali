@@ -121,6 +121,108 @@ function Preview($div, filename){
 }
 
 /**
+*
+* Sisältää javascript-koodin 
+* kommenttien prosessoimista varten
+*
+*/
+
+var loaderpath = "php/loaders";
+
+
+/**
+ *
+ * Laajenna näkyviin uuden kommentin kirjoituskenttä
+ *
+ */
+function ExpandCommentField(){
+    $(this).animate({"height":"6em"}); 
+    var $details = $(this).parent().parent().find(".commentdetails:eq(0)");
+    $details.show();
+    ScrollToCenter($details);
+}
+
+
+
+/**
+ *
+ * Lataa kaikki kommentit tietokannasta dokumenttiin
+ *
+ */
+function LoadComments(){
+    $.post(loaderpath + "/loadcomments.php", {id:$("#service_id").val()}, function(data){
+        $(".loadedcomments").html(data);
+        $(".newcomment").val("");
+        $(".commentator").val("");
+        $(".newcomment:eq(0)").height("3em");
+        $(".comment comment-insert-controls").hide()
+        $(".commentdetails").hide()
+        $("select").prop('selectedIndex',0);
+        $(".comment-answer-link")
+            .click(CreateCommentAnswerField)
+            .each(function(){
+            //Muuta vastauslinkin tekstiä ketjujen osalta
+            if($(this).parent().parent().find(".comment").length>0) $(this).text("Jatka viestiketjua");
+        });
+        //Huom! Varmistetan, ettei tallennustapahtuma tule sidotuksi kahdesti
+        $(".savecomment").unbind("click",SaveComment);
+        $(".savecomment").bind("click",SaveComment);
+        $(".newcomment:eq(0)").click(ExpandCommentField);
+    });
+}
+
+/**
+ *
+ * Tallenna syötetty kommentti
+ *
+ */
+function SaveComment(){
+    console.log("raz!");
+    $container = $(this).parent().parent().parent();
+    var theme = "";
+    var replyto = 0;
+    var id = $container.parent().attr("id");
+    if(id){
+        replyto = id.replace(/c_/,"");
+    }
+    if($container.find("select").length>0){
+        theme = $container.find("select").get(0).selectedIndex>1 ? $container.find("select").val() : "";
+    }
+    var queryparams = {id:$("#service_id").val(),
+                       theme: theme,
+                       content:$container.find(".newcomment").val(),
+                       commentator:$container.find(".commentator").val(),
+                       replyto:replyto
+                      };
+    $.post(loaderpath + "/savecomment.php",queryparams).done(LoadComments);
+}
+
+/**
+ *
+ * Syötä tekstikenttä kommenttiin tai viestiketjuun
+ * vastaamista varten.
+ *
+ */
+function CreateCommentAnswerField(){
+    $(this).parent().next().slideDown().children().show();
+}
+
+
+
+/**
+*
+* Sisältää javascript-koodin messudetaljisivulla näytettäviä
+* kommentteja varten
+*
+*/
+$(document).ready(function(){
+    if($("body").hasClass("servicedetails")){
+        //Kommentit
+        LoadComments();
+    }
+});
+
+/**
  *
  * Jquery ui:n selectmenu-pluginin muokkaus niin, että
  * mahdollista valita myös tekstikenttä.
@@ -303,108 +405,6 @@ function Preview($div, filename){
 
      }
 );
-
-/**
-*
-* Sisältää javascript-koodin 
-* kommenttien prosessoimista varten
-*
-*/
-
-var loaderpath = "php/loaders";
-
-
-/**
- *
- * Laajenna näkyviin uuden kommentin kirjoituskenttä
- *
- */
-function ExpandCommentField(){
-    $(this).animate({"height":"6em"}); 
-    var $details = $(this).parent().parent().find(".commentdetails:eq(0)");
-    $details.show();
-    ScrollToCenter($details);
-}
-
-
-
-/**
- *
- * Lataa kaikki kommentit tietokannasta dokumenttiin
- *
- */
-function LoadComments(){
-    $.post(loaderpath + "/loadcomments.php", {id:$("#service_id").val()}, function(data){
-        $(".loadedcomments").html(data);
-        $(".newcomment").val("");
-        $(".commentator").val("");
-        $(".newcomment:eq(0)").height("3em");
-        $(".comment comment-insert-controls").hide()
-        $(".commentdetails").hide()
-        $("select").prop('selectedIndex',0);
-        $(".comment-answer-link")
-            .click(CreateCommentAnswerField)
-            .each(function(){
-            //Muuta vastauslinkin tekstiä ketjujen osalta
-            if($(this).parent().parent().find(".comment").length>0) $(this).text("Jatka viestiketjua");
-        });
-        //Huom! Varmistetan, ettei tallennustapahtuma tule sidotuksi kahdesti
-        $(".savecomment").unbind("click",SaveComment);
-        $(".savecomment").bind("click",SaveComment);
-        $(".newcomment:eq(0)").click(ExpandCommentField);
-    });
-}
-
-/**
- *
- * Tallenna syötetty kommentti
- *
- */
-function SaveComment(){
-    console.log("raz!");
-    $container = $(this).parent().parent().parent();
-    var theme = "";
-    var replyto = 0;
-    var id = $container.parent().attr("id");
-    if(id){
-        replyto = id.replace(/c_/,"");
-    }
-    if($container.find("select").length>0){
-        theme = $container.find("select").get(0).selectedIndex>1 ? $container.find("select").val() : "";
-    }
-    var queryparams = {id:$("#service_id").val(),
-                       theme: theme,
-                       content:$container.find(".newcomment").val(),
-                       commentator:$container.find(".commentator").val(),
-                       replyto:replyto
-                      };
-    $.post(loaderpath + "/savecomment.php",queryparams).done(LoadComments);
-}
-
-/**
- *
- * Syötä tekstikenttä kommenttiin tai viestiketjuun
- * vastaamista varten.
- *
- */
-function CreateCommentAnswerField(){
-    $(this).parent().next().slideDown().children().show();
-}
-
-
-
-/**
-*
-* Sisältää javascript-koodin messudetaljisivulla näytettäviä
-* kommentteja varten
-*
-*/
-$(document).ready(function(){
-    if($("body").hasClass("servicedetails")){
-        //Kommentit
-        LoadComments();
-    }
-});
 
 /**
  *
@@ -803,6 +803,7 @@ SongSlideAdder.prototype = {
         this.slot_number = this.$container.find(".slot-number").text();
         this.slot_name = this.$container.find(".slot_name_orig").val();
         this.addedclass = this.$container.find(".addedclass").val();
+        this.selected_header = "Ei ylätunnistetta";
         var self = this;
         $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"songsegment","id":id},function(data){
             if(data.multiname != ""){

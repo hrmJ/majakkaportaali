@@ -261,6 +261,7 @@ SongSlideAdder.prototype = {
         this.slot_number = this.$container.find(".slot-number").text();
         this.slot_name = this.$container.find(".slot_name_orig").val();
         this.addedclass = this.$container.find(".addedclass").val();
+        this.selected_header = "Ei ylätunnistetta";
         var self = this;
         $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"songsegment","id":id},function(data){
             if(data.multiname != ""){
