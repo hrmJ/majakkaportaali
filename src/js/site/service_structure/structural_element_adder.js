@@ -11,6 +11,9 @@ var StructuralElementAdder = function($container){
         this.$container = $container;
         this.previewparams = {};
         this.previewhtml = "";
+        this.selected_header = '0';
+        this.id = $container.find(".content_id").val();
+        this.header_id = $container.find(".header_id").val();
 }
 
 StructuralElementAdder.prototype = {
@@ -50,12 +53,14 @@ StructuralElementAdder.prototype = {
 
 
     /**
-     * Tulostaa käyttäjän määrittämät ylätunnisteet
+     * Tulostaa käyttäjän määrittämät ylätunnisteet.
+     * Tallentaa myös muistiin ylätunnisteiden sisällön.
      *
      */
     SetHeaderTemplates: function(){
         var self = this;
-        $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"headernames","id":""}, function(headernames){
+        self.headerdata = {};
+        $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"headernames","id":self.header_id}, function(headers){
             var $sel = self.$lightbox.find("select[name='header_select']");
             try{
                 $sel.select_withtext("destroy").html("");
@@ -63,14 +68,30 @@ StructuralElementAdder.prototype = {
             catch(e){
                 $sel.select_withtext().html("");
             }
-            headernames.unshift("Ei ylätunnistetta");
-            headernames.push("Uusi tunniste");
-            $.each(headernames,function(idx,el){
-                $("<option></option>").text(el).appendTo($sel);
+            $("<option value='0'></option>").text("Ei ylätunnistetta").appendTo($sel);
+            $.each(headers,function(idx,header){
+                var is_selected = (header.id == self.selected_header ? " selected" : "");
+                $("<option value='" + header.id + "' "+ is_selected +"></option>").text(header.template_name).appendTo($sel);
+                //Tallenna ylätunniste id:n perusteella
+                self.headerdata[header.id] = header;
             });
-            self.$lightbox.find("select[name='header_select']").select_withtext();
+            $("<option>").text("Uusi tunniste").appendTo($sel);
+            self.$lightbox.find("select[name='header_select']")
+                .select_withtext({select:function(){self.PickHeader()}})
+                .select_withtext("refresh");
+            self.$lightbox.find("select[name='header_select']").on("selectmenuchange",function(){console.log("MOR");});
         });
     },
+
+    /**
+     *
+     * Lataa näytettäväksi käyttäjän valitseman ylätunnisteen.
+     *
+     */
+    PickHeader: function(){
+        console.log("MORO");
+    },
+
 
     /**
      *
@@ -257,13 +278,12 @@ SongSlideAdder.prototype = {
      *
      * @param int id haettavan sisällön id songsegments-taulussa
      */
-    LoadParams: function(id){
+    LoadParams: function(){
         this.slot_number = this.$container.find(".slot-number").text();
         this.slot_name = this.$container.find(".slot_name_orig").val();
         this.addedclass = this.$container.find(".addedclass").val();
-        this.selected_header = "Ei ylätunnistetta";
         var self = this;
-        $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"songsegment","id":id},function(data){
+        $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"songsegment","id":self.id},function(data){
             if(data.multiname != ""){
                 self.$lightbox.find("[value='multisong']").get(0).checked=true;
                 self.$lightbox.find(".multisongheader").val(data.multiname).show();

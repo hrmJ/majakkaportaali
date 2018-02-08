@@ -32,7 +32,7 @@ class StructurePage extends Page{
      *
      */
     public function LoadSlots(){
-        $slots = $this->con->q("SELECT id, slot_name, slot_type, slot_number, content_id, addedclass FROM presentation_structure ORDER by slot_number",Array(),"all");
+        $slots = $this->con->q("SELECT id, slot_name, slot_type, slot_number, content_id, addedclass, header_id FROM presentation_structure ORDER by slot_number",Array(),"all");
         $slotstring = "";
         foreach($slots as $slot){
             $newslot = new Template("{$this->path}/slot.tpl");
@@ -41,6 +41,7 @@ class StructurePage extends Page{
                 ->Set("number", $slot["slot_number"])
                 ->Set("addedclass", $slot["addedclass"])
                 ->Set("content_id",$slot["content_id"])
+                ->Set("content_id",$slot["header_id"])
                 ->Set("slot_type",FormatSlotName($slot["slot_type"]))
                 ->Set("slot_type_orig",$slot["slot_type"])
                 ->Set("slot_id",$slot["id"])

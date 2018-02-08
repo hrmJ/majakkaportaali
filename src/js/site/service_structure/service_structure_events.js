@@ -12,18 +12,20 @@ var currently_dragged_no = undefined;
 function UpdateAdderEvents(){
     $(".slot:last-of-type").after("<div class='drop-target'></div>");
     $(".edit-link").click(function(){
-        switch($(this).parents(".slot").find(".slot_type").val()){
+        var $container = $(this).parents(".slot");
+        var slot_type  = $container.find(".slot_type").val();
+        switch(slot_type){
             case "infosegment":
-                adder = new InfoSlideAdder($(this).parents(".slot"));
+                adder = new InfoSlideAdder($container);
                 break;
             case "songsegment":
-                adder = new SongSlideAdder($(this).parents(".slot"));
+                adder = new SongSlideAdder($container);
                 break;
             case "biblesegment":
-                adder = new BibleSlideAdder($(this).parents(".slot"));
+                adder = new BibleSlideAdder($container);
                 break;
         }
-        adder.LoadParams($(this).parents(".slot").find(".content_id").val());
+        adder.LoadParams();
         adder.ShowWindow();
     });
 

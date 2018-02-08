@@ -33,10 +33,12 @@ class ServiceDataLoader{
     }
 
     /**
-     * Hakee kaikki tietokantaan tallennetut ylätunnisteet
+     * Hakee kaikki tietokantaan tallennetut ylätunnisteet.
+     * Hakee erikseen nimet ja 
+     *
      */
     function LoadSlideHeaders(){
-        $this->data =  $this->con->q("SELECT DISTINCT template_name FROM headers", Array(),"all_flat");
+        $this->data = $this->con->q("SELECT template_name, maintext, imgname, imgposition FROM headers", Array(), "all");
     }
 
 
