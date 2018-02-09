@@ -9,11 +9,10 @@ var StructuralElementAdder = function($container){
         this.$lightbox = $("<div class='my-lightbox structural-element-adder'></div>");
         this.$preview_window = $("<div class='preview-window'><iframe scrolling='no' frameBorder='0'></iframe><button>Sulje esikatselu</button></div>");
         this.$container = $container;
-        this.previewparams = {};
+        this.previewparams = {slideclass: this.slideclass.replace("\.","")};
         this.previewhtml = "";
         this.selected_header = '0';
         this.id = $container.find(".content_id").val();
-        console.log($container);
         this.header_id = $container.find(".header_id").val();
 }
 
@@ -35,6 +34,84 @@ StructuralElementAdder.prototype = {
         $(".slidetext").on("change paste keyup",function(){self.InjectServiceData()});
         $("[value='multisong']").click(function(){self.$container.find(".multisongheader").toggle(); });
         if(this.slideclass==".songslide") this.AddAutoComplete();
+    },
+
+
+    /**
+     * Hae dian sisältötiedot tietokannasta
+     *
+     */
+    LoadParams: function(){
+        //Huolehdi siitä, että kuvanvalintavalikko on näkyvissä ennen tietojen lataamista
+        if(this.slideclass==".infoslide"){
+            this.AddImageLoader();
+        } 
+        this.slot_number = this.$container.find(".slot-number").text();
+        this.slot_name = this.$container.find(".slot_name_orig").val();
+        this.$lightbox.find(".segment-name").val(this.slot_name);
+        this.addedclass = this.$container.find(".addedclass").val();
+        var self = this;
+        $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":this.slideclass.replace("\\.",""),"id":this.id},function(data){
+            switch(self.slideclass){
+                case ".songslide":
+                    if(data.multiname != ""){
+                        self.$lightbox.find("[value='multisong']").get(0).checked=true;
+                        self.$lightbox.find(".multisongheader").val(data.multiname).show();
+                    }
+                    if(data.restrictedto != ""){
+                        self.$lightbox.find("[value='restrictedsong']").get(0).checked=true;
+                        self.$lightbox.find(".restrictionlist").val(data.restrictedto).show();
+                    }
+                    self.$lightbox.find(".songdescription").val(data.songdescription);
+                    break;
+                case ".infoslide":
+                    self.$lightbox.find(".slide-header").val(data.header);
+                    self.$lightbox.find(".infoslidetext").val(data.maintext);
+                    self.$lightbox.find(".slide_img .img-select").val(data.imgname);
+                    self.$lightbox.find(".slide_img .img-pos-select").val(data.imgposition);
+                    if(data.genheader != ""){
+                        //Lisää ruksi, jos määritetty, että on yläotsikko
+                        self.$lightbox.find("[value='show-upper-header']").get(0).checked=true;
+                    }
+                    var used_img = self.$lightbox.find(".slide_img .img-select").val();
+                    if(used_img!="Ei kuvaa"){
+                        //Lataa valmiiksi kuvan esikatselu, jos kuva määritelty
+                        Preview(self.$lightbox.find(".slide_img .img-select").parents(".with-preview"),"images/" + used_img);
+                    }
+                    break;
+            }
+        });
+    },
+
+    /**
+     * Tallenna dian tiedot tietokantaan (myös mahdollista esikatselua varten)
+     */
+    SetPreviewParams: function(){
+        var self = this;
+        var slot_number = self.slot_number==undefined ? $(".slot").length + 1 : self.slot_number;
+        var slot_name = this.$lightbox.find(".segment-name").val();
+        switch(this.slideclass){
+            case ".infoslide":
+                var maintext = this.$lightbox.find(".slidetext").val();
+                //korvaa ät-merkit halutuilla arvoilla
+                this.$lightbox.find(".resp_select").each(function(){maintext = maintext.replace(/@/," [" + $(this).val() + "] ")});
+                var params = {
+                    maintext:maintext,
+                    genheader: self.$lightbox.find("[type='checkbox']").get(0).checked ? "Majakkamessu" : "",
+                    subgenheader: self.$lightbox.find("[type='checkbox']").get(0).checked ? "Messun aihe" : "",
+                    imgname:this.$lightbox.find(".slide_img .img-select").val() ,
+                    imgpos:this.$lightbox.find(".slide_img .img-pos-select").val() ,
+                    header:this.$lightbox.find(".slide-header").val()
+                };
+                break;
+            case ".songslide":
+                var params = {
+                    multiname: this.$lightbox.find(".multisongheader").val(),
+                    restricted_to: this.$lightbox.find(".restrictionlist").val(),
+                    songdescription: this.$lightbox.find(".songdescription").val(),
+                    };
+                break;
+        }
     },
 
     /**
@@ -253,52 +330,14 @@ StructuralElementAdder.prototype = {
  *
  */
 var SongSlideAdder = function($container){
-    StructuralElementAdder.call(this, $container);
     this.slideclass = ".songslide";
+    StructuralElementAdder.call(this, $container);
     this.SetLightBox();
     return this;
 }
 
 SongSlideAdder.prototype = {
-    /**
-     * Kerää tallennusta varten tarvittavat tiedot
-     */
-    SetPreviewParams: function(){
-        var self = this;
-        this.previewparams = {
-            multiname: this.$lightbox.find(".multisongheader").val(),
-            restricted_to: this.$lightbox.find(".restrictionlist").val(),
-            slideclass: "songsegment",
-            songdescription: this.$lightbox.find(".songdescription").val(),
-            slot_number: self.slot_number==undefined ? $(".slot").length + 1 : self.slot_number*1,
-            slot_name:this.$lightbox.find(".segment-name").val()};
-    },
 
-
-    /**
-     * Hae dian sisältötiedot tietokannasta
-     *
-     * @param int id haettavan sisällön id songsegments-taulussa
-     */
-    LoadParams: function(){
-        this.slot_number = this.$container.find(".slot-number").text();
-        this.slot_name = this.$container.find(".slot_name_orig").val();
-        this.addedclass = this.$container.find(".addedclass").val();
-        var self = this;
-        $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"songsegment","id":self.id},function(data){
-            if(data.multiname != ""){
-                self.$lightbox.find("[value='multisong']").get(0).checked=true;
-                self.$lightbox.find(".multisongheader").val(data.multiname).show();
-            }
-            if(data.restrictedto != ""){
-                self.$lightbox.find("[value='restrictedsong']").get(0).checked=true;
-                self.$lightbox.find(".restrictionlist").val(data.restrictedto).show();
-            }
-            self.$lightbox.find(".segment-name").val(self.slot_name);
-            self.$lightbox.find(".songdescription").val(data.songdescription);
-            }
-        );
-    }
 }
 
 /**
@@ -309,62 +348,14 @@ SongSlideAdder.prototype = {
  *
  */
 var InfoSlideAdder = function($container){
-    StructuralElementAdder.call(this, $container);
     this.slideclass = ".infoslide";
+    StructuralElementAdder.call(this, $container);
     this.SetLightBox();
     return this;
 }
 
 
 InfoSlideAdder.prototype = {
-    /**
-     * Muodosta dia esikatselua varten
-     */
-    SetPreviewParams: function(){
-        var self = this;
-        var maintext = this.$lightbox.find(".slidetext").val();
-        //korvaa ät-merkit halutuilla arvoilla
-        this.$lightbox.find(".resp_select").each(function(){maintext = maintext.replace(/@/," [" + $(this).val() + "] ")});
-        console.log(this.$lightbox.find(".slide_img .img-select").val());
-        this.previewparams = {
-            slideclass: "infosegment",
-            maintext:maintext,
-            genheader: self.$lightbox.find("[type='checkbox']").get(0).checked ? "Majakkamessu" : "",
-            subgenheader: self.$lightbox.find("[type='checkbox']").get(0).checked ? "Messun aihe" : "",
-            slot_number: self.slot_number==undefined ? $(".slot").length + 1 : self.slot_number,
-            slot_name:this.$lightbox.find(".segment-name").val() ,
-            imgname:this.$lightbox.find(".slide_img .img-select").val() ,
-            imgpos:this.$lightbox.find(".slide_img .img-pos-select").val() ,
-            header:this.$lightbox.find(".slide-header").val()};
-    },
-
-    /**
-     * Hae dian sisältötiedot tietokannasta
-     *
-     * @param int id haettavan sisällön id infosegments-taulussa
-     */
-    LoadParams: function(){
-        //Huolehdi siitä, että kuvanvalintavalikko on näkyvissä ennen tietojen lataamista
-        this.AddImageLoader();
-        this.slot_number = this.$container.find(".slot-number").text();
-        this.slot_name = this.$container.find(".slot_name_orig").val();
-        var self = this;
-        console.log(self.id);
-        $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"infosegment","id":self.id},function(data){
-            self.$lightbox.find(".slide-header").val(data.header);
-            self.$lightbox.find(".infoslidetext").val(data.maintext);
-            self.$lightbox.find(".segment-name").val(self.slot_name);
-            self.$lightbox.find(".slide_img .img-select").val(data.imgname);
-            self.$lightbox.find(".slide_img .img-pos-select").val(data.imgposition);
-            if(data.genheader != ""){
-                self.$lightbox.find("[value='show-upper-header']").get(0).checked=true;
-            }
-            var used_img = self.$lightbox.find(".slide_img .img-select").val();
-            if(used_img!="Ei kuvaa"){
-                Preview(self.$lightbox.find(".slide_img .img-select").parents(".with-preview"),"images/" + used_img);
-            }
-        });
-    },
 
     /**
      * Lataa näkyviin tietokantaan tallennetut kuvat valittavaksi esitykseen lisäämistä varten.
@@ -398,23 +389,13 @@ InfoSlideAdder.prototype = {
  *
  */
 var BibleSlideAdder = function($container){
-    StructuralElementAdder.call(this, $container);
     this.slideclass = ".bibleslide";
+    StructuralElementAdder.call(this, $container);
     this.SetLightBox();
     return this;
 }
 
 BibleSlideAdder.prototype = {
-    /**
-     * Kerää tallennusta varten tarvittavat tiedot
-     */
-    SetPreviewParams: function(){
-        var self = this;
-        this.previewparams = {
-            slideclass: "biblesegment",
-            slot_number: self.slot_number==undefined ? $(".slot").length + 1 : self.slot_number*1,
-            slot_name:this.$lightbox.find(".segment-name").val()};
-    },
 
 
     /**
