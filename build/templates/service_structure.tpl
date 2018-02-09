@@ -74,7 +74,7 @@
                     <select name="header_select">
                     </select>
                 </div>
-                <div class="slidemodel-flex">
+                <div class="slidemodel-flex headertemplates">
                     <div>
                         <h3>Ylätunnisteen teksti</h3>
                         <div><textarea class='' placeholder="Esimerkiksi @messu:  @aihe . Jos et halua ylätunnistetta, jätä tyhjäksi. TODO: pudotusvalikko "></textarea></div>

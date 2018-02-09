@@ -614,6 +614,7 @@ StructuralElementAdder.prototype = {
             }
             $("<option value='0'></option>").text("Ei ylätunnistetta").appendTo($sel);
             $.each(headers,function(idx,header){
+                console.log(header.id);
                 var is_selected = (header.id == self.selected_header ? " selected" : "");
                 $("<option value='" + header.id + "' "+ is_selected +"></option>").text(header.template_name).appendTo($sel);
                 //Tallenna ylätunniste id:n perusteella
@@ -621,9 +622,8 @@ StructuralElementAdder.prototype = {
             });
             $("<option>").text("Uusi tunniste").appendTo($sel);
             self.$lightbox.find("select[name='header_select']")
-                .select_withtext()
+                .select_withtext({select:function(){self.PickHeader()}})
                 .select_withtext("refresh");
-            self.$lightbox.find("select[name='header_select']").on("selectmenuchange",function(){console.log("MOR");});
         });
     },
 
@@ -633,7 +633,9 @@ StructuralElementAdder.prototype = {
      *
      */
     PickHeader: function(){
-        console.log("MORO");
+        var id = this.$lightbox.find("select[name='header_select']").val();
+        var header = this.headerdata[id];
+        this.$lightbox.find(".headertemplates textarea").val(header.maintext);
     },
 
 
