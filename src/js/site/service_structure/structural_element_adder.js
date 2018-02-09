@@ -28,7 +28,6 @@ StructuralElementAdder.prototype = {
         $("<button>Tallenna</button>").click(function(){ self.SaveAndClose(); }).appendTo($buttons);
         if(this.slideclass==".infoslide"){
             $("<button>Esikatsele</button>").click(function(){ self.PreviewSlide(); }).appendTo($buttons)
-            this.AddImageLoader();
         };
         this.$lightbox.append($buttons);
         this.$container.prepend(this.$lightbox);
@@ -349,18 +348,17 @@ InfoSlideAdder.prototype = {
         this.slot_name = this.$container.find(".slot_name_orig").val();
         var self = this;
         $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"infosegment","id":id},function(data){
-            console.log(data);
             self.$lightbox.find(".slide-header").val(data.header);
             self.$lightbox.find(".infoslidetext").val(data.maintext);
             self.$lightbox.find(".segment-name").val(self.slot_name);
-            self.$lightbox.find(".img-select").val(data.imgname);
-            self.$lightbox.find(".img-pos-select").val(data.imgposition);
+            self.$lightbox.find(".slide_img .img-select").val(data.imgname);
+            self.$lightbox.find(".slide_img .img-pos-select").val(data.imgposition);
             if(data.genheader != ""){
                 self.$lightbox.find("[value='show-upper-header']").get(0).checked=true;
             }
-            var used_img = self.$lightbox.find(".img-select").val();
+            var used_img = self.$lightbox.find(".slide_img .img-select").val();
             if(used_img!="Ei kuvaa"){
-                Preview(self.$lightbox.find(".img-select").parents(".with-preview"),"images/" + used_img);
+                Preview(self.$lightbox.find(".slide_img .img-select").parents(".with-preview"),"images/" + used_img);
             }
         });
     },
