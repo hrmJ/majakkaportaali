@@ -30,7 +30,7 @@
                 </div>
             </div>
             <h2 class="subwindow-opener slide-section-controller">Kuva</h2>
-            <div class="slidemodel-flex controller-subwindow img-adder with-preview">
+            <div class="slidemodel-flex controller-subwindow img-adder with-preview slide_img">
                 <div class="with-preview">
                     <div class="img-select-parent"></div>
                     <div class="preview"></div>
@@ -88,6 +88,24 @@
                         </p>
                         <div class="injected-data">
                         
+                        </div>
+                    </div>
+                </div>
+                <div class="slidemodel-flex img-adder with-preview">
+                    <div class="with-preview">
+                        <div class="img-select-parent"></div>
+                        <div class="preview"></div>
+                    </div>
+                    <div class="basic-flex">
+                        <div>Kuvan sijainti</div>
+                        <div>
+                            <select class="img-pos-select">
+                                <option value="left">Tekstin vasemmalla puolella</option>
+                                <option value="right">Tekstin oikealla puolella</option>
+                                <option value="top">Tekstin yläpuolella</option>
+                                <option value="bottom">Tekstin alapuolella</option>
+                                <option value="wholescreen">Koko ruutu</option>
+                            </select>
                         </div>
                     </div>
                 </div>

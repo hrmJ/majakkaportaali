@@ -41,7 +41,7 @@ class StructurePage extends Page{
                 ->Set("number", $slot["slot_number"])
                 ->Set("addedclass", $slot["addedclass"])
                 ->Set("content_id",$slot["content_id"])
-                ->Set("content_id",$slot["header_id"])
+                ->Set("header_id",$slot["header_id"])
                 ->Set("slot_type",FormatSlotName($slot["slot_type"]))
                 ->Set("slot_type_orig",$slot["slot_type"])
                 ->Set("slot_id",$slot["id"])

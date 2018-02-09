@@ -13,6 +13,7 @@ var StructuralElementAdder = function($container){
         this.previewhtml = "";
         this.selected_header = '0';
         this.id = $container.find(".content_id").val();
+        console.log($container);
         this.header_id = $container.find(".header_id").val();
 }
 
@@ -324,6 +325,7 @@ InfoSlideAdder.prototype = {
         var maintext = this.$lightbox.find(".slidetext").val();
         //korvaa ät-merkit halutuilla arvoilla
         this.$lightbox.find(".resp_select").each(function(){maintext = maintext.replace(/@/," [" + $(this).val() + "] ")});
+        console.log(this.$lightbox.find(".slide_img .img-select").val());
         this.previewparams = {
             slideclass: "infosegment",
             maintext:maintext,
@@ -331,8 +333,8 @@ InfoSlideAdder.prototype = {
             subgenheader: self.$lightbox.find("[type='checkbox']").get(0).checked ? "Messun aihe" : "",
             slot_number: self.slot_number==undefined ? $(".slot").length + 1 : self.slot_number,
             slot_name:this.$lightbox.find(".segment-name").val() ,
-            imgname:this.$lightbox.find(".img-select").val() ,
-            imgpos:this.$lightbox.find(".img-pos-select").val() ,
+            imgname:this.$lightbox.find(".slide_img .img-select").val() ,
+            imgpos:this.$lightbox.find(".slide_img .img-pos-select").val() ,
             header:this.$lightbox.find(".slide-header").val()};
     },
 
@@ -341,13 +343,14 @@ InfoSlideAdder.prototype = {
      *
      * @param int id haettavan sisällön id infosegments-taulussa
      */
-    LoadParams: function(id){
+    LoadParams: function(){
         //Huolehdi siitä, että kuvanvalintavalikko on näkyvissä ennen tietojen lataamista
         this.AddImageLoader();
         this.slot_number = this.$container.find(".slot-number").text();
         this.slot_name = this.$container.find(".slot_name_orig").val();
         var self = this;
-        $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"infosegment","id":id},function(data){
+        console.log(self.id);
+        $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"infosegment","id":self.id},function(data){
             self.$lightbox.find(".slide-header").val(data.header);
             self.$lightbox.find(".infoslidetext").val(data.maintext);
             self.$lightbox.find(".segment-name").val(self.slot_name);
