@@ -305,108 +305,6 @@ function Preview($div, filename){
 );
 
 /**
-*
-* Sisältää javascript-koodin 
-* kommenttien prosessoimista varten
-*
-*/
-
-var loaderpath = "php/loaders";
-
-
-/**
- *
- * Laajenna näkyviin uuden kommentin kirjoituskenttä
- *
- */
-function ExpandCommentField(){
-    $(this).animate({"height":"6em"}); 
-    var $details = $(this).parent().parent().find(".commentdetails:eq(0)");
-    $details.show();
-    ScrollToCenter($details);
-}
-
-
-
-/**
- *
- * Lataa kaikki kommentit tietokannasta dokumenttiin
- *
- */
-function LoadComments(){
-    $.post(loaderpath + "/loadcomments.php", {id:$("#service_id").val()}, function(data){
-        $(".loadedcomments").html(data);
-        $(".newcomment").val("");
-        $(".commentator").val("");
-        $(".newcomment:eq(0)").height("3em");
-        $(".comment comment-insert-controls").hide()
-        $(".commentdetails").hide()
-        $("select").prop('selectedIndex',0);
-        $(".comment-answer-link")
-            .click(CreateCommentAnswerField)
-            .each(function(){
-            //Muuta vastauslinkin tekstiä ketjujen osalta
-            if($(this).parent().parent().find(".comment").length>0) $(this).text("Jatka viestiketjua");
-        });
-        //Huom! Varmistetan, ettei tallennustapahtuma tule sidotuksi kahdesti
-        $(".savecomment").unbind("click",SaveComment);
-        $(".savecomment").bind("click",SaveComment);
-        $(".newcomment:eq(0)").click(ExpandCommentField);
-    });
-}
-
-/**
- *
- * Tallenna syötetty kommentti
- *
- */
-function SaveComment(){
-    console.log("raz!");
-    $container = $(this).parent().parent().parent();
-    var theme = "";
-    var replyto = 0;
-    var id = $container.parent().attr("id");
-    if(id){
-        replyto = id.replace(/c_/,"");
-    }
-    if($container.find("select").length>0){
-        theme = $container.find("select").get(0).selectedIndex>1 ? $container.find("select").val() : "";
-    }
-    var queryparams = {id:$("#service_id").val(),
-                       theme: theme,
-                       content:$container.find(".newcomment").val(),
-                       commentator:$container.find(".commentator").val(),
-                       replyto:replyto
-                      };
-    $.post(loaderpath + "/savecomment.php",queryparams).done(LoadComments);
-}
-
-/**
- *
- * Syötä tekstikenttä kommenttiin tai viestiketjuun
- * vastaamista varten.
- *
- */
-function CreateCommentAnswerField(){
-    $(this).parent().next().slideDown().children().show();
-}
-
-
-
-/**
-*
-* Sisältää javascript-koodin messudetaljisivulla näytettäviä
-* kommentteja varten
-*
-*/
-$(document).ready(function(){
-    if($("body").hasClass("servicedetails")){
-        //Kommentit
-        LoadComments();
-    }
-});
-
-/**
  *
  * Messun rakenne-elementtien muokkaukseen liittyvät tapahtumat:
  * Elementtien poisto ja muokkaus sekä siirto.
@@ -582,14 +480,13 @@ StructuralElementAdder.prototype = {
 
 
     /**
-     * Hae dian sisältötiedot tietokannasta
+     * Hae dian sisältötiedot tietokannasta: tyypistä riippuen vähintään nimi ja luokka,
+     * mahdollisesti myös teksti, laulun nimi, kuvat, ylätunniste jne.
      *
      */
     LoadParams: function(){
-        //Huolehdi siitä, että kuvanvalintavalikko on näkyvissä ennen tietojen lataamista
-        if (this.__proto__.hasOwnProperty("AddImageLoader")){ 
-            this.AddImageLoader();
-        }
+        //Huolehdi siitä, että kuvanvalintavalikot ovat näkyvissä ennen tietojen lataamista
+        this.AddImageLoader();
         this.slot_number = this.$container.find(".slot-number").text();
         this.slot_name = this.$container.find(".slot_name_orig").val();
         this.$lightbox.find(".segment-name").val(this.slot_name);
@@ -665,7 +562,6 @@ StructuralElementAdder.prototype = {
             slot_name : this.$lightbox.find(".segment-name").val()
             }
         );
-        console.log(this.previewparams);
     },
 
     /**
@@ -676,7 +572,10 @@ StructuralElementAdder.prototype = {
      */
     SetLightBox: function($el){
         BlurContent();
-        this.$lightbox.html("").prepend($(this.slideclass).clone(true));
+        //Tuo templatesta varsinainen diansyöttövalikko ja ylätunnisteen syöttövalikko
+        this.$lightbox.html("").prepend($(this.slideclass).clone(true)
+                                        .append($("#headertemplate_container > *").clone(true))
+                                        );
         this.$lightbox.css({"width":$(".innercontent").width(),"top":  $("nav .dropdown").is(":visible") ? "-250px" : "-50px"}).show();
         this.SetSlideClasses();
         this.SetHeaderTemplates();
@@ -701,7 +600,6 @@ StructuralElementAdder.prototype = {
             }
             $("<option value='0'></option>").text("Ei ylätunnistetta").appendTo($sel);
             $.each(headers,function(idx,header){
-                console.log(header.id);
                 var is_selected = (header.id == self.selected_header ? " selected" : "");
                 $("<option value='" + header.id + "' "+ is_selected +"></option>").text(header.template_name).appendTo($sel);
                 //Tallenna ylätunniste id:n perusteella
@@ -749,7 +647,6 @@ StructuralElementAdder.prototype = {
             //Lisää vielä mahdollisuus lisätä uusi luokka
             self.$lightbox.find("select[name='addedclass']").append("<option value='Uusi luokka'>Uusi luokka</option>");
             self.$lightbox.find("select[name='addedclass']").select_withtext();
-            //self.$lightbox.find("select").on("selectmenuchange",function(){console.log("moro")});
         });
         //lisää muokattu jquery ui -selectmenu mahdollistamaan uusien dialuokkien luomisen
     },
@@ -873,6 +770,27 @@ StructuralElementAdder.prototype = {
                             } });
         },
 
+    /**
+     * Lataa näkyviin tietokantaan tallennetut kuvat valittavaksi esitykseen lisäämistä varten.
+     *
+     */
+    AddImageLoader: function(){
+        var self = this;
+        this.$lightbox.find(".img-select").remove();
+        $sel = $("<select class='img-select'><option>Ei kuvaa</option></select>")
+            .on("change",function(){ 
+                Preview($(this).parents(".with-preview"),"images/" + $(this).val())}
+            );
+        $.getJSON("php/loaders/load_assets.php",{"asset_type":"backgrounds"},
+                //Luo ensin lista tallennetuista kuvista. 
+                function(data){
+                    $.each(data, function(idx,imgname){
+                        $("<option>").text(imgname).appendTo($sel);
+                        } 
+                    );
+                    self.$lightbox.find(".img-select-parent").append($sel);
+                });
+    }
 }
 
 
@@ -913,28 +831,6 @@ var InfoSlideAdder = function($container){
 
 InfoSlideAdder.prototype = {
 
-    /**
-     * Lataa näkyviin tietokantaan tallennetut kuvat valittavaksi esitykseen lisäämistä varten.
-     *
-     */
-    AddImageLoader: function(){
-        console.log("images");
-        var self = this;
-        this.$lightbox.find(".img-select").remove();
-        $sel = $("<select class='img-select'><option>Ei kuvaa</option></select>")
-            .on("change",function(){ 
-                Preview($(this).parents(".with-preview"),"images/" + $(this).val())}
-            );
-        $.getJSON("php/loaders/load_assets.php",{"asset_type":"backgrounds"},
-                //Luo ensin lista tallennetuista kuvista. 
-                function(data){
-                    $.each(data, function(idx,imgname){
-                        $("<option>").text(imgname).appendTo($sel);
-                        } 
-                    );
-                    self.$lightbox.find(".img-select-parent").append($sel);
-                });
-    }
 
 }
 
@@ -954,23 +850,6 @@ var BibleSlideAdder = function($container){
 
 BibleSlideAdder.prototype = {
 
-
-    /**
-     * Hae dian sisältötiedot tietokannasta
-     *
-     * @param int id haettavan sisällön id songsegments-taulussa
-     */
-    LoadParams: function(id){
-        this.slot_number = this.$container.find(".slot-number").text();
-        this.slot_name = this.$container.find(".slot_name_orig").val();
-        this.addedclass = this.$container.find(".addedclass").val();
-        var self = this;
-        $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"biblesegment","id":id},function(data){
-            self.$lightbox.find(".segment-name").val(self.slot_name);
-            self.$lightbox.find(".songdescription").val(data.songdescription);
-            }
-        );
-    }
 }
 
 
@@ -980,6 +859,108 @@ extend(StructuralElementAdder, BibleSlideAdder);
 
 
 
+
+/**
+*
+* Sisältää javascript-koodin 
+* kommenttien prosessoimista varten
+*
+*/
+
+var loaderpath = "php/loaders";
+
+
+/**
+ *
+ * Laajenna näkyviin uuden kommentin kirjoituskenttä
+ *
+ */
+function ExpandCommentField(){
+    $(this).animate({"height":"6em"}); 
+    var $details = $(this).parent().parent().find(".commentdetails:eq(0)");
+    $details.show();
+    ScrollToCenter($details);
+}
+
+
+
+/**
+ *
+ * Lataa kaikki kommentit tietokannasta dokumenttiin
+ *
+ */
+function LoadComments(){
+    $.post(loaderpath + "/loadcomments.php", {id:$("#service_id").val()}, function(data){
+        $(".loadedcomments").html(data);
+        $(".newcomment").val("");
+        $(".commentator").val("");
+        $(".newcomment:eq(0)").height("3em");
+        $(".comment comment-insert-controls").hide()
+        $(".commentdetails").hide()
+        $("select").prop('selectedIndex',0);
+        $(".comment-answer-link")
+            .click(CreateCommentAnswerField)
+            .each(function(){
+            //Muuta vastauslinkin tekstiä ketjujen osalta
+            if($(this).parent().parent().find(".comment").length>0) $(this).text("Jatka viestiketjua");
+        });
+        //Huom! Varmistetan, ettei tallennustapahtuma tule sidotuksi kahdesti
+        $(".savecomment").unbind("click",SaveComment);
+        $(".savecomment").bind("click",SaveComment);
+        $(".newcomment:eq(0)").click(ExpandCommentField);
+    });
+}
+
+/**
+ *
+ * Tallenna syötetty kommentti
+ *
+ */
+function SaveComment(){
+    console.log("raz!");
+    $container = $(this).parent().parent().parent();
+    var theme = "";
+    var replyto = 0;
+    var id = $container.parent().attr("id");
+    if(id){
+        replyto = id.replace(/c_/,"");
+    }
+    if($container.find("select").length>0){
+        theme = $container.find("select").get(0).selectedIndex>1 ? $container.find("select").val() : "";
+    }
+    var queryparams = {id:$("#service_id").val(),
+                       theme: theme,
+                       content:$container.find(".newcomment").val(),
+                       commentator:$container.find(".commentator").val(),
+                       replyto:replyto
+                      };
+    $.post(loaderpath + "/savecomment.php",queryparams).done(LoadComments);
+}
+
+/**
+ *
+ * Syötä tekstikenttä kommenttiin tai viestiketjuun
+ * vastaamista varten.
+ *
+ */
+function CreateCommentAnswerField(){
+    $(this).parent().next().slideDown().children().show();
+}
+
+
+
+/**
+*
+* Sisältää javascript-koodin messudetaljisivulla näytettäviä
+* kommentteja varten
+*
+*/
+$(document).ready(function(){
+    if($("body").hasClass("servicedetails")){
+        //Kommentit
+        LoadComments();
+    }
+});
 
 /**
  *

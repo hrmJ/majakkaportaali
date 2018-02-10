@@ -68,48 +68,6 @@
                     </div>
                 </div>
             </div>
-            <h2 class="subwindow-opener slide-section-controller">Ylätunniste</h2>
-            <div class="controller-subwindow">
-                <div>
-                    <select name="header_select">
-                    </select>
-                </div>
-                <div class="slidemodel-flex headertemplates">
-                    <div>
-                        <h3>Ylätunnisteen teksti</h3>
-                        <div><textarea class='' placeholder="Esimerkiksi @messu:  @aihe . Jos et halua ylätunnistetta, jätä tyhjäksi. TODO: pudotusvalikko "></textarea></div>
-                    </div>
-                    <div>
-                        <h3>Upota messudataa</h3>
-                        <p>Voit lisätä diaan tietoja kyseisen päivän messusta. Tämä tapahtuu kirjoittamalla
-                        tekstikenttään @-merkki, minkä jälkeen tämän tekstin alle ilmestyy pudotusvalikko, josta voit
-                        valita syötettävän tiedon. Ensimmäinen pudotusvalikko vastaa ensimmäistä @-merkkiä, toinen
-                        toista ja niin edelleen.
-                        </p>
-                        <div class="injected-data">
-                        
-                        </div>
-                    </div>
-                </div>
-                <div class="slidemodel-flex img-adder with-preview">
-                    <div class="with-preview">
-                        <div class="img-select-parent"></div>
-                        <div class="preview"></div>
-                    </div>
-                    <div class="basic-flex">
-                        <div>Kuvan sijainti</div>
-                        <div>
-                            <select class="img-pos-select">
-                                <option value="left">Tekstin vasemmalla puolella</option>
-                                <option value="right">Tekstin oikealla puolella</option>
-                                <option value="top">Tekstin yläpuolella</option>
-                                <option value="bottom">Tekstin alapuolella</option>
-                                <option value="wholescreen">Koko ruutu</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
 
@@ -163,6 +121,56 @@
             </div>
         </div>
 
+    </div>
 
-    <div>
+
+    <div class="hidden" id="headertemplate_container">
+    
+            <h2 class="subwindow-opener slide-section-controller">Ylätunniste</h2>
+            <div class="controller-subwindow">
+                <div>
+                    <select name="header_select">
+                    </select>
+                </div>
+                <div class="slidemodel-flex headertemplates">
+                    <div>
+                        <h3>Ylätunnisteen teksti</h3>
+                        <div><textarea class='' placeholder="Esimerkiksi @messu:  @aihe . Jos et halua ylätunnistetta, jätä tyhjäksi. TODO: pudotusvalikko "></textarea></div>
+                    </div>
+                    <div>
+                        <h3>Upota messudataa</h3>
+                        <p>Voit lisätä diaan tietoja kyseisen päivän messusta. Tämä tapahtuu kirjoittamalla
+                        tekstikenttään @-merkki, minkä jälkeen tämän tekstin alle ilmestyy pudotusvalikko, josta voit
+                        valita syötettävän tiedon. Ensimmäinen pudotusvalikko vastaa ensimmäistä @-merkkiä, toinen
+                        toista ja niin edelleen.
+                        </p>
+                        <div class="injected-data">
+                        
+                        </div>
+                    </div>
+                </div>
+                <div class="slidemodel-flex img-adder with-preview">
+                    <div class="with-preview">
+                        <div class="img-select-parent"></div>
+                        <div class="preview"></div>
+                    </div>
+                    <div class="basic-flex">
+                        <div>Kuvan sijainti</div>
+                        <div>
+                            <select class="img-pos-select">
+                                <option value="left">Tekstin vasemmalla puolella</option>
+                                <option value="right">Tekstin oikealla puolella</option>
+                                <option value="top">Tekstin yläpuolella</option>
+                                <option value="bottom">Tekstin alapuolella</option>
+                                <option value="wholescreen">Koko ruutu</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+    
+    </div>
+
+
 </div>

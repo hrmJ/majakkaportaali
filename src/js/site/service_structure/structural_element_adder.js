@@ -38,14 +38,13 @@ StructuralElementAdder.prototype = {
 
 
     /**
-     * Hae dian sisältötiedot tietokannasta
+     * Hae dian sisältötiedot tietokannasta: tyypistä riippuen vähintään nimi ja luokka,
+     * mahdollisesti myös teksti, laulun nimi, kuvat, ylätunniste jne.
      *
      */
     LoadParams: function(){
-        //Huolehdi siitä, että kuvanvalintavalikko on näkyvissä ennen tietojen lataamista
-        if (this.__proto__.hasOwnProperty("AddImageLoader")){ 
-            this.AddImageLoader();
-        }
+        //Huolehdi siitä, että kuvanvalintavalikot ovat näkyvissä ennen tietojen lataamista
+        this.AddImageLoader();
         this.slot_number = this.$container.find(".slot-number").text();
         this.slot_name = this.$container.find(".slot_name_orig").val();
         this.$lightbox.find(".segment-name").val(this.slot_name);
@@ -121,7 +120,6 @@ StructuralElementAdder.prototype = {
             slot_name : this.$lightbox.find(".segment-name").val()
             }
         );
-        console.log(this.previewparams);
     },
 
     /**
@@ -132,7 +130,10 @@ StructuralElementAdder.prototype = {
      */
     SetLightBox: function($el){
         BlurContent();
-        this.$lightbox.html("").prepend($(this.slideclass).clone(true));
+        //Tuo templatesta varsinainen diansyöttövalikko ja ylätunnisteen syöttövalikko
+        this.$lightbox.html("").prepend($(this.slideclass).clone(true)
+                                        .append($("#headertemplate_container > *").clone(true))
+                                        );
         this.$lightbox.css({"width":$(".innercontent").width(),"top":  $("nav .dropdown").is(":visible") ? "-250px" : "-50px"}).show();
         this.SetSlideClasses();
         this.SetHeaderTemplates();
@@ -157,7 +158,6 @@ StructuralElementAdder.prototype = {
             }
             $("<option value='0'></option>").text("Ei ylätunnistetta").appendTo($sel);
             $.each(headers,function(idx,header){
-                console.log(header.id);
                 var is_selected = (header.id == self.selected_header ? " selected" : "");
                 $("<option value='" + header.id + "' "+ is_selected +"></option>").text(header.template_name).appendTo($sel);
                 //Tallenna ylätunniste id:n perusteella
@@ -205,7 +205,6 @@ StructuralElementAdder.prototype = {
             //Lisää vielä mahdollisuus lisätä uusi luokka
             self.$lightbox.find("select[name='addedclass']").append("<option value='Uusi luokka'>Uusi luokka</option>");
             self.$lightbox.find("select[name='addedclass']").select_withtext();
-            //self.$lightbox.find("select").on("selectmenuchange",function(){console.log("moro")});
         });
         //lisää muokattu jquery ui -selectmenu mahdollistamaan uusien dialuokkien luomisen
     },
@@ -329,6 +328,27 @@ StructuralElementAdder.prototype = {
                             } });
         },
 
+    /**
+     * Lataa näkyviin tietokantaan tallennetut kuvat valittavaksi esitykseen lisäämistä varten.
+     *
+     */
+    AddImageLoader: function(){
+        var self = this;
+        this.$lightbox.find(".img-select").remove();
+        $sel = $("<select class='img-select'><option>Ei kuvaa</option></select>")
+            .on("change",function(){ 
+                Preview($(this).parents(".with-preview"),"images/" + $(this).val())}
+            );
+        $.getJSON("php/loaders/load_assets.php",{"asset_type":"backgrounds"},
+                //Luo ensin lista tallennetuista kuvista. 
+                function(data){
+                    $.each(data, function(idx,imgname){
+                        $("<option>").text(imgname).appendTo($sel);
+                        } 
+                    );
+                    self.$lightbox.find(".img-select-parent").append($sel);
+                });
+    }
 }
 
 
@@ -369,28 +389,6 @@ var InfoSlideAdder = function($container){
 
 InfoSlideAdder.prototype = {
 
-    /**
-     * Lataa näkyviin tietokantaan tallennetut kuvat valittavaksi esitykseen lisäämistä varten.
-     *
-     */
-    AddImageLoader: function(){
-        console.log("images");
-        var self = this;
-        this.$lightbox.find(".img-select").remove();
-        $sel = $("<select class='img-select'><option>Ei kuvaa</option></select>")
-            .on("change",function(){ 
-                Preview($(this).parents(".with-preview"),"images/" + $(this).val())}
-            );
-        $.getJSON("php/loaders/load_assets.php",{"asset_type":"backgrounds"},
-                //Luo ensin lista tallennetuista kuvista. 
-                function(data){
-                    $.each(data, function(idx,imgname){
-                        $("<option>").text(imgname).appendTo($sel);
-                        } 
-                    );
-                    self.$lightbox.find(".img-select-parent").append($sel);
-                });
-    }
 
 }
 
@@ -410,23 +408,6 @@ var BibleSlideAdder = function($container){
 
 BibleSlideAdder.prototype = {
 
-
-    /**
-     * Hae dian sisältötiedot tietokannasta
-     *
-     * @param int id haettavan sisällön id songsegments-taulussa
-     */
-    LoadParams: function(id){
-        this.slot_number = this.$container.find(".slot-number").text();
-        this.slot_name = this.$container.find(".slot_name_orig").val();
-        this.addedclass = this.$container.find(".addedclass").val();
-        var self = this;
-        $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"biblesegment","id":id},function(data){
-            self.$lightbox.find(".segment-name").val(self.slot_name);
-            self.$lightbox.find(".songdescription").val(data.songdescription);
-            }
-        );
-    }
 }
 
 
