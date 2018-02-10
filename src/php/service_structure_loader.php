@@ -28,7 +28,7 @@ class ServiceStructureLoader{
      */
     public function SetSlotData(){
         $this->con->q("DELETE FROM presentation_structure WHERE slot_number = :no",Array("no"=>$this->slot_number),"none");
-        $this->con->q("INSERT INTO presentation_structure (content_id, slot_number, slot_type, slot_name, addedclass) VALUES (:cid,:sno,:ctype,:sname, :aclass)",Array("cid"=>$this->content_id,"sno"=>$this->slot_number,"ctype"=>$this->content_type,"sname"=>$this->slot_name,"aclass"=>$this->addedclass),"none");
+        $this->con->q("INSERT INTO presentation_structure (content_id, slot_number, slot_type, slot_name, addedclass, header_id) VALUES (:cid,:sno,:ctype,:sname, :aclass, :headerid)",Array("cid"=>$this->content_id,"sno"=>$this->slot_number,"ctype"=>$this->content_type,"sname"=>$this->slot_name,"aclass"=>$this->addedclass,"headerid"=>$_POST["header_id"]),"none");
         return $this;
     }
 

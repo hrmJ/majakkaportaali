@@ -11,9 +11,12 @@ var StructuralElementAdder = function($container){
         this.$container = $container;
         this.previewparams = {segment_type: this.segment_type};
         this.previewhtml = "";
-        this.selected_header = '0';
         this.id = $container.find(".content_id").val();
         this.header_id = $container.find(".header_id").val();
+        console.log("lkjsad");
+        if(!this.header_id){
+            this.header_id = 0;
+        }
 }
 
 StructuralElementAdder.prototype = {
@@ -117,7 +120,8 @@ StructuralElementAdder.prototype = {
             params,
             {
             slot_number : self.slot_number==undefined ? $(".slot").length + 1 : self.slot_number,
-            slot_name : this.$lightbox.find(".segment-name").val()
+            slot_name : this.$lightbox.find(".segment-name").val(),
+            header_id : this.header_id
             }
         );
     },
@@ -148,7 +152,7 @@ StructuralElementAdder.prototype = {
     SetHeaderTemplates: function(){
         var self = this;
         self.headerdata = {};
-        $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"headernames","id":self.header_id}, function(headers){
+        $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"headernames","id":""}, function(headers){
             var $sel = self.$lightbox.find("select[name='header_select']");
             try{
                 $sel.select_withtext("destroy").html("");
@@ -158,7 +162,7 @@ StructuralElementAdder.prototype = {
             }
             $("<option value='0'></option>").text("Ei ylätunnistetta").appendTo($sel);
             $.each(headers,function(idx,header){
-                var is_selected = (header.id == self.selected_header ? " selected" : "");
+                var is_selected = (header.id == self.header_id ? " selected" : "");
                 $("<option value='" + header.id + "' "+ is_selected +"></option>").text(header.template_name).appendTo($sel);
                 //Tallenna ylätunniste id:n perusteella
                 self.headerdata[header.id] = header;
@@ -167,6 +171,10 @@ StructuralElementAdder.prototype = {
             self.$lightbox.find("select[name='header_select']")
                 .select_withtext({select:function(){self.PickHeader()}})
                 .select_withtext("refresh");
+            if(self.header_id){
+                //Lataa ylätunnisteen teksti, jos jokin tunniste valittu
+                self.PickHeader();
+            }
         });
     },
 
@@ -179,6 +187,7 @@ StructuralElementAdder.prototype = {
         var id = this.$lightbox.find("select[name='header_select']").val();
         var header = this.headerdata[id];
         this.$lightbox.find(".headertemplates textarea").val(header.maintext);
+        this.header_id = id;
     },
 
 
