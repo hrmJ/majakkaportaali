@@ -19,19 +19,19 @@ if(isset($_POST["removeslide"])){
     $con->q("DELETE FROM presentation_structure WHERE id = :slot_id", Array("slot_id"=>$_POST["id"]), "none");
 }
 else{
-    switch($_POST["slideclass"]){
+    switch($_POST["segment_type"]){
         case "songsegment":
-            $params = Array("description"=>$_POST["songdescription"],"slideclass"=>$_POST["slideclass"],"slot_number"=>$_POST["slot_number"],"slot_name"=>$_POST["slot_name"],"restricted_to"=>$_POST["restricted_to"],"multiname"=>$_POST["multiname"],"addedclass"=>$_POST["addedclass"]);
+            $params = Array("description"=>$_POST["songdescription"],"slideclass"=>$_POST["segment_type"],"slot_number"=>$_POST["slot_number"],"slot_name"=>$_POST["slot_name"],"restricted_to"=>$_POST["restricted_to"],"multiname"=>$_POST["multiname"],"addedclass"=>$_POST["addedclass"]);
             $loader= new SongSegmentSaver("../../../config.ini", $params);
             $loader->SetContentId()->SetSlotData();
             break;
         case "infosegment":
-            $params = Array("maintext"=>$_POST["maintext"],"header"=>$_POST["header"],"genheader"=>$_POST["genheader"],"subgenheader"=>$_POST["subgenheader"],"slideclass"=>$_POST["slideclass"],"slot_number"=>$_POST["slot_number"],"slot_name"=>$_POST["slot_name"], "addedclass"=>$_POST["addedclass"],"imgname"=>$_POST["imgname"], "imgpos"=>$_POST["imgpos"]);
+            $params = Array("maintext"=>$_POST["maintext"],"header"=>$_POST["header"],"genheader"=>$_POST["genheader"],"subgenheader"=>$_POST["subgenheader"],"slideclass"=>$_POST["segment_type"],"slot_number"=>$_POST["slot_number"],"slot_name"=>$_POST["slot_name"], "addedclass"=>$_POST["addedclass"],"imgname"=>$_POST["imgname"], "imgpos"=>$_POST["imgpos"]);
             $loader= new InfoSegmentSaver("../../../config.ini", $params);
             $loader->SetContentId()->SetSlotData();
             break;
         case "biblesegment":
-            $params = Array("maintext"=>$_POST["maintext"],"header"=>$_POST["header"],"genheader"=>$_POST["genheader"],"subgenheader"=>$_POST["subgenheader"],"slideclass"=>$_POST["slideclass"],"slot_number"=>$_POST["slot_number"],"slot_name"=>$_POST["slot_name"], "addedclass"=>$_POST["addedclass"],"imgname"=>$_POST["imgname"], "imgpos"=>$_POST["imgpos"]);
+            $params = Array("maintext"=>$_POST["maintext"],"header"=>$_POST["header"],"genheader"=>$_POST["genheader"],"subgenheader"=>$_POST["subgenheader"],"slideclass"=>$_POST["segment_type"],"slot_number"=>$_POST["slot_number"],"slot_name"=>$_POST["slot_name"], "addedclass"=>$_POST["addedclass"],"imgname"=>$_POST["imgname"], "imgpos"=>$_POST["imgpos"]);
             $loader= new InfoSegmentSaver("../../../config.ini", $params);
             $loader->SetContentId()->SetSlotData();
             break;
@@ -43,7 +43,7 @@ else{
             break;
     }
 
-    if($_POST["slideclass"]!="update_numbers"){
+    if($_POST["segment_type"]!="update_numbers"){
         //Päivitä diaesityksen tyylit uusien dialuokkien varalta
         UpdateAndAddClasses($loader->con,$_POST["addedclass"]);
     }

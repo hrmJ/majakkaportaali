@@ -9,7 +9,7 @@ var StructuralElementAdder = function($container){
         this.$lightbox = $("<div class='my-lightbox structural-element-adder'></div>");
         this.$preview_window = $("<div class='preview-window'><iframe scrolling='no' frameBorder='0'></iframe><button>Sulje esikatselu</button></div>");
         this.$container = $container;
-        this.previewparams = {slideclass: this.slideclass.replace("\.","")};
+        this.previewparams = {segment_type: this.segment_type};
         this.previewhtml = "";
         this.selected_header = '0';
         this.id = $container.find(".content_id").val();
@@ -43,9 +43,9 @@ StructuralElementAdder.prototype = {
      */
     LoadParams: function(){
         //Huolehdi siitä, että kuvanvalintavalikko on näkyvissä ennen tietojen lataamista
-        if(this.slideclass==".infoslide"){
+        if (this.__proto__.hasOwnProperty("AddImageLoader")){ 
             this.AddImageLoader();
-        } 
+        }
         this.slot_number = this.$container.find(".slot-number").text();
         this.slot_name = this.$container.find(".slot_name_orig").val();
         this.$lightbox.find(".segment-name").val(this.slot_name);
@@ -67,8 +67,10 @@ StructuralElementAdder.prototype = {
                 case ".infoslide":
                     self.$lightbox.find(".slide-header").val(data.header);
                     self.$lightbox.find(".infoslidetext").val(data.maintext);
-                    self.$lightbox.find(".slide_img .img-select").val(data.imgname);
-                    self.$lightbox.find(".slide_img .img-pos-select").val(data.imgposition);
+                    if(data.imgname){ 
+                        self.$lightbox.find(".slide_img .img-select").val(data.imgname);
+                        self.$lightbox.find(".slide_img .img-pos-select").val(data.imgposition);
+                    }
                     if(data.genheader != ""){
                         //Lisää ruksi, jos määritetty, että on yläotsikko
                         self.$lightbox.find("[value='show-upper-header']").get(0).checked=true;
@@ -88,8 +90,6 @@ StructuralElementAdder.prototype = {
      */
     SetPreviewParams: function(){
         var self = this;
-        var slot_number = self.slot_number==undefined ? $(".slot").length + 1 : self.slot_number;
-        var slot_name = this.$lightbox.find(".segment-name").val();
         switch(this.slideclass){
             case ".infoslide":
                 var maintext = this.$lightbox.find(".slidetext").val();
@@ -112,6 +112,16 @@ StructuralElementAdder.prototype = {
                     };
                 break;
         }
+
+        // Lisää tallennettaviin parametreihin tässä määritellyt
+        $.extend(this.previewparams,
+            params,
+            {
+            slot_number : self.slot_number==undefined ? $(".slot").length + 1 : self.slot_number,
+            slot_name : this.$lightbox.find(".segment-name").val()
+            }
+        );
+        console.log(this.previewparams);
     },
 
     /**
@@ -331,6 +341,7 @@ StructuralElementAdder.prototype = {
  */
 var SongSlideAdder = function($container){
     this.slideclass = ".songslide";
+    this.segment_type = "songsegment";
     StructuralElementAdder.call(this, $container);
     this.SetLightBox();
     return this;
@@ -349,6 +360,7 @@ SongSlideAdder.prototype = {
  */
 var InfoSlideAdder = function($container){
     this.slideclass = ".infoslide";
+    this.segment_type = "infosegment";
     StructuralElementAdder.call(this, $container);
     this.SetLightBox();
     return this;
@@ -362,6 +374,7 @@ InfoSlideAdder.prototype = {
      *
      */
     AddImageLoader: function(){
+        console.log("images");
         var self = this;
         this.$lightbox.find(".img-select").remove();
         $sel = $("<select class='img-select'><option>Ei kuvaa</option></select>")
