@@ -51,7 +51,7 @@ StructuralElementAdder.prototype = {
         this.$lightbox.find(".segment-name").val(this.slot_name);
         this.addedclass = this.$container.find(".addedclass").val();
         var self = this;
-        $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":this.slideclass.replace("\\.",""),"id":this.id},function(data){
+        $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":this.slideclass.replace(".",""),"id":this.id},function(data){
             switch(self.slideclass){
                 case ".songslide":
                     if(data.multiname != ""){

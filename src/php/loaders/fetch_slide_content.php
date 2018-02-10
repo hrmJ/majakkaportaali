@@ -14,15 +14,15 @@ require("../segment.php");
 require("../service_data_loader.php");
 
 switch($_GET["slideclass"]){
-    case "infosegment":
+    case "infoslide":
         $loader= new InfoSegmentLoader("../../../config.ini", $_GET["id"]);
         $loader->LoadInfoSlide();
         break;
-    case "songsegment":
+    case "songslide":
         $loader= new SongSegmentLoader("../../../config.ini", $_GET["id"]);
         $loader->LoadSongSlide();
         break;
-    case "biblesegment":
+    case "bibleslide":
         $loader= new BibleSegmentLoader("../../../config.ini", $_GET["id"]);
         $loader->LoadBibleSlide();
         break;
