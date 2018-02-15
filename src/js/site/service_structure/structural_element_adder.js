@@ -92,8 +92,10 @@ StructuralElementAdder.prototype = {
      */
     SetPreviewParams: function(){
         var self = this;
+        console.log(this.slideclass);
         switch(this.slideclass){
             case ".infoslide":
+                console.log("HUuu");
                 var maintext = this.$lightbox.find(".slidetext").val();
                 //korvaa ät-merkit halutuilla arvoilla
                 this.$lightbox.find(".resp_select").each(function(){maintext = maintext.replace(/@/," [" + $(this).val() + "] ")});
@@ -101,10 +103,11 @@ StructuralElementAdder.prototype = {
                     maintext:maintext,
                     genheader: self.$lightbox.find("[type='checkbox']").get(0).checked ? "Majakkamessu" : "",
                     subgenheader: self.$lightbox.find("[type='checkbox']").get(0).checked ? "Messun aihe" : "",
-                    imgname:this.$lightbox.find(".slide_img .img-select").val() ,
+                    imgname:this.$lightbox.find(".slide_img .img-select").val() || "" ,
                     imgpos:this.$lightbox.find(".slide_img .img-pos-select").val() ,
                     header:this.$lightbox.find(".slide-header").val()
                 };
+                console.log(params);
                 break;
             case ".songslide":
                 var params = {
@@ -171,7 +174,7 @@ StructuralElementAdder.prototype = {
             self.$lightbox.find("select[name='header_select']")
                 .select_withtext({select:function(){self.PickHeader()}})
                 .select_withtext("refresh");
-            if(self.header_id){
+            if(self.header_id>0){
                 //Lataa ylätunnisteen teksti, jos jokin tunniste valittu
                 self.PickHeader();
             }
