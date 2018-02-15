@@ -154,6 +154,8 @@ StructuralElementAdder.prototype = {
      */
     SetHeaderTemplates: function(){
         var self = this;
+        console.log(self.$lightbox.find(".headertemplates select").length);
+        self.$lightbox.find(".headertemplates select").on("change",function(){console.log("moro")});
         self.headerdata = {};
         $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"headernames","id":""}, function(headers){
             var $sel = self.$lightbox.find("select[name='header_select']");
