@@ -172,6 +172,7 @@ StructuralElementAdder.prototype = {
     SetHeaderTemplates: function(){
         var self = this;
         self.$lightbox.find(".headertemplates select").on("change",function(){self.UpdatePickedHeader()});
+        self.$lightbox.find(".headertemplates textarea").on("keyup",function(){self.UpdatePickedHeader()});
         self.headerdata = {};
         $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"headernames","id":""}, function(headers){
             var $sel = self.$lightbox.find("select[name='header_select']");
