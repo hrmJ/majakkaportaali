@@ -41,9 +41,15 @@ else{
                 $con->q("UPDATE presentation_structure SET slot_number = :newnumber WHERE id = :slot_id",$idpair,"none");
             }
             break;
+        case "update_headertemplate":
+            $con= new DbCon("../../../config.ini");
+            $con->q("UPDATE headers SET imgname = :imgname, imgposition = :imgpos, maintext = :maintext WHERE id = :header_id",
+                Array("imgname"=>$_POST["imgname"],"header_id"=>$_POST["header_id"],
+                "imgpos" => $_POST["imgpos"],"maintext"=>$_POST["maintext"]),"none");
+            break;
     }
 
-    if($_POST["segment_type"]!="update_numbers"){
+    if(!in_array($_POST["segment_type"],Array("update_numbers","update_headertemplate"))){
         //Päivitä diaesityksen tyylit uusien dialuokkien varalta
         UpdateAndAddClasses($loader->con,$_POST["addedclass"]);
     }

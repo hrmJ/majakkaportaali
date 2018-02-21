@@ -13,7 +13,6 @@ var StructuralElementAdder = function($container){
         this.previewhtml = "";
         this.id = $container.find(".content_id").val();
         this.header_id = $container.find(".header_id").val();
-        console.log("lkjsad");
         if(!this.header_id){
             this.header_id = 0;
         }
@@ -92,10 +91,8 @@ StructuralElementAdder.prototype = {
      */
     SetPreviewParams: function(){
         var self = this;
-        console.log(this.slideclass);
         switch(this.slideclass){
             case ".infoslide":
-                console.log("HUuu");
                 var maintext = this.$lightbox.find(".slidetext").val();
                 //korvaa ät-merkit halutuilla arvoilla
                 this.$lightbox.find(".resp_select").each(function(){maintext = maintext.replace(/@/," [" + $(this).val() + "] ")});
@@ -107,7 +104,6 @@ StructuralElementAdder.prototype = {
                     imgpos:this.$lightbox.find(".slide_img .img-pos-select").val() ,
                     header:this.$lightbox.find(".slide-header").val()
                 };
-                console.log(params);
                 break;
             case ".songslide":
                 var params = {
@@ -143,19 +139,39 @@ StructuralElementAdder.prototype = {
                                         );
         this.$lightbox.css({"width":$(".innercontent").width(),"top":  $("nav .dropdown").is(":visible") ? "-250px" : "-50px"}).show();
         this.SetSlideClasses();
-        this.SetHeaderTemplates();
     },
 
 
     /**
+     *
+     * Päivitä tietokantaan ylätunnisteeseen tehdyt muutokset, kuten
+     * kuvan vaihtaminen tai kuvan sijainnin muuttaminen
+     *
+     */
+    UpdatePickedHeader: function(){
+        var self = this;
+        var $header = this.$lightbox.find(".headertemplates");
+        var params = {segment_type:"update_headertemplate"};
+        params.header_id = $header.find("select[name='header_select']").val();
+        params.imgpos = $header.find(".img-pos-select").val();
+        params.imgname = $header.find(".img-select").val();
+        params.maintext = $header.find("textarea").val();
+        $.post("php/loaders/save_structure_slide.php",params,function(data){
+            $("body").prepend(data);
+        });
+    
+    },
+
+    /**
      * Tulostaa käyttäjän määrittämät ylätunnisteet.
      * Tallentaa myös muistiin ylätunnisteiden sisällön.
+     * Huomaa, että tämä metodi kutsutaan AddImageLoader-metodista,
+     * jotta ylätunnisteen kuvat ehtivät latautua.
      *
      */
     SetHeaderTemplates: function(){
         var self = this;
-        console.log(self.$lightbox.find(".headertemplates select").length);
-        self.$lightbox.find(".headertemplates select").on("change",function(){console.log("moro")});
+        self.$lightbox.find(".headertemplates select").on("change",function(){self.UpdatePickedHeader()});
         self.headerdata = {};
         $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"headernames","id":""}, function(headers){
             var $sel = self.$lightbox.find("select[name='header_select']");
@@ -361,6 +377,7 @@ StructuralElementAdder.prototype = {
                         } 
                     );
                     self.$lightbox.find(".img-select-parent").append($sel);
+                    self.SetHeaderTemplates();
                 });
     }
 }

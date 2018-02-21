@@ -127,12 +127,12 @@
     <div class="hidden" id="headertemplate_container">
     
             <h2 class="subwindow-opener slide-section-controller">Ylätunniste</h2>
-            <div class="controller-subwindow">
+            <div class="controller-subwindow headertemplates">
                 <div>
                     <select name="header_select">
                     </select>
                 </div>
-                <div class="slidemodel-flex headertemplates">
+                <div class="slidemodel-flex">
                     <div>
                         <h3>Ylätunnisteen teksti</h3>
                         <div><textarea class='' placeholder="Esimerkiksi @messu:  @aihe . Jos et halua ylätunnistetta, jätä tyhjäksi. TODO: pudotusvalikko "></textarea></div>
