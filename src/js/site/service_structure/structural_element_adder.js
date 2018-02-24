@@ -7,7 +7,9 @@
  */
 var StructuralElementAdder = function($container){
         this.$lightbox = $("<div class='my-lightbox structural-element-adder'></div>");
-        this.$preview_window = $("<div class='preview-window'><iframe scrolling='no' frameBorder='0'></iframe><button>Sulje esikatselu</button></div>");
+        this.$preview_window = $(`<div class='preview-window'>
+                                  <iframe scrolling='no' frameBorder='0'></iframe>
+                                  <button>Sulje esikatselu</button></div>`);
         this.$container = $container;
         this.previewparams = {segment_type: this.segment_type};
         this.previewhtml = "";
@@ -50,7 +52,7 @@ StructuralElementAdder.prototype = {
         this.slot_number = this.$container.find(".slot-number").text();
         this.slot_name = this.$container.find(".slot_name_orig").val();
         this.$lightbox.find(".segment-name").val(this.slot_name);
-        this.addedclass = this.$container.find(".addedclass").val();
+
         var self = this;
         $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":this.slideclass.replace(".",""),"id":this.id},function(data){
             switch(self.slideclass){
@@ -203,13 +205,41 @@ StructuralElementAdder.prototype = {
     /**
      *
      * Lataa näytettäväksi käyttäjän valitseman ylätunnisteen.
+     * Jos käyttäjä syöttänyt kokonaan uuden, lisätään se ylätunnisteiden listaan.
      *
      */
     PickHeader: function(){
-        var id = this.$lightbox.find("select[name='header_select']").val();
-        var header = this.headerdata[id];
-        this.$lightbox.find(".headertemplates textarea").val(header.maintext);
-        this.header_id = id;
+        console.log(this.$lightbox.find(".headertemplates").val());
+        var $sel = this.$lightbox.find("select[name='header_select']");
+        var maxval = 0;
+        $sel.find("option").each(function(idx, el){
+            var val = $(this).attr("value");
+            if(val){
+                if(isNaN($(this).val()*1)){
+                    //Jos syötetty uusi tunniste = arvo ei ole numeerinen
+                    console.log("NOVAL: " + $(this).val());
+                }
+                else{
+                    maxval = $(this).val()*1;
+                }
+            }
+            else if($(this).val() == "Uusi tunniste"){
+                //console.log("NOVAL: " + $(this).val());
+            }
+        });
+        //$sel.find("option[value=]")
+        //var id = this.$lightbox.find("select[name='header_select']").val();
+        //var header = this.headerdata[id];
+        //this.$lightbox.find(".headertemplates textarea").val(header.maintext);
+        //if (!header){
+        //    //Jos syötetty uusi ylätunniste
+        //    params = {"segment_type":"insert_headertemplate","maintext":"","imgpos":"","imgname":"","template_name":};
+        //    $.post("php/loaders/save_structure_slide.php",params,function(data){
+        //        $("body").prepend(data);
+        //        console.log("moro")
+        //    });
+        //}
+        //this.header_id = id;
     },
 
 

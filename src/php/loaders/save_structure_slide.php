@@ -47,6 +47,12 @@ else{
                 Array("imgname"=>$_POST["imgname"],"header_id"=>$_POST["header_id"],
                 "imgpos" => $_POST["imgpos"],"maintext"=>$_POST["maintext"]),"none");
             break;
+        case "insert_headertemplate":
+            $con= new DbCon("../../../config.ini");
+            $con->q("INSERT INTO headers (imgname, imgposition, maintext) VALUES (:imgname,:imgpos, :maintext)",
+                Array("imgname"=>$_POST["imgname"], "imgpos" =>
+                $_POST["imgpos"],"maintext"=>$_POST["maintext"]),"none");
+            break;
     }
 
     if(!in_array($_POST["segment_type"],Array("update_numbers","update_headertemplate"))){
