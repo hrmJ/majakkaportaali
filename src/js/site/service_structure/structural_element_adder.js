@@ -192,11 +192,6 @@ StructuralElementAdder.prototype = {
             $.each(headers,function(idx,header){
                 var is_selected = (header.id == self.header_id ? " selected" : "");
                 $("<option value='" + header.id + "' "+ is_selected +"></option>").text(header.template_name).appendTo($sel);
-                if ( is_selected & header.imgname !== "Ei kuvaa" ) { 
-                    self.$lightbox.find(".headertemplates .slide_img .img-select").val(header.imgname);
-                    self.$lightbox.find(".headertemplates .slide_img .img-pos-select").val(header.imgposition);
-                    self.$lightbox.find(".headertemplates select[name='header_select']").val(header.maintext);
-                }
                 //Tallenna ylätunniste id:n perusteella
                 self.headerdata[header.id] = header;
             });
@@ -221,6 +216,7 @@ StructuralElementAdder.prototype = {
      */
     PickHeader: function(selected_item){
         var $sel = this.$lightbox.find("select[name='header_select']");
+        var header = undefined;
         if (selected_item){
             //Jos funktio ajettu todellisen valinnan seurauksena
             //eikä vain muokkausikkunan avaamisen yhteydessä
@@ -231,29 +227,16 @@ StructuralElementAdder.prototype = {
                 console.log("uusi");
             }
             else if ( selected_item.value *1 === 0 ){
-                return 0;
             }
             else{
                 console.log("vanha");
                 var header = this.headerdata[selected_item.value];
-                this.$lightbox.find(".headertemplates textarea").val(header.maintext);
             }
 
-            //var id = this.$lightbox.find("select[name='header_select']").val();
-            //var header = this.headerdata[id];
-            //this.$lightbox.find(".headertemplates textarea").val(header.maintext);
-            //if (!header){
-            //    //Jos syötetty uusi ylätunniste
-            //    params = {"segment_type":"insert_headertemplate","maintext":"","imgpos":"","imgname":"","template_name":};
-            //    $.post("php/loaders/save_structure_slide.php",params,function(data){
-            //        $("body").prepend(data);
-            //        console.log("moro")
-            //    });
-            //}
-            //this.header_id = id;
         }
         else{
             //Ladataan valittu tunniste ennen kuin niitä on vaihdettu tai muokattu
+            header = this.headerdata[this.header_id];
         }
 
         if($sel.val() === "0"){
@@ -263,8 +246,13 @@ StructuralElementAdder.prototype = {
             this.$lightbox.find(".headertemplates_hiddencontent").show();
         }
         
-        if(maintext){
-
+        if(header){
+            this.$lightbox.find(".headertemplates textarea").val(header.maintext);
+            this.$lightbox.find(".headertemplates .img-select").val(header.imgname);
+            this.$lightbox.find(".headertemplates .img-pos-select").val(header.imgposition);
+            if(header.imgname !== "Ei kuvaa"){ 
+                Preview(this.$lightbox.find(".headertemplates .img-select").parents(".with-preview"),"images/" + header.imgname);
+            }
         }
 
     },
