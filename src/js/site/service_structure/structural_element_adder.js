@@ -158,11 +158,15 @@ StructuralElementAdder.prototype = {
         params.imgpos = $header.find(".img-pos-select").val();
         params.imgname = $header.find(".img-select").val();
         params.maintext = $header.find("textarea").val();
+        //Päivitetään muuttuneet arvot myös nykyiseen headers-attribuuttiin
+        self.headerdata[params.header_id] = params;
         $.post("php/loaders/save_structure_slide.php",params,function(data){
             $("body").prepend(data);
         });
     
     },
+
+
 
     /**
      * Tulostaa käyttäjän määrittämät ylätunnisteet.
@@ -188,12 +192,17 @@ StructuralElementAdder.prototype = {
             $.each(headers,function(idx,header){
                 var is_selected = (header.id == self.header_id ? " selected" : "");
                 $("<option value='" + header.id + "' "+ is_selected +"></option>").text(header.template_name).appendTo($sel);
+                if ( is_selected & header.imgname !== "Ei kuvaa" ) { 
+                    self.$lightbox.find(".headertemplates .slide_img .img-select").val(header.imgname);
+                    self.$lightbox.find(".headertemplates .slide_img .img-pos-select").val(header.imgposition);
+                    self.$lightbox.find(".headertemplates select[name='header_select']").val(header.maintext);
+                }
                 //Tallenna ylätunniste id:n perusteella
                 self.headerdata[header.id] = header;
             });
             $("<option>").text("Uusi tunniste").appendTo($sel);
             self.$lightbox.find("select[name='header_select']")
-                .select_withtext({select:function(){self.PickHeader()}})
+                .select_withtext({select:function(event, ui){self.PickHeader(ui.item)}})
                 .select_withtext("refresh");
             if(self.header_id>0){
                 //Lataa ylätunnisteen teksti, jos jokin tunniste valittu
@@ -207,39 +216,57 @@ StructuralElementAdder.prototype = {
      * Lataa näytettäväksi käyttäjän valitseman ylätunnisteen.
      * Jos käyttäjä syöttänyt kokonaan uuden, lisätään se ylätunnisteiden listaan.
      *
+     * @param selected_item valittu elementti (jquery ui-oliona)
+     *
      */
-    PickHeader: function(){
-        console.log(this.$lightbox.find(".headertemplates").val());
+    PickHeader: function(selected_item){
         var $sel = this.$lightbox.find("select[name='header_select']");
-        var maxval = 0;
-        $sel.find("option").each(function(idx, el){
-            var val = $(this).attr("value");
-            if(val){
-                if(isNaN($(this).val()*1)){
-                    //Jos syötetty uusi tunniste = arvo ei ole numeerinen
-                    console.log("NOVAL: " + $(this).val());
-                }
-                else{
-                    maxval = $(this).val()*1;
-                }
+        if (selected_item){
+            //Jos funktio ajettu todellisen valinnan seurauksena
+            //eikä vain muokkausikkunan avaamisen yhteydessä
+
+            if (isNaN(selected_item.value)*1){
+                //Jos syötetty kokonaan uusi ylätunniste
+                //(arvo ei-numeerinen)
+                console.log("uusi");
             }
-            else if($(this).val() == "Uusi tunniste"){
-                //console.log("NOVAL: " + $(this).val());
+            else if ( selected_item.value *1 === 0 ){
+                return 0;
             }
-        });
-        //$sel.find("option[value=]")
-        //var id = this.$lightbox.find("select[name='header_select']").val();
-        //var header = this.headerdata[id];
-        //this.$lightbox.find(".headertemplates textarea").val(header.maintext);
-        //if (!header){
-        //    //Jos syötetty uusi ylätunniste
-        //    params = {"segment_type":"insert_headertemplate","maintext":"","imgpos":"","imgname":"","template_name":};
-        //    $.post("php/loaders/save_structure_slide.php",params,function(data){
-        //        $("body").prepend(data);
-        //        console.log("moro")
-        //    });
-        //}
-        //this.header_id = id;
+            else{
+                console.log("vanha");
+                var header = this.headerdata[selected_item.value];
+                this.$lightbox.find(".headertemplates textarea").val(header.maintext);
+            }
+
+            //var id = this.$lightbox.find("select[name='header_select']").val();
+            //var header = this.headerdata[id];
+            //this.$lightbox.find(".headertemplates textarea").val(header.maintext);
+            //if (!header){
+            //    //Jos syötetty uusi ylätunniste
+            //    params = {"segment_type":"insert_headertemplate","maintext":"","imgpos":"","imgname":"","template_name":};
+            //    $.post("php/loaders/save_structure_slide.php",params,function(data){
+            //        $("body").prepend(data);
+            //        console.log("moro")
+            //    });
+            //}
+            //this.header_id = id;
+        }
+        else{
+            //Ladataan valittu tunniste ennen kuin niitä on vaihdettu tai muokattu
+        }
+
+        if($sel.val() === "0"){
+            this.$lightbox.find(".headertemplates_hiddencontent").hide();
+        }
+        else{
+            this.$lightbox.find(".headertemplates_hiddencontent").show();
+        }
+        
+        if(maintext){
+
+        }
+
     },
 
 
