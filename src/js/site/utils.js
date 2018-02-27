@@ -69,9 +69,14 @@ function extend(base, sub) {
  *
  */
 function Preview($div, filename){
-    $("<img>").attr({"src":"assets/" + filename,
-        "height":"100%",
-        "width":"100%",
-        "object-fit":"contain",
-    }).appendTo($div.find(".preview").html(""));
+    if( filename.indexOf("Ei kuvaa") > -1 ){ 
+        $div.find(".preview img").remove();
+    }
+    else{
+        $("<img>").attr({"src":"assets/" + filename,
+            "height":"100%",
+            "width":"100%",
+            "object-fit":"contain",
+        }).appendTo($div.find(".preview").html(""));
+    }
 }

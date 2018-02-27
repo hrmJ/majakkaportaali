@@ -49,9 +49,8 @@ else{
             break;
         case "insert_headertemplate":
             $con= new DbCon("../../../config.ini");
-            $con->q("INSERT INTO headers (imgname, imgposition, maintext) VALUES (:imgname,:imgpos, :maintext)",
-                Array("imgname"=>$_POST["imgname"], "imgpos" =>
-                $_POST["imgpos"],"maintext"=>$_POST["maintext"]),"none");
+            $con->q("INSERT INTO headers (template_name, imgname, imgposition, maintext) VALUES (:tname, 'Ei kuvaa','left','')",
+                Array("tname"=>$_POST["template_name"]),"none");
             break;
     }
 
