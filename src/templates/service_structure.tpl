@@ -55,17 +55,7 @@
                         <h3>Dian varsinainen teksti</h3>
                         <div><textarea class='infoslidetext slidetext' placeholder="Kirjoita diassa leipätekstinä näytettävä informaatio tähän."></textarea></div>
                     </div>
-                    <div>
-                        <h3>Upota messudataa</h3>
-                        <p>Voit lisätä diaan tietoja kyseisen päivän messusta. Tämä tapahtuu kirjoittamalla
-                        tekstikenttään @-merkki, minkä jälkeen tämän tekstin alle ilmestyy pudotusvalikko, josta voit
-                        valita syötettävän tiedon. Ensimmäinen pudotusvalikko vastaa ensimmäistä @-merkkiä, toinen
-                        toista ja niin edelleen.
-                        </p>
-                        <div class="injected-data">
-                        
-                        </div>
-                    </div>
+                    <div class="injection_placeholder"></div>
                 </div>
             </div>
         </div>
@@ -138,17 +128,7 @@
                             <h3>Ylätunnisteen teksti</h3>
                             <div><textarea class='' placeholder="Esimerkiksi @messu:  @aihe . Jos et halua ylätunnistetta, jätä tyhjäksi. TODO: pudotusvalikko "></textarea></div>
                         </div>
-                        <div>
-                            <h3>Upota messudataa</h3>
-                            <p>Voit lisätä diaan tietoja kyseisen päivän messusta. Tämä tapahtuu kirjoittamalla
-                            tekstikenttään @-merkki, minkä jälkeen tämän tekstin alle ilmestyy pudotusvalikko, josta voit
-                            valita syötettävän tiedon. Ensimmäinen pudotusvalikko vastaa ensimmäistä @-merkkiä, toinen
-                            toista ja niin edelleen.
-                            </p>
-                            <div class="injected-data">
-                            
-                            </div>
-                        </div>
+                        <div class="injection_placeholder"></div>
                     </div>
                     <div class="slidemodel-flex img-adder with-preview">
                         <div class="with-preview">
@@ -175,4 +155,17 @@
     </div>
 
 
+</div>
+
+<div class="hidden">
+    <div id='injected-data-container'>
+        <h3>Upota messudataa</h3>
+        <p>Voit lisätä diaan tietoja kyseisen päivän messusta. Voit valita 
+        syötettävän tiedon alla olevasta pudotusvalikosta tai määritellä
+        sen suoraan tekstikenttään {{- ja }}-merkkien väliin, esim. {{juontaja}}.
+        </p>
+        <div class="injected-data">
+        
+        </div>
+    </div>
 </div>

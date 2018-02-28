@@ -469,7 +469,8 @@ h3 {
   left: -10px; }
 
 .slidemodel-flex {
-  display: flex; }
+  display: flex;
+  margin-bottom: 2em; }
   .slidemodel-flex > div:first-of-type {
     flex: 2 1 60%; }
   .slidemodel-flex > div:nth-of-type(2) {

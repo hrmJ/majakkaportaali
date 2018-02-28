@@ -15,13 +15,13 @@ var StructuralElementAdder = function($container){
         this.previewhtml = "";
         this.id = $container.find(".content_id").val();
         this.header_id = $container.find(".header_id").val();
+        this.injectables = {"responsibilities":"vastuu tms."};
         if(!this.header_id){
             this.header_id = 0;
         }
 }
 
 StructuralElementAdder.prototype = {
-
     /**
      *  Näytä ikkuna, jossa käyttäjä voi muokata messun rakenteeseen lisättävää diaa
      */
@@ -35,11 +35,54 @@ StructuralElementAdder.prototype = {
         };
         this.$lightbox.append($buttons);
         this.$container.prepend(this.$lightbox);
-        $(".slidetext").on("change paste keyup",function(){self.InjectServiceData()});
+        this.InitializeInjectableData();
         $("[value='multisong']").click(function(){self.$container.find(".multisongheader").toggle(); });
         if(this.slideclass==".songslide") this.AddAutoComplete();
     },
 
+
+    /**
+     *
+     * Hakee tiedot datasta, jota messun dioihin voi syöttää, kuten juontajan nimen tms.
+     * Data tallennetaan valmiina jquery-elementteinä (select).
+     *
+     */
+    InitializeInjectableData: function(){ 
+        var self = this;
+        $.each(this.injectables,function(identifier, name){ 
+            var $select = $(`<select class='${identifier}_select'><option>Upota ${name}</option></select>`);
+            $select.on("change",function(){
+                if($(this)[0].selectedIndex > 0) { 
+                    //Lisää viereiseen tekstikenttään pudotusvalikon valinta
+                    var $textarea = $(this).parents(".injection_placeholder").prev().find("textarea");
+                    $textarea.val([$textarea.val(), "{{" + $(this).val() + "}}"].join(" "));
+                }
+            });
+            $.getJSON("php/loaders/load_data_for_injection.php",{"fetch": identifier},
+                function(data){
+                    $.each(data,function(idx,el){ 
+                        $select.append("<option>" + el + "</option>")
+                    });
+                    self.InsertInjectableData($select);
+                });
+        });
+    },
+
+
+    /**
+     *
+     * Lisää listan syötettävistä dataelementeistä niihin diaelementteihin, joissa sitä voidaan hyödyntää.
+     *
+     * @param $select syötettävä jquery-muotoinen select-elementtiä kuvaava olio
+     *
+     */
+    InsertInjectableData: function($select){ 
+        this.$lightbox.find(".injected-data").each(function(){ 
+            if( !$(this).find($select.attr("class")).length ){ 
+                $(this).append($select.clone(true));
+            }
+        });
+    },
 
     /**
      * Hae dian sisältötiedot tietokannasta: tyypistä riippuen vähintään nimi ja luokka,
@@ -139,6 +182,10 @@ StructuralElementAdder.prototype = {
         this.$lightbox.html("").prepend($(this.slideclass).clone(true)
                                         .append($("#headertemplate_container > *").clone(true))
                                         );
+        //Lisää syötettävän datan valitsimet
+        this.$lightbox.find(".injection_placeholder").each(function(){
+            $(this).html("").append($("#injected-data-container").clone(true));
+        });
         this.$lightbox.css({"width":$(".innercontent").width(),"top":  $("nav .dropdown").is(":visible") ? "-250px" : "-50px"}).show();
         this.SetSlideClasses();
     },
@@ -182,7 +229,7 @@ StructuralElementAdder.prototype = {
         }
         var self = this;
         self.$lightbox.find(".headertemplates select").on("change",function(){self.UpdatePickedHeader()});
-        self.$lightbox.find(".headertemplates textarea").on("keyup",function(){self.UpdatePickedHeader()});
+        self.$lightbox.find(".headertemplates textarea").on("change paste keyup",function(){self.UpdatePickedHeader()});
         self.headerdata = {};
         $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"headernames","id":""}, function(headers){
             //Jos alustetaan käyttöä varten ensimmäistä kertaa
