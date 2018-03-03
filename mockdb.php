@@ -80,9 +80,9 @@ $con->q("INSERT INTO services (servicedate, theme) VALUES ('2017-04-23', 'Kuudes
 
 
 //Lauluja messuun nro 2
-$con->q("INSERT INTO servicesongs (service_id, song_title, songtype) VALUES (2, 'Virsi 001', 'alkulaulu')",Array(),"none");
-$con->q("INSERT INTO servicesongs (service_id, song_title, songtype) VALUES (2, 'Virsi 012', 'paivanlaulu')",Array(),"none");
-$con->q("INSERT INTO servicesongs (service_id, song_title, songtype) VALUES (2, 'Virsi 033', 'loppulaulu')",Array(),"none");
+$con->q("INSERT INTO servicesongs (service_id, song_title, songtype) VALUES (2, 'Be all end all', 'alkulaulu')",Array(),"none");
+$con->q("INSERT INTO servicesongs (service_id, song_title, songtype) VALUES (2, 'Ukko Nooa', 'paivanlaulu')",Array(),"none");
+$con->q("INSERT INTO servicesongs (service_id, song_title, songtype) VALUES (2, 'Satu meni saunaan', 'loppulaulu')",Array(),"none");
 $con->q("INSERT INTO servicesongs (service_id, song_title, songtype) VALUES (2, 'Virsi 011', 'ws')",Array(),"none");
 $con->q("INSERT INTO servicesongs (service_id, song_title, songtype) VALUES (2, 'Virsi 029', 'ws')",Array(),"none");
 $con->q("INSERT INTO servicesongs (service_id, song_title, songtype) VALUES (2, 'Virsi 028', 'ws')",Array(),"none");

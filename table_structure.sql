@@ -151,7 +151,7 @@ CREATE TABLE songsegments (
 
 CREATE TABLE infosegments (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `maintext` varchar(100) DEFAULT NULL,
+  `maintext` varchar(9999) DEFAULT NULL,
   `header` varchar(300) DEFAULT NULL,
   `genheader` varchar(300) DEFAULT NULL,
   `subgenheader` varchar(300) DEFAULT NULL,
@@ -169,7 +169,7 @@ CREATE TABLE infosegments (
 CREATE TABLE headers (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `template_name` varchar(100) DEFAULT NULL,
-  `maintext` varchar(100) DEFAULT NULL,
+  `maintext` varchar(9999) DEFAULT NULL,
   `imgname` varchar(300) DEFAULT NULL,
   `imgposition` varchar(300) DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -206,6 +206,7 @@ CREATE TABLE service_specific_presentation_structure (
   id_in_type_table varchar(300) DEFAULT NULL,
   content_id int(10) unsigned NOT NULL,
   addedclass varchar(300) DEFAULT NULL,
+  header_id int(10) DEFAULT NULL,
   PRIMARY KEY (id)
 ) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
 

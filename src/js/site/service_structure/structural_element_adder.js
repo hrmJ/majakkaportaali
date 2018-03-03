@@ -40,7 +40,6 @@ StructuralElementAdder.prototype = {
         if(this.slideclass==".songslide") this.AddAutoComplete();
     },
 
-
     /**
      *
      * Hakee tiedot datasta, jota messun dioihin voi syöttää, kuten juontajan nimen tms.
@@ -67,7 +66,6 @@ StructuralElementAdder.prototype = {
                 });
         });
     },
-
 
     /**
      *
