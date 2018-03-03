@@ -16,6 +16,9 @@ switch($_GET["fetch"]){
     case "responsibilities":
         $loader->LoadResponsibilities();
         break;
+    case "service_meta":
+        $loader->LoadServiceMeta();
+        break;
 }
 $loader->OutputData();
 ?>

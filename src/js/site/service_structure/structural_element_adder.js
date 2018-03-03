@@ -15,7 +15,7 @@ var StructuralElementAdder = function($container){
         this.previewhtml = "";
         this.id = $container.find(".content_id").val();
         this.header_id = $container.find(".header_id").val();
-        this.injectables = {"responsibilities":"vastuu tms."};
+        this.injectables = {"responsibilities":"vastuu tms.", "service_meta": "pvm tms."};
         if(!this.header_id){
             this.header_id = 0;
         }
@@ -55,6 +55,10 @@ StructuralElementAdder.prototype = {
                     //Lisää viereiseen tekstikenttään pudotusvalikon valinta
                     var $textarea = $(this).parents(".injection_placeholder").prev().find("textarea");
                     $textarea.val([$textarea.val(), "{{" + $(this).val() + "}}"].join(" "));
+                    if( $(this).parents(".controller-subwindow").hasClass("headertemplates") ){ 
+                        //Jos kyseessä oli ylätunnisteeseen lisättävä data, päivitä ylätunniste tietokantaan
+                        self.UpdatePickedHeader();
+                    }
                 }
             });
             $.getJSON("php/loaders/load_data_for_injection.php",{"fetch": identifier},
@@ -375,30 +379,6 @@ StructuralElementAdder.prototype = {
         });
         this.$lightbox.html("").hide();
         $(".blurcover").remove();
-    },
-
-    /**
-     *
-     * Syötä valitsin, jolla voi liittää diaan tietoja messusta. Esimerkiksi sen, kuka on juontaja, kuka liturgi jne.
-     *
-     */
-    InjectServiceData: function(){
-        var atsings = this.$lightbox.find(".infoslidetext").val().match(/@/g);
-        var number_of_atsings = atsings ? atsings.length : 0;
-        if(this.$lightbox.find(".resp_select").length<number_of_atsings){
-            //Laske ät-merkkien määrä ja vertaa select-elementtien määrään
-            var $select = $("<select class='resp_select'></select>");
-            $.getJSON("php/loaders/load_data_for_injection.php",{fetch:"responsibilities"},
-                function(data){$.each(data,function(idx,el){ $select.append("<option>" + el + "</option>")})});
-            $select.appendTo(this.$lightbox.find(".injected-data"));
-        }
-        else if(this.$lightbox.find(".resp_select").length>number_of_atsings){
-            while (this.$lightbox.find(".resp_select").length>number_of_atsings){
-                this.$lightbox.find(".resp_select:last-of-type").remove();
-                atsings = this.$lightbox.find(".slidetext").val().match(/@/g);
-                number_of_atsings = atsings ? atsings.length : 0;
-            }
-        }
     },
 
     /**

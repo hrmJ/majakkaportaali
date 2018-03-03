@@ -79,6 +79,12 @@ class ServiceLoader extends ServiceDataLoader{
         $this->data =  $this->con->q("SELECT DISTINCT responsibility FROM responsibilities", Array(),"all_flat");
     }
 
+    /**
+     * Hakee messuista saatavilla olevat tiedot (tai oikeastaan nämä ovat toistaiseksi vakioita.)
+     */
+    function LoadServiceMeta(){
+        $this->data =  Array("Messun aihe","Messun päivämäärä");
+    }
 
 
     /**
