@@ -38,7 +38,7 @@ class ServiceDataLoader{
      *
      */
     function LoadSlideHeaders(){
-        $this->data = $this->con->q("SELECT id, template_name, maintext, imgname, imgposition FROM headers", Array(), "all");
+        $this->data = $this->con->q("SELECT id, template_name, maintext, imgname, imgposition, is_aside FROM headers", Array(), "all");
     }
 
 

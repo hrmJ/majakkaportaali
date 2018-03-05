@@ -172,6 +172,7 @@ CREATE TABLE headers (
   `maintext` varchar(9999) DEFAULT NULL,
   `imgname` varchar(300) DEFAULT NULL,
   `imgposition` varchar(300) DEFAULT NULL,
+  `is_aside` boolean DEFAULT false,
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
 

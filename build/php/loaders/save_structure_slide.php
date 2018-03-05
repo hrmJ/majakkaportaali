@@ -43,9 +43,9 @@ else{
             break;
         case "update_headertemplate":
             $con= new DbCon("../../../config.ini");
-            $con->q("UPDATE headers SET imgname = :imgname, imgposition = :imgpos, maintext = :maintext WHERE id = :header_id",
+            $con->q("UPDATE headers SET imgname = :imgname, imgposition = :imgpos, maintext = :maintext, is_aside = :is_aside WHERE id = :header_id",
                 Array("imgname"=>$_POST["imgname"],"header_id"=>$_POST["header_id"],
-                "imgpos" => $_POST["imgpos"],"maintext"=>$_POST["maintext"]),"none");
+                "imgpos" => $_POST["imgpos"],"maintext"=>$_POST["maintext"], "is_aside"=>$_POST["is_aside"]),"none");
             break;
         case "insert_headertemplate":
             $con= new DbCon("../../../config.ini");

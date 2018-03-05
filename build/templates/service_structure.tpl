@@ -123,6 +123,9 @@
                     </select>
                 </div>
                 <div class="headertemplates_hiddencontent">
+                    <div class="slidemodel-flex some-margin">
+                        <input type='checkbox' value='use_aside' name='header_type'> Sivutunniste eikä ylätunniste</input>
+                    </div>
                     <div class="slidemodel-flex">
                         <div>
                             <h3>Ylätunnisteen teksti</h3>

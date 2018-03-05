@@ -751,8 +751,8 @@ StructuralElementAdder.prototype = {
     UpdatePickedHeader: function(){
         var self = this;
         var $header = this.$lightbox.find(".headertemplates");
-        var params = {segment_type:"update_headertemplate"};
-        console.log(params);
+        var is_aside = this.$lightbox.find("input[name='header_type']").get(0).checked ? 1 : 0;
+        var params = {segment_type:"update_headertemplate",is_aside: is_aside};
         params.header_id = $header.find("select[name='header_select']").val();
         params.imgpos = $header.find(".img-pos-select").val();
         params.imgname = $header.find(".img-select").val();
@@ -781,6 +781,7 @@ StructuralElementAdder.prototype = {
         var self = this;
         self.$lightbox.find(".headertemplates select").on("change",function(){self.UpdatePickedHeader()});
         self.$lightbox.find(".headertemplates textarea").on("change paste keyup",function(){self.UpdatePickedHeader()});
+        self.$lightbox.find(".headertemplates [name='header_type']").on("click",function(){self.UpdatePickedHeader()});
         self.headerdata = {};
         $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"headernames","id":""}, function(headers){
             //Jos alustetaan käyttöä varten ensimmäistä kertaa
@@ -868,6 +869,13 @@ StructuralElementAdder.prototype = {
             this.$lightbox.find(".headertemplates textarea").val(header.maintext);
             this.$lightbox.find(".headertemplates .img-select").val(header.imgname);
             this.$lightbox.find(".headertemplates .img-pos-select").val(header.imgposition);
+            console.log(header.is_aside);
+            if(header.is_aside == 1){
+                this.$lightbox.find(".headertemplates input[name='header_type']")[0].checked = true;
+            }
+            else{
+                this.$lightbox.find(".headertemplates input[name='header_type']")[0].checked = false;
+            }
             if(header.imgname !== "Ei kuvaa"){ 
                 Preview(this.$lightbox.find(".headertemplates .img-select").parents(".with-preview"),"images/" + header.imgname);
             }
