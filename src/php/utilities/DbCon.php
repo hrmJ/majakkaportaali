@@ -1,5 +1,9 @@
 <?php
 
+namespace Portal\utilities;
+use PDO;
+
+
 /**
  *
  * Hallitsee yhteyksiä tietokantaan.

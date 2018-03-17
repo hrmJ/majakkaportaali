@@ -7,9 +7,9 @@
  *
  */
 
+require("../vendor/autoload.php");
 require("php/templating.php");
 require("php/services.php");
-require("php/database.php");
 require("php/utilities.php");
 require("php/select.php");
 require("php/songs.php");
