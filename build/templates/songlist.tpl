@@ -17,7 +17,7 @@
 
 
        <section class="side-main">
-            <h2>Majakkamessun laulut</h2>
+            <h2 class="inner-title">Majakkamessun laulut</h2>
 
             <div class="below-header">
                 <span><a href="javascript:void(0)" class="songlistview-toggle">Selaa laulujen listaa</a></span>

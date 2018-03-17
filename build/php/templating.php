@@ -335,6 +335,7 @@ class Page extends Template{
                 $this->con = new SongCon("$this->path/../../config.ini");
                 $bodyclass = "songs";
                 $title = "Laulut majakkamessuun xx. (Bändinä x)";
+                $byline = "<h2>Messun laulut</h2>";
                 break;
             case "service_structure":
                 $this->con = new DbCon("$this->path/../../config.ini");

@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css?family=Lustria|Noto+Serif");
+@import url("https://fonts.googleapis.com/css?family=Lustria|Noto+Serif|Amatic+SC");
 .hidden {
   display: none; }
 
@@ -82,10 +82,14 @@ main {
     padding-left: 0px;
     display: block;
     width: 100%;
-    height: 10em; }
+    height: 10em;
+    font-family: "Amatic SC", cursive; }
 
   .service_structure .byline {
     background: url(../assets/images/site/byline_servicestructure.png); }
+
+  .songs .byline {
+    background: url(../assets/images/site/byline_songs.png); }
 
   .inner-title {
     display: none; } }
@@ -180,8 +184,9 @@ h3 {
 
 .byline h2 {
   margin-left: 2em;
-  font-size: 3em;
-  color: white; }
+  font-size: 4em;
+  color: white;
+  font-family: "Amatic SC", cursive; }
 
 .data-container {
   display: flex;

@@ -1,0 +1,15 @@
+{
+	"name": "hrmj/majakkaportaali",
+	"description": "A portal for managing worship services and volunteers",
+	"type": "project",
+	"authors": [
+	{
+	    "name": "Juho Härme",
+	    "email": "juho.harme@gmail.com"
+	}
+	],
+	"require": {},
+	"autoload":{
+        "psr-4":{"Portal\\":"src"}
+	}
+}

@@ -164,6 +164,9 @@ käyttää isäntäkoneelta käsin, joten asennus virtuaalikoneelle periaatteess
 
 PHP-luokkien ja kirjastojen hallinta tapahtuu composer-softan avulla (automaattisesti asennettu esim. homestead improved:issa).
 
+projektin juuressa aja:
+
+`composer dump-autoload`
 
 
 ## Projektin kansiorakenne
