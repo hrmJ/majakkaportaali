@@ -159,6 +159,13 @@ Lisäksi asennetaan automaattisessa testauksessa käytettävät pluginit, joskin
 käyttää isäntäkoneelta käsin, joten asennus virtuaalikoneelle periaatteessa turhaa. (TODO muokkaa ohjeet).
     
 
+## COMPOSER
+
+
+PHP-luokkien ja kirjastojen hallinta tapahtuu composer-softan avulla (automaattisesti asennettu esim. homestead improved:issa).
+
+
+
 ## Projektin kansiorakenne
 
 Juuri:

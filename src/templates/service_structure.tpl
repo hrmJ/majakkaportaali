@@ -1,6 +1,6 @@
 <div>
     <section class="innercontent">
-        <h2>Messun rakenne</h2>
+        <h2 class='inner-title'>Messun rakenne</h2>
         <p>Tällä sivulla voit määritellä messun rakenteen tai tarkemmin
         sanottuna sen, millaisena rakenne näyttäytyy diaesityksessä</p>
         <div>

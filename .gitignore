@@ -22,3 +22,5 @@ config.ini
 *virsi_09*txt
 build/assets/images/*
 src/assets/images/*jpg
+
+/vendor/

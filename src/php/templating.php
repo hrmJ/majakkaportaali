@@ -333,13 +333,12 @@ class Page extends Template{
         switch($this->type){
             case "songlist":
                 $this->con = new SongCon("$this->path/../../config.ini");
-                $byline = "Laulujen syöttö";
                 $bodyclass = "songs";
                 $title = "Laulut majakkamessuun xx. (Bändinä x)";
                 break;
             case "service_structure":
                 $this->con = new DbCon("$this->path/../../config.ini");
-                $byline = "Messurakenne";
+                $byline = "<h2>Messun rakenne</h2>";
                 $bodyclass = "service_structure";
                 break;
             case "servicelist":

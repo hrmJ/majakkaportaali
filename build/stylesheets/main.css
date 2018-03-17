@@ -82,8 +82,13 @@ main {
     padding-left: 0px;
     display: block;
     width: 100%;
-    height: 10em;
-    background: url(../assets/images/bg/mountain.png); } }
+    height: 10em; }
+
+  .service_structure .byline {
+    background: url(../assets/images/site/byline_servicestructure.png); }
+
+  .inner-title {
+    display: none; } }
 nav {
   position: relative;
   height: 40px;
@@ -172,6 +177,11 @@ h2 {
 
 h3 {
   color: #4d4d4d; }
+
+.byline h2 {
+  margin-left: 2em;
+  font-size: 3em;
+  color: white; }
 
 .data-container {
   display: flex;

@@ -1,6 +1,7 @@
 $rootpath: '../';
 $paths: ('icons':$rootpath + "assets/images/icons/",
          'bg':$rootpath + "assets/images/bg/",
+         'site':$rootpath + "assets/images/site/",
          );
 
 $hamburger: map-get($paths,"icons") + "hamburger.svg";
