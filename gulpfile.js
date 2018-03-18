@@ -22,7 +22,7 @@ var
 
 out = {phputils: folder.build + "php/", 
         phpmain: folder.build,
-        templates: folder.build + "templates/",
+        templates: folder.build + "views/",
         };
 
 
@@ -45,7 +45,7 @@ gulp.task("htmlmain",function(){
 });
 
 gulp.task("templates",function(){
-    gulp.src(folder.src + "templates/**/*").pipe(newer(out.templates)).pipe(gulp.dest(out.templates));
+    gulp.src(folder.src + "views/**/*").pipe(newer(out.templates)).pipe(gulp.dest(out.templates));
 });
 
 gulp.task("vendors",function(){
@@ -69,7 +69,7 @@ gulp.task("watch",function(){
     gulp.watch(folder.src + "php/**/*",["phputils"]);
     gulp.watch(folder.src + "*.php",["phpmain"]);
     gulp.watch(folder.src + "*.html",["htmlmain"]);
-    gulp.watch(folder.src + "templates/**/*",["templates"]);
+    gulp.watch(folder.src + "views/**/*",["templates"]);
     gulp.watch(folder.src + "js/site/**/*.js",["js"]);
     gulp.watch(folder.src + "sass/**/*",["css"]);
     gulp.watch(folder.src + "assets/**/*",["assets"]);
