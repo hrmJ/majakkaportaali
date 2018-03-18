@@ -14,7 +14,11 @@ $m = new Mustache_Engine(array(
 $layout = $m->loadTemplate('layout'); 
 $service = $m->loadTemplate('service'); 
 
-$page_output = $layout->render(Array("content"=>$service->render()));
+$page_content = Array("content"=>$service->render(),
+    "byline" => "<h2>Majakkamessu 10.10.2010</h2>",
+    "bodyclass" => "songs"
+    );
+$page_output = $layout->render($page_content);
 
 echo $page_output;
 

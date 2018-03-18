@@ -188,6 +188,16 @@ h3 {
   color: white;
   font-family: "Amatic SC", cursive; }
 
+.ui-widget-header {
+  background: none; }
+
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover {
+  background: #262626; }
+
+.ui-widget-header {
+  border: none;
+  border-bottom: 1px solid #ddd; }
+
 .data-container {
   display: flex;
   flex-flow: column;
