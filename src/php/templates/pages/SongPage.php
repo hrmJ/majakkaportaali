@@ -1,5 +1,9 @@
 <?php
 
+namespace Portal\templates\pages;
+
+use Portal\templates\pages\Page;
+
 /**
  *
  * Laulujen syöttösivun template.
@@ -23,6 +27,23 @@ class SongPage extends Page{
         $this->multisongsdata = Array("ws", "com");
         $this->multisongtargets = Array("ws"=>"worshipsongs", "com"=>"communionsongs");
         parent::__construct();
+    }
+
+    /**
+     *
+     * Hakee messu-id:n, jos sitä ei ole asetettu.
+     *
+     * @param DbCon $con yhteys tietokantaan
+     *
+     * @return int päivämäärältään lähimmän messun id.
+     *
+     */
+    public function GetIdByDate($con, $date){
+        //Pyri ensiksi löytämään lähin sunnuntai tulevaisuudesta
+        $id = $con->q("SELECT id FROM services WHERE servicedate >= :today ORDER BY servicedate",Array("today"=>$date), "column");
+        //Jos ei löydy, ota lähin menneisyydestä
+        $id = ($id ? $id: $con->q("SELECT id FROM services WHERE servicedate < :today ORDER BY servicedate DESC",Array("today"=>$date), "column"));
+        return $id;
     }
 
     /**

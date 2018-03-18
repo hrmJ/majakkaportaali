@@ -8,17 +8,12 @@ use Portal\utilities\SongCon;
 /**
  * @covers DbCon
  */
-class DbTest extends TestCase
+class SongListTest extends TestCase
 {
 
-    public function testCreateConnection() {
+    protected function SetUp() {
         $n = new DbCon("config.ini");
         $this->assertInstanceOf(DbCon::class,$n);
-    }
-
-    public function testCreateSongConnection() {
-        $n = new SongCon("config.ini");
-        $this->assertInstanceOf(SongCon::class,$n);
     }
 
 }

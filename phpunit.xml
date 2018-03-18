@@ -3,5 +3,8 @@
         <testsuite name="basic_functionalities">
             <file>tests/db.php</file>
         </testsuite>
+        <testsuite name="templates">
+            <file>tests/template.php</file>
+        </testsuite>
     </testsuites>
 </phpunit>
