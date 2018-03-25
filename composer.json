@@ -8,12 +8,8 @@
 	    "email": "juho.harme@gmail.com"
 	}
 	],
-	"require": {
-		"catfan/medoo": "^1.5",
-		"mustache/mustache": "^2.12"
-	},
+	"require": {},
 	"autoload":{
-        "psr-4":{"Portal\\":"src/php"
-        }
+        "psr-4":{"Portal\\":"src"}
 	}
 }

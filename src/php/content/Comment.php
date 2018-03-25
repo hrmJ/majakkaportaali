@@ -43,7 +43,7 @@ class Comment{
      *
      *
      */
-    public function __construct($con, $sid, $m){
+    public function __construct(\Medoo\Medoo $con, $sid, $m){
         $this->con = $con;
         $this->time = date('Y-m-d H:i:s');
         $this->service_id = $sid;
