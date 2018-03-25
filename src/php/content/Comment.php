@@ -1,9 +1,14 @@
 <?php
 /**
  *
- * Kommenttiolio
+ * Kommenttluokka
  *
  */
+
+
+namespace Portal\content;
+
+use Medoo\Medoo;
 
 
 /**
@@ -16,7 +21,8 @@ class Comment{
 
     /**
      *
-     * @param DbCon $con tietokantayhteys
+     * @param Medoo $con tietokantayhteys
+     * @param Mustache $template_engine Mustache-template engine
      * @param string $theme aihe, johon kommentti liittyy (jokin vastuutyyppi tai esimerkiksi 'infoasia')
      * @param string $commentator kommentin lähettäjä
      * @param string $content kommentin sisältö
@@ -26,17 +32,22 @@ class Comment{
      *
      */
     protected $con;
+    public $template_engine;
     protected $theme="";
     protected $commentator="";
     protected $time="";
     protected $content="";
     protected $replyto=NULL;
 
-    public function __construct($con, $sid, $path){
+    /*
+     *
+     *
+     */
+    public function __construct($con, $sid, $m){
         $this->con = $con;
         $this->time = date('Y-m-d H:i:s');
         $this->service_id = $sid;
-        $this->path = $path;
+        $this->template_engine = $m;
     }
 
     /**
@@ -107,29 +118,30 @@ class Comment{
      */
     public function LoadAll(){
         //Järjestä ketjut niin, että tuorein ekana
-        $all = $this->con->q("SELECT * FROM comments WHERE reply_to  = 0 AND service_id = :sid ORDER by comment_time DESC",Array("sid"=>$this->service_id),"all");
+        $all =  $this->con->select("comments","*",[
+            'reply_to' => 0,
+            'service_id' => $this->service_id,
+            'ORDER' => [ 'comment_time' => 'DESC' ]
+        ]);
+
         $commentstring = "";
         foreach($all as $chain){
-            $tpl = new Template("{$this->path}/comment.tpl");
-            $tpl->Set("content",$chain["content"])->Set("theme",$chain["theme"])->Set("commentator",$chain["commentator"])->Set("id",$chain["id"])->Set("time",$chain["comment_time"]);
-            $subchain = $this->con->q("SELECT * FROM comments WHERE reply_to  = :id ORDER by comment_time",Array("id"=>$chain["id"]),"all");
-            //Huom: järjestä vastaukset niin, että tuorein viimeisenä;
+            //Kootaan kaikki 
+            $tpl = $this->template_engine->loadTemplate('comment'); 
+            $subchain = $this->con->select("comments", "*",[
+                'reply_to' => $chain["id"],
+                'ORDER' => ['comment_time' => 'DESC']
+            ]);
+            //Huom: järjestä vastaukset niin, että tuorein viimeisenä
             if(!$subchain){
-                $tpl->Set("subchain","");
-            }
-            else{
                 $subchainstring = "";
                 foreach($subchain as $reply){
-                    $subtpl = new Template("{$this->path}/comment.tpl");
-                    $subtpl->Set("content",$reply["content"])->Set("theme",$reply["theme"]) ->Set("commentator",$reply["commentator"])->Set("id",$reply["id"])->Set("subchain","")->Set("time",$reply["comment_time"]);
-                    $subchainstring .= "\n" . $subtpl->Output();
+                    $subtpl = $this->template_engine->loadTemplate('comment'); 
+                    $subchainstring .= "\n{$subtpl->render($reply)}";
                 }
-                $tpl->Set("subchain",$subchainstring);
             }
-            $comment_controls = new Template("{$this->path}/comment-insert-controls.tpl");
-            $comment_controls->Set("commentthemeselect", "");
-            $tpl->Set("comment-insert-controls",$comment_controls->Output());
-            $commentstring .= "\n\n" . $tpl->Output();
+            $commentstring .= $tpl->render(array_merge($chain,
+                Array("subchain" => $subchainstring)));
 
         }
         return $commentstring;

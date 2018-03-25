@@ -18,6 +18,7 @@ $page_content = Array("content"=>$service->render(),
     "byline" => "<h2>Majakkamessu 10.10.2010</h2>",
     "bodyclass" => "songs"
     );
+
 $page_output = $layout->render($page_content);
 
 echo $page_output;
