@@ -40,7 +40,8 @@ class DetailsPage extends Page{
      *
      */
     public function SetCommentThemeSelect(){
-        $responsibilities = array_merge(Array("Kommentin aihe","----------","Yleinen","Infoasia"), $this->con->q("SELECT DISTINCT responsibility FROM responsibilities",Array(),"all_flat"));
+        $responsibilities = array_merge(Array("Kommentin aihe","----------","Yleinen","Infoasia"), 
+            $this->con->select("responsibilities", "responsibility" =>  Medoo::raw('DISTINCT(responsibility)')
         $select = new Select($this->path, $responsibilities); 
         $comment_controls = new Template("{$this->path}/comment-insert-controls.tpl");
         $comment_controls->Set("commentthemeselect", "<div>{$select->OutputSelect()}</div>");

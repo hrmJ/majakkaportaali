@@ -56,8 +56,14 @@ class Comment{
      *
      */
     public function Save(){
-        $this->con->q("INSERT INTO comments (service_id, comment_time, theme, commentator, content, reply_to) VALUES (:sid, :ct, :th, :ctor, :ctnt, :rpl)
-                        ",Array("sid"=>$this->service_id,"ct"=>$this->time,"th"=>$this->theme,"ctor"=>$this->commentator, "ctnt"=>$this->content, "rpl"=>$this->replyto),"none");
+        $this->con->insert("comments",[
+            "service_id" => $this->service_id,
+            "comment_time" => $this->time,
+            "theme" => $this->theme,
+            "commentator" => $this->commentator,
+            "content" => $this->content,
+            "reply_to" => $this->replyto
+        ]);
     }
 
     /**
