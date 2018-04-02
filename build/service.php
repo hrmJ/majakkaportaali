@@ -8,7 +8,6 @@
 require '../vendor/autoload.php';
 
 use Medoo\Medoo;
-use Portal\content\Comment;
 
 $config = parse_ini_file("../config.ini");
 $database = new Medoo([
@@ -27,18 +26,13 @@ $m = new Mustache_Engine(array(
 $layout = $m->loadTemplate('layout'); 
 $service = $m->loadTemplate('service'); 
 
-$comment= new Comment($database, $_GET["service_id"], $m);
-$service_content = Array("comments" => $comment->LoadAll());
-
 $page_content = Array(
-    "content" => $service->render($service_content),
+    "content" => $service->render(),
     "byline" => "<h2>Majakkamessu 10.10.2010</h2>",
-    "bodyclass" => "songs"
+    "bodyclass" => "servicedetails"
     );
 
-$page_output = $layout->render($page_content);
-
-echo $page_output;
+echo $layout->render($page_content);
 
 
 ?>

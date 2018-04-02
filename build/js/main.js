@@ -137,7 +137,7 @@ function Preview($div, filename){
 *
 */
 
-var loaderpath = "php/loaders";
+var loaderpath = "php/ajax";
 
 
 /**
@@ -157,28 +157,47 @@ function ExpandCommentField(){
 /**
  *
  * Lataa kaikki kommentit tietokannasta dokumenttiin
+ * Lataa myös uuden kommentin syöttämiseen tarvittavat tiedot.
  *
  */
 function LoadComments(){
-    $.post(loaderpath + "/loadcomments.php", {id:$("#service_id").val()}, function(data){
-        $(".loadedcomments").html(data);
-        $(".newcomment").val("");
-        $(".commentator").val("");
-        $(".newcomment:eq(0)").height("3em");
-        $(".comment comment-insert-controls").hide()
-        $(".commentdetails").hide()
-        $("select").prop('selectedIndex',0);
-        $(".comment-answer-link")
-            .click(CreateCommentAnswerField)
-            .each(function(){
-            //Muuta vastauslinkin tekstiä ketjujen osalta
-            if($(this).parent().parent().find(".comment").length>0) $(this).text("Jatka viestiketjua");
-        });
-        //Huom! Varmistetan, ettei tallennustapahtuma tule sidotuksi kahdesti
-        $(".savecomment").unbind("click",SaveComment);
-        $(".savecomment").bind("click",SaveComment);
-        $(".newcomment:eq(0)").click(ExpandCommentField);
-    });
+    $.get("php/ajax/Loader.php", {
+        action: "load_comments",
+        service_id: 2
+        },
+        function(data){
+            $(".loadedcomments").html(data);
+            $(".newcomment").val("");
+            $(".commentator").val("");
+            $(".newcomment:eq(0)").height("3em");
+            $(".comment comment-insert-controls").hide()
+            $(".commentdetails").hide()
+            $("select").prop('selectedIndex',0);
+            $(".comment-answer-link")
+                .click(CreateCommentAnswerField)
+                .each(function(){
+                //Muuta vastauslinkin tekstiä ketjujen osalta
+                if($(this).parent().parent().find(".comment").length>0) $(this).text("Jatka viestiketjua");
+            });
+            //Huom! Varmistetan, ettei tallennustapahtuma tule sidotuksi kahdesti
+            $(".savecomment").unbind("click",SaveComment);
+            $(".savecomment").bind("click",SaveComment);
+            $(".newcomment:eq(0)").click(ExpandCommentField);
+    }
+    );
+
+    //Luo select-elementin, jossa kommentin aiheen voi valita
+    $.getJSON("php/ajax/Loader.php", {
+        action: "get_responsibilities_list",
+        },
+        function(data){
+            var $sel = $(".commentdetails select");
+            $sel.html("").append("<option>Ei aihetta</option>");
+            $.each(data, function(idx, el){
+                $sel.append(`<option>${el}</option>`)
+            });
+        }
+    );
 }
 
 /**

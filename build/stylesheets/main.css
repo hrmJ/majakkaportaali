@@ -88,7 +88,7 @@ main {
   .service_structure .byline {
     background: url(../assets/images/site/byline_servicestructure.png); }
 
-  .songs .byline {
+  .songs .byline, .servicedetails .byline {
     background: url(../assets/images/site/byline_songs.png); }
 
   .inner-title {
@@ -269,13 +269,14 @@ h3 {
       background: #e9e9e9; }
     .comment .comment .answercomment {
       display: none; }
-  .comment .comment-insert-controls {
-    display: none;
-    margin-top: 1em; }
-    .comment .comment-insert-controls div {
-      padding-left: 0px; }
-    .comment .comment-insert-controls textarea {
-      height: 6em; }
+
+.comment-insert-controls {
+  display: none;
+  margin-top: 1em; }
+  .comment-insert-controls div {
+    padding-left: 0px; }
+  .comment-insert-controls textarea {
+    height: 6em; }
 
 .commentheader {
   padding: 0.2em;

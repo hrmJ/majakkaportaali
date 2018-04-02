@@ -12,6 +12,8 @@ require("../songs.php");
 require("../templating.php");
 require("../comments.php");
 
-$comment= new Comment(new DbCon("../../../config.ini"), $_GET["id"], "../../templates");
+
+$comment= new Comment($database, $_GET["service_id"], $m);
 echo $comment->LoadAll();
+
 ?>

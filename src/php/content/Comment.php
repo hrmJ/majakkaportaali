@@ -1,5 +1,4 @@
-<?php
-/**
+<?php /**
  *
  * Kommenttluokka
  *
@@ -9,6 +8,7 @@
 namespace Portal\content;
 
 use Medoo\Medoo;
+use PDO;
 
 
 /**
@@ -152,6 +152,8 @@ class Comment{
         }
         return $commentstring;
     }
+
+
 
 }
 

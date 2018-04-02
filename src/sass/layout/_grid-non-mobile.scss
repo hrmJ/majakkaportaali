@@ -39,7 +39,7 @@
         background:url(#{map-get($paths,"site") + "byline_servicestructure.png"});
     }
 
-    .songs .byline{
+    .songs .byline, .servicedetails .byline{
         background:url(#{map-get($paths,"site") + "byline_songs.png"});
     }
 

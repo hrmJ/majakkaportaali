@@ -51,6 +51,8 @@ class CommentTest extends TestCase
 
     }
 
+
+
     /**
      *
      * Testaa uuden kommentin tallentaminen tietokantaan
@@ -59,7 +61,7 @@ class CommentTest extends TestCase
     public function testSaveNewComment(){
 
         #var_dump($this->con->select("responsibilities", Medoo::raw('DISTINCT(responsibility)')));
-        var_dump($this->con->query("SELECT DISTINCT responsibility FROM responsibilities")->fetchAll(PDO::FETCH_COLUMN));
+        #var_dump($this->con->query("SELECT DISTINCT responsibility FROM responsibilities")->fetchAll(PDO::FETCH_COLUMN));
         #$comment= new Comment($this->con, 2, $this->m);
         #$comment->SetTheme("yleinen")->SetReplyTo("")->SetContent
         ##uniqid()

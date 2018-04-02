@@ -45,17 +45,18 @@
         }
     }
 
-    .comment-insert-controls{
-        display:none;
-        margin-top:1em;
-        div{
-            padding-left:0px;
-        }
-        textarea{
-            height:6em;
-        }
-    }
 
+}
+
+.comment-insert-controls{
+    display:none;
+    margin-top:1em;
+    div{
+        padding-left:0px;
+    }
+    textarea{
+        height:6em;
+    }
 }
 
 .commentheader{
