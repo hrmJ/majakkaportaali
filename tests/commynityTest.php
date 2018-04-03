@@ -21,6 +21,7 @@ class CommunityTest extends TestCase
         'server' => 'localhost',
         'username' => $config["un"],
         'password' => $config["pw"],
+        'charset' => 'utf8'
         ]);
         $this->con = $database;
     }

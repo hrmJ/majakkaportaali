@@ -28,10 +28,23 @@ $m = new Mustache_Engine(array(
     'loader' => new Mustache_Loader_FilesystemLoader('../../views')
     ));
 
+
 switch($_GET["action"]){
+    case "save_comment":
+        $comment= new Comment($database, $_GET["service_id"], $m);
+        $comment
+            ->SetTheme($_GET["theme"])
+            ->SetContent($_GET["content"])
+            ->SetCommentator($_GET["commentator"])
+            ->SetReplyTo($_GET["replyto"])
+            ->Save();
+        echo "MORO";
+        break;
     case "load_comments":
         $comment= new Comment($database, $_GET["service_id"], $m);
         echo $comment->LoadAll();
+        break;
+    case "save_comment":
         break;
     case "get_responsibilities_list":
         $com= new Community($database);

@@ -21,6 +21,7 @@ class CommentTest extends TestCase
         'server' => 'localhost',
         'username' => $config["un"],
         'password' => $config["pw"],
+        'charset' => 'utf8'
         ]);
         $this->con = $database;
         $this->m = new Mustache_Engine(array(
@@ -59,16 +60,17 @@ class CommentTest extends TestCase
      *
      **/
     public function testSaveNewComment(){
-
-        #var_dump($this->con->select("responsibilities", Medoo::raw('DISTINCT(responsibility)')));
-        #var_dump($this->con->query("SELECT DISTINCT responsibility FROM responsibilities")->fetchAll(PDO::FETCH_COLUMN));
-        #$comment= new Comment($this->con, 2, $this->m);
-        #$comment->SetTheme("yleinen")->SetReplyTo("")->SetContent
-        ##uniqid()
-        #$comment->Save();
-        #$service = $this->m->loadTemplate('service'); 
-        #$this->assertRegExp("/class=.comment./",
-        #    $service->render(Array("comments" => $comment->LoadAll())));
+        $comment= new Comment($this->con, 2, $this->m);
+        $comments_before = $this->con->query("SELECT count(*) FROM comments")->fetchAll(PDO::FETCH_COLUMN);
+        $comment
+            ->SetTheme("juonaja")
+            ->SetContent("Testisisältö on tässä.")
+            ->SetCommentator("Pekka")
+            ->SetReplyTo("1")
+            ->Save();
+        $comments_after = $this->con->query("SELECT count(*) FROM comments")->fetchAll(PDO::FETCH_COLUMN);
+        $this->assertTrue($comments_after > $comments_before);
+        $this->con->query("DELETE FROM comments WHERE id  = (SELECT max(id) FROM comments)");
 
     }
 
