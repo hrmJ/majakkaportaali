@@ -59,20 +59,20 @@ class CommentTest extends TestCase
      * Testaa uuden kommentin tallentaminen tietokantaan
      *
      **/
-    public function testSaveNewComment(){
-        $comment= new Comment($this->con, 2, $this->m);
-        $comments_before = $this->con->query("SELECT count(*) FROM comments")->fetchAll(PDO::FETCH_COLUMN);
-        $comment
-            ->SetTheme("juonaja")
-            ->SetContent("Testisisältö on tässä.")
-            ->SetCommentator("Pekka")
-            ->SetReplyTo("1")
-            ->Save();
-        $comments_after = $this->con->query("SELECT count(*) FROM comments")->fetchAll(PDO::FETCH_COLUMN);
-        $this->assertTrue($comments_after > $comments_before);
-        $this->con->query("DELETE FROM comments WHERE id  = (SELECT max(id) FROM comments)");
-
-    }
+#    public function testSaveNewComment(){
+#        $comment= new Comment($this->con, 2, $this->m);
+#        $comments_before = $this->con->query("SELECT count(*) FROM comments")->fetchAll(PDO::FETCH_COLUMN);
+#        $comment
+#            ->SetTheme("juonaja")
+#            ->SetContent("Testisisältö on tässä.")
+#            ->SetCommentator("Pekka")
+#            ->SetReplyTo("1")
+#            ->Save();
+#        $comments_after = $this->con->query("SELECT count(*) FROM comments")->fetchAll(PDO::FETCH_COLUMN);
+#        $this->assertTrue($comments_after > $comments_before);
+#        $this->con->query("DELETE FROM comments WHERE id  = (SELECT max(id) FROM comments)");
+#
+#    }
 
 
 }

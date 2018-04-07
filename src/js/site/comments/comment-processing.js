@@ -92,7 +92,9 @@ function SaveComment(){
 function CreateCommentAnswerField(){
     var $commentbox = $(this).parents(".comment");
     if( !$commentbox.find(".comment_controls").length ){
-        $(".comment_controls:eq(0)").clone(true)
+        var $controls = $(".comment_controls:eq(0)").clone(true);
+        $controls.find("select").remove();
+        $controls
             .appendTo($commentbox)
             .css({"margin-top":"1em"})
             .hide().slideDown()

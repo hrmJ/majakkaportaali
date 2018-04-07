@@ -136,10 +136,11 @@ class Comment{
             $tpl = $this->template_engine->loadTemplate('comment'); 
             $subchain = $this->con->select("comments", "*",[
                 'reply_to' => $chain["id"],
-                'ORDER' => ['comment_time' => 'DESC']
+                'ORDER' => ['comment_time' => 'ASC']
             ]);
             //Huom: järjestä vastaukset niin, että tuorein viimeisenä
-            if(!$subchain){
+            $subchainstring = "";
+            if($subchain){
                 $subchainstring = "";
                 foreach($subchain as $reply){
                     $subtpl = $this->template_engine->loadTemplate('comment'); 

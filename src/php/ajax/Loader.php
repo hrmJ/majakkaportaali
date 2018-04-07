@@ -38,7 +38,6 @@ switch($_GET["action"]){
             ->SetCommentator($_GET["commentator"])
             ->SetReplyTo($_GET["replyto"])
             ->Save();
-        echo "MORO";
         break;
     case "load_comments":
         $comment= new Comment($database, $_GET["service_id"], $m);
