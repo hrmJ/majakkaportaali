@@ -12,6 +12,7 @@ require '../../../vendor/autoload.php';
 use Medoo\Medoo;
 use Portal\content\Comment;
 use Portal\content\Community;
+use Portal\content\Service;
 
 
 $config = parse_ini_file("../../../config.ini");
@@ -28,26 +29,30 @@ $m = new Mustache_Engine(array(
     'loader' => new Mustache_Loader_FilesystemLoader('../../views')
     ));
 
+//Käytä joko get- tai post-dataa riippuen kutsujasta
+$params = (isset($_GET["action"]) ? $_GET : $_POST);
 
-switch($_GET["action"]){
+switch($params["action"]){
     case "save_comment":
-        $comment= new Comment($database, $_GET["service_id"], $m);
+        $comment= new Comment($database, $params["service_id"], $m);
         $comment
-            ->SetTheme($_GET["theme"])
-            ->SetContent($_GET["content"])
-            ->SetCommentator($_GET["commentator"])
-            ->SetReplyTo($_GET["replyto"])
+            ->SetTheme($params["theme"])
+            ->SetContent($params["content"])
+            ->SetCommentator($params["commentator"])
+            ->SetReplyTo($params["replyto"])
             ->Save();
         break;
     case "load_comments":
-        $comment= new Comment($database, $_GET["service_id"], $m);
+        $comment= new Comment($database, $params["service_id"], $m);
         echo $comment->LoadAll();
-        break;
-    case "save_comment":
         break;
     case "get_responsibilities_list":
         $com= new Community($database);
         echo json_encode($com->GetListOfResponsibilities());
+        break;
+    case "get_service_theme":
+        $service = new Service($database, $params["service_id"]);
+        echo $service->GetTheme();
         break;
 
 }

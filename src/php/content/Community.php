@@ -14,8 +14,10 @@ use PDO;
 
 /**
  *
- * Kommenttien lataamisen ja uuden kommentin lisäämisen 
- * hoitavat oliot
+ * 
+ * 
+ * Yksi portaalia käyttävä yhteisö
+ * 
  *
  */
 class Community{

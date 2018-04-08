@@ -52,8 +52,38 @@ gulp.task("vendors",function(){
     gulp.src(folder.src + "js/vendor/**/*").pipe(newer(folder.build + "js/vendor/")).pipe(gulp.dest(folder.build + "js/vendor/"));
 });
 
+//gulp.task("js",function(){
+//    var jsbuild = gulp.src(folder.src + "js/site/**/*.js").pipe(deporder()).pipe(concat('main.js'));
+//    return jsbuild.pipe(gulp.dest(folder.build + 'js/'));
+//});
+
+
 gulp.task("js",function(){
-    var jsbuild = gulp.src(folder.src + "js/site/**/*.js").pipe(deporder()).pipe(concat('main.js'));
+    //Huom: tiedostojen järjestys oleellinen: mieti, mikä pitää olla ladattuna ennen mitäkin
+    //HUOM2: kirjoita tiedostot ilman .js-päätettä
+    var jsfiles = ["customization/jquery_ui_selectmenu_other",
+                   "utils",
+                   "servicedetails",
+                   "content/Service",
+                   "servicelist",
+                   "comments/comment-processing",
+                   "service_structure/structural_element_adder",
+                   "service_structure/adder_events_updater",
+                   "service_structure/structural_element_adder",
+                   "songs/lyrics-processing",
+                   "songs/songlistview",
+                   "songs/songs-events",
+                   "menus",
+                   "servicelist",
+                   "service_events",
+                   "comments/comments-events",
+                   "actions"
+                   ];
+    var jsprefix = folder.src + "js/site/";
+    for (idx=0;idx<jsfiles.length;idx++){
+        jsfiles[idx] = jsprefix + jsfiles[idx] + ".js";
+    }
+    var jsbuild = gulp.src(jsfiles).pipe(deporder()).pipe(concat('main.js'));
     return jsbuild.pipe(gulp.dest(folder.build + 'js/'));
 });
 
