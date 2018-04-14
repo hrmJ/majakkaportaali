@@ -50,6 +50,10 @@ switch($params["action"]){
         $com= new Community($database);
         echo json_encode($com->GetListOfResponsibilities());
         break;
+    case "get_responsibles":
+        $service = new Service($database, $params["service_id"]);
+        echo json_encode($service->GetResponsibles());
+        break;
     case "get_service_theme":
         $service = new Service($database, $params["service_id"]);
         echo $service->GetTheme();

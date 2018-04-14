@@ -188,6 +188,24 @@ h3 {
   color: white;
   font-family: "Amatic SC", cursive; }
 
+.editable_data_list {
+  padding: 0; }
+  .editable_data_list li {
+    font-size: 1.1em;
+    list-style-type: none; }
+    .editable_data_list li + li {
+      margin-top: 0.5em; }
+    .editable_data_list li input {
+      outline: none;
+      border: none;
+      border-bottom: 1px dashed #787878; }
+    .editable_data_list li span:first-child {
+      display: inline-block;
+      word-wrap: break-word;
+      width: 5em; }
+    .editable_data_list li span:nth-child(2) {
+      margin-left: 1em; }
+
 .ui-widget-header {
   background: none; }
 

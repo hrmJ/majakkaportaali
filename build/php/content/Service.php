@@ -45,6 +45,14 @@ class Service{
         return $this->con->get("services","theme",["id" => $this->id]);
     }
 
+    /*
+     * Hakee messuun tarvittavat vastuuroolit ja niissä toimivat ihmiset
+     *
+     */
+    public function GetResponsibles(){
+        return $this->con->select("responsibilities",["responsibility","responsible"],["service_id" => $this->id]);
+    }
+
 }
 
 

@@ -10,7 +10,7 @@ use Portal\content\Service;
 
 /**
  */
-class ServiceTest extends TestCase
+class StructureTest extends TestCase
 {
 
     protected function SetUp(){
@@ -36,26 +36,6 @@ class ServiceTest extends TestCase
     {
         $service= new Service($this->con, 2);
         $this-> assertInstanceOf(Service::class,$service);
-    }
-
-
-    /**
-     * Testaa messun aiheen hakeminen
-     */
-    public function testFetchTheme()
-    {
-        $service = new Service($this->con, 2);
-        $this->assertTrue(!empty($service->GetTheme()));
-    }
-
-
-    /**
-     * Testaa messun vastuunkantajien hakeminen
-     */
-    public function testFetchResponsibles()
-    {
-        $service = new Service($this->con, 2);
-        $this->assertTrue(sizeof($service->GetResponsibles())>1);
     }
 
 }

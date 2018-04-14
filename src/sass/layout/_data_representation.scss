@@ -1,0 +1,35 @@
+
+
+.editable_data_list{
+    // li-elementit, joiden toisena osana muokattavat tiedot
+    padding:0;
+
+    li{
+    
+        font-size:1.1em;
+        list-style-type:none;
+
+        & + li{
+            margin-top:0.5em;
+        }
+
+        input{
+            outline: none;
+            border: none;
+            border-bottom: 1px dashed lighten($navbg,32%);
+        }
+
+        span:first-child{
+            display:inline-block;
+            word-wrap:break-word;
+            width:5em;
+        }
+
+        span:nth-child(2){
+            margin-left:1em;
+        }
+    
+    }
+
+
+}

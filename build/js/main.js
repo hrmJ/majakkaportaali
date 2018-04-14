@@ -304,6 +304,22 @@ var Service = function(){
                 }, callback);
         };
 
+
+        /**
+         *
+         * Hakee messun vastuunkantajat
+         *
+         * @param callback funktio, joka ajetaan kun lataus on valmis
+         *
+         *
+         **/
+        this.GetResponsibles = function(callback){
+            $.getJSON("php/ajax/Loader.php",{
+                action: "get_responsibles",
+                service_id: service_id
+                }, callback);
+        };
+
         /**
          *
          * Vaihtaa messun teeman 
@@ -313,6 +329,28 @@ var Service = function(){
          **/
         this.SetTheme = function(theme){
             $("#service_theme").text(theme);
+        };
+
+
+        /**
+         *
+         * Tulostaa kaikkien messussa mukana olevien vastuunkantajien nimet
+         *
+         * @param list_of_people ajax-responssina saatu taulukko muodossa [{responsible:x,responsibility:x},{:},...]
+         *
+         **/
+        this.SetResponsibles = function(list_of_people){
+            $("#peopletab ul").remove();
+            var $ul = $("<ul class='editable_data_list'></ul>");
+            $.each(list_of_people, function(idx, person){
+                $ul.append(`<li>
+                            <span>${person.responsibility}</span>
+                            <span>
+                                <input type="text" value="${person.responsible || ''}" </input>
+                            </span>
+                    </li>`);
+            });
+            $ul.appendTo("#peopletab");
         };
 
     };
@@ -350,10 +388,12 @@ var Service = function(){
     function Initialize(){
         console.log("Initializing the service view...");
         Details.GetTheme(Details.SetTheme);
+        Details.GetResponsibles(Details.SetResponsibles);
     }
 
     //Alustetaan eri osiot
     var Details = new Details();
+    var People = new People();
 
     return {
         Initialize,
