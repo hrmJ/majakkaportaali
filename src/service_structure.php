@@ -1,4 +1,3 @@
-
 <?php
 /**
  *
@@ -9,6 +8,7 @@
 require '../vendor/autoload.php';
 
 use Medoo\Medoo;
+use Portal\content\Structure;
 
 $config = parse_ini_file("../config.ini");
 $database = new Medoo([
@@ -24,19 +24,17 @@ $m = new Mustache_Engine(array(
     'loader' => new Mustache_Loader_FilesystemLoader(__DIR__ . '/views')
     ));
 
+$struct = new Structure($database, $m);
+
 $layout = $m->loadTemplate('layout'); 
-$service = $m->loadTemplate('service'); 
 
 $page_content = Array(
-    "content" => $service->render(),
-    "byline" => "<h2>Majakkamessu 10.10.2010</h2>",
-    "bodyclass" => "servicedetails"
+    "content" => $struct->LoadSlots()->OutputPage(),
+    "byline" => "<h2>Messupohjan asetukset</h2>",
+    "bodyclass" => "service_structure"
     );
 
 echo $layout->render($page_content);
 
-#$page = new StructurePage("templates",new DbCon("../config.ini"));
-#$page->LoadSlots();
-#echo $page->InsertElementAdder()->OutputPage();
 
 ?>

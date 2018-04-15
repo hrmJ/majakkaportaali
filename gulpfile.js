@@ -69,7 +69,7 @@ gulp.task("js",function(){
                    "comments/comment-processing",
                    "service_structure/structural_element_adder",
                    "service_structure/adder_events_updater",
-                   "service_structure/structural_element_adder",
+                   "service_structure/service_structure_events",
                    "songs/lyrics-processing",
                    "songs/songlistview",
                    "songs/songs-events",

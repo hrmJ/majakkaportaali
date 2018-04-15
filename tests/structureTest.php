@@ -5,7 +5,7 @@ require 'vendor/autoload.php';
  
 use PHPUnit\Framework\TestCase;
 use Medoo\Medoo;
-use Portal\content\Service;
+use Portal\content\Structure;
 
 
 /**
@@ -30,12 +30,22 @@ class StructureTest extends TestCase
     }
 
     /**
-     * Testaa messuolion luonti
+     * Testaa rakenneolion luonti
      */
     public function testCreateObject()
     {
-        $service= new Service($this->con, 2);
-        $this-> assertInstanceOf(Service::class,$service);
+        $service = new Structure($this->con, $this->m);
+        $this->assertInstanceOf(Structure::class,$service);
+    }
+
+    /**
+     * Testaa, että slottien lataaminen onnistuu
+     */
+    public function testLoadSlots()
+    {
+        $struct = new Structure($this->con, $this->m);
+        $struct->LoadSlots();
+        $this->assertRegExp("/<div/", $struct->slotstring);
     }
 
 }

@@ -113,7 +113,6 @@ function SelectTheContentToAdd(e, u){
 
 $(document).ready(function(){
     if($("body").hasClass("service_structure")){
-
         $(".menu").menu({ position: { my: "bottom", at: "right-5 top+5" }, select: SelectTheContentToAdd});
         UpdateAdderEvents();
 
