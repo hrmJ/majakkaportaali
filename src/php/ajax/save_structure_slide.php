@@ -6,33 +6,43 @@
  *
  */
 
+require '../../../vendor/autoload.php';
 
-require("../database.php");
-require("../templating.php");
-require("../slide.php");
-require("../segment.php");
-require("../service_structure_loader.php");
-require("../styles_saver.php");
+use Medoo\Medoo;
+
+$config = parse_ini_file("../../../config.ini");
+$database = new Medoo([
+    'database_type' => 'mysql',
+    'database_name' => $config["dbname"],
+    'server' => 'localhost',
+    'username' => $config["un"],
+    'password' => $config["pw"],
+    'charset' => 'utf8'
+]);
+
+$m = new Mustache_Engine(array(
+    'loader' => new Mustache_Loader_FilesystemLoader('../../views')
+    ));
+
 
 if(isset($_POST["removeslide"])){
-    $con= new DbCon("../../../config.ini");
-    $con->q("DELETE FROM presentation_structure WHERE id = :slot_id", Array("slot_id"=>$_POST["id"]), "none");
+    $database->delete("presentation_structure",  ["id" => $_POST["id"]]);
 }
 else{
     switch($_POST["segment_type"]){
         case "songsegment":
             $params = Array("description"=>$_POST["songdescription"],"slideclass"=>$_POST["segment_type"],"slot_number"=>$_POST["slot_number"],"slot_name"=>$_POST["slot_name"],"restricted_to"=>$_POST["restricted_to"],"multiname"=>$_POST["multiname"],"addedclass"=>$_POST["addedclass"]);
-            $loader= new SongSegmentSaver("../../../config.ini", $params);
+            $loader= new SongSegmentSaver($database, $params);
             $loader->SetContentId()->SetSlotData();
             break;
         case "infosegment":
             $params = Array("maintext"=>$_POST["maintext"],"header"=>$_POST["header"],"genheader"=>$_POST["genheader"],"subgenheader"=>$_POST["subgenheader"],"slideclass"=>$_POST["segment_type"],"slot_number"=>$_POST["slot_number"],"slot_name"=>$_POST["slot_name"], "addedclass"=>$_POST["addedclass"],"imgname"=>$_POST["imgname"], "imgpos"=>$_POST["imgpos"]);
-            $loader= new InfoSegmentSaver("../../../config.ini", $params);
+            $loader= new InfoSegmentSaver($database, $params);
             $loader->SetContentId()->SetSlotData();
             break;
         case "biblesegment":
             $params = Array("maintext"=>$_POST["maintext"],"header"=>$_POST["header"],"genheader"=>$_POST["genheader"],"subgenheader"=>$_POST["subgenheader"],"slideclass"=>$_POST["segment_type"],"slot_number"=>$_POST["slot_number"],"slot_name"=>$_POST["slot_name"], "addedclass"=>$_POST["addedclass"],"imgname"=>$_POST["imgname"], "imgpos"=>$_POST["imgpos"]);
-            $loader= new InfoSegmentSaver("../../../config.ini", $params);
+            $loader= new InfoSegmentSaver($database, $params);
             $loader->SetContentId()->SetSlotData();
             break;
         case "update_numbers":
