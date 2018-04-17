@@ -1,30 +1,38 @@
 <?php
 /**
  *
- * Tulostaa näkymän, jossa koko yhden kauden (TODO linkki) messuja voi tutkia
- * listana. Lisäksi tässä näkymässä on mahdollista tarkastella kaikkia messuja
- * jonkin tietyn responsibilityn (TODO linkki) osalta.
+ * Yksittäistä messua koskeva informaatio: laulut, vastuunkantajat jne.
  *
- */
+ **/
 
-require("php/utilities.php");
-require("php/templating.php");
-require("php/database.php"); 
-require("php/services.php");
-require("php/select.php");
-require("php/service_list_page.php");
+require '../vendor/autoload.php';
 
-$templatepath="templates";
+use Medoo\Medoo;
 
-$page = new ServiceListPage("templates", (isset($_GET["filterby"]) ? $_GET["filterby"] : "Yleisnäkymä"));
-if(isset($_POST["filteredchanges"]))
-    $page->con->SaveData($_GET["filterby"], $_POST);
+$config = parse_ini_file("../config.ini");
+$database = new Medoo([
+    'database_type' => 'mysql',
+    'database_name' => $config["dbname"],
+    'server' => 'localhost',
+    'username' => $config["un"],
+    'password' => $config["pw"],
+    'charset' => 'utf8'
+]);
 
-$page->InsertResponsibilitySelect();
-$page->SetPageVersion();
-$page->FilterContent();
-$page->Set("action", "{$_SERVER["PHP_SELF"]}?filterby={$page->filterby}");
+$m = new Mustache_Engine(array(
+    'loader' => new Mustache_Loader_FilesystemLoader(__DIR__ . '/views')
+    ));
 
-echo $page->OutputPage();
+$layout = $m->loadTemplate('layout'); 
+$servicelist = $m->loadTemplate('servicelist'); 
+
+$page_content = Array(
+    "content" => $servicelist->render(),
+    "byline" => "<h2>Messut / kausi</h2>",
+    "bodyclass" => "servicelist"
+    );
+
+echo $layout->render($page_content);
+
 
 ?>

@@ -266,12 +266,6 @@ function Preview($div, filename){
 }
 
 /**
-*
-* Sisältää javascript-koodin messudetaljisivua varten.
-*
-*/
-
-/**
  *
  * Yksittäisen messun / palveluksen toiminnot
  *
@@ -401,25 +395,54 @@ var Service = function(){
 
 }()
 
-$(document).ready(function(){
-    if($("body").hasClass("servicelist")){
-        //Siirtyminen messudetaljinäkymään
-        $(".datarow").click(function(){
-            if($("#respfilter").val()=="Yleisnäkymä") window.location="servicedetails.php?id=" + this.id.replace(/[^_]+_/,"");
-        });
-        //Suodattaminen vastuun mukaan
-        $("#respfilter") .change(function(){
-            if(!this.value.match(/----/)) window.location="servicelist.php?filterby=" + this.value;
-        });
+/**
+ *
+ * Yksittäisen messun / palveluksen toiminnot
+ *
+ **/
 
-        //Lisää jaottelu kuukausien mukaan
-        var months = ['Tammikuu', 'Helmikuu', 'Maaliskuu', 'Huhtikuu', 'Toukokuu', 'Kesäkuu', 'Heinäkuu', 'Elokuu', 'Syyskuu', 'Lokakuu', 'Marraskuu', 'Joulukuu'];
-        $(".servicedate").each(function(){
-            var thismonth = months[$(this).text().split(".")[1] *1-1];
-            if($(document).find("h2:contains("+ thismonth + ")").length==0) $(this).parents(".datarow").before("<h2>"+ thismonth + "</h2>");
-        });
+
+var Servicelist = function(){
+
+    season = "?";
+
+    /**
+     *
+     * Lista kaikista yhden tietyn kauden messuista
+     *
+     **/
+    var List = function(){
+    
+
+        /**
+         *
+         * Tulostaa listan ja liittää sen osaksi html-DOMia
+         *
+         **/
+        this.Output = function(){
+        
+        }
+    
     }
-});
+
+    /**
+     *
+     * Alusta messunäkymän sisältö, tapahtumat ym.
+     *
+     **/
+    function Initialize(){
+        console.log("Initializing the list of services...");
+        List_of_services.Output();
+    }
+
+    //Alustetaan eri osiot
+    var List_of_services = new List();
+
+    return {
+        Initialize,
+    };
+
+}()
 
 /**
 *
@@ -1637,11 +1660,6 @@ $(document).ready(function(){
 
 });
 
-//Tapahtumat, jotka liittyvät messukohtaiseen näkymään
-$(document).ready(function(){
-    $("#tabs").tabs();
-});
-
 /**
 *
 * Sisältää javascript-koodin messudetaljisivulla näytettäviä
@@ -1677,6 +1695,13 @@ $(document).ready(function(){
  */
 $(function(){
     if ($("body").hasClass("servicedetails")){
+        //Messukohtainen näkymä
+        $("#tabs").tabs();
         Service.Initialize();
+    }
+    else if ($("body").hasClass("servicelist")){
+        //Kaikkien messujen lista
+        Servicelist.Initialize();
+        //Ehkä filtteröitynä?
     }
 });

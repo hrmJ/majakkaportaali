@@ -35,7 +35,7 @@
         font-family: $indieflower;
     }
 
-    .service_structure .byline{
+    .service_structure .byline, .servicelist .byline{
         background:url(#{map-get($paths,"site") + "byline_servicestructure.png"});
     }
 

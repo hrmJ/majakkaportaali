@@ -85,7 +85,7 @@ main {
     height: 10em;
     font-family: "Amatic SC", cursive; }
 
-  .service_structure .byline {
+  .service_structure .byline, .servicelist .byline {
     background: url(../assets/images/site/byline_servicestructure.png); }
 
   .songs .byline, .servicedetails .byline {

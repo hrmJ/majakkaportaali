@@ -55,7 +55,7 @@ class Structure{
                 "slot_type" => $this->FormatSlotName($slot["slot_type"]),
                 "slot_type_orig" =>$slot["slot_type"],
                 "slot_id" =>$slot["id"],
-                "slot_name_orig" =>$name,
+                "name" =>$name,
                 "slot_id" =>$slot["id"]
             ]);
         }

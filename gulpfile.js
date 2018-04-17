@@ -63,9 +63,8 @@ gulp.task("js",function(){
     //HUOM2: kirjoita tiedostot ilman .js-päätettä
     var jsfiles = ["customization/jquery_ui_selectmenu_other",
                    "utils",
-                   "servicedetails",
                    "content/Service",
-                   "servicelist",
+                   "content/Servicelist",
                    "comments/comment-processing",
                    "service_structure/structural_element_adder",
                    "service_structure/adder_events_updater",
@@ -74,7 +73,6 @@ gulp.task("js",function(){
                    "songs/songlistview",
                    "songs/songs-events",
                    "menus",
-                   "servicelist",
                    "service_events",
                    "comments/comments-events",
                    "actions"
