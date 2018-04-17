@@ -31,11 +31,11 @@ function UpdateAdderEvents(){
 
     //slottien poisto
     $(".remove-link").click(function(){
-        $.post("php/loaders/save_structure_slide.php",
-            {"removeslide":"y,","id":$(this).parents(".slot").find(".slot_id").val()}, 
+        $.post("php/ajax/Structure.php",
+            {"action":"remove_slide","id":$(this).parents(".slot").find(".slot_id").val()}, 
             function(data){ 
                 console.log(data);
-                $(".structural-slots").load("php/loaders/loadslots.php",UpdateAdderEvents);
+                $(".structural-slots").load("php/ajax/Structure.php",{"action":"load_slots"},UpdateAdderEvents);
             });
     });
 
@@ -64,7 +64,6 @@ function UpdateAdderEvents(){
             var newids = [];
             console.log("PREVNO: " + prevno);
             $(".slot").each(function(){
-                //console.log($(this).text());
                 var thisno = $(this).find(".slot-number").text()*1;
                 var id = $(this).find(".slot_id").val()*1;
                 var newno = thisno*1;
@@ -80,7 +79,19 @@ function UpdateAdderEvents(){
                 else if(thisno==prevno) newno = thisno;
                 newids.push({"slot_id":id,"newnumber":newno});
                 });
-            $.post("php/loaders/save_structure_slide.php",{"slideclass":"update_numbers","newids":newids}, function(data){ $(".structural-slots").load("php/loaders/loadslots.php",UpdateAdderEvents); });
+            //Save the changes
+            $.post("php/ajax/Structure.php",{
+            "action":"save",
+            "slideclass":"update_numbers",
+            "segment_type":"update_numbers",
+            "newids":newids
+            }, 
+            function(data){ 
+                console.log("moro");
+                $("body").prepend(data);
+                $(".structural-slots").load("php/ajax/Structure.php",{"action":"load_slots"}, UpdateAdderEvents);
+            }
+            );
         });
 
 }
