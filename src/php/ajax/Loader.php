@@ -58,6 +58,10 @@ switch($params["action"]){
         $service = new Service($database, $params["service_id"]);
         echo $service->GetTheme();
         break;
+    case "get_list_of_services":
+        $service = new Service($database, $params["service_id"]);
+        echo $service->GetTheme();
+        break;
 
 }
 

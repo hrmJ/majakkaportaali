@@ -17,14 +17,23 @@ var Servicelist = function(){
     var List = function(){
     
 
+        this.LoadServices = function(){
+        
+        
+        
+        };
+
         /**
          *
          * Tulostaa listan ja liittää sen osaksi html-DOMia
          *
+         * @param data listaan syötettävät tiedot
+         *
          **/
-        this.Output = function(){
+        this.Output = function(data){
         
-        }
+        };
+
     
     }
 
