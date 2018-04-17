@@ -48,19 +48,32 @@ else{
         case "update_numbers":
             $con= new DbCon("../../../config.ini");
             foreach($_POST["newids"] as $idpair){
-                $con->q("UPDATE presentation_structure SET slot_number = :newnumber WHERE id = :slot_id",$idpair,"none");
+                $database->update("presentation_structure", 
+                    ["slot_number" => $idpair["newnumber"]],
+                    ["id" => $idpair["slot_id"]] );
+                #$con->q("UPDATE presentation_structure SET slot_number = :newnumber WHERE id = :slot_id",$idpair,"none");
             }
             break;
         case "update_headertemplate":
-            $con= new DbCon("../../../config.ini");
-            $con->q("UPDATE headers SET imgname = :imgname, imgposition = :imgpos, maintext = :maintext, is_aside = :is_aside WHERE id = :header_id",
-                Array("imgname"=>$_POST["imgname"],"header_id"=>$_POST["header_id"],
-                "imgpos" => $_POST["imgpos"],"maintext"=>$_POST["maintext"], "is_aside"=>$_POST["is_aside"]),"none");
+            $database->update("headers",
+                [
+                    "imgname" => $_POST["imgname"],
+                    "imgposition" => $_POST["imgpos"],
+                    "maintext" => $_POST["maintext"],
+                    "is_aside" => $_POST["is_aside"]
+                ],
+                [
+                    "id" => $_POST["header_id"]
+                ]
+            );
             break;
         case "insert_headertemplate":
-            $con= new DbCon("../../../config.ini");
-            $con->q("INSERT INTO headers (template_name, imgname, imgposition, maintext) VALUES (:tname, 'Ei kuvaa','left','')",
-                Array("tname"=>$_POST["template_name"]),"none");
+            $database->insert("headers", [
+                "template_name" => $_POST["template_name"],
+                "imgname" => "Ei kuvaa",
+                "imgposition" => "left",
+                "maintext" => ""
+            ]);
             break;
     }
 
