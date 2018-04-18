@@ -13,6 +13,7 @@ use Medoo\Medoo;
 use Portal\content\Comment;
 use Portal\content\Community;
 use Portal\content\Service;
+use Portal\content\Servicelist;
 
 
 $config = parse_ini_file("../../../config.ini");
@@ -59,10 +60,10 @@ switch($params["action"]){
         echo $service->GetTheme();
         break;
     case "get_list_of_services":
-        $service = new Service($database, $params["service_id"]);
-        echo $service->GetTheme();
+        $servicelist = new Servicelist($database);
+        $servicelist->SetSeason();
+        echo json_encode($servicelist->ListServices());
         break;
-
 }
 
 

@@ -17,10 +17,17 @@ var Servicelist = function(){
     var List = function(){
     
 
-        this.LoadServices = function(){
-        
-        
-        
+        /**
+         *
+         * Lataa messulista
+         *
+         * @param callback funktio, joka ajetaan kun lataus on valmis
+         *
+         **/
+        this.LoadServices = function(callback){
+            $.getJSON("php/ajax/Loader.php",{
+                action: "get_list_of_services"
+                }, callback);
         };
 
         /**
@@ -31,10 +38,14 @@ var Servicelist = function(){
          *
          **/
         this.Output = function(data){
-        
+            $("#servicelist").html("");
+            $.each(data,function(idx, service){
+                $("#servicelist").append(`
+                    <li>${service.theme}
+                    /li>
+                    `);
+            });
         };
-
-    
     }
 
     /**
@@ -44,7 +55,7 @@ var Servicelist = function(){
      **/
     function Initialize(){
         console.log("Initializing the list of services...");
-        List_of_services.Output();
+        List_of_services.LoadServices(List_of_services.Output);
     }
 
     //Alustetaan eri osiot
