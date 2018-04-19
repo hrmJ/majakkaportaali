@@ -4,6 +4,7 @@ namespace Portal\content;
 
 use Medoo\Medoo;
 use PDO;
+use Portal\utilities;
 
 
 /**
@@ -36,6 +37,7 @@ class Servicelist{
      *
      */
     public function ListServices(){
+        $df = new utilities\DateFormatter();
         $dates_and_themes = $this->con->select("services",
             ["servicedate", "theme", "id"],
             ["AND" => [
@@ -44,6 +46,11 @@ class Servicelist{
             ["ORDER" => [
                 ["servicedate" => "ASC"]
             ]]);
+        foreach($dates_and_themes as $idx => $entry){
+            $dates_and_themes[$idx]["servicedate"] = $df
+                ->SetDate($entry["servicedate"])
+                ->FormatDate();
+        }
         return $dates_and_themes;
     }
 

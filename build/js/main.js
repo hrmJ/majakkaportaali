@@ -436,11 +436,25 @@ var Servicelist = function(){
          **/
         this.Output = function(data){
             $("#servicelist").html("");
+            var prevmonth = 0;
             $.each(data,function(idx, service){
+                thismonth = service.servicedate.replace(/\d+\.(\d+)\.\d+/g,"$1") * 1 ;
+                if (thismonth != prevmonth){
+                    prevmonth = thismonth;
+                    $("#servicelist").append(`<li>${MonthName(thismonth)}</li>`);
+                }
                 $("#servicelist").append(`
-                    <li>${service.theme}
-                    /li>
+                    <li class='service_link_li' id="service_id_${service.id}">
+                    <span>${service.servicedate}</span>
+                    <span>${service.theme}</span>
+                    </li>
                     `);
+            });
+            
+            //Lisää siirtyminen messukohtaiseen näkymään:
+            $(".service_link_li").click(function(){
+                var id = $(this).attr("id").replace(/.*id_(\d+)/,"$1");
+                window.location = window.location.href = "service.php?service_id=" + id;
             });
         };
     }
@@ -453,6 +467,20 @@ var Servicelist = function(){
     function Initialize(){
         console.log("Initializing the list of services...");
         List_of_services.LoadServices(List_of_services.Output);
+    }
+
+    /**
+     *
+     * Muuttaa kuukauden numeron nimeksi
+     *
+     * @param month_no kuukauden numero
+     *
+     **/
+    function MonthName(month_no){
+        var months = ["Tammikuu", "Helmikuu", "Maaliskuu", "Huhtikuu", 
+                      "Toukokuu","Kesäkuu","Heinäkuu","Elokuu","Syyskuu",
+                      "Lokakuu","Marraskuu","Joulukuu"];
+        return months[month_no - 1];
     }
 
     //Alustetaan eri osiot
