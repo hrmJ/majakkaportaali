@@ -63,9 +63,10 @@ gulp.task("js",function(){
     //HUOM2: kirjoita tiedostot ilman .js-päätettä
     var jsfiles = ["customization/jquery_ui_selectmenu_other",
                    "utils",
+                   "content/Comments",
+                   "content/Songs",
                    "content/Service",
                    "content/Servicelist",
-                   "comments/comment-processing",
                    "service_structure/structural_element_adder",
                    "service_structure/adder_events_updater",
                    "service_structure/service_structure_events",
@@ -74,7 +75,6 @@ gulp.task("js",function(){
                    "songs/songs-events",
                    "menus",
                    "service_events",
-                   "comments/comments-events",
                    "actions"
                    ];
     var jsprefix = folder.src + "js/site/";

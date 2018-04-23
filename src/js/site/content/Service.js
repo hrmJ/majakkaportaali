@@ -7,7 +7,8 @@
 
 var Service = function(){
 
-    service_id = 2;
+    //Ota messun id simppelisti url:sta
+    service_id = window.location.href.replace(/.*service_id=(\d+)/,"$1")*1;
 
     /**
      * Messun tiedot -välilehti. Yksittäisen messun aihe, raamatunkohdat
@@ -31,22 +32,6 @@ var Service = function(){
                 }, callback);
         };
 
-
-        /**
-         *
-         * Hakee messun vastuunkantajat
-         *
-         * @param callback funktio, joka ajetaan kun lataus on valmis
-         *
-         *
-         **/
-        this.GetResponsibles = function(callback){
-            $.getJSON("php/ajax/Loader.php",{
-                action: "get_responsibles",
-                service_id: service_id
-                }, callback);
-        };
-
         /**
          *
          * Vaihtaa messun teeman 
@@ -58,6 +43,16 @@ var Service = function(){
             $("#service_theme").text(theme);
         };
 
+
+
+    };
+
+    /**
+     *
+     * Messun vastuunkantajat. (Vastuunkantajat-välilehti)
+     *
+     **/
+    var People = function(){
 
         /**
          *
@@ -80,14 +75,22 @@ var Service = function(){
             $ul.appendTo("#peopletab");
         };
 
-    };
 
-    /**
-     *
-     * Messun vastuunkantajat. (Vastuunkantajat-välilehti)
-     *
-     **/
-    var People = function(){
+        /**
+         *
+         * Hakee messun vastuunkantajat
+         *
+         * @param callback funktio, joka ajetaan kun lataus on valmis
+         *
+         *
+         **/
+        this.GetResponsibles = function(callback){
+            $.getJSON("php/ajax/Loader.php",{
+                action: "get_responsibles",
+                service_id: service_id
+                }, callback);
+        };
+
     };
 
     /**
@@ -115,7 +118,19 @@ var Service = function(){
     function Initialize(){
         console.log("Initializing the service view...");
         Details.GetTheme(Details.SetTheme);
-        Details.GetResponsibles(Details.SetResponsibles);
+        People.GetResponsibles(People.SetResponsibles);
+        Comments.LoadComments();
+        Comments.CreateThemeSelect();
+        Songs.LoadSongSlots();
+    }
+
+    /**
+     *
+     * Palauttaa tämänhetkisen messun id:n
+     *
+     **/
+    function GetServiceId(){
+        return service_id;
     }
 
     //Alustetaan eri osiot
@@ -124,6 +139,7 @@ var Service = function(){
 
     return {
         Initialize,
+        GetServiceId,
     };
 
-}()
+}();

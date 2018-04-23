@@ -14,6 +14,7 @@ use Portal\content\Comment;
 use Portal\content\Community;
 use Portal\content\Service;
 use Portal\content\Servicelist;
+use Portal\content\Songlist;
 
 
 $config = parse_ini_file("../../../config.ini");
@@ -58,6 +59,10 @@ switch($params["action"]){
     case "get_service_theme":
         $service = new Service($database, $params["service_id"]);
         echo $service->GetTheme();
+        break;
+    case "get_song_slots":
+        $songlist = new Songlist($database, $params["service_id"], $m);
+        echo $songlist->LoadSongSlots()->slots_as_string;
         break;
     case "get_list_of_services":
         $servicelist = new Servicelist($database);
