@@ -266,6 +266,65 @@ function Preview($div, filename){
 }
 
 /**
+ *
+ * Yksinkertainen, koko ruudun peittävä menu
+ *
+ **/
+
+
+var Menus = function(){
+
+
+    var Covermenu = function(){
+    
+        /**
+         *
+         * Avaa oikean menun, kun klikattu oikeaa linkkiä
+         *
+         * @param $launcher menu-klikkauksen laukaissut linkki
+         *
+         **/
+        this.OpenMenu = function($launcher){
+            console.log($launcher);
+        }
+
+
+        /**
+         *
+         * Alusta itse menujen toiminnallisuus:
+         * sulkulinkki ym.
+         *
+         **/
+        this.Initialize = function(){
+           var self = this;
+           console.log("Initializing cover menus...");
+           var $closerdiv = $(`
+                <div class='closer_div' id='close_covermenu'>
+                    <a href='javascript:void(0);'>Sulje valikko</a>
+                </div>`);
+            $closerdiv.click(function(){
+                $(this).parents(".covermenu").hide();
+            });
+            $(".covermenu").find('.closerdiv').remove();
+            $(".covermenu").append($closerdiv.clone(true));
+            $(".covermenu-launcher").click(function(){self.OpenMenu($(this))});
+        }
+        
+    }
+
+    var Covermenu = new Covermenu();
+
+
+
+    return {
+        Covermenu,
+    }
+
+
+
+}();
+
+/**
 *
 * Kommentit - lataaminen ja prosessointi
 *
@@ -415,6 +474,14 @@ var Songs = function(){
                 $("#songslots").html(data);
             });
     }
+
+    //Add song-related actions
+    $(function(){
+        $("#browse_songs").click(function(){
+            console.log("hosing");
+            $("#songlist").show();
+        });
+    });
 
     return {
 
@@ -1785,6 +1852,9 @@ $(document).ready(function(){
  *
  */
 $(function(){
+    //Navigation etc:
+    Menus.Covermenu.Initialize();
+    //Other actions:
     if ($("body").hasClass("servicedetails")){
         //Messukohtainen näkymä
         $("#tabs").tabs();
@@ -1795,4 +1865,5 @@ $(function(){
         Servicelist.Initialize();
         //Ehkä filtteröitynä?
     }
+
 });

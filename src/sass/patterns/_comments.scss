@@ -1,18 +1,23 @@
 .comments{
     margin-top:2em;
     textarea{
-        width:100%;
+        width:93%;
+        margin-left:1em;
     }
     .commentdetails{
         display:flex;
-        flex-flow:row;
+        flex-flow: row wrap;
         justify-content:flex-start;
+        padding-left:1em;
         padding-top:1em;
         div{
             flex:0 0 20%;
             margin-right:1em;
             display: flex;
             align-items: center;
+        }
+        div + div{
+            margin-top:0.2em;
         }
     }
 }

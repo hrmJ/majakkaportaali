@@ -8,12 +8,20 @@
 }
 
 
+
 .songslot{
     width:100%;
     display:flex;
     flex-direction:column;
     margin: 1em auto 1em auto;
-    //border:1px solid $datarowbg;
+    border-radius:10px;
+    border:1px solid #a7a7a7;
+    padding:1em;
+    & > div:first-child{
+        margin-bottom:0.8em;
+        font-family: $os_condensed;
+    }
+
 }
 
 

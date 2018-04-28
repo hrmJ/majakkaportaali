@@ -1,11 +1,14 @@
 //Google fonts
 
-@import url('https://fonts.googleapis.com/css?family=Lustria|Noto+Serif|Amatic+SC');
+@import url('https://fonts.googleapis.com/css?family=Lustria|Noto+Serif|Amatic+SC|Open+Sans+Condensed|Abel|Josefin+Slab');
 
 
 $lustria: 'Lustria', serif;
 $roboto: 'Roboto', sans-serif;
 $indieflower: 'Amatic SC', cursive;
+$os_condensed: 'Open Sans Condensed', sans-serif;
+$os: 'Abel', sans-serif;
+$inputfont: 'Josefin Slab', sans-serif;
 
 $datafontsize: 1.0em;
 
@@ -13,3 +16,5 @@ body{
     color:lighten(black,40%);
     font-family: $roboto;
 }
+
+

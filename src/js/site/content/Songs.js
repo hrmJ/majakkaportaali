@@ -15,6 +15,14 @@ var Songs = function(){
             });
     }
 
+    //Add song-related actions
+    $(function(){
+        $("#browse_songs").click(function(){
+            console.log("hosing");
+            $("#songlist").show();
+        });
+    });
+
     return {
 
         LoadSongSlots,

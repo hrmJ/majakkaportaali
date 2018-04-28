@@ -6,6 +6,9 @@
  *
  */
 $(function(){
+    //Navigation etc:
+    Menus.Covermenu.Initialize();
+    //Other actions:
     if ($("body").hasClass("servicedetails")){
         //Messukohtainen näkymä
         $("#tabs").tabs();
@@ -16,4 +19,5 @@ $(function(){
         Servicelist.Initialize();
         //Ehkä filtteröitynä?
     }
+
 });

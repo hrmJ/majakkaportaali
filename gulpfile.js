@@ -63,6 +63,7 @@ gulp.task("js",function(){
     //HUOM2: kirjoita tiedostot ilman .js-päätettä
     var jsfiles = ["customization/jquery_ui_selectmenu_other",
                    "utils",
+                   "navigation/Menus",
                    "content/Comments",
                    "content/Songs",
                    "content/Service",

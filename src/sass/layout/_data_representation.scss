@@ -9,6 +9,8 @@
         outline: none;
         border: none;
         border-bottom: 1px dashed lighten($navbg,32%);
+        font-family: $inputfont;
+        color: darken($datarowbg, 40%);
     }
 
     li{
