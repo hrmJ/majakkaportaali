@@ -14,7 +14,8 @@ use PDO;
 
 /**
  *
- * Yksi messu / palvelus 
+ * Messussa käytössä olevat laulut 
+ * Tai listat mahdollisista lauluista
  *
  */
 class Songlist{
@@ -40,6 +41,22 @@ class Songlist{
         $this->template_engine = $m;
     }
 
+
+    /**
+     *
+     * Hakee kaikkien laulujen ensimmäiset kirjaimet
+     * aakkosjärjestyksessä
+     *
+     * @return lista kirjaimista
+     *
+     **/
+    public function GetAlphabets(){
+        return $this->con->query(
+            "SELECT LEFT(title, 1) as fc FROM songdata 
+            GROUP BY fc HAVING fc != '' 
+            ORDER BY fc")
+            ->fetchAll(PDO::FETCH_COLUMN);
+    }
 
     /**
      * Lataa tietokannasta kaikki messussa käytössä olevat laulutyypit

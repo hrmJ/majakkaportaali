@@ -48,6 +48,16 @@ class SongsTest extends TestCase
         $this->assertRegExp("/songslot/",$songlist->slots_as_string);
     }
 
+
+    /**
+     * Testaa aakkoslistan haku
+     */
+    public function testLoadAlpha()
+    {
+        $songlist = new Songlist($this->con, 2, $this->m);
+        $this->assertTrue(sizeof($songlist->GetAlphabets())>0);
+    }
+
 }
 
 

@@ -122,6 +122,7 @@ var Service = function(){
         Comments.LoadComments();
         Comments.CreateThemeSelect();
         Songs.LoadSongSlots();
+        Songs.LoadSongLists();
     }
 
     /**

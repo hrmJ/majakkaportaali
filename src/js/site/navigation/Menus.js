@@ -1,13 +1,18 @@
+
+
 /**
  *
- * Yksinkertainen, koko ruudun peittävä menu
+ * Moduuli erilaisille menuille
  *
  **/
-
-
 var Menus = function(){
 
 
+    /**
+     *
+     * Yksinkertainen, koko ruudun peittävä menu
+     *
+     **/
     var Covermenu = function(){
     
         /**
@@ -26,7 +31,7 @@ var Menus = function(){
 
         /**
          *
-         * Alusta itse menujen toiminnallisuus:
+         * Alustaa itse menujen toiminnallisuuden:
          * sulkulinkki ym.
          *
          **/

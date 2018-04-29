@@ -619,3 +619,13 @@ h3 {
 
 .opened::before {
   content: '\25BC'; }
+
+ul.contentlist {
+  margin-left: 0;
+  padding-left: 0px; }
+  ul.contentlist > li {
+    margin-left: 0;
+    padding-left: 0;
+    list-style-type: none; }
+    ul.contentlist > li + li {
+      margin-top: 0.5em; }
