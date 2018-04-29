@@ -1,0 +1,12 @@
+
+.closed{
+    &::before{
+    content: '\25BA';
+    }
+}
+
+.opened{
+    &::before{
+        content: '\25BC';
+    }
+}

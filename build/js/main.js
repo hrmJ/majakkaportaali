@@ -285,7 +285,9 @@ var Menus = function(){
          *
          **/
         this.OpenMenu = function($launcher){
-            console.log($launcher);
+            var target = $launcher.attr("class").replace(/.*covermenu-target_(songlist)/g, "$1");
+            $("#" + target).show();
+            BlurContent();
         }
 
 
@@ -304,6 +306,7 @@ var Menus = function(){
                 </div>`);
             $closerdiv.click(function(){
                 $(this).parents(".covermenu").hide();
+                $(".blurcover").remove();
             });
             $(".covermenu").find('.closerdiv').remove();
             $(".covermenu").append($closerdiv.clone(true));
