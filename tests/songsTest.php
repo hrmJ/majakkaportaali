@@ -58,6 +58,16 @@ class SongsTest extends TestCase
         $this->assertTrue(sizeof($songlist->GetAlphabets())>0);
     }
 
+
+    /**
+     * Testaa hakea yhden kirjaimen kaikki laulut
+     */
+    public function testLoadByLetter()
+    {
+        $songlist = new Songlist($this->con, 2, $this->m);
+        $this->assertTrue(sizeof($songlist->GetTitlesByLetter("S"))>0);
+    }
+
 }
 
 

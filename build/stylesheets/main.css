@@ -614,15 +614,19 @@ h3 {
   padding: 1em;
   background: white; }
 
-.closed::before {
-  content: '\25BA'; }
+.closed {
+  cursor: pointer; }
+  .closed::before {
+    content: '\25BA'; }
 
-.opened::before {
-  content: '\25BC'; }
+.opened {
+  cursor: pointer; }
+  .opened::before {
+    content: '\25BC'; }
 
 ul.contentlist {
   margin-left: 0;
-  padding-left: 0px; }
+  padding-left: 2em; }
   ul.contentlist > li {
     margin-left: 0;
     padding-left: 0;

@@ -59,6 +59,35 @@ class Songlist{
     }
 
     /**
+     *
+     * Hakee kaikki laulut, jotka alkavat tietyllä kirjaimella
+     *
+     * @param string $letter kirjain, jolla etsitään
+     *
+     * @return lista kirjaimista
+     *
+     **/
+    public function GetTitlesByLetter($letter){
+        $songs = $this->con->select("songdata",
+            "title",
+            ["OR" => 
+                [
+                "title[~]" => strtolower($letter) . "%",
+                "title[~]" => strtoupper($letter) . "%"
+                ]
+            ],
+            ["ORDER" =>
+                [ "ACC" => "title"]
+            ]
+        );
+        $returns = [];
+        foreach($songs as $song){
+            $returns[] = $song["title"];
+        }
+        return $returns;
+    }
+
+    /**
      * Lataa tietokannasta kaikki messussa käytössä olevat laulutyypit
      * (määritelty service_structure.php-sivulla) ja syötä sivupohjaan
      * niiden mukaiset slotit lauluille.

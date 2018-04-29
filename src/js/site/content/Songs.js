@@ -62,11 +62,38 @@ var Songs = function(){
             self.$anchor.html("");
             $.each(categories, function(idx, el){
                 var $li = $(`
-                        <li>${el}</li>
+                        <li class='subwindow-opener'>${el}</li>
                     `);
+                $li.click(function(){self.ListSongs($(this))});
                 self.$anchor.append($li);
             });
         }
+
+        /**
+         *
+         * Listaa kaikki tämän kategorian / kirjaimen laulut
+         *
+         * @param songs laulujen nimet taulukkona
+         * @param $launcher tapahtuman laukaissut listaelementti
+         *
+         **/
+        this.SetSongs = function(songs, $launcher){
+            console.log(songs);
+            //self.$anchor.html("");
+            if(!$launcher.find("ul").length){
+                $ul =  $("<ul></ul>").appendTo($launcher);
+                $.each(songs, function(idx, el){
+                    var $li = $(`
+                            <li>${el}</li>
+                        `);
+                    $ul.append(`<li>${el}</li>`);
+                });
+            }
+            else{
+                $launcher.find("ul").slideToggle();
+            }
+        }
+
 
     }
 
@@ -79,8 +106,27 @@ var Songs = function(){
         this.list_type = "alpha";
         Songlist.call(this);
 
-        this.InitializeSubCategories = function(data){
-        }
+        /**
+         *
+         * Hakee kaikki käyttäjän klikkaamaan kategoriaan
+         * kuuluvat laulut ja listaa ne
+         *
+         * @param $launcher klikkauksen laukaissut linkki
+         *
+         **/
+        this.ListSongs = function($launcher){
+            var self = this;
+            $.getJSON("php/ajax/Loader.php",
+                {
+                    action: "get_songs_in_list_alpha",
+                    service_id: Service.GetServiceId(),
+                    letter: $launcher.text().charAt(0),
+                },
+                function(data){
+                    self.SetSongs(data, $launcher);
+                }
+            );
+        };
     }
 
     /**

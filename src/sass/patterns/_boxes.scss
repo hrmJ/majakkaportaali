@@ -3,17 +3,19 @@
     &::before{
     content: '\25BA';
     }
+    @include pointer;
 }
 
 .opened{
     &::before{
         content: '\25BC';
     }
+    @include pointer;
 }
 
 ul.contentlist{
     margin-left:0;
-    padding-left:0px;
+    padding-left:2em;
 
     > li{
         margin-left:0;

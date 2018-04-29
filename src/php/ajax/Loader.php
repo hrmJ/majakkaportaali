@@ -73,6 +73,10 @@ switch($params["action"]){
         $songlist = new Songlist($database, $params["service_id"], $m);
         echo json_encode($songlist->GetAlphabets());
         break;
+    case "get_songs_in_list_alpha":
+        $songlist = new Songlist($database, $params["service_id"], $m);
+        echo json_encode($songlist->GetTitlesByLetter($params["letter"]));
+        break;
 }
 
 
