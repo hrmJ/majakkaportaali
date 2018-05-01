@@ -6,6 +6,8 @@
 var Songs = function(){
 
     var Alphalist = undefined;
+    var SongSlots = [];
+    var waiting_for_attachment = undefined;
 
     function LoadSongSlots(){
         $.get("php/ajax/Loader.php", {
@@ -14,16 +16,61 @@ var Songs = function(){
             },
             function(data){
                 $("#songslots").html(data);
+                InitializeSlots();
             });
     }
 
-    //Add song-related actions
-    $(function(){
-        $("#browse_songs").click(function(){
-            console.log("hosing");
-            $("#songlist").show();
+    /**
+     *
+     * Yksi lauluslotti, joka kuvaa esim. alkulaulua tai yhtä
+     * ylistyslauluista
+     *
+     * @param $slot_div laulun sisältävä laatikko
+     *
+     **/
+    var SongSlot = function($slot_div){
+
+        var self = this;
+
+
+        /**
+         *
+         * Liittää tähän slottiin jokin laulu esimerkiksi sen jälkeen, kun
+         * käyttäjä on raahannnut laululistan selauksen jälkeen näytölle
+         * jääneen laulun slotin päälle.
+         *
+         * @param drop_event  mahdollinen pudotustapahtuma, joka kuuluu lauluslotti-diviin
+         *
+         **/ 
+        this.AttachSong = function(drop_event){
+            //waiting_for_attachment
+            if(drop_event){
+                $("#prepared_for_insertion").hide();
+                var $target = $(drop_event.target);
+            }
+            $target.find(".songinput").val(waiting_for_attachment);
+        }
+
+
+        /**
+         *
+         * Tarkistaa, onko tämän laulun sanoja tietokannassa
+         *
+         **/
+        this.CheckLyrics = function(){
+        
+        
+        }
+
+        $slot_div.droppable({
+            drop: this.AttachSong
         });
-    });
+
+
+
+    
+    }
+
 
 
 
@@ -62,38 +109,56 @@ var Songs = function(){
             self.$anchor.html("");
             $.each(categories, function(idx, el){
                 var $li = $(`
-                        <li class='subwindow-opener'>${el}</li>
+                        <li class='songlist_subcat'>${el}</li>
                     `);
-                $li.click(function(){self.ListSongs($(this))});
+                $li.click(function(){
+                        self.ListSongs($(this));}
+                    );
                 self.$anchor.append($li);
             });
         }
 
         /**
          *
-         * Listaa kaikki tämän kategorian / kirjaimen laulut
+         * Listaa kaikki tämän kategorian / kirjaimen laulut, jotka
+         * on jo haettu tietokannasta
          *
          * @param songs laulujen nimet taulukkona
          * @param $launcher tapahtuman laukaissut listaelementti
+         * @param self viittaus olioon itseensä
          *
          **/
-        this.SetSongs = function(songs, $launcher){
-            console.log(songs);
-            //self.$anchor.html("");
-            if(!$launcher.find("ul").length){
-                $ul =  $("<ul></ul>").appendTo($launcher);
-                $.each(songs, function(idx, el){
-                    var $li = $(`
-                            <li>${el}</li>
-                        `);
-                    $ul.append(`<li>${el}</li>`);
+        this.SetSongs = function(songs, $launcher, self){
+            $ul = $("<ul></ul>").appendTo($launcher);
+            $.each(songs, function(idx, el){
+                var $li = $(`
+                        <li>${el}</li>
+                    `);
+                $li.on("hover",function(){console.log("haa")});
+                $li.click(function(e){
+                    e.stopPropagation();
+                    self.PrepareSongForInsertion($(this));
                 });
-            }
-            else{
-                $launcher.find("ul").slideToggle();
-            }
-        }
+                $ul.append($li);
+            });
+        };
 
+
+        /**
+         *
+         * Erotta listasta valitun laulun, niin että se voidaan
+         * liitää osaksi messua.
+         *
+         * @param $launcher tapahtuman laukaissut laulu
+         *
+         **/
+        this.PrepareSongForInsertion = function($launcher){
+            waiting_for_attachment =  $launcher.text();
+            $("#songlist").hide();
+            $(".blurcover").remove();
+            $("#prepared_for_insertion").show()
+                .find("h4").text(waiting_for_attachment);
+        };
 
     }
 
@@ -115,17 +180,23 @@ var Songs = function(){
          *
          **/
         this.ListSongs = function($launcher){
-            var self = this;
-            $.getJSON("php/ajax/Loader.php",
-                {
-                    action: "get_songs_in_list_alpha",
-                    service_id: Service.GetServiceId(),
-                    letter: $launcher.text().charAt(0),
-                },
-                function(data){
-                    self.SetSongs(data, $launcher);
-                }
-            );
+            if(!$launcher.find("ul").length){
+                //Vain, jos kyseessä kategorialinkki, eikä laulun nimi
+                var self = this;
+                $.getJSON("php/ajax/Loader.php",
+                    {
+                        action: "get_songs_in_list_alpha",
+                        service_id: Service.GetServiceId(),
+                        letter: $launcher.text().charAt(0),
+                    },
+                    function(data){
+                        self.SetSongs(data, $launcher, self);
+                    }
+                );
+            }
+            else if($launcher.hasClass("songlist_subcat")){
+                $launcher.find("ul").slideToggle();
+            }
         };
     }
 
@@ -139,14 +210,25 @@ var Songs = function(){
         Alphalist.GetAndSetSubCategories();
     }
 
-    AlphabeticalSonglist.prototype = Object.create(Songlist.prototype);
+    /**
+     *
+     * Luo jokaisesta lauluslotista oma olionsa, joka kuuntelee
+     *
+     **/
+    function InitializeSlots(){
+        $(".songslot").each(function(){
+            SongSlots.push(new SongSlot($(this)));
+        });
+    }
 
+    AlphabeticalSonglist.prototype = Object.create(Songlist.prototype);
 
 
     return {
 
         LoadSongSlots,
         LoadSongLists,
+        InitializeSlots,
 
     };
 

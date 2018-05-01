@@ -47,7 +47,7 @@ var Menus = function(){
                 $(".blurcover").remove();
             });
             $(".covermenu").find('.closerdiv').remove();
-            $(".covermenu").append($closerdiv.clone(true));
+            $(".covermenu").prepend($closerdiv.clone(true));
             $(".covermenu-launcher").click(function(){self.OpenMenu($(this))});
         }
         

@@ -9,6 +9,10 @@
     }
 }
 
+.songlis_subcat:hover{
+    @include pointer;
+}
+
 .songnames-container{
     max-height: 500px;
     overflow:auto;

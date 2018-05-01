@@ -123,6 +123,10 @@ var Service = function(){
         Comments.CreateThemeSelect();
         Songs.LoadSongSlots();
         Songs.LoadSongLists();
+        $("#prepared_for_insertion").hide()
+            .draggable({
+                revert: "valid"
+            });
     }
 
     /**
