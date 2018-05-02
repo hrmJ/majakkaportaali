@@ -501,6 +501,7 @@ var Songs = function(){
         var self = this;
 
 
+
         /**
          *
          * Liittää tähän slottiin jokin laulu esimerkiksi sen jälkeen, kun
@@ -530,8 +531,21 @@ var Songs = function(){
         
         }
 
+        //Attach a listener for autocomplete:
+        //https://jqueryui.com/autocomplete/#remote
+        $slot_div.find(".songinput").autocomplete(
+            source: ,
+            minLength: 2,
+            select:,
+        );
+
+        //Attach a listener for dropping
         $slot_div.droppable({
-            drop: this.AttachSong
+            drop: this.AttachSong,
+                  classes: {
+                    "ui-droppable-active": "songslot_waiting",
+                    "ui-droppable-hover": "songslot_taking"
+          },
         });
 
 

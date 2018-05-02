@@ -429,6 +429,13 @@ h3 {
   border: 1px solid #dadada;
   margin-bottom: 1em; }
 
+.songslot_wating {
+  background: yellow; }
+
+.songslot_taking {
+  background: grey;
+  color: white; }
+
 .songslot {
   width: 100%;
   display: flex;
