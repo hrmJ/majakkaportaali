@@ -58,6 +58,48 @@ class Songlist{
             ->fetchAll(PDO::FETCH_COLUMN);
     }
 
+
+    /**
+     *
+     * Hakee kaikki laulut, jotka alkavat tietyllä kirjaimella
+     *
+     * @param string $title 
+     *
+     * @return lista kirjaimista
+     *
+     **/
+    public function GetTitles($title){
+        return $this->con->select("songdata", "title", ["OR" =>
+            [
+                "title[~]" => strtolower("%$title%"),
+                "title[~]" => strtoupper("%$title%")
+            ]]);
+    }
+
+    /**
+     *
+     * Tarkistaa, onko jotakin laulua nimellä X tietokannassa
+     *
+     * @param string $title  nimi, jota ollaan tarkistamassa
+     *
+     * @return true / false
+     *
+     **/
+    public function CheckTitle($title){
+        $res =  $this->con->select("songdata", "title", ["OR" =>
+            [
+                "title" => strtolower("$title"),
+                "title" => strtoupper("$title")
+            ]]);
+
+        if(sizeof($res)==1 and $res[0] == ""){
+            //Tyhjistä palauta false
+            return false;
+        }
+        //TODO: monta mätsiä nimen perusteella
+        return (sizeof($res)>0 ? true : false);
+    }
+
     /**
      *
      * Hakee kaikki laulut, jotka alkavat tietyllä kirjaimella

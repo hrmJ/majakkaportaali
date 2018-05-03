@@ -68,6 +68,28 @@ class SongsTest extends TestCase
         $this->assertTrue(sizeof($songlist->GetTitlesByLetter("S"))>0);
     }
 
+    /**
+     * Testaa hakea kaikki laulujen nimet
+     */
+    public function testLoadSongTitles()
+    {
+        $songlist = new Songlist($this->con, 2, $this->m);
+        #var_dump($songlist->GetTitles("a"));
+        $this->assertTrue(sizeof($songlist->GetTitles("Ukk"))>0);
+    }
+
+    /**
+     * Testaa testata laulun nimen löytymistä
+     */
+    public function testCheckSongTitle()
+    {
+        $songlist = new Songlist($this->con, 2, $this->m);
+        #var_dump($songlist->GetTitles("a"));
+        $this->assertTrue($songlist->CheckTitle("Ukko Nooa"));
+        $this->assertFalse($songlist->CheckTitle("lkjsadlasd"));
+        $this->assertFalse($songlist->CheckTitle(""));
+    }
+
 }
 
 
