@@ -121,8 +121,8 @@ var Service = function(){
         People.GetResponsibles(People.SetResponsibles);
         Comments.LoadComments();
         Comments.CreateThemeSelect();
-        Songs.LoadSongSlots();
-        Songs.LoadSongLists();
+        SongSlots.LoadSongsToSlots();
+        SongLists.LoadSongLists();
         $("#prepared_for_insertion").hide()
             .draggable({
                 revert: "valid"

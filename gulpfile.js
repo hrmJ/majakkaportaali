@@ -65,17 +65,13 @@ gulp.task("js",function(){
                    "utils",
                    "navigation/Menus",
                    "content/Comments",
-                   "content/Songs",
+                   "content/songs/Slots",
+                   "content/songs/Songlists",
                    "content/Service",
                    "content/Servicelist",
                    "service_structure/structural_element_adder",
                    "service_structure/adder_events_updater",
                    "service_structure/service_structure_events",
-                   "songs/lyrics-processing",
-                   "songs/songlistview",
-                   "songs/songs-events",
-                   "menus",
-                   "service_events",
                    "actions"
                    ];
     var jsprefix = folder.src + "js/site/";

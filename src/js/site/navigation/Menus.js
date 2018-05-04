@@ -7,6 +7,17 @@
  **/
 var Menus = function(){
 
+    var Hamburgermenu = function(){
+
+        this.Initialize = function(){
+        
+            $(".hamburger").click(function(){$(this).next(".dropdown").slideToggle();});
+
+        }
+    
+    
+    }
+
 
     /**
      *
@@ -53,12 +64,26 @@ var Menus = function(){
         
     }
 
-    var Covermenu = new Covermenu();
+    function InitializeMenus(){
+    
+        //Aseta taittovalikot toimintakuntoon
+        $(".controller-subwindow").hide()
+        $(".subwindow-opener").click(function(){ 
+            //Avaa tai sulje tarkemmat fonttien muokkaussäätimet ym
+            $(this).next().slideToggle(); 
+            $(this).toggleClass("opened");
+        });
+
+        var covermenu = new Covermenu();
+        covermenu.Initialize();
+    
+    }
+
 
 
 
     return {
-        Covermenu,
+        InitializeMenus,
     }
 
 

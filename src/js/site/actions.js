@@ -7,7 +7,7 @@
  */
 $(function(){
     //Navigation etc:
-    Menus.Covermenu.Initialize();
+    Menus.InitializeMenus();
     //Other actions:
     if ($("body").hasClass("servicedetails")){
         //Messukohtainen näkymä
