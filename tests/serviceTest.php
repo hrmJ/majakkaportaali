@@ -58,6 +58,22 @@ class ServiceTest extends TestCase
         $this->assertTrue(sizeof($service->GetResponsibles())>1);
     }
 
+    /**
+     * Testaa messun vastuunkantajien tallentaminen / päivitys
+     */
+    public function testSaveResponsibles()
+    {
+        $service = new Service($this->con, 2);
+        $service->SaveResponsibles([
+            ["responsibility"=>"juontaja",
+           "responsible" => "Jari Kurri"] ,
+            ["responsibility"=>"liturgi",
+           "responsible" => "Kille K."] ,
+        ]);
+        $this->assertTrue(sizeof($service->GetResponsibles())>1);
+    }
+
+
 }
 
 

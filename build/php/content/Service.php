@@ -59,10 +59,18 @@ class Service{
      *
      */
     public function SaveResponsibles($data){
-        foreach($data as $responsibility=>$responsible){
+        foreach($data as $entry){
             $this->con->update("responsibilities",
-                [$responsibility => $responsible],
-                ["service_id" => $this->id]);
+                [
+                    "responsible" => $entry["responsible"]
+                ],
+                [
+                    "AND" => [
+                         "service_id" => $this->id,
+                         "responsibility" => $entry["responsibility"],
+                    ]
+                ]
+                );
         }
         return $this;
     }

@@ -266,6 +266,47 @@ function Preview($div, filename){
 }
 
 
+/**
+ *
+ * Olio lyhyiden viestien näyttämiseen hallintanäytöllä.
+ *
+ * @param msg näytettävä viesti
+ * @param $parent_el jquery-elementti, jonka sisään viesti syötetään
+ *
+ */
+var Message = function(msg, $parent_el){
+    this.$box = $("<div></div>").text(msg).attr({"class":"msgbox"});
+    this.$parent_el = $parent_el || $("body");
+    return this;
+}
+
+Message.prototype = {
+    background: "",
+    color: "",
+
+    /**
+     * Näyttää viestilaatikon viesti käyttäjälle
+     *
+     * @param offtime millisekunteina se, kuinka kauan viesti näkyy (oletus 2 s)
+     *
+     */
+    Show: function(offtime){
+        var self = this;
+        var offtime = offtime || 2000;
+        this.$parent_el.css({"position":"relative"});
+        this.$box.appendTo(this.$parent_el).fadeIn("slow");
+        setTimeout(function(){
+            self.$parent_el.find(".msgbox").fadeOut("slow",function(){
+                self.$parent_el.find(".msgbox").remove();
+            });
+        },offtime)
+        
+        //BlurContent(self.box);
+    },
+}
+
+
+
 
 /**
  *
@@ -842,7 +883,9 @@ var Service = function(){
      * Factory-pattern eri välilehtiä edustavien olioiden luomiseksi
      *
      **/
-    function TabFactory(){}
+    function TabFactory(){
+        this.tabdata = [];
+    }
 
     /**
      *
@@ -850,10 +893,46 @@ var Service = function(){
      *
      **/
     TabFactory.prototype.AddSaveButton = function(){
-        var $but = $("<button>Tallenna</button>")
-                .click(function(){console.log("eee!");});
+        var self = this;
+        var $but = $("<button class='save_tab_data'>Tallenna</button>")
+            .click(this.SaveTabData.bind(this))
+            .hide();
             this.$div.append($but);
     };
+
+    /**
+     *
+     * Tarkastelee muutoksia ja ilmoittaa käyttäjälle, jos tallentamattomia
+     * muutoksia havaitaan
+     *
+     **/
+    TabFactory.prototype.MonitorChanges = function(){
+        var $tabheader = $(`.${this.tab_type}_tabheader`);
+        if(JSON.stringify(this.tabdata) !== JSON.stringify(this.GetTabData())){
+            //Jos muutoksia, näytä tallenna-painike ja muutosindikaattorit
+            this.$div.find(".save_tab_data").show();
+            $tabheader.text($tabheader.text().replace(" *","") + " *");
+        }
+        else{
+            //Ei muutoksia, piilota tallenna-painike ja muutosindikaattorit
+            $tabheader.text($tabheader.text().replace(" *",""));
+            this.$div.find(".save_tab_data").hide();
+        }
+    };
+
+    /**
+     *
+     * Lisää tallenna-painikkeet kunkin täbin alareunaan
+     *
+     * @param response ajax-vastaus
+     *
+     **/
+    TabFactory.prototype.AfterSavedChanges = function(response){
+        this.MonitorChanges();
+        var msg = new Message("Muutokset tallennettu", this.$div);
+        msg.Show();
+    };
+
 
     /**
      *
@@ -867,135 +946,22 @@ var Service = function(){
         var tab;
         TabFactory[constr].prototype = new TabFactory();
         tab = new TabFactory[constr]();
+        tab.tab_type = constr;
         tab.$div = $div;
         TabObjects[constr] = tab;
         return tab;
     };
 
 
-    /**
-     * Messun tiedot -välilehti. Yksittäisen messun aihe, raamatunkohdat
-     * ja muu yleisen tason (ei ihmisiä koskeva )info, tämän muokkaus ym.
-     *
-     **/
-    TabFactory.Details = function(){
-
-        /**
-         *
-         * Hakee messun teeman
-         *
-         * @param callback funktio, joka ajetaan kun lataus on valmis
-         *
-         *
-         **/
-        this.GetTheme = function(callback){
-            $.get("php/ajax/Loader.php",{
-                action: "get_service_theme",
-                service_id: service_id
-                }, callback);
-        };
-
-        /**
-         *
-         * Vaihtaa messun teeman 
-         *
-         * @param theme uusi teema, joka messulle asetetaan
-         *
-         **/
-        this.SetTheme = function(theme){
-            $("#service_theme").text(theme);
-        };
-
-
-
-    };
 
     /**
      *
-     * Messun vastuunkantajat. (Vastuunkantajat-välilehti)
+     * Palauttaa tämänhetkisen messun id:n
      *
      **/
-    TabFactory.People = function(){
-
-        /**
-         *
-         * Tulostaa kaikkien messussa mukana olevien vastuunkantajien nimet
-         *
-         * @param list_of_people ajax-responssina saatu taulukko muodossa [{responsible:x,responsibility:x},{:},...]
-         *
-         **/
-        this.SetResponsibles = function(list_of_people){
-            $("#People ul").remove();
-            var $ul = $("<ul class='editable_data_list'></ul>");
-            $.each(list_of_people, function(idx, person){
-                $ul.append(`<li>
-                            <div>${person.responsibility}</div>
-                            <div>
-                                <input type="text" value="${person.responsible || ''}" </input>
-                            </div>
-                    </li>`);
-            });
-            $ul.appendTo("#People .embed-data");
-        };
-
-
-        /**
-         *
-         * Hakee messun vastuunkantajat
-         *
-         * @param callback funktio, joka ajetaan kun lataus on valmis
-         *
-         *
-         **/
-        this.GetResponsibles = function(callback){
-            $.getJSON("php/ajax/Loader.php",{
-                action: "get_responsibles",
-                service_id: service_id
-                }, callback);
-        };
-
-        /**
-         *
-         * Tallentaa muutokset messun vastuunkantajiin
-         *
-         *
-         **/
-        this.SaveResponsibles = function(){
-            $("");
-            //$.getJSON("php/ajax/Saver.php",{
-            //    action: "save_responsibles",
-            //    service_id: service_id
-            //    data: data
-            //    }, callback);
-        };
-
-
-    };
-
-    /**
-     *
-     * Messun infodiat
-     *
-     **/
-    TabFactory.Infoslides = function(){
-    };
-
-    /**
-     *
-     * Messun rakenne - mahdolliset poikkeamat oletusrakenteesta ym.
-     *
-     **/
-    TabFactory.Structure = function(){
-    };
-
-
-    /**
-     *
-     * Lauluvälilehti ja sen toiminnallisuus (huom, lauluslotit ja laululistat omia luokkiaan)
-     *
-     **/
-    TabFactory.Songs = function(){
-    };
+    function GetServiceId(){
+        return service_id;
+    }
 
 
     /**
@@ -1025,21 +991,194 @@ var Service = function(){
         //Luodaana kustakin välilehdestä oma olionsa
     }
 
-    /**
-     *
-     * Palauttaa tämänhetkisen messun id:n
-     *
-     **/
-    function GetServiceId(){
-        return service_id;
-    }
 
     return {
         Initialize,
         GetServiceId,
+        TabFactory,
     };
 
 }();
+
+/**
+ *
+ * Messun vastuunkantajat. (Vastuunkantajat-välilehti)
+ *
+ **/
+Service.TabFactory.People = function(){
+
+    /**
+     *
+     * Tulostaa kaikkien messussa mukana olevien vastuunkantajien nimet
+     *
+     * @param list_of_people ajax-responssina saatu taulukko muodossa [{responsible:x,responsibility:x},{:},...]
+     *
+     **/
+    this.SetResponsibles = function(list_of_people){
+        $("#People ul").remove();
+        var $ul = $("<ul class='editable_data_list'></ul>");
+        $.each(list_of_people, function(idx, person){
+            var $li = 
+            $ul.append(`<li>
+                        <div>${person.responsibility}</div>
+                        <div>
+                            <input type="text" value="${person.responsible || ''}" </input>
+                        </div>
+                </li>`);
+        });
+        //Tarkkaile muutoksia:
+        $ul.find("input[type='text']").on("change paste keyup",this.MonitorChanges.bind(this));
+        $ul.appendTo("#People .embed-data");
+        //Tallennetaan data, jotta voidaan tarkastella sen muutoksia
+        this.tabdata = this.GetTabData();
+    };
+
+
+    /**
+     *
+     * Hakee messun vastuunkantajat
+     *
+     * @param callback funktio, joka ajetaan kun lataus on valmis
+     *
+     *
+     **/
+    this.GetResponsibles = function(callback){
+        $.getJSON("php/ajax/Loader.php",{
+            action: "get_responsibles",
+            service_id: service_id
+            }, callback.bind(this));
+    };
+
+    /**
+     *
+     * Kerää kaiken välilehden sisältämän datan joko tallentamista
+     * varten tai jotta voitaisiin nähdä, onko tehty muutoksia.
+     *
+     **/
+    this.GetTabData = function(){
+        var data = [];
+        this.$div.find(".editable_data_list li").each(function(){
+            data.push({
+                responsibility: $(this).find("div:eq(0)").text(),
+                responsible: $(this).find("input[type='text']").val()
+            });
+        });
+        return data;
+    }
+
+
+    /**
+     *
+     * Tallentaa muutokset messun vastuunkantajiin
+     *
+     **/
+    this.SaveTabData = function(){
+        self = this;
+        this.tabdata = this.GetTabData();
+        $.post("php/ajax/Saver.php",{
+            action: "save_responsibles",
+            service_id: Service.GetServiceId(),
+            data: self.tabdata
+            }, self.AfterSavedChanges.bind(self));
+    };
+
+
+};
+
+/**
+ * Messun tiedot -välilehti. Yksittäisen messun aihe, raamatunkohdat
+ * ja muu yleisen tason (ei ihmisiä koskeva )info, tämän muokkaus ym.
+ *
+ **/
+Service.TabFactory.Details = function(){
+
+
+    /**
+     *
+     *
+     **/
+    this.SaveTabData = function(){
+        console.log("songs");
+    };
+
+    /**
+     *
+     * Hakee messun teeman
+     *
+     * @param callback funktio, joka ajetaan kun lataus on valmis
+     *
+     *
+     **/
+    this.GetTheme = function(callback){
+        $.get("php/ajax/Loader.php",{
+            action: "get_service_theme",
+            service_id: service_id
+            }, callback);
+    };
+
+    /**
+     *
+     * Vaihtaa messun teeman 
+     *
+     * @param theme uusi teema, joka messulle asetetaan
+     *
+     **/
+    this.SetTheme = function(theme){
+        $("#service_theme").text(theme);
+    };
+
+
+
+};
+
+
+
+/**
+ *
+ * Messun rakenteen säätely
+ *
+ **/
+Service.TabFactory.Structure = function(){
+
+    /**
+     *
+     *
+     **/
+    this.SaveTabData = function(){
+        console.log("structure");
+    };
+
+};
+
+/**
+ *
+ * Messun infodiat
+ *
+ **/
+Service.TabFactory.Infoslides = function(){
+    /**
+     *
+     *
+     **/
+    this.SaveTabData = function(){
+    };
+};
+
+/**
+ *
+ * Lauluvälilehti ja sen toiminnallisuus (huom, lauluslotit ja laululistat omia luokkiaan)
+ *
+ **/
+Service.TabFactory.Songs = function(){
+
+    /**
+     *
+     *
+     **/
+    this.SaveTabData = function(){
+    };
+
+};
 
 /**
  *

@@ -26,3 +26,17 @@ ul.contentlist{
         }
     }
 }
+
+
+.msgbox{
+    display:none;
+    font-size:0.72em;
+    background: $navbg;
+    color:#ffffff;
+    border-radius:2px;
+    @include shadow;
+    padding: 2em;
+    position:absolute;
+    top:1em;
+    left:1em;
+}

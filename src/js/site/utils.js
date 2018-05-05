@@ -80,3 +80,44 @@ function Preview($div, filename){
         }).appendTo($div.find(".preview").html(""));
     }
 }
+
+
+/**
+ *
+ * Olio lyhyiden viestien näyttämiseen hallintanäytöllä.
+ *
+ * @param msg näytettävä viesti
+ * @param $parent_el jquery-elementti, jonka sisään viesti syötetään
+ *
+ */
+var Message = function(msg, $parent_el){
+    this.$box = $("<div></div>").text(msg).attr({"class":"msgbox"});
+    this.$parent_el = $parent_el || $("body");
+    return this;
+}
+
+Message.prototype = {
+    background: "",
+    color: "",
+
+    /**
+     * Näyttää viestilaatikon viesti käyttäjälle
+     *
+     * @param offtime millisekunteina se, kuinka kauan viesti näkyy (oletus 2 s)
+     *
+     */
+    Show: function(offtime){
+        var self = this;
+        var offtime = offtime || 2000;
+        this.$parent_el.css({"position":"relative"});
+        this.$box.appendTo(this.$parent_el).fadeIn("slow");
+        setTimeout(function(){
+            self.$parent_el.find(".msgbox").fadeOut("slow",function(){
+                self.$parent_el.find(".msgbox").remove();
+            });
+        },offtime)
+        
+        //BlurContent(self.box);
+    },
+}
+
