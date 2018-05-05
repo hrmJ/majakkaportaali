@@ -53,6 +53,20 @@ class Service{
         return $this->con->select("responsibilities",["responsibility","responsible"],["service_id" => $this->id]);
     }
 
+    /**
+     *
+     * Tallentaa muutokset messun vastuunkantajiin
+     *
+     */
+    public function SaveResponsibles($data){
+        foreach($data as $responsibility=>$responsible){
+            $this->con->update("responsibilities",
+                [$responsibility => $responsible],
+                ["service_id" => $this->id]);
+        }
+        return $this;
+    }
+
 }
 
 

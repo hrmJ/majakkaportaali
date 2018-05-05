@@ -243,15 +243,17 @@ h3 {
     color: #747474; }
   .editable_data_list li {
     font-size: 1.1em;
-    list-style-type: none; }
+    list-style-type: none;
+    display: flex;
+    flex-flow: row wrap; }
     .editable_data_list li + li {
-      margin-top: 0.5em; }
-    .editable_data_list li span:first-child {
+      margin-top: 1.0em; }
+    .editable_data_list li div:first-child {
       display: inline-block;
       word-wrap: break-word;
-      width: 5em; }
-    .editable_data_list li span:nth-child(2) {
-      margin-left: 1em; }
+      width: 5em;
+      margin-right: 1em;
+      margin-bottom: 0.2em; }
 
 .ui-widget-header {
   background: none; }

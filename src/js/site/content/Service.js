@@ -7,15 +7,54 @@
 
 var Service = function(){
 
+    //Kukin välilehti tallennetaan tähän
+    TabObjects = {};
+
     //Ota messun id simppelisti url:sta
-    service_id = window.location.href.replace(/.*service_id=(\d+)/,"$1")*1;
+    service_id = window.location.href.replace(/.*service_id=(\d+).*/,"$1")*1;
+
+    /**
+     *
+     * Factory-pattern eri välilehtiä edustavien olioiden luomiseksi
+     *
+     **/
+    function TabFactory(){}
+
+    /**
+     *
+     * Lisää tallenna-painikkeet kunkin täbin alareunaan
+     *
+     **/
+    TabFactory.prototype.AddSaveButton = function(){
+        var $but = $("<button>Tallenna</button>")
+                .click(function(){console.log("eee!");});
+            this.$div.append($but);
+    };
+
+    /**
+     *
+     * Tuottaa yhden välilehtiolion haluttua tyyppiä
+     *
+     * @param $tab jquery-esitys yhdestä välilehti-divistä
+     *
+     **/
+    TabFactory.make = function($div){
+        var constr = $div.attr("id");
+        var tab;
+        TabFactory[constr].prototype = new TabFactory();
+        tab = new TabFactory[constr]();
+        tab.$div = $div;
+        TabObjects[constr] = tab;
+        return tab;
+    };
+
 
     /**
      * Messun tiedot -välilehti. Yksittäisen messun aihe, raamatunkohdat
      * ja muu yleisen tason (ei ihmisiä koskeva )info, tämän muokkaus ym.
      *
      **/
-    var Details = function(){
+    TabFactory.Details = function(){
 
         /**
          *
@@ -52,7 +91,7 @@ var Service = function(){
      * Messun vastuunkantajat. (Vastuunkantajat-välilehti)
      *
      **/
-    var People = function(){
+    TabFactory.People = function(){
 
         /**
          *
@@ -62,17 +101,17 @@ var Service = function(){
          *
          **/
         this.SetResponsibles = function(list_of_people){
-            $("#peopletab ul").remove();
+            $("#People ul").remove();
             var $ul = $("<ul class='editable_data_list'></ul>");
             $.each(list_of_people, function(idx, person){
                 $ul.append(`<li>
-                            <span>${person.responsibility}</span>
-                            <span>
+                            <div>${person.responsibility}</div>
+                            <div>
                                 <input type="text" value="${person.responsible || ''}" </input>
-                            </span>
+                            </div>
                     </li>`);
             });
-            $ul.appendTo("#peopletab");
+            $ul.appendTo("#People .embed-data");
         };
 
 
@@ -91,6 +130,22 @@ var Service = function(){
                 }, callback);
         };
 
+        /**
+         *
+         * Tallentaa muutokset messun vastuunkantajiin
+         *
+         *
+         **/
+        this.SaveResponsibles = function(){
+            $("");
+            //$.getJSON("php/ajax/Saver.php",{
+            //    action: "save_responsibles",
+            //    service_id: service_id
+            //    data: data
+            //    }, callback);
+        };
+
+
     };
 
     /**
@@ -98,7 +153,7 @@ var Service = function(){
      * Messun infodiat
      *
      **/
-    var InfoSlides = function(){
+    TabFactory.Infoslides = function(){
     };
 
     /**
@@ -106,7 +161,16 @@ var Service = function(){
      * Messun rakenne - mahdolliset poikkeamat oletusrakenteesta ym.
      *
      **/
-    var Structure = function(){
+    TabFactory.Structure = function(){
+    };
+
+
+    /**
+     *
+     * Lauluvälilehti ja sen toiminnallisuus (huom, lauluslotit ja laululistat omia luokkiaan)
+     *
+     **/
+    TabFactory.Songs = function(){
     };
 
 
@@ -117,8 +181,15 @@ var Service = function(){
      **/
     function Initialize(){
         console.log("Initializing the service view...");
-        Details.GetTheme(Details.SetTheme);
-        People.GetResponsibles(People.SetResponsibles);
+        $("#tabs > div").each(function(){
+            TabFactory.make($(this));
+        })
+        TabObjects.Details.GetTheme(TabObjects.Details.SetTheme);
+        TabObjects.People.GetResponsibles(TabObjects.People.SetResponsibles);
+        for(this_tab in TabObjects){
+            TabObjects[this_tab].AddSaveButton();
+        }
+
         Comments.LoadComments();
         Comments.CreateThemeSelect();
         SongSlots.LoadSongsToSlots();
@@ -127,6 +198,7 @@ var Service = function(){
             .draggable({
                 revert: "valid"
             });
+        //Luodaana kustakin välilehdestä oma olionsa
     }
 
     /**
@@ -137,10 +209,6 @@ var Service = function(){
     function GetServiceId(){
         return service_id;
     }
-
-    //Alustetaan eri osiot
-    var Details = new Details();
-    var People = new People();
 
     return {
         Initialize,

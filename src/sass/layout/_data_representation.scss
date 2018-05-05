@@ -19,19 +19,24 @@
         list-style-type:none;
 
         & + li{
-            margin-top:0.5em;
+            margin-top:1.0em;
         }
 
+        display:flex;
+        flex-flow:row wrap;
 
-        span:first-child{
+
+        div:first-child{
             display:inline-block;
             word-wrap:break-word;
             width:5em;
+            margin-right:1em;
+            margin-bottom:0.2em;
         }
 
-        span:nth-child(2){
-            margin-left:1em;
+        div:nth-child(2){
         }
+
     
     }
 
