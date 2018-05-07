@@ -902,6 +902,21 @@ var Service = function(){
 
     /**
      *
+     * Tallentaa välilehdessä tehdyt muutokset 
+     *
+     **/
+    TabFactory.prototype.SaveTabData = function(){
+        self = this;
+        this.tabdata = this.GetTabData();
+        $.post("php/ajax/Saver.php",{
+            action: self.action,
+            service_id: Service.GetServiceId(),
+            data: self.tabdata
+            }, self.AfterSavedChanges.bind(self));
+    };
+
+    /**
+     *
      * Tarkastelee muutoksia ja ilmoittaa käyttäjälle, jos tallentamattomia
      * muutoksia havaitaan
      *
@@ -1007,6 +1022,8 @@ var Service = function(){
  **/
 Service.TabFactory.People = function(){
 
+    this.action = "save_responsibles";
+
     /**
      *
      * Tulostaa kaikkien messussa mukana olevien vastuunkantajien nimet
@@ -1067,20 +1084,6 @@ Service.TabFactory.People = function(){
     }
 
 
-    /**
-     *
-     * Tallentaa muutokset messun vastuunkantajiin
-     *
-     **/
-    this.SaveTabData = function(){
-        self = this;
-        this.tabdata = this.GetTabData();
-        $.post("php/ajax/Saver.php",{
-            action: "save_responsibles",
-            service_id: Service.GetServiceId(),
-            data: self.tabdata
-            }, self.AfterSavedChanges.bind(self));
-    };
 
 
 };
@@ -1092,14 +1095,8 @@ Service.TabFactory.People = function(){
  **/
 Service.TabFactory.Details = function(){
 
+    this.action = "save_details";
 
-    /**
-     *
-     *
-     **/
-    this.SaveTabData = function(){
-        console.log("songs");
-    };
 
     /**
      *
@@ -1110,10 +1107,11 @@ Service.TabFactory.Details = function(){
      *
      **/
     this.GetTheme = function(callback){
+        $("#service_theme").on("change paste keyup",this.MonitorChanges.bind(this));
         $.get("php/ajax/Loader.php",{
             action: "get_service_theme",
             service_id: service_id
-            }, callback);
+            }, callback.bind(this));
     };
 
     /**
@@ -1124,8 +1122,26 @@ Service.TabFactory.Details = function(){
      *
      **/
     this.SetTheme = function(theme){
-        $("#service_theme").text(theme);
+        $("#service_theme").val(theme);
+        this.tabdata = this.GetTabData();
+        $("#service_theme").on("change paste keyup",this.MonitorChanges.bind(this));
+        //Tarkkaile muutoksia:
+        
     };
+
+
+    /**
+     *
+     * Kerää kaiken välilehden sisältämän datan joko tallentamista
+     * varten tai jotta voitaisiin nähdä, onko tehty muutoksia.
+     *
+     **/
+    this.GetTabData = function(){
+        var data = [
+                {"type":"theme","value":$("#service_theme").val()}
+            ];
+        return data;
+    }
 
 
 

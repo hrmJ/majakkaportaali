@@ -36,6 +36,10 @@ switch($params["action"]){
         $service = new Service($database, $params["service_id"]);
         $service->SaveResponsibles($params["data"]);
         break;
+    case "save_details":
+        $service = new Service($database, $params["service_id"]);
+        $service->SaveDetails($params["data"]);
+        break;
 }
 
 

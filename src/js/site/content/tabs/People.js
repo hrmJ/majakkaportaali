@@ -5,6 +5,8 @@
  **/
 Service.TabFactory.People = function(){
 
+    this.action = "save_responsibles";
+
     /**
      *
      * Tulostaa kaikkien messussa mukana olevien vastuunkantajien nimet
@@ -65,20 +67,6 @@ Service.TabFactory.People = function(){
     }
 
 
-    /**
-     *
-     * Tallentaa muutokset messun vastuunkantajiin
-     *
-     **/
-    this.SaveTabData = function(){
-        self = this;
-        this.tabdata = this.GetTabData();
-        $.post("php/ajax/Saver.php",{
-            action: "save_responsibles",
-            service_id: Service.GetServiceId(),
-            data: self.tabdata
-            }, self.AfterSavedChanges.bind(self));
-    };
 
 
 };

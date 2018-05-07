@@ -37,6 +37,21 @@ var Service = function(){
 
     /**
      *
+     * Tallentaa välilehdessä tehdyt muutokset 
+     *
+     **/
+    TabFactory.prototype.SaveTabData = function(){
+        self = this;
+        this.tabdata = this.GetTabData();
+        $.post("php/ajax/Saver.php",{
+            action: self.action,
+            service_id: Service.GetServiceId(),
+            data: self.tabdata
+            }, self.AfterSavedChanges.bind(self));
+    };
+
+    /**
+     *
      * Tarkastelee muutoksia ja ilmoittaa käyttäjälle, jos tallentamattomia
      * muutoksia havaitaan
      *

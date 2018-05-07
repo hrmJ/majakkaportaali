@@ -73,6 +73,19 @@ class ServiceTest extends TestCase
         $this->assertTrue(sizeof($service->GetResponsibles())>1);
     }
 
+    /**
+     * Testaa messun perustietojen tallentaminen
+     */
+    public function testSaveDetails()
+    {
+        $service = new Service($this->con, 2);
+        $service->SaveDetails([
+            ["type"=>"theme",
+             "value" => "Teeemaa"] 
+        ]);
+        $this->assertTrue($service->GetTheme() == "Teeemaa"); 
+    }
+
 
 }
 

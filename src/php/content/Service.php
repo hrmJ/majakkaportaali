@@ -45,6 +45,8 @@ class Service{
         return $this->con->get("services","theme",["id" => $this->id]);
     }
 
+
+
     /*
      * Hakee messuun tarvittavat vastuuroolit ja niissä toimivat ihmiset
      *
@@ -56,6 +58,8 @@ class Service{
     /**
      *
      * Tallentaa muutokset messun vastuunkantajiin
+     *
+     * @param Array $data taulukko muotoa [["responsible" => x, "responsibility" => "x"], ...]
      *
      */
     public function SaveResponsibles($data){
@@ -71,6 +75,30 @@ class Service{
                     ]
                 ]
                 );
+        }
+        return $this;
+    }
+
+    /**
+     *
+     * Tallentaa muutokset messun perustietoihin kuten teemaan
+     *
+     * @param Array $data taulukko muotoa ....
+     *
+     */
+    public function SaveDetails($data){
+        foreach($data as $entry){
+            switch($entry["type"]){
+                case "theme":
+                    $data = $this->con->update("services",
+                        [
+                            "theme" => $entry["value"] 
+                        ],
+                        [ 
+                            "id" => $this->id
+                        ]);
+                    break;
+            }
         }
         return $this;
     }
