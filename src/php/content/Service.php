@@ -103,6 +103,26 @@ class Service{
         return $this;
     }
 
+
+    /**
+     * Lataa tietokannasta kaikki messussa käytössä olevat laulutyypit
+     * (määritelty service_structure.php-sivulla) ja syötä sivupohjaan
+     * niiden mukaiset slotit lauluille.
+     *
+     */
+    public function LoadStructure(){
+        $slots = $this->con->select("service_specific_presentation_structure", 
+            ["id",  "slot_name", "slot_number", "slot_type", "content_id", "addedclass", "header_id"],
+            ['ORDER' => [ 'slot_number' => 'ASC' ]]);
+        if( !$slots ){
+            $slots = $this->con->select("presentation_structure", 
+                ["id", "slot_name", "slot_type", "slot_number", "content_id", "addedclass", "header_id"],
+                ['ORDER' => [ 'slot_number' => 'ASC' ]]);
+        }
+        return $this;
+    }
+
+
 }
 
 

@@ -87,6 +87,15 @@ class ServiceTest extends TestCase
     }
 
 
+    /**
+     * Testaa messukohtaisen rakenteen lataamista tietokannasta
+     */
+    public function testLoadServiceSpecificStructure()
+    {
+        $service = new Service($this->con, 2);
+        $service->LoadStructure();
+    }
+
 }
 
 

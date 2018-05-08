@@ -35,8 +35,10 @@ class Structure{
     }
 
 
-    /*
+    /**
      *
+     * Lataa käyttäjän perusmessupohjaan  määrittelemät osiot.
+     * TODO muistiinpanot/apumerkinnät, joista ei tule omaa diaansa.
      *
      */
     public function LoadSlots(){
