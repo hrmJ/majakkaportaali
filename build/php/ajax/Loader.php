@@ -13,6 +13,7 @@ use Medoo\Medoo;
 use Portal\content\Comment;
 use Portal\content\Community;
 use Portal\content\Service;
+use Portal\content\Structure;
 use Portal\content\Servicelist;
 use Portal\content\Songlist;
 
@@ -63,6 +64,10 @@ switch($params["action"]){
     case "get_song_slots":
         $songlist = new Songlist($database, $params["service_id"], $m);
         echo $songlist->LoadSongSlots()->slots_as_string;
+        break;
+    case "get_service_specific_slots":
+        $structure = new Structure($database, $m);
+        echo $structure->LoadSlots()->slotstring;
         break;
     case "get_list_of_services":
         $servicelist = new Servicelist($database);

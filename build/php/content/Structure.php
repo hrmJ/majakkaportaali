@@ -40,11 +40,21 @@ class Structure{
      * Lataa käyttäjän perusmessupohjaan  määrittelemät osiot.
      * TODO muistiinpanot/apumerkinnät, joista ei tule omaa diaansa.
      *
+     * $service_id jos haetaan messuspesifiä rakennetta, messun id (oletus nolla)
+     *
      */
-    public function LoadSlots(){
-        $slots = $this->con->select("presentation_structure", 
-            ["id", "slot_name", "slot_type", "slot_number", "content_id", "addedclass", "header_id"],
+    public function LoadSlots($service_id = 0){
+        $slots = $this->con->select("service_specific_presentation_structure", 
+            ["id",  "slot_name", "slot_number", "slot_type", 
+            "content_id", "addedclass", "header_id"],
+            ["service_id" => $service_id],
             ['ORDER' => [ 'slot_number' => 'ASC' ]]);
+        if(!$slots){
+            //Ei löydy messuspesifiä rakennetta tai haetaan suoraan yleistä
+            $slots = $this->con->select("presentation_structure", 
+                ["id", "slot_name", "slot_type", "slot_number", "content_id", "addedclass", "header_id"],
+                ['ORDER' => [ 'slot_number' => 'ASC' ]]);
+        }
         $this->slotstring = "";
         foreach($slots as $slot){
             $newslot = $this->template_engine->loadTemplate('slot'); 

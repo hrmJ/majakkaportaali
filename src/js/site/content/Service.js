@@ -126,6 +126,7 @@ var Service = function(){
         })
         TabObjects.Details.GetTheme(TabObjects.Details.SetTheme);
         TabObjects.People.GetResponsibles(TabObjects.People.SetResponsibles);
+        TabObjects.Structure.GetStructure(TabObjects.Structure.SetStructure);
         for(this_tab in TabObjects){
             TabObjects[this_tab].AddSaveButton();
         }

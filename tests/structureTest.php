@@ -48,6 +48,16 @@ class StructureTest extends TestCase
         $this->assertRegExp("/<div/", $struct->slotstring);
     }
 
+    /**
+     * Testaa, että slottien lataaminen onnistuu messuspesifisti
+     */
+    public function testLoadSlotsForService()
+    {
+        $struct = new Structure($this->con, $this->m);
+        $struct->LoadSlots(2);
+        $this->assertRegExp("/<div/", $struct->slotstring);
+    }
+
 }
 
 
