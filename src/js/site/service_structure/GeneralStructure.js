@@ -67,6 +67,7 @@ var GeneralStructure = function(){
             select: function(e, u){
                 var slot_type = u.item.find(">div:eq(0)").attr("id").replace(/([^_]+)_launcher/,"$1");
                 self.SlotFactory.SlotFactory.make(slot_type)
+                    .LoadParams()
                     .ShowWindow();
                 }
             });

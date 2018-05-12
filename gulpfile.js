@@ -77,6 +77,7 @@ gulp.task("js",function(){
                    "service_structure/GeneralStructure",
                    "service_structure/SlotFactory",
                    "service_structure/DragAndDrop",
+                   "service_structure/Headers",
                    "actions"
                    ];
     var jsprefix = folder.src + "js/site/";
