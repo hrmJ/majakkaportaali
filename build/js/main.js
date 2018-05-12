@@ -1403,7 +1403,7 @@ var GeneralStructure = function(){
         $(".menu").menu({ 
             position: { my: "bottom", at: "right-5 top+5" },
             select: function(e, u){
-                var slot_type = u.item.find(">div:eq(0)").attr("class").split(" ")[0];
+                var slot_type = u.item.find(">div:eq(0)").attr("id").replace(/([^_]+)_launcher/,"$1");
                 self.SlotFactory.SlotFactory.make(slot_type)
                     .ShowWindow();
                 }
@@ -1478,6 +1478,7 @@ GeneralStructure.SlotFactory = function(){
         slot.previewparams = {segment_type: slot.segment_type};
         slot.previewhtml = "";
         slot.injectables = {"responsibilities":"vastuu tms.", "service_meta": "pvm tms."};
+        slot.SetLightBox();
         return slot;
     };
 
@@ -1653,14 +1654,26 @@ GeneralStructure.SlotFactory = function(){
         SetLightBox: function($el){
             BlurContent();
             //Tuo templatesta varsinainen diansyöttövalikko ja ylätunnisteen syöttövalikko
-            this.$lightbox.html("").prepend($(this.slideclass).clone(true)
-                                            .append($("#headertemplate_container > *").clone(true))
-                                            );
+            this.$lightbox.html("")
+                .prepend(
+                    $(this.slideclass)
+                    .clone(true)
+                    .append(
+                        $("#headertemplate_container > *").clone(true)
+                    ));
             //Lisää syötettävän datan valitsimet
-            this.$lightbox.find(".injection_placeholder").each(function(){
-                $(this).html("").append($("#injected-data-container").clone(true));
-            });
-            this.$lightbox.css({"width":$(".innercontent").width(),"top":  $("nav .dropdown").is(":visible") ? "-250px" : "-50px"}).show();
+            this.$lightbox.find(".injection_placeholder")
+                    .each(function(){
+                            $(this).html("")
+                            .append($("#injected-data-container")
+                            .clone(true));
+                    });
+            this.$lightbox.css(
+                {
+                 "width":$(".innercontent").width(),
+                 "top":  $("nav .dropdown").is(":visible") ? "-250px" : "-50px"
+                }
+            ).show();
             this.SetSlideClasses();
         },
 

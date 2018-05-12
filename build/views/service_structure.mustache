@@ -8,19 +8,20 @@
                 <ul class="menu">
                     <li><div>Syötä uusi messuelementti</div>
                         <ul>
-                            <li><div class="songslide">Laulu</div></li>
-                            <li><div class="bibleslide">Raamatunkohta</div></li>
-                            <li><div class="infoslide">Muu</div></li>
+                            <li><div id="songslide_launcher">Laulu</div></li>
+                            <li><div id="bibleslide_launcher">Raamatunkohta</div></li>
+                            <li><div id="infoslide_launcher">Muu</div></li>
                         </ul>
                     </li>
                 </ul>
             </div>
+            <div class="new_slot_container"></div>
             <div class='structural-slots'>
             {{{units}}}
             </div>
         </div>
     </section>
-    <div class="hidden">
+    <div class="hidden slide_models_parent">
         <div class="infoslide slidemodel">
             <h2 class="subwindow-opener slide-section-controller">Otsikot ja luokka</h2>
             <div class="slidemodel-flex-column controller-subwindow">
