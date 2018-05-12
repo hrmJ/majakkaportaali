@@ -1,13 +1,6 @@
-
-/**
- *
- *
- **/
-
 var GeneralStructure = GeneralStructure || {};
-var GeneralStructure.Events = GeneralStructure.Events || {};
 
-GeneralStructure.Events.DragAndDrop = function(){
+GeneralStructure.DragAndDrop = function(){
 
     var currently_dragged_no;
 

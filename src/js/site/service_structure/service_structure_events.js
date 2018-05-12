@@ -9,7 +9,9 @@ var GeneralStructure = GeneralStructure || {};
  * Alempi namespace: messun rakenteen muokkaamiseen liittyvät tapahtumat
  *
  **/
-GeneralStructure.Events = function(){
+GeneralStructure = function(){
+
+
 
     /**
      * Lisää kaikkiin messun segmentteihin muokkaus- ja poisto-ominaisuudet.
@@ -36,23 +38,13 @@ GeneralStructure.Events = function(){
         });
     }
 
-    /**
-     *
-     * Pohjusta messuslottien siirtoon liittyvät tapahtumat
-     *
-     **/
-    function InitializeDragAndDrop(){
-    
-    
-    }
-
-
     
 
 
     return {
     
-    
+        SaveSlotOrder,
+        Initialize,
     
     }
 
@@ -95,10 +87,6 @@ GeneralStructure.SelectTheContentToAdd = function(e, u){
  * 
  **/
 GeneralStructure.Initialize = function(){
-        $(".menu").menu({ position: { my: "bottom", at: "right-5 top+5" }, select: SelectTheContentToAdd});
-        GeneralStructure.UpdateAdderEvents();
-        //Vain testaamista varten: lisäillään vähän id:itä
-        $(".menu").find("li").each(function(){if($(this).text()=="Laulu")$(this).attr({"id":"addsongmenu"});});
 }
 
 

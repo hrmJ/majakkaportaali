@@ -1,44 +1,75 @@
 
+var GeneralStructure = GeneralStructure || {};
+
+GeneralStructure.SlotFactory = function(){
+
 
     /**
      *
-     * Olio, jolla lisätään uusia esitykseen liittyviä messun rakenneosia.
+     * Factory-pattern eri välilehtiä edustavien olioiden luomiseksi
      *
-     * @param object $container jquery-oliona se div, jonka sisältä valittiin syöttää uusi elementti
-     *
-     */
-    var StructuralElementAdder = function($container){
-            this.$lightbox = $("<div class='my-lightbox structural-element-adder'></div>");
-            this.$preview_window = $(`<div class='preview-window'>
-                                      <iframe scrolling='no' frameBorder='0'></iframe>
-                                      <button>Sulje esikatselu</button></div>`);
-            this.$container = $container;
-            this.previewparams = {segment_type: this.segment_type};
-            this.previewhtml = "";
-            this.id = $container.find(".content_id").val();
-            this.header_id = $container.find(".header_id").val();
-            this.injectables = {"responsibilities":"vastuu tms.", "service_meta": "pvm tms."};
-            if(!this.header_id){
-                this.header_id = 0;
-            }
+     **/
+    function SlotFactory(){
+        this.tabdata = [];
     }
 
-    StructuralElementAdder.prototype = {
+    /**
+     *
+     * Tuottaa yhden välilehtiolion haluttua tyyppiä
+     *
+     * @param slot_type luotavan slotin tyyppi 
+     *
+     **/
+    SlotFactory.make = function(slot_type, $container){
+        var constr = slot_type;
+        var slot;
+        SlotFactory[constr].prototype = new SlotFactory();
+        slot = new SlotFactory[constr]();
+        slot.slot_type = constr;
+        slot.$lightbox = $("<div class='my-lightbox structural-element-adder'></div>");
+        slot.$preview_window = $(`<div class='preview-window'>
+                                  <iframe scrolling='no' frameBorder='0'></iframe>
+                                  <button>Sulje esikatselu</button></div>`);
+        // kun luodaan uutta, liitä lightbox sivun yläreunan diviin
+        slot.$container = $container || $(".structural-element-add");
+        var $content_id = slot.$container.find(".content_id");
+        var $header_id = slot.$container.find(".header_id");
+        slot.id = ($content_id ? $content_id.val() : 0);
+        slot.header_id = ($header_id ? $header_id.val() : 0);
+        slot.previewparams = {segment_type: slot.segment_type};
+        slot.previewhtml = "";
+        slot.injectables = {"responsibilities":"vastuu tms.", "service_meta": "pvm tms."};
+        return slot;
+    };
+
+    SlotFactory.prototype = {
         /**
          *  Näytä ikkuna, jossa käyttäjä voi muokata messun rakenteeseen lisättävää diaa
          */
         ShowWindow: function(){
             var self = this
             var $buttons = $("<div class='button-container'>")
-            $("<button>Sulje tallentamatta</button>").click(function(){ self.$lightbox.html("").hide(); $(".blurcover").remove();}).appendTo($buttons);
-            $("<button>Tallenna</button>").click(function(){ self.SaveAndClose(); }).appendTo($buttons);
+            $("<button>Sulje tallentamatta</button>")
+                .click(function(){ 
+                        self.$lightbox.html("").hide();
+                        $(".blurcover").remove();
+                })
+                .appendTo($buttons);
+            $("<button>Tallenna</button>")
+                .click(self.SaveAndClose)
+                .appendTo($buttons);
             if(this.slideclass==".infoslide"){
-                $("<button>Esikatsele</button>").click(function(){ self.PreviewSlide(); }).appendTo($buttons)
+                $("<button>Esikatsele</button>")
+                    .click(self.PreviewSlide())
+                    .appendTo($buttons)
             };
             this.$lightbox.append($buttons);
             this.$container.prepend(this.$lightbox);
             this.InitializeInjectableData();
-            $("[value='multisong']").click(function(){self.$container.find(".multisongheader").toggle(); });
+            $("[value='multisong']")
+                .click(function(){
+                    self.$container.find(".multisongheader").toggle(); 
+                });
             if(this.slideclass==".songslide") this.AddAutoComplete();
         },
 
@@ -488,41 +519,23 @@
      *
      * Laulusisällön lisäävä olio.
      *
-     * @param object $container jquery-oliona se div, jonka sisältä valittiin syöttää uusi elementti
-     *
      */
-    var SongSlideAdder = function($container){
+    SlotFactory.songslide = function(){
         this.slideclass = ".songslide";
         this.segment_type = "songsegment";
-        StructuralElementAdder.call(this, $container);
-        this.SetLightBox();
-        return this;
     }
 
-    SongSlideAdder.prototype = {
-
-    }
 
     /**
      *
      * Yksittäisen diasisällön lisäävä olio.
      *
-     * @param object $container jquery-oliona se div, jonka sisältä valittiin syöttää uusi elementti
-     *
      */
-    var InfoSlideAdder = function($container){
+    SlotFactory.infoslide = function(){
         this.slideclass = ".infoslide";
         this.segment_type = "infosegment";
-        StructuralElementAdder.call(this, $container);
-        this.SetLightBox();
-        return this;
     }
 
-
-    InfoSlideAdder.prototype = {
-
-
-    }
 
     /**
      *
@@ -531,24 +544,17 @@
      * @param object $container jquery-oliona se div, jonka sisältä valittiin syöttää uusi elementti
      *
      */
-    var BibleSlideAdder = function($container){
+    SlotFactory.bibleslide = function(){
         this.slideclass = ".bibleslide";
-        StructuralElementAdder.call(this, $container);
-        this.SetLightBox();
-        return this;
     }
 
-    BibleSlideAdder.prototype = {
-
-    }
-
-
-    extend(StructuralElementAdder, InfoSlideAdder);
-    extend(StructuralElementAdder, SongSlideAdder);
-    extend(StructuralElementAdder, BibleSlideAdder);
 
     return {
-        InfoSlideAdder,
-        adder,
-        currently_dragged_no
+    
+        SlotFactory
+    
     }
+
+
+}();
+

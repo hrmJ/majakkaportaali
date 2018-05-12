@@ -1349,43 +1349,166 @@ var GeneralStructure = function(){
 
     /**
      *
-     * Olio, jolla lisätään uusia esitykseen liittyviä messun rakenneosia.
+     * Lataa informaation messun rakenneosista
      *
-     * @param object $container jquery-oliona se div, jonka sisältä valittiin syöttää uusi elementti
+     * @param data ajax-responssina tullut informaatio sloteista
      *
-     */
-    var StructuralElementAdder = function($container){
-            this.$lightbox = $("<div class='my-lightbox structural-element-adder'></div>");
-            this.$preview_window = $(`<div class='preview-window'>
-                                      <iframe scrolling='no' frameBorder='0'></iframe>
-                                      <button>Sulje esikatselu</button></div>`);
-            this.$container = $container;
-            this.previewparams = {segment_type: this.segment_type};
-            this.previewhtml = "";
-            this.id = $container.find(".content_id").val();
-            this.header_id = $container.find(".header_id").val();
-            this.injectables = {"responsibilities":"vastuu tms.", "service_meta": "pvm tms."};
-            if(!this.header_id){
-                this.header_id = 0;
-            }
+     **/
+    function ReloadSlots(data){
+        $(".structural-slots").load("php/ajax/Structure.php",
+            {"action":"load_slots"}, 
+            UpdateAdderEvents
+        );
     }
 
-    StructuralElementAdder.prototype = {
+    /**
+     *
+     * Poista jokin messun rakenneosa kokonaan
+     *
+     **/
+    function RemoveSlot(){
+        $.post("php/ajax/Structure.php", {
+            "action":"remove_slide",
+            "id":$(this).parents(".slot").find(".slot_id").val()
+            }, 
+            ReloadSlots
+        );
+    }
+
+    /**
+     *
+     * Tallentaa muutokset slottien järjestykseen
+     *
+     * $param newids slottien järjestysnumerot siirron jälkeen
+     *
+     **/
+    function SaveSlotOrder(newids){
+        //Save the changes
+        $.post("php/ajax/Structure.php",{
+        "action":"save",
+        "slideclass":"update_numbers",
+        "segment_type":"update_numbers",
+        "newids":newids
+        }, ReloadSlots);
+    }
+
+
+    /**
+     *
+     * Alusta kaikki messun rakenneosiin liittyvät tapahtumat
+     *
+     **/
+    function Initialize(){
+        var self = this;
+        $(".menu").menu({ 
+            position: { my: "bottom", at: "right-5 top+5" },
+            select: function(e, u){
+                var slot_type = u.item.find(">div:eq(0)").attr("class").split(" ")[0];
+                self.SlotFactory.SlotFactory.make(slot_type)
+                    .ShowWindow();
+                }
+            });
+        $(".slot:last-of-type").after("<div class='drop-target'></div>");
+        $(".remove-link").click(RemoveSlot);
+        $(".slot").on("dragstart",GeneralStructure.DragAndDrop.DragStart);
+        $(".drop-target")
+            .on("dragover",GeneralStructure.DragAndDrop.DragOver)
+            .on("dragleave",GeneralStructure.DragAndDrop.DragLeave)
+            .on("drop",GeneralStructure.DragAndDrop.Drop)
+        $(".edit-link").click(function(){
+            //Jos käyttäjä haluaa muokata slottia, pyydä olio slottitehtaahlta:
+            var $container = $(this).parents(".slot");
+            GeneralStructure.SlotFactory.SlotFactory
+                .make($container)
+                .LoadParams()
+                .ShowWindow();
+        });
+        //Vain testaamista varten: lisäillään vähän id:itä
+        //$(".menu").find("li").each(function(){if($(this).text()=="Laulu")$(this).attr({"id":"addsongmenu"});});
+    }
+
+
+    return {
+         Initialize,
+    }
+    
+
+
+
+}();
+
+
+var GeneralStructure = GeneralStructure || {};
+
+GeneralStructure.SlotFactory = function(){
+
+
+    /**
+     *
+     * Factory-pattern eri välilehtiä edustavien olioiden luomiseksi
+     *
+     **/
+    function SlotFactory(){
+        this.tabdata = [];
+    }
+
+    /**
+     *
+     * Tuottaa yhden välilehtiolion haluttua tyyppiä
+     *
+     * @param slot_type luotavan slotin tyyppi 
+     *
+     **/
+    SlotFactory.make = function(slot_type, $container){
+        var constr = slot_type;
+        var slot;
+        SlotFactory[constr].prototype = new SlotFactory();
+        slot = new SlotFactory[constr]();
+        slot.slot_type = constr;
+        slot.$lightbox = $("<div class='my-lightbox structural-element-adder'></div>");
+        slot.$preview_window = $(`<div class='preview-window'>
+                                  <iframe scrolling='no' frameBorder='0'></iframe>
+                                  <button>Sulje esikatselu</button></div>`);
+        // kun luodaan uutta, liitä lightbox sivun yläreunan diviin
+        slot.$container = $container || $(".structural-element-add");
+        var $content_id = slot.$container.find(".content_id");
+        var $header_id = slot.$container.find(".header_id");
+        slot.id = ($content_id ? $content_id.val() : 0);
+        slot.header_id = ($header_id ? $header_id.val() : 0);
+        slot.previewparams = {segment_type: slot.segment_type};
+        slot.previewhtml = "";
+        slot.injectables = {"responsibilities":"vastuu tms.", "service_meta": "pvm tms."};
+        return slot;
+    };
+
+    SlotFactory.prototype = {
         /**
          *  Näytä ikkuna, jossa käyttäjä voi muokata messun rakenteeseen lisättävää diaa
          */
         ShowWindow: function(){
             var self = this
             var $buttons = $("<div class='button-container'>")
-            $("<button>Sulje tallentamatta</button>").click(function(){ self.$lightbox.html("").hide(); $(".blurcover").remove();}).appendTo($buttons);
-            $("<button>Tallenna</button>").click(function(){ self.SaveAndClose(); }).appendTo($buttons);
+            $("<button>Sulje tallentamatta</button>")
+                .click(function(){ 
+                        self.$lightbox.html("").hide();
+                        $(".blurcover").remove();
+                })
+                .appendTo($buttons);
+            $("<button>Tallenna</button>")
+                .click(self.SaveAndClose)
+                .appendTo($buttons);
             if(this.slideclass==".infoslide"){
-                $("<button>Esikatsele</button>").click(function(){ self.PreviewSlide(); }).appendTo($buttons)
+                $("<button>Esikatsele</button>")
+                    .click(self.PreviewSlide())
+                    .appendTo($buttons)
             };
             this.$lightbox.append($buttons);
             this.$container.prepend(this.$lightbox);
             this.InitializeInjectableData();
-            $("[value='multisong']").click(function(){self.$container.find(".multisongheader").toggle(); });
+            $("[value='multisong']")
+                .click(function(){
+                    self.$container.find(".multisongheader").toggle(); 
+                });
             if(this.slideclass==".songslide") this.AddAutoComplete();
         },
 
@@ -1835,41 +1958,23 @@ var GeneralStructure = function(){
      *
      * Laulusisällön lisäävä olio.
      *
-     * @param object $container jquery-oliona se div, jonka sisältä valittiin syöttää uusi elementti
-     *
      */
-    var SongSlideAdder = function($container){
+    SlotFactory.songslide = function(){
         this.slideclass = ".songslide";
         this.segment_type = "songsegment";
-        StructuralElementAdder.call(this, $container);
-        this.SetLightBox();
-        return this;
     }
 
-    SongSlideAdder.prototype = {
-
-    }
 
     /**
      *
      * Yksittäisen diasisällön lisäävä olio.
      *
-     * @param object $container jquery-oliona se div, jonka sisältä valittiin syöttää uusi elementti
-     *
      */
-    var InfoSlideAdder = function($container){
+    SlotFactory.infoslide = function(){
         this.slideclass = ".infoslide";
         this.segment_type = "infosegment";
-        StructuralElementAdder.call(this, $container);
-        this.SetLightBox();
-        return this;
     }
 
-
-    InfoSlideAdder.prototype = {
-
-
-    }
 
     /**
      *
@@ -1878,201 +1983,111 @@ var GeneralStructure = function(){
      * @param object $container jquery-oliona se div, jonka sisältä valittiin syöttää uusi elementti
      *
      */
-    var BibleSlideAdder = function($container){
+    SlotFactory.bibleslide = function(){
         this.slideclass = ".bibleslide";
-        StructuralElementAdder.call(this, $container);
-        this.SetLightBox();
-        return this;
     }
 
-    BibleSlideAdder.prototype = {
-
-    }
-
-
-    extend(StructuralElementAdder, InfoSlideAdder);
-    extend(StructuralElementAdder, SongSlideAdder);
-    extend(StructuralElementAdder, BibleSlideAdder);
 
     return {
-        InfoSlideAdder,
-        adder,
-        currently_dragged_no
+    
+        SlotFactory
+    
     }
 
 
 }();
 
-/**
- * Tapahtumat, jotka liittyvät messurakenteen määrittelyyn
- */
 
 var GeneralStructure = GeneralStructure || {};
 
-/**
- *
- * Alempi namespace: messun rakenteen muokkaamiseen liittyvät tapahtumat
- *
- **/
-GeneralStructure.Events = function(){
+GeneralStructure.DragAndDrop = function(){
 
-    /**
-     * Lisää kaikkiin messun segmentteihin muokkaus- ja poisto-ominaisuudet.
-     * Lisäksi mahdollistaa segmenttien uudelleenjärjestelyn raahaamalla.
-     */
-    function UpdateAdderEvents(){
-        $(".slot:last-of-type").after("<div class='drop-target'></div>");
-        $(".edit-link").click(function(){
-            var $container = $(this).parents(".slot");
-            var slot_type  = $container.find(".slot_type").val();
-            switch(slot_type){
-                case "infosegment":
-                    adder = new InfoSlideAdder($container);
-                    break;
-                case "songsegment":
-                    adder = new SongSlideAdder($container);
-                    break;
-                case "biblesegment":
-                    adder = new BibleSlideAdder($container);
-                    break;
-            }
-            adder.LoadParams();
-            adder.ShowWindow();
-        });
-    }
+    var currently_dragged_no;
+
 
     /**
      *
-     * Pohjusta messuslottien siirtoon liittyvät tapahtumat
+     * Määrittelee, mitä tapahtuu, kun käyttäjä alkaa raahata jotakin
+     * slottia
      *
      **/
-    function InitializeDragAndDrop(){
-    
-    
+    function DragStart(){
+        $(".slot").addClass("drop-hide");
+        $(this).removeClass("drop-hide");
+        currently_dragged_no = $(this).find(".slot-number").text() * 1;
     }
 
-        //slottien poisto
-        $(".remove-link").click(function(){
-            $.post("php/ajax/Structure.php",
-                {"action":"remove_slide","id":$(this).parents(".slot").find(".slot_id").val()}, 
-                function(data){ 
-                    console.log(data);
-                    $(".structural-slots").load("php/ajax/Structure.php",{"action":"load_slots"},UpdateAdderEvents);
-                });
-        });
 
-        //slottien siirtely
-        $(".slot").on("dragstart",function(){ 
-            $(".slot").addClass("drop-hide");
-            $(this).removeClass("drop-hide");
-            currently_dragged_no = $(this).find(".slot-number").text() * 1;
-        });
-        $(".drop-target")
-            .on("dragover",function(event){
-                event.preventDefault();  
-                event.stopPropagation();
-                $(this).addClass("drop-highlight").text("Siirrä tähän");
-            })
-            .on("dragleave",function(event){
-                event.preventDefault();  
-                event.stopPropagation();
-                $(this).text("").removeClass("drop-highlight");
-            })
-            .on("drop",function(event){
-                event.preventDefault();  
-                event.stopPropagation();
-                var prevno = $(this).prev().find(".slot-number").text();
-                if(prevno=="") prevno = 0;
-                var newids = [];
-                console.log("PREVNO: " + prevno);
-                $(".slot").each(function(){
-                    var thisno = $(this).find(".slot-number").text()*1;
-                    var id = $(this).find(".slot_id").val()*1;
-                    var newno = thisno*1;
-                    if(thisno == currently_dragged_no){
-                        newno = prevno*1 + 1;
-                        if(prevno > currently_dragged_no)
-                            newno -= 1;
-                    }
-                    else if(thisno>currently_dragged_no && thisno > prevno) newno = thisno;
-                    else if(thisno>currently_dragged_no && thisno <= prevno) newno = thisno -1;
-                    else if(thisno>prevno && thisno != currently_dragged_no) newno = thisno*1 +1;
-                    else if(thisno==prevno && thisno >currently_dragged_no) newno = thisno*1 -1;
-                    else if(thisno==prevno) newno = thisno;
-                    newids.push({"slot_id":id,"newnumber":newno});
-                    });
-                //Save the changes
-                $.post("php/ajax/Structure.php",{
-                "action":"save",
-                "slideclass":"update_numbers",
-                "segment_type":"update_numbers",
-                "newids":newids
-                }, 
-                function(data){ 
-                    console.log("moro");
-                    $("body").prepend(data);
-                    $(".structural-slots").load("php/ajax/Structure.php",{"action":"load_slots"}, UpdateAdderEvents);
-                }
-                );
+    /**
+     * 
+     * Määrittelee, mitä tapahtuu, kun elementti
+     * raahataan slottien välisen tilan ylle
+     *
+     * @param event funktion käynnistänyt tapahtuma
+     *
+     **/
+    function DragOver(event){
+        event.preventDefault();  
+        event.stopPropagation();
+        $(this).addClass("drop-highlight").text("Siirrä tähän");
+    }
+
+    /**
+     *
+     * Määrittelee, mitä tapahtuu, kun raahattu
+     * elementti poistuu slottien välisen alueen
+     * päältä
+     *
+     * @param event funktion käynnistänyt tapahtuma
+     *
+     **/
+    function DragLeave(event){
+        event.preventDefault();  
+        event.stopPropagation();
+        $(this).text("").removeClass("drop-highlight");
+    }
+
+    /**
+     *
+     *
+     * Määrittelee, mitä tapahtuu, kun käyttäjä on tiputtanut raahaamansa elementin kohteeseen.
+     *
+     * @param event funktion käynnistänyt tapahtuma
+     *
+     **/
+    function Drop(event){
+        event.preventDefault();  
+        event.stopPropagation();
+        var prevno = $(this).prev().find(".slot-number").text();
+        if(prevno=="") prevno = 0;
+        var newids = [];
+        console.log("PREVNO: " + prevno);
+        $(".slot").each(function(){
+            var thisno = $(this).find(".slot-number").text()*1;
+            var id = $(this).find(".slot_id").val()*1;
+            var newno = thisno*1;
+            if(thisno == currently_dragged_no){
+                newno = prevno*1 + 1;
+                if(prevno > currently_dragged_no)
+                    newno -= 1;
+            }
+            else if(thisno>currently_dragged_no && thisno > prevno) newno = thisno;
+            else if(thisno>currently_dragged_no && thisno <= prevno) newno = thisno -1;
+            else if(thisno>prevno && thisno != currently_dragged_no) newno = thisno*1 +1;
+            else if(thisno==prevno && thisno >currently_dragged_no) newno = thisno*1 -1;
+            else if(thisno==prevno) newno = thisno;
+            newids.push({"slot_id":id,"newnumber":newno});
             });
 
+        GeneralStructure.SaveSlotOrder(newids);
     }
-
-    
 
 
     return {
-    
-    
-    
+        DragStart,
     }
-
 
 }();
-
-
-
-
-
-
-/**
- *
- * Valitse, mitä sisältöä ryhdytään lisäämään. 
- * Valintamenun  (jqueryui menu) callback.
- *
- */
-GeneralStructure.SelectTheContentToAdd = function(e, u){
-    if(u.item.find("span").length==0){
-        switch(u.item.text()){
-            //case "Yksittäinen dia":
-            //    break;
-            case "Laulu":
-                adder = new SongSlideAdder(u.item.parents(".structural-element-add"));
-                break;
-            case "Raamatunkohta":
-                adder = new BibleSlideAdder(u.item.parents(".structural-element-add"));
-                break;
-            default:
-                adder = new InfoSlideAdder(u.item.parents(".structural-element-add"));
-                break;
-        }
-        if (adder != undefined) adder.ShowWindow();
-    }
-}
-
-/**
- *
- * Pohjusta messun rakenteen muokkaus ja siihen liittyvät tapahtumat
- * 
- **/
-GeneralStructure.Initialize = function(){
-        $(".menu").menu({ position: { my: "bottom", at: "right-5 top+5" }, select: SelectTheContentToAdd});
-        GeneralStructure.UpdateAdderEvents();
-        //Vain testaamista varten: lisäillään vähän id:itä
-        $(".menu").find("li").each(function(){if($(this).text()=="Laulu")$(this).attr({"id":"addsongmenu"});});
-}
-
-
 
 /**
  *
@@ -2093,6 +2108,11 @@ $(function(){
     else if ($("body").hasClass("servicelist")){
         //Kaikkien messujen lista
         Servicelist.Initialize();
+        //Ehkä filtteröitynä?
+    }
+    else if ($("body").hasClass("service_structure")){
+        //Kaikkien messujen lista
+        GeneralStructure.Initialize();
         //Ehkä filtteröitynä?
     }
 

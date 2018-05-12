@@ -19,5 +19,10 @@ $(function(){
         Servicelist.Initialize();
         //Ehkä filtteröitynä?
     }
+    else if ($("body").hasClass("service_structure")){
+        //Kaikkien messujen lista
+        GeneralStructure.Initialize();
+        //Ehkä filtteröitynä?
+    }
 
 });
