@@ -384,7 +384,7 @@
                 this.previewparams.addedclass = this.$lightbox.find("select[name='addedclass']").val();
             }
             $.post("php/loaders/save_structure_slide.php",this.previewparams,function(html){
-                $(".structural-slots").load("php/loaders/loadslots.php",UpdateAdderEvents);
+                $(".structural-slots").load("php/loaders/loadslots.php",UkdateAdderEvents);
                 $("body").prepend(html);
             });
             this.$lightbox.html("").hide();

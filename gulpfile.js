@@ -75,9 +75,14 @@ gulp.task("js",function(){
                    "content/tabs/Songs",
                    "content/Servicelist",
                    "service_structure/GeneralStructure",
+                   "service_structure/songslide",
+                   "service_structure/bibleslide",
+                   "service_structure/infoslide",
                    "service_structure/SlotFactory",
                    "service_structure/DragAndDrop",
                    "service_structure/Headers",
+                   "service_structure/InjectableData",
+                   "service_structure/DataLoading",
                    "actions"
                    ];
     var jsprefix = folder.src + "js/site/";
