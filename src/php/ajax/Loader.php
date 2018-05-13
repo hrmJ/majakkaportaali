@@ -85,6 +85,10 @@ switch($params["action"]){
         $structure = new Structure($database, $m);
         echo json_encode($structure->LoadSlideClassNames());
         break;
+    case "get_slide_image_names":
+        $structure = new Structure($database, $m);
+        echo json_encode($structure->LoadSlideImageNames());
+        break;
     case "get_list_of_services":
         $servicelist = new Servicelist($database);
         $servicelist->SetSeason();

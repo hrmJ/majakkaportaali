@@ -42,6 +42,7 @@ GeneralStructure.SlotFactory = function(){
         GeneralStructure.DataLoading.Attach(this);
         GeneralStructure.InjectableData.Attach(this);
         GeneralStructure.Headers.Attach(this);
+        GeneralStructure.Images.Attach(this);
         GeneralStructure.LightBox.Attach(this);
         slot.SetLightBox();
         return slot;

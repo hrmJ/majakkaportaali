@@ -84,6 +84,15 @@ class StructureTest extends TestCase{
         $this->assertTrue(sizeof($struct->LoadSlideClassNames())>0);
     }
 
+    /**
+     * Testaa, että tietokannassa olevien kuvien lataus onnistuu
+     */
+    public function testLoadSlideImageNamaes()
+    {
+        $struct = new Structure($this->con, $this->m);
+        $this->assertTrue(sizeof($struct->LoadSlideImageNames())>0);
+    }
+
 }
 
 

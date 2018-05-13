@@ -1547,6 +1547,8 @@ GeneralStructure.SlotFactory.infoslide = function(){
     this.slideclass = ".infoslide";
     this.segment_type = "infosegment";
 
+
+
     /**
      *
      * Lisää ajax-ladatun datan slottiin
@@ -1555,7 +1557,22 @@ GeneralStructure.SlotFactory.infoslide = function(){
      *
      **/
     this.FillInData = function(data){
-        console.log(data);
+        var self = this;
+        self.$lightbox.find(".slide-header").val(data.header);
+        self.$lightbox.find(".infoslidetext").val(data.maintext);
+        if(data.imgname){ 
+            self.$lightbox.find(".slide_img .img-select").val(data.imgname);
+            self.$lightbox.find(".slide_img .img-pos-select").val(data.imgposition);
+        }
+        if(data.genheader){
+            //Lisää ruksi, jos määritetty, että on yläotsikko
+            self.$lightbox.find("[value='show-upper-header']").get(0).checked=true;
+        }
+        var used_img = self.$lightbox.find(".slide_img .img-select").val();
+        if(used_img!="Ei kuvaa"){
+            //Lataa valmiiksi kuvan esikatselu, jos kuva määritelty
+            Preview(self.$lightbox.find(".slide_img .img-select").parents(".with-preview"),"images/" + used_img);
+        }
     }
 }
 
@@ -1604,6 +1621,7 @@ GeneralStructure.SlotFactory = function(){
         GeneralStructure.DataLoading.Attach(this);
         GeneralStructure.InjectableData.Attach(this);
         GeneralStructure.Headers.Attach(this);
+        GeneralStructure.Images.Attach(this);
         GeneralStructure.LightBox.Attach(this);
         slot.SetLightBox();
         return slot;
@@ -1661,7 +1679,7 @@ GeneralStructure.LightBox = function(){
                 .appendTo($buttons);
             if(this.slideclass==".infoslide"){
                 $("<button>Esikatsele</button>")
-                    .click(self.PreviewSlide())
+                    .click(self.PreviewSlide)
                     .appendTo($buttons)
             };
             this.$lightbox.append($buttons);
@@ -1956,6 +1974,70 @@ GeneralStructure.Headers = function(){
 
 GeneralStructure = GeneralStructure || {};
 
+GeneralStructure.Images = function(){
+
+
+    /**
+     *
+     * Liittää kuvien lataamiseen  liittyvän toiminnallisuuden lähdeolioon
+     *
+     * @param source olio, johon liitetään
+     *
+     **/
+    function Attach(source){
+
+        /**
+         *
+         * Listaa tietokantaan tallennettujen kuvien nimet
+         *
+         */
+        source.prototype.AddImageLoader = function(){
+            var self = this;
+            this.$lightbox.find(".img-select").remove();
+            $.getJSON("php/ajax/Loader.php",
+                    {"action":"get_slide_image_names"},
+                    this.CreateListOfImages.bind(this));
+        };
+
+        /**
+         *
+         * Prosessoi ladattujen kuvannimien listan ja luo siitä
+         * select-elementin
+         *
+         * @param data dian tiedot ajax-responssina 
+         *
+         **/
+        source.prototype.CreateListOfImages = function(data){
+            var self = this;
+            $sel = $(`<select class='img-select'>
+                        <option>Ei kuvaa</option>
+                      </select>`);
+            $sel.on("change",function(){ 
+                Preview($(this).parents(".with-preview"),"images/" + $(this).val())}
+            );
+            $.each(data, function(idx,imgname){
+                imgname = imgname.filename;
+                $("<option>").text(imgname).appendTo($sel);
+                } 
+            );
+            self.$lightbox.find(".img-select-parent").append($sel);
+            //Kuvien lautauksen jälkeen lataa ylätunnisteet
+            self.SetHeaderTemplates();
+        };
+
+
+
+    }
+
+
+    return {
+        Attach,
+    };
+
+}();
+
+GeneralStructure = GeneralStructure || {};
+
 GeneralStructure.InjectableData = function(){
 
 
@@ -2048,6 +2130,7 @@ GeneralStructure.DataLoading = function(){
          */
         source.prototype.LoadParams = function(){
             //Huolehdi siitä, että kuvanvalintavalikot ovat näkyvissä ennen tietojen lataamista
+            console.log("heijaa");
             this.AddImageLoader();
             this.slot_number = this.$container.find(".slot-number").text();
             this.slot_name = this.$container.find(".slot_name_orig").val();
@@ -2102,29 +2185,6 @@ GeneralStructure.DataLoading = function(){
                 header_id : this.header_id
                 }
             );
-        };
-
-        /**
-         * Lataa näkyviin tietokantaan tallennetut kuvat valittavaksi esitykseen lisäämistä varten.
-         *
-         */
-        source.prototype.AddImageLoader = function(){
-            var self = this;
-            this.$lightbox.find(".img-select").remove();
-            $sel = $("<select class='img-select'><option>Ei kuvaa</option></select>")
-                .on("change",function(){ 
-                    Preview($(this).parents(".with-preview"),"images/" + $(this).val())}
-                );
-            $.getJSON("php/loaders/load_assets.php",{"asset_type":"backgrounds"},
-                    //Luo ensin lista tallennetuista kuvista. 
-                    function(data){
-                        $.each(data, function(idx,imgname){
-                            $("<option>").text(imgname).appendTo($sel);
-                            } 
-                        );
-                        self.$lightbox.find(".img-select-parent").append($sel);
-                        self.SetHeaderTemplates();
-                    });
         };
 
 

@@ -29,7 +29,7 @@ GeneralStructure.LightBox = function(){
                 .appendTo($buttons);
             if(this.slideclass==".infoslide"){
                 $("<button>Esikatsele</button>")
-                    .click(self.PreviewSlide())
+                    .click(self.PreviewSlide)
                     .appendTo($buttons)
             };
             this.$lightbox.append($buttons);

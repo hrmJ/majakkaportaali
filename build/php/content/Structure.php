@@ -153,6 +153,22 @@ class Structure{
             return $data[0];
     }
 
+    /**
+     *
+     * Lataa dioihin syötettävissä olevien kuvien nimet
+     *
+     * 
+     */
+    public function LoadSlideImageNames(){
+
+        $data = $this->con->select("backgrounds",[
+            "filename" => Medoo::raw('DISTINCT(filename)')
+            ]);
+
+        return $data;
+
+    }
+
 
 }
 

@@ -19,6 +19,7 @@ GeneralStructure.DataLoading = function(){
          */
         source.prototype.LoadParams = function(){
             //Huolehdi siitä, että kuvanvalintavalikot ovat näkyvissä ennen tietojen lataamista
+            console.log("heijaa");
             this.AddImageLoader();
             this.slot_number = this.$container.find(".slot-number").text();
             this.slot_name = this.$container.find(".slot_name_orig").val();
@@ -73,29 +74,6 @@ GeneralStructure.DataLoading = function(){
                 header_id : this.header_id
                 }
             );
-        };
-
-        /**
-         * Lataa näkyviin tietokantaan tallennetut kuvat valittavaksi esitykseen lisäämistä varten.
-         *
-         */
-        source.prototype.AddImageLoader = function(){
-            var self = this;
-            this.$lightbox.find(".img-select").remove();
-            $sel = $("<select class='img-select'><option>Ei kuvaa</option></select>")
-                .on("change",function(){ 
-                    Preview($(this).parents(".with-preview"),"images/" + $(this).val())}
-                );
-            $.getJSON("php/loaders/load_assets.php",{"asset_type":"backgrounds"},
-                    //Luo ensin lista tallennetuista kuvista. 
-                    function(data){
-                        $.each(data, function(idx,imgname){
-                            $("<option>").text(imgname).appendTo($sel);
-                            } 
-                        );
-                        self.$lightbox.find(".img-select-parent").append($sel);
-                        self.SetHeaderTemplates();
-                    });
         };
 
 

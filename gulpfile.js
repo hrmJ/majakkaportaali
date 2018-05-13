@@ -81,6 +81,7 @@ gulp.task("js",function(){
                    "service_structure/SlotFactory",
                    "service_structure/LightBox",
                    "service_structure/Headers",
+                   "service_structure/Images",
                    "service_structure/InjectableData",
                    "service_structure/DataLoading",
                    "service_structure/DragAndDrop",
