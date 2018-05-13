@@ -1421,8 +1421,8 @@ var GeneralStructure = function(){
             var $container = $(this).parents(".slot");
             var slot_type = $container.find(".slot_type").val();
             //hack:
-            if(slot_type == "songsegment"){
-                slot_type = "songslide";
+            if(slot_type.match("segment")){
+                slot_type = slot_type.replace("segment","slide");
             }
             GeneralStructure.SlotFactory.SlotFactory
                 .make(slot_type, $container)
@@ -1558,6 +1558,7 @@ GeneralStructure.SlotFactory.infoslide = function(){
      **/
     this.FillInData = function(data){
         var self = this;
+        console.log(data);
         self.$lightbox.find(".slide-header").val(data.header);
         self.$lightbox.find(".infoslidetext").val(data.maintext);
         if(data.imgname){ 
@@ -1623,6 +1624,7 @@ GeneralStructure.SlotFactory = function(){
         GeneralStructure.Headers.Attach(this);
         GeneralStructure.Images.Attach(this);
         GeneralStructure.LightBox.Attach(this);
+        GeneralStructure.Preview.Attach(this);
         slot.SetLightBox();
         return slot;
     };

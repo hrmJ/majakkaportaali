@@ -44,6 +44,7 @@ GeneralStructure.SlotFactory = function(){
         GeneralStructure.Headers.Attach(this);
         GeneralStructure.Images.Attach(this);
         GeneralStructure.LightBox.Attach(this);
+        GeneralStructure.Preview.Attach(this);
         slot.SetLightBox();
         return slot;
     };

@@ -64,8 +64,9 @@ class Structure{
                 "addedclass" => $slot["addedclass"],
                 "content_id" => $slot["content_id"],
                 "header_id" => $slot["header_id"],
-                "slot_type" => $this->FormatSlotName($slot["slot_type"]),
+                "slot_type" => $this->FormatSlotType($slot["slot_type"]),
                 "slot_type_orig" =>$slot["slot_type"],
+                "slot_name_orig" =>$slot["slot_name"],
                 "slot_id" =>$slot["id"],
                 "name" =>$name,
                 "slot_id" =>$slot["id"]
@@ -86,7 +87,7 @@ class Structure{
     /**
      * Muokkaa segmentin tyypistä järkevä suomenkielinen selite.
      */
-    public function FormatSlotName($name){
+    public function FormatSlotType($name){
         switch($name){
             case "infosegment":
                 return "Infodia";

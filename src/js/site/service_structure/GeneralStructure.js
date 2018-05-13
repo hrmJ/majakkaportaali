@@ -83,8 +83,8 @@ var GeneralStructure = function(){
             var $container = $(this).parents(".slot");
             var slot_type = $container.find(".slot_type").val();
             //hack:
-            if(slot_type == "songsegment"){
-                slot_type = "songslide";
+            if(slot_type.match("segment")){
+                slot_type = slot_type.replace("segment","slide");
             }
             GeneralStructure.SlotFactory.SlotFactory
                 .make(slot_type, $container)

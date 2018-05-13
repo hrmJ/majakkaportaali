@@ -21,6 +21,7 @@ GeneralStructure.SlotFactory.infoslide = function(){
      **/
     this.FillInData = function(data){
         var self = this;
+        console.log(data);
         self.$lightbox.find(".slide-header").val(data.header);
         self.$lightbox.find(".infoslidetext").val(data.maintext);
         if(data.imgname){ 
