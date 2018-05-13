@@ -69,6 +69,22 @@ switch($params["action"]){
         $structure = new Structure($database, $m);
         echo $structure->LoadSlots()->slotstring;
         break;
+    case "get_infoslide":
+        $structure = new Structure($database, $m);
+        echo json_encode($structure->LoadInfoSlide($params["id"]));
+        break;
+    case "get_songslide":
+        $structure = new Structure($database, $m);
+        echo json_encode($structure->LoadSongSlide($params["id"]));
+        break;
+    case "get_bibleslide":
+        $structure = new Structure($database, $m);
+        echo json_encode($structure->LoadBibleSlide($params["id"]));
+        break;
+    case "get_slideclass_names":
+        $structure = new Structure($database, $m);
+        echo json_encode($structure->LoadSlideClassNames());
+        break;
     case "get_list_of_services":
         $servicelist = new Servicelist($database);
         $servicelist->SetSeason();

@@ -73,7 +73,7 @@ GeneralStructure.LightBox = function(){
                  "top":  $("nav .dropdown").is(":visible") ? "-250px" : "-50px"
                 }
             ).show();
-            this.SetSlideClasses();
+            this.GetSlideClasses();
         };
 
 
@@ -138,7 +138,7 @@ GeneralStructure.LightBox = function(){
          */
         source.prototype.SetPreviewContent = function(){
             $(".preview-window iframe").contents().find("main").html(this.previewhtml);
-        },
+        };
 
     }
 

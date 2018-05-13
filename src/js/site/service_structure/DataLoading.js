@@ -25,38 +25,13 @@ GeneralStructure.DataLoading = function(){
             this.$lightbox.find(".segment-name").val(this.slot_name);
 
             var self = this;
-            $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":this.slideclass.replace(".",""),"id":this.id},function(data){
-                switch(self.slideclass){
-                    case ".songslide":
-                        if(data.multiname != ""){
-                            self.$lightbox.find("[value='multisong']").get(0).checked=true;
-                            self.$lightbox.find(".multisongheader").val(data.multiname).show();
-                        }
-                        if(data.restrictedto != ""){
-                            self.$lightbox.find("[value='restrictedsong']").get(0).checked=true;
-                            self.$lightbox.find(".restrictionlist").val(data.restrictedto).show();
-                        }
-                        self.$lightbox.find(".songdescription").val(data.songdescription);
-                        break;
-                    case ".infoslide":
-                        self.$lightbox.find(".slide-header").val(data.header);
-                        self.$lightbox.find(".infoslidetext").val(data.maintext);
-                        if(data.imgname){ 
-                            self.$lightbox.find(".slide_img .img-select").val(data.imgname);
-                            self.$lightbox.find(".slide_img .img-pos-select").val(data.imgposition);
-                        }
-                        if(data.genheader != ""){
-                            //Lisää ruksi, jos määritetty, että on yläotsikko
-                            self.$lightbox.find("[value='show-upper-header']").get(0).checked=true;
-                        }
-                        var used_img = self.$lightbox.find(".slide_img .img-select").val();
-                        if(used_img!="Ei kuvaa"){
-                            //Lataa valmiiksi kuvan esikatselu, jos kuva määritelty
-                            Preview(self.$lightbox.find(".slide_img .img-select").parents(".with-preview"),"images/" + used_img);
-                        }
-                        break;
-                }
-            });
+            $.getJSON("php/ajax/Loader.php",
+                {
+                    "action": "get_" + this.slideclass.replace(".",""),
+                    "id" : this.id,
+                },
+                //This method is child-specific, cf. infoslide.js, songslide.js etc
+                this.FillInData.bind(this));
 
             return this;
         };
@@ -126,29 +101,44 @@ GeneralStructure.DataLoading = function(){
 
         /**
          *
-         * Lataa käytössä olevta messuosiot / dialuokat select-valikkoon
+         * Lataa käytössä olevta messuosiot / dialuokat tietokannasta
          *
          */
-        source.prototype.SetSlideClasses = function(){
+        source.prototype.GetSlideClasses = function(){
             var self = this;
-            var selectedclass = self.$container.find(".addedclass").val();
+            self.selectedclass = self.$container.find(".addedclass").val();
             //Poistetaan kokonaan edellisellä avauksella näkyvissä ollut select
             self.$lightbox.find("select[name='addedclass']").remove();
             self.$lightbox.find(".addedclass_span").append("<select name='addedclass'>");
-            $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"list_all","id":""},function(data){
-                $.each(data,function(idx, thisclass){
-                    if([".Laulu",".Raamatunteksti"].indexOf(thisclass)==-1){
-                        if(selectedclass){
-                            var selectme = (selectedclass.replace(".","") == thisclass.replace(".","") ? " selected " : "");
-                        }
-                        self.$lightbox.find("select[name='addedclass']").append("<option value='" + thisclass + "' " + selectme + ">" + thisclass.replace(".","") + "</option>");
+            $.getJSON("php/ajax/Loader.php", {"action":"get_slideclass_names"},
+                this.SetSlideClasses.bind(this));
+        };
+
+        /**
+         *
+         * Syötä käytössä olevta messuosiot / dialuokat select-valikkoon
+         *
+         * @param data ajax-responssina saatu data eli lista käytössä olevista luokista
+         *
+         */
+        source.prototype.SetSlideClasses = function(data){
+            var self = this;
+            $.each(data,function(idx, thisclass){
+                thisclass = thisclass.classname;
+                if([".Laulu",".Raamatunteksti"].indexOf(thisclass)==-1){
+                    if(self.selectedclass){
+                        var selectme = (self.selectedclass.replace(".","") == thisclass.replace(".","") 
+                            ?  " selected " : "");
                     }
-                });
-                //Lisää vielä mahdollisuus lisätä uusi luokka
-                self.$lightbox.find("select[name='addedclass']").append("<option value='Uusi luokka'>Uusi luokka</option>");
-                self.$lightbox.find("select[name='addedclass']").select_withtext();
+                    self.$lightbox.find("select[name='addedclass']")
+                        .append(`<option value='${thisclass}' ${selectme}>
+                                ${thisclass.replace(".","")}
+                                </option>`);
+                }
             });
-            //lisää muokattu jquery ui -selectmenu mahdollistamaan uusien dialuokkien luomisen
+            //Lisää vielä mahdollisuus lisätä uusi luokka
+            self.$lightbox.find("select[name='addedclass']").append("<option value='Uusi luokka'>Uusi luokka</option>");
+            self.$lightbox.find("select[name='addedclass']").select_withtext();
         };
 
     }

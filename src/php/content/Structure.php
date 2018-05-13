@@ -97,6 +97,63 @@ class Structure{
         }
     }
 
+
+    /**
+     * Hakee kaikki eri luokat ( ~ esim. messun osiot), jotka tässä portaalissa
+     * ovat käytössä
+     */
+    public function LoadSlideClassNames(){
+        $data = $this->con->select("styles",[
+            "classname" =>  Medoo::raw('DISTINCT(classname)')
+            ],
+            ["classname[!]" => "sample"]
+        );
+        return $data;
+    }
+
+    /**
+     *
+     * Lataa yhden infodian sisällön
+     *
+     * @param $id dian tunniste
+     * 
+     */
+    public function LoadInfoSlide($id){
+        $data =  $this->con->select("infosegments", [
+            "maintext", 
+            "header",
+            "genheader",
+            "subgenheader",
+            "imgname",
+            "imgposition"
+        ],
+        ["id"=>$id]
+        );
+        if($data)
+            return $data[0];
+    }
+
+    /**
+     *
+     * Lataa yhden lauludian sisällön
+     *
+     * @param $id dian tunniste
+     * 
+     */
+    public function LoadSongSlide($id){
+        $data =   $this->con->select("songsegments", [
+            "songdescription",
+            "restrictedto",
+            "singlename", 
+            "multiname"
+        ],
+        ["id"=>$id]
+        );
+        if($data)
+            return $data[0];
+    }
+
+
 }
 
 

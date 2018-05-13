@@ -10,8 +10,7 @@ use Portal\content\Structure;
 
 /**
  */
-class StructureTest extends TestCase
-{
+class StructureTest extends TestCase{
 
     protected function SetUp(){
         $config = parse_ini_file("config.ini");
@@ -56,6 +55,33 @@ class StructureTest extends TestCase
         $struct = new Structure($this->con, $this->m);
         $struct->LoadSlots(2);
         $this->assertRegExp("/<div/", $struct->slotstring);
+    }
+
+    /**
+     * Testaa, että infodian lataaminen onnistuu
+     */
+    public function testLoadInfoSlide()
+    {
+        $struct = new Structure($this->con, $this->m);
+        $this->assertTrue(sizeof($struct->LoadInfoSlide(1))>0);
+    }
+
+    /**
+     * Testaa, että infodian lataaminen onnistuu
+     */
+    public function testLoadSongSlide()
+    {
+        $struct = new Structure($this->con, $this->m);
+        $this->assertTrue(sizeof($struct->LoadSongSlide(1))>0);
+    }
+
+    /**
+     * Testaa, että dialuokkien nimien lataaminen onnistuu
+     */
+    public function testLoadSlideClassNames()
+    {
+        $struct = new Structure($this->con, $this->m);
+        $this->assertTrue(sizeof($struct->LoadSlideClassNames())>0);
     }
 
 }

@@ -81,8 +81,13 @@ var GeneralStructure = function(){
         $(".edit-link").click(function(){
             //Jos käyttäjä haluaa muokata slottia, pyydä olio slottitehtaahlta:
             var $container = $(this).parents(".slot");
+            var slot_type = $container.find(".slot_type").val();
+            //hack:
+            if(slot_type == "songsegment"){
+                slot_type = "songslide";
+            }
             GeneralStructure.SlotFactory.SlotFactory
-                .make($container)
+                .make(slot_type, $container)
                 .LoadParams()
                 .ShowWindow();
         });

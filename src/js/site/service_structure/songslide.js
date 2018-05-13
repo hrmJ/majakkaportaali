@@ -10,6 +10,27 @@ GeneralStructure.SlotFactory.songslide = function(){
     this.segment_type = "songsegment";
 
     /**
+     *
+     * Lisää ajax-ladatun datan slottiin
+     *
+     * @param data dian tiedot ajax-responssina 
+     *
+     **/
+    this.FillInData = function(data){
+        console.log(data.restrictedto);
+        if(data.multiname){
+            this.$lightbox.find("[value='multisong']").get(0).checked=true;
+            this.$lightbox.find(".multisongheader").val(data.multiname).show();
+        }
+        if(data.restrictedto){
+            this.$lightbox.find("[value='restrictedsong']").get(0).checked=true;
+            this.$lightbox.find(".restrictionlist").val(data.restrictedto).show();
+        }
+        this.$lightbox.find(".songdescription").val(data.songdescription);
+    };
+
+
+    /**
      * Aseta autocomplete-mahdollisuus etsiä lauluja rajoitettuun listaan
      * Käytetään hyväksi jquery ui:n skriptiä useista autocomplete-arvoista (https://jqueryui.com/autocomplete/#multiple)
      */

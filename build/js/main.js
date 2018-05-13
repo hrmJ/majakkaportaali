@@ -1419,8 +1419,13 @@ var GeneralStructure = function(){
         $(".edit-link").click(function(){
             //Jos käyttäjä haluaa muokata slottia, pyydä olio slottitehtaahlta:
             var $container = $(this).parents(".slot");
+            var slot_type = $container.find(".slot_type").val();
+            //hack:
+            if(slot_type == "songsegment"){
+                slot_type = "songslide";
+            }
             GeneralStructure.SlotFactory.SlotFactory
-                .make($container)
+                .make(slot_type, $container)
                 .LoadParams()
                 .ShowWindow();
         });
@@ -1448,6 +1453,27 @@ GeneralStructure.SlotFactory = GeneralStructure.SlotFactory || {};
 GeneralStructure.SlotFactory.songslide = function(){
     this.slideclass = ".songslide";
     this.segment_type = "songsegment";
+
+    /**
+     *
+     * Lisää ajax-ladatun datan slottiin
+     *
+     * @param data dian tiedot ajax-responssina 
+     *
+     **/
+    this.FillInData = function(data){
+        console.log(data.restrictedto);
+        if(data.multiname){
+            this.$lightbox.find("[value='multisong']").get(0).checked=true;
+            this.$lightbox.find(".multisongheader").val(data.multiname).show();
+        }
+        if(data.restrictedto){
+            this.$lightbox.find("[value='restrictedsong']").get(0).checked=true;
+            this.$lightbox.find(".restrictionlist").val(data.restrictedto).show();
+        }
+        this.$lightbox.find(".songdescription").val(data.songdescription);
+    };
+
 
     /**
      * Aseta autocomplete-mahdollisuus etsiä lauluja rajoitettuun listaan
@@ -1520,6 +1546,17 @@ GeneralStructure.SlotFactory = GeneralStructure.SlotFactory || {};
 GeneralStructure.SlotFactory.infoslide = function(){
     this.slideclass = ".infoslide";
     this.segment_type = "infosegment";
+
+    /**
+     *
+     * Lisää ajax-ladatun datan slottiin
+     *
+     * @param data dian tiedot ajax-responssina 
+     *
+     **/
+    this.FillInData = function(data){
+        console.log(data);
+    }
 }
 
 
@@ -1593,94 +1630,154 @@ GeneralStructure.SlotFactory = function(){
 }();
 
 
-var GeneralStructure = GeneralStructure || {};
+GeneralStructure = GeneralStructure || {};
 
-GeneralStructure.DragAndDrop = function(){
-
-    var currently_dragged_no;
-
+GeneralStructure.LightBox = function(){
 
     /**
      *
-     * Määrittelee, mitä tapahtuu, kun käyttäjä alkaa raahata jotakin
-     * slottia
+     * Liittää messurakenteen lightbox-ikkunaan liittyvän toiminnallisuuden
+     * lähdeolioon
+     *
+     * @param source olio, johon liitetään
      *
      **/
-    function DragStart(){
-        $(".slot").addClass("drop-hide");
-        $(this).removeClass("drop-hide");
-        currently_dragged_no = $(this).find(".slot-number").text() * 1;
-    }
+    function Attach(source){
+
+        /**
+         *  Näytä ikkuna, jossa käyttäjä voi muokata messun rakenteeseen lisättävää diaa
+         */
+        source.prototype.ShowWindow = function(){
+            var self = this
+            var $buttons = $("<div class='button-container'>")
+            $("<button>Sulje tallentamatta</button>")
+                .click(function(){ 
+                        self.$lightbox.html("").hide();
+                        $(".blurcover").remove();
+                })
+                .appendTo($buttons);
+            $("<button>Tallenna</button>")
+                .click(self.SaveAndClose)
+                .appendTo($buttons);
+            if(this.slideclass==".infoslide"){
+                $("<button>Esikatsele</button>")
+                    .click(self.PreviewSlide())
+                    .appendTo($buttons)
+            };
+            this.$lightbox.append($buttons);
+            this.$container.prepend(this.$lightbox);
+            this.InitializeInjectableData();
+            $("[value='multisong']")
+                .click(function(){
+                    self.$container.find(".multisongheader").toggle(); 
+                });
+            if(this.slideclass==".songslide") this.AddAutoComplete();
+        };
 
 
-    /**
-     * 
-     * Määrittelee, mitä tapahtuu, kun elementti
-     * raahataan slottien välisen tilan ylle
-     *
-     * @param event funktion käynnistänyt tapahtuma
-     *
-     **/
-    function DragOver(event){
-        event.preventDefault();  
-        event.stopPropagation();
-        $(this).addClass("drop-highlight").text("Siirrä tähän");
-    }
 
-    /**
-     *
-     * Määrittelee, mitä tapahtuu, kun raahattu
-     * elementti poistuu slottien välisen alueen
-     * päältä
-     *
-     * @param event funktion käynnistänyt tapahtuma
-     *
-     **/
-    function DragLeave(event){
-        event.preventDefault();  
-        event.stopPropagation();
-        $(this).text("").removeClass("drop-highlight");
-    }
+        /**
+         * Nollaa lisäysvalikon sisältö ja syöttää uuden sisällön
+         *
+         * @param object $el jquery-olio, joka syötetään  lightbox-ikkunan sisään
+         *
+         */
+        source.prototype.SetLightBox = function($el){
+            BlurContent();
+            //Tuo templatesta varsinainen diansyöttövalikko ja ylätunnisteen syöttövalikko
+            this.$lightbox.html("")
+                .prepend(
+                    $(this.slideclass)
+                    .clone(true)
+                    .append(
+                        $("#headertemplate_container > *").clone(true)
+                    ));
+            //Lisää syötettävän datan valitsimet
+            this.$lightbox.find(".injection_placeholder")
+                    .each(function(){
+                            $(this).html("")
+                            .append($("#injected-data-container")
+                            .clone(true));
+                    });
+            this.$lightbox.css(
+                {
+                 "width":$(".innercontent").width(),
+                 "top":  $("nav .dropdown").is(":visible") ? "-250px" : "-50px"
+                }
+            ).show();
+            this.GetSlideClasses();
+        };
 
-    /**
-     *
-     *
-     * Määrittelee, mitä tapahtuu, kun käyttäjä on tiputtanut raahaamansa elementin kohteeseen.
-     *
-     * @param event funktion käynnistänyt tapahtuma
-     *
-     **/
-    function Drop(event){
-        event.preventDefault();  
-        event.stopPropagation();
-        var prevno = $(this).prev().find(".slot-number").text();
-        if(prevno=="") prevno = 0;
-        var newids = [];
-        console.log("PREVNO: " + prevno);
-        $(".slot").each(function(){
-            var thisno = $(this).find(".slot-number").text()*1;
-            var id = $(this).find(".slot_id").val()*1;
-            var newno = thisno*1;
-            if(thisno == currently_dragged_no){
-                newno = prevno*1 + 1;
-                if(prevno > currently_dragged_no)
-                    newno -= 1;
+
+
+        /**
+         * Nollaa esikatseluikkunan sisällön ja syöttää uuden.
+         *
+         */
+        source.prototype.SetPreviewWindow = function($el){
+            this.$preview_window.css(
+                {
+                    "width":$(".innercontent").width(),
+                    "top":  $("nav .dropdown").is(":visible") ? "-250px" : "-50px"
+                })
+                .show();
+            this.$preview_window.find("iframe")
+                .attr(
+                    {
+                        "width":$(".innercontent").width()-30 + "px",
+                        "height":($(".innercontent").width()-30)/4*3+"px",
+                        "border":"0"
+                    })
+                .show();
+        };
+
+        /**
+         *  Sulkee lisäysvalikkoikkunan ja tallentaa muutokset. Lataa myös tehdyt muutokset sivulle näkyviin.
+         */
+        source.prototype.SaveAndClose = function(){
+            var self = this;
+            this.SetPreviewParams();
+            if(this.$lightbox.find("select[name='addedclass']").length>0){
+                //Tallenna myös dian luokka, jos asetetu
+                this.previewparams.addedclass = this.$lightbox.find("select[name='addedclass']").val();
             }
-            else if(thisno>currently_dragged_no && thisno > prevno) newno = thisno;
-            else if(thisno>currently_dragged_no && thisno <= prevno) newno = thisno -1;
-            else if(thisno>prevno && thisno != currently_dragged_no) newno = thisno*1 +1;
-            else if(thisno==prevno && thisno >currently_dragged_no) newno = thisno*1 -1;
-            else if(thisno==prevno) newno = thisno;
-            newids.push({"slot_id":id,"newnumber":newno});
+            $.post("php/loaders/save_structure_slide.php",this.previewparams,function(html){
+                $(".structural-slots").load("php/loaders/loadslots.php",UpdateAdderEvents);
+                $("body").prepend(html);
             });
+            this.$lightbox.html("").hide();
+            $(".blurcover").remove();
+        };
 
-        GeneralStructure.SaveSlotOrder(newids);
+        /**
+         * Avaa ikkuna, jossa voi esikatsella diaa.
+         */
+        source.prototype.PreviewSlide = function(){
+            var self = this;
+            this.SetPreviewParams();
+            this.$container.prepend(this.$preview_window);
+            this.SetPreviewWindow();
+            this.$preview_window.find("button").click(function(){self.$preview_window.hide()});
+            $.post("php/loaders/slides_preview.php",this.previewparams,function(html){
+                self.previewhtml = html;
+                console.log(html);
+                $(".preview-window iframe").attr({"src":"slides.html"});
+            });
+        };
+
+        /**
+         * Kun esikatseluikkuna latautunut, päivitä sen sisältö.
+         */
+        source.prototype.SetPreviewContent = function(){
+            $(".preview-window iframe").contents().find("main").html(this.previewhtml);
+        };
+
     }
 
 
     return {
-        DragStart,
-    }
+        Attach,
+    };
 
 }();
 
@@ -1957,38 +2054,13 @@ GeneralStructure.DataLoading = function(){
             this.$lightbox.find(".segment-name").val(this.slot_name);
 
             var self = this;
-            $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":this.slideclass.replace(".",""),"id":this.id},function(data){
-                switch(self.slideclass){
-                    case ".songslide":
-                        if(data.multiname != ""){
-                            self.$lightbox.find("[value='multisong']").get(0).checked=true;
-                            self.$lightbox.find(".multisongheader").val(data.multiname).show();
-                        }
-                        if(data.restrictedto != ""){
-                            self.$lightbox.find("[value='restrictedsong']").get(0).checked=true;
-                            self.$lightbox.find(".restrictionlist").val(data.restrictedto).show();
-                        }
-                        self.$lightbox.find(".songdescription").val(data.songdescription);
-                        break;
-                    case ".infoslide":
-                        self.$lightbox.find(".slide-header").val(data.header);
-                        self.$lightbox.find(".infoslidetext").val(data.maintext);
-                        if(data.imgname){ 
-                            self.$lightbox.find(".slide_img .img-select").val(data.imgname);
-                            self.$lightbox.find(".slide_img .img-pos-select").val(data.imgposition);
-                        }
-                        if(data.genheader != ""){
-                            //Lisää ruksi, jos määritetty, että on yläotsikko
-                            self.$lightbox.find("[value='show-upper-header']").get(0).checked=true;
-                        }
-                        var used_img = self.$lightbox.find(".slide_img .img-select").val();
-                        if(used_img!="Ei kuvaa"){
-                            //Lataa valmiiksi kuvan esikatselu, jos kuva määritelty
-                            Preview(self.$lightbox.find(".slide_img .img-select").parents(".with-preview"),"images/" + used_img);
-                        }
-                        break;
-                }
-            });
+            $.getJSON("php/ajax/Loader.php",
+                {
+                    "action": "get_" + this.slideclass.replace(".",""),
+                    "id" : this.id,
+                },
+                //This method is child-specific, cf. infoslide.js, songslide.js etc
+                this.FillInData.bind(this));
 
             return this;
         };
@@ -2058,29 +2130,44 @@ GeneralStructure.DataLoading = function(){
 
         /**
          *
-         * Lataa käytössä olevta messuosiot / dialuokat select-valikkoon
+         * Lataa käytössä olevta messuosiot / dialuokat tietokannasta
          *
          */
-        source.prototype.SetSlideClasses = function(){
+        source.prototype.GetSlideClasses = function(){
             var self = this;
-            var selectedclass = self.$container.find(".addedclass").val();
+            self.selectedclass = self.$container.find(".addedclass").val();
             //Poistetaan kokonaan edellisellä avauksella näkyvissä ollut select
             self.$lightbox.find("select[name='addedclass']").remove();
             self.$lightbox.find(".addedclass_span").append("<select name='addedclass'>");
-            $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"list_all","id":""},function(data){
-                $.each(data,function(idx, thisclass){
-                    if([".Laulu",".Raamatunteksti"].indexOf(thisclass)==-1){
-                        if(selectedclass){
-                            var selectme = (selectedclass.replace(".","") == thisclass.replace(".","") ? " selected " : "");
-                        }
-                        self.$lightbox.find("select[name='addedclass']").append("<option value='" + thisclass + "' " + selectme + ">" + thisclass.replace(".","") + "</option>");
+            $.getJSON("php/ajax/Loader.php", {"action":"get_slideclass_names"},
+                this.SetSlideClasses.bind(this));
+        };
+
+        /**
+         *
+         * Syötä käytössä olevta messuosiot / dialuokat select-valikkoon
+         *
+         * @param data ajax-responssina saatu data eli lista käytössä olevista luokista
+         *
+         */
+        source.prototype.SetSlideClasses = function(data){
+            var self = this;
+            $.each(data,function(idx, thisclass){
+                thisclass = thisclass.classname;
+                if([".Laulu",".Raamatunteksti"].indexOf(thisclass)==-1){
+                    if(self.selectedclass){
+                        var selectme = (self.selectedclass.replace(".","") == thisclass.replace(".","") 
+                            ?  " selected " : "");
                     }
-                });
-                //Lisää vielä mahdollisuus lisätä uusi luokka
-                self.$lightbox.find("select[name='addedclass']").append("<option value='Uusi luokka'>Uusi luokka</option>");
-                self.$lightbox.find("select[name='addedclass']").select_withtext();
+                    self.$lightbox.find("select[name='addedclass']")
+                        .append(`<option value='${thisclass}' ${selectme}>
+                                ${thisclass.replace(".","")}
+                                </option>`);
+                }
             });
-            //lisää muokattu jquery ui -selectmenu mahdollistamaan uusien dialuokkien luomisen
+            //Lisää vielä mahdollisuus lisätä uusi luokka
+            self.$lightbox.find("select[name='addedclass']").append("<option value='Uusi luokka'>Uusi luokka</option>");
+            self.$lightbox.find("select[name='addedclass']").select_withtext();
         };
 
     }
@@ -2089,6 +2176,97 @@ GeneralStructure.DataLoading = function(){
     return {
         Attach,
     };
+
+}();
+
+var GeneralStructure = GeneralStructure || {};
+
+GeneralStructure.DragAndDrop = function(){
+
+    var currently_dragged_no;
+
+
+    /**
+     *
+     * Määrittelee, mitä tapahtuu, kun käyttäjä alkaa raahata jotakin
+     * slottia
+     *
+     **/
+    function DragStart(){
+        $(".slot").addClass("drop-hide");
+        $(this).removeClass("drop-hide");
+        currently_dragged_no = $(this).find(".slot-number").text() * 1;
+    }
+
+
+    /**
+     * 
+     * Määrittelee, mitä tapahtuu, kun elementti
+     * raahataan slottien välisen tilan ylle
+     *
+     * @param event funktion käynnistänyt tapahtuma
+     *
+     **/
+    function DragOver(event){
+        event.preventDefault();  
+        event.stopPropagation();
+        $(this).addClass("drop-highlight").text("Siirrä tähän");
+    }
+
+    /**
+     *
+     * Määrittelee, mitä tapahtuu, kun raahattu
+     * elementti poistuu slottien välisen alueen
+     * päältä
+     *
+     * @param event funktion käynnistänyt tapahtuma
+     *
+     **/
+    function DragLeave(event){
+        event.preventDefault();  
+        event.stopPropagation();
+        $(this).text("").removeClass("drop-highlight");
+    }
+
+    /**
+     *
+     *
+     * Määrittelee, mitä tapahtuu, kun käyttäjä on tiputtanut raahaamansa elementin kohteeseen.
+     *
+     * @param event funktion käynnistänyt tapahtuma
+     *
+     **/
+    function Drop(event){
+        event.preventDefault();  
+        event.stopPropagation();
+        var prevno = $(this).prev().find(".slot-number").text();
+        if(prevno=="") prevno = 0;
+        var newids = [];
+        console.log("PREVNO: " + prevno);
+        $(".slot").each(function(){
+            var thisno = $(this).find(".slot-number").text()*1;
+            var id = $(this).find(".slot_id").val()*1;
+            var newno = thisno*1;
+            if(thisno == currently_dragged_no){
+                newno = prevno*1 + 1;
+                if(prevno > currently_dragged_no)
+                    newno -= 1;
+            }
+            else if(thisno>currently_dragged_no && thisno > prevno) newno = thisno;
+            else if(thisno>currently_dragged_no && thisno <= prevno) newno = thisno -1;
+            else if(thisno>prevno && thisno != currently_dragged_no) newno = thisno*1 +1;
+            else if(thisno==prevno && thisno >currently_dragged_no) newno = thisno*1 -1;
+            else if(thisno==prevno) newno = thisno;
+            newids.push({"slot_id":id,"newnumber":newno});
+            });
+
+        GeneralStructure.SaveSlotOrder(newids);
+    }
+
+
+    return {
+        DragStart,
+    }
 
 }();
 

@@ -79,10 +79,11 @@ gulp.task("js",function(){
                    "service_structure/bibleslide",
                    "service_structure/infoslide",
                    "service_structure/SlotFactory",
-                   "service_structure/DragAndDrop",
+                   "service_structure/LightBox",
                    "service_structure/Headers",
                    "service_structure/InjectableData",
                    "service_structure/DataLoading",
+                   "service_structure/DragAndDrop",
                    "actions"
                    ];
     var jsprefix = folder.src + "js/site/";
