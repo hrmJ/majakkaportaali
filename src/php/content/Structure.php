@@ -160,6 +160,20 @@ class Structure{
 
     /**
      *
+     * Syöttää uuden messuslotin
+     *
+     * @param $params tallennettavat parametrit
+     * 
+     */
+    public function InsertNewSlot($params){
+        $last_slot_no = $this->con->max("presentation_structure","slot_number");
+        $params["slot_number"] = $last_slot_no + 1;
+        $this->con->insert("presentation_structure", $params);
+        return $this;
+    }
+
+    /**
+     *
      * Lataa yhden lauludian sisällön
      *
      * @param $id dian tunniste

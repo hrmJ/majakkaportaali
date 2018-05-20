@@ -132,6 +132,26 @@ class StructureTest extends TestCase{
         $this->assertGreaterThan($oldmax, $newmax);
     }
 
+    /**
+     * Testaa, että uuden messuslotin syöttäminen onnistuu
+     */
+    public function testInsertNewSlot()
+    {
+        $struct = new Structure($this->con, $this->m);
+        $params = [
+            "slot_name" => "Tervetulosanat",
+            "slot_type" => "infosegment",
+            "id_in_type_table" => NULL,
+            "addedclass" => ".Teksti",
+            "header_id" => 0,
+            "content_id" => 1,
+            ];
+        $oldmax = $this->con->max("presentation_structure","id");
+        $struct->InsertNewSlot($params);
+        $newmax = $this->con->max("presentation_structure","id");
+        $this->assertGreaterThan($oldmax, $newmax);
+    }
+
 }
 
 

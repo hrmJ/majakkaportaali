@@ -2202,6 +2202,7 @@ GeneralStructure.DataLoading = function(){
          *
          */
         source.prototype.SaveParams = function(){
+            var self = this;
             params = {
                 action: "save_" + this.segment_type,
                 id: this.id,
@@ -2211,12 +2212,25 @@ GeneralStructure.DataLoading = function(){
             if(this.$lightbox.find("select[name='addedclass']").length>0){
                 params.addedclass = this.$lightbox.find("select[name='addedclass']").val();
             }
-            $.post("php/ajax/Saver.php", params,function(data){
-                $("body").prepend(data);
+            $.post("php/ajax/Saver.php", params,function(){
+                if(!self.id){
+                    self.AddNewSlotToDataBase()
+                    //slot_params?
+                }
             })
             return this;
         };
 
+        /**
+         *
+         * Lisää kokonaan uuden slotin tietokantaan: jos esimerkiksi käyttäjä
+         * lisää slotin "alkuinfo", tämä lisätään presentation_structure-tauluun samalla
+         * kun dian konkreettinen lisätään infosegments-tauluun
+         *
+         */
+        source.prototype.AddNewSlotToDataBase = function(){
+        
+        };
 
         /**
          *
