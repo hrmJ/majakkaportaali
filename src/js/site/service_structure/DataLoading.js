@@ -19,7 +19,6 @@ GeneralStructure.DataLoading = function(){
          */
         source.prototype.LoadParams = function(){
             //Huolehdi siitä, että kuvanvalintavalikot ovat näkyvissä ennen tietojen lataamista
-            console.log("heijaa");
             this.AddImageLoader();
             this.slot_number = this.$container.find(".slot-number").text();
             this.slot_name = this.$container.find(".slot_name_orig").val();
@@ -35,6 +34,39 @@ GeneralStructure.DataLoading = function(){
                 this.FillInData.bind(this));
 
             return this;
+        };
+
+        /**
+         *
+         * Tallentaa diaaan tehdyt muutokset
+         *
+         */
+        source.prototype.SaveParams = function(){
+            params = {
+                action: "save_" + this.segment_type,
+                id: this.id,
+                params: this.slide_params
+            };
+            //Tallentaa myös dian luokan, jos asetetu
+            if(this.$lightbox.find("select[name='addedclass']").length>0){
+                params.addedclass = this.$lightbox.find("select[name='addedclass']").val();
+            }
+            $.post("php/ajax/Saver.php", params,function(data){
+                $("body").prepend(data);
+            })
+            return this;
+        };
+
+
+        /**
+         *
+         * Tallentaa myös dian luokan, jos asetetu
+         *
+         */
+        source.prototype.AddSlideClassToParams = function(){
+            if(this.$lightbox.find("select[name='addedclass']").length>0){
+                this.slide_params.addedclass = this.$lightbox.find("select[name='addedclass']").val();
+            }
         };
 
         /**

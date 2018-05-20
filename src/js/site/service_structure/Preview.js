@@ -1,6 +1,6 @@
 GeneralStructure = GeneralStructure || {};
 
-GeneralStructure.LightBox = function(){
+GeneralStructure.Preview = function(){
 
     /**
      *
@@ -38,15 +38,16 @@ GeneralStructure.LightBox = function(){
          */
         source.prototype.PreviewSlide = function(){
             var self = this;
-            this.SetPreviewParams();
-            this.$container.prepend(this.$preview_window);
+            this.SetSlideParams();
             this.SetPreviewWindow();
+            this.$container.prepend(this.$preview_window);
             this.$preview_window.find("button").click(function(){self.$preview_window.hide()});
-            $.post("php/loaders/slides_preview.php",this.previewparams,function(html){
-                self.previewhtml = html;
-                console.log(html);
-                $(".preview-window iframe").attr({"src":"slides.html"});
-            });
+            //this.SetPreviewParams();
+            //$.post("php/loaders/slides_preview.php",this.previewparams,function(html){
+            //    self.previewhtml = html;
+            //    console.log(html);
+            //    $(".preview-window iframe").attr({"src":"slides.html"});
+            //});
         };
 
         /**

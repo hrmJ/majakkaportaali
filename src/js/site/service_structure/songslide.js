@@ -31,6 +31,16 @@ GeneralStructure.SlotFactory.songslide = function(){
 
 
     /**
+     *
+     * Kerää diaan liittyvän informaation tallentamista tai esikatselua
+     * varten
+     *
+     **/
+    this.SetSlideParams = function(){
+    
+    }
+
+    /**
      * Aseta autocomplete-mahdollisuus etsiä lauluja rajoitettuun listaan
      * Käytetään hyväksi jquery ui:n skriptiä useista autocomplete-arvoista (https://jqueryui.com/autocomplete/#multiple)
      */

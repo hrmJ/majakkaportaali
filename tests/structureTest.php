@@ -93,6 +93,45 @@ class StructureTest extends TestCase{
         $this->assertTrue(sizeof($struct->LoadSlideImageNames())>0);
     }
 
+    /**
+     * Testaa, että infodian tallentaminen onnistuu
+     */
+    public function testSaveInfoSlide()
+    {
+        $struct = new Structure($this->con, $this->m);
+        $params = [
+            "maintext" =>  "Tällanen info nyt sitten!",
+            "header" => "Infoa",
+            "genheader" => NULL,
+            "subgenheader" => NULL,
+            "imgname" => NULL,
+            "imgposition" => "left"
+            ];
+        $struct->UpdateInfoSlide(1, $params);
+        $newinfo = $struct->LoadInfoSlide(1);
+        $this->assertRegExp("/Tällanen info/",$newinfo["maintext"]);
+    }
+
+    /**
+     * Testaa, että uuden infodian syöttäminen onnistuu
+     */
+    public function testInsertInfoSlide()
+    {
+        $struct = new Structure($this->con, $this->m);
+        $params = [
+            "maintext" =>  "Ihan uusi info",
+            "header" => "Infoa",
+            "genheader" => NULL,
+            "subgenheader" => NULL,
+            "imgname" => NULL,
+            "imgposition" => "left",
+            ];
+        $oldmax = $this->con->max("infosegments","id");
+        $struct->InsertInfoSlide($params);
+        $newmax = $this->con->max("infosegments","id");
+        $this->assertGreaterThan($oldmax, $newmax);
+    }
+
 }
 
 

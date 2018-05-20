@@ -69,7 +69,6 @@ class Structure{
                 "slot_name_orig" =>$slot["slot_name"],
                 "slot_id" =>$slot["id"],
                 "name" =>$name,
-                "slot_id" =>$slot["id"]
             ]);
         }
         return $this;
@@ -132,6 +131,31 @@ class Structure{
         );
         if($data)
             return $data[0];
+    }
+
+    /**
+     *
+     * Tallentaa muokatun infodian sisällön
+     *
+     * @param $id dian tunniste
+     * @param $params tallennettavat parametrit
+     * 
+     */
+    public function UpdateInfoSlide($id, $params){
+        $data =  $this->con->update("infosegments", $params, ["id"=>$id]);
+        return $this;
+    }
+
+    /**
+     *
+     * Syöttää uuden infodian sisällön
+     *
+     * @param $params tallennettavat parametrit
+     * 
+     */
+    public function InsertInfoSlide($params){
+        $data =  $this->con->insert("infosegments", $params);
+        return $this;
     }
 
     /**

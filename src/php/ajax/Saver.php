@@ -13,6 +13,7 @@ use Medoo\Medoo;
 use Portal\content\Comment;
 use Portal\content\Community;
 use Portal\content\Service;
+use Portal\content\Structure;
 use Portal\content\Servicelist;
 use Portal\content\Songlist;
 
@@ -27,8 +28,11 @@ $database = new Medoo([
     'charset' => 'utf8'
 ]);
 
+$m = new Mustache_Engine(array(
+    'loader' => new Mustache_Loader_FilesystemLoader('../../views')
+    ));
 
-//Käytä joko get- tai post-dataa riippuen kutsujasta
+//DEV: Käytä joko get- tai post-dataa riippuen kutsujasta
 $params = (isset($_GET["action"]) ? $_GET : $_POST);
 
 switch($params["action"]){
@@ -39,6 +43,15 @@ switch($params["action"]){
     case "save_details":
         $service = new Service($database, $params["service_id"]);
         $service->SaveDetails($params["data"]);
+        break;
+    case "save_infosegment":
+        $struct = new Structure($database, $m);
+        if(isset($params["id"])){
+            $struct->UpdateInfoSlide($params["id"], $params["params"]);
+        }
+        else{
+            $struct->InsertInfoSlide($params["params"]);
+        }
         break;
 }
 
