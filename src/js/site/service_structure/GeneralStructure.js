@@ -18,8 +18,7 @@ var GeneralStructure = function(){
      **/
     function ReloadSlots(data){
         $(".structural-slots").load("php/ajax/Structure.php",
-            {"action":"load_slots"}, 
-            UpdateAdderEvents
+            {"action":"load_slots"} 
         );
     }
 
@@ -98,6 +97,7 @@ var GeneralStructure = function(){
 
     return {
          Initialize,
+         ReloadSlots
     }
     
 

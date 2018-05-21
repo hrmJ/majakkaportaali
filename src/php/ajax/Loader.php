@@ -110,6 +110,9 @@ switch($params["action"]){
         $songlist = new Songlist($database, $params["service_id"], $m);
         echo json_encode($songlist->GetTitlesByLetter($params["letter"]));
         break;
+    case "check_last_index_of_segment_type":
+        echo json_encode($database->max($params["segment_type"] . "s","id"));
+        break;
 }
 
 

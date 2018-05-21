@@ -53,6 +53,13 @@ switch($params["action"]){
             $struct->InsertInfoSlide($params["params"]);
         }
         break;
+    case "add_new_slot":
+        $struct = new Structure($database, $m);
+        $struct->InsertNewSlot($params["params"]);
+        break;
+    case "check_last_index_infosegment":
+        echo json_encode($database->max("infosegments","id"));
+        break;
 }
 
 

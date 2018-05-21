@@ -25,7 +25,13 @@ GeneralStructure.LightBox = function(){
                 })
                 .appendTo($buttons);
             $("<button>Tallenna</button>")
-                .click(self.SaveAndClose.bind(this))
+                .click(function(){
+                    self.SetSlideParams()
+                        .SaveParams(function(){
+                            self.CloseLightBox();
+                            GeneralStructure.ReloadSlots();
+                        });
+                })
                 .appendTo($buttons);
             if(this.slideclass==".infoslide"){
                 $("<button>Esikatsele</button>")
@@ -79,12 +85,9 @@ GeneralStructure.LightBox = function(){
 
 
         /**
-         *  Sulkee lisäysvalikkoikkunan ja tallentaa muutokset. Lataa myös tehdyt muutokset sivulle näkyviin.
+         *  Sulkee lisäysvalikkoikkunan 
          */
-        source.prototype.SaveAndClose = function(){
-            var self = this;
-            this.SetSlideParams()
-                .SaveParams();
+        source.prototype.CloseLightBox = function(){
             this.$lightbox.html("").hide();
             $(".blurcover").remove();
         };

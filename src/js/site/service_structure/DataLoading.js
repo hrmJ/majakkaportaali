@@ -40,25 +40,59 @@ GeneralStructure.DataLoading = function(){
          *
          * Tallentaa diaaan tehdyt muutokset
          *
+         * @param callback, funktio,joka laukaistaan, kun tallennus valmis
+         *
          */
-        source.prototype.SaveParams = function(){
+        source.prototype.SaveParams = function(callback){
+            callback = callback || function(){};
             var self = this;
             params = {
                 action: "save_" + this.segment_type,
                 id: this.id,
                 params: this.slide_params
             };
-            //Tallentaa myös dian luokan, jos asetetu
-            if(this.$lightbox.find("select[name='addedclass']").length>0){
-                params.addedclass = this.$lightbox.find("select[name='addedclass']").val();
-            }
             $.post("php/ajax/Saver.php", params,function(){
+                self.SetSlotParams();
                 if(!self.id){
-                    self.AddNewSlotToDataBase()
-                    //slot_params?
+                    self.AddNewSlot(callback);
+                }
+                else{
+                    self.UpdateSlot(callback);
                 }
             })
             return this;
+        };
+
+
+        /**
+         *
+         * Hakee yleiset, tätä slottia koskevat tiedot ja tallentaa ne
+         * slot_params-attribuuttiin
+         *
+         */
+        source.prototype.SetSlotParams = function(){
+            console.log(this.slide_params);
+            this.slot_params = {
+                "slot_name" : this.$lightbox.find(".segment-name").val(),
+                "slot_type" : this.segment_type,
+                "id_in_type_table" : null,
+                "addedclass" : this.$lightbox.find("select[name='addedclass']").val(),
+                "header_id" : this.header_id,
+                "content_id" : this.slide_params.id,
+            };
+
+            return this;
+        };
+
+        /**
+         *
+         * Päivittää tietokantaan käyttäjän muuttamat slottikohtaiset tiedot
+         *
+         * @param callback funktio, joka suoritetaan, kun valmis
+         *
+         */
+        source.prototype.UpdateSlot = function(callback){
+            $.post("php/ajax/Saver.php", this.slot_params, callback.bind(this));
         };
 
         /**
@@ -67,17 +101,31 @@ GeneralStructure.DataLoading = function(){
          * lisää slotin "alkuinfo", tämä lisätään presentation_structure-tauluun samalla
          * kun dian konkreettinen lisätään infosegments-tauluun
          *
+         * @param callback funktio, joka suoritetaan, kun valmis
+         *
          */
-        source.prototype.AddNewSlotToDataBase = function(){
-        
+        source.prototype.AddNewSlot = function(callback){
+            params = {
+                action: "add_new_slot",
+                params: this.slot_params
+            };
+            $.getJSON("php/ajax/Loader.php",
+                {
+                    action : "check_last_index_of_segment_type",
+                    segment_type: this.segment_type
+                }, 
+                function(max_id){
+                    params.content_id = max_id;
+                    $.post("php/ajax/Saver.php", params, callback.bind(this));
+                });
         };
 
         /**
          *
-         * Tallentaa myös dian luokan, jos asetetu
+         * Hakee luokan, jos asetetu
          *
          */
-        source.prototype.AddSlideClassToParams = function(){
+        source.prototype.GetSlideClass = function(){
             if(this.$lightbox.find("select[name='addedclass']").length>0){
                 this.slide_params.addedclass = this.$lightbox.find("select[name='addedclass']").val();
             }
