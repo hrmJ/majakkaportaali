@@ -1356,7 +1356,11 @@ var GeneralStructure = function(){
      **/
     function ReloadSlots(data){
         $(".structural-slots").load("php/ajax/Structure.php",
-            {"action":"load_slots"} 
+            {"action":"load_slots"},
+            function(){
+                InitializeSlotFunctionality();
+                GeneralStructure.DragAndDrop.Initialize();
+            }
         );
     }
 
@@ -1394,29 +1398,31 @@ var GeneralStructure = function(){
 
     /**
      *
-     * Alusta kaikki messun rakenneosiin liittyvät tapahtumat
+     * Alustaa uusia slotteja lisäävän jquery-ui-menun toiminnallisuuden
      *
      **/
-    function Initialize(){
-        var self = this;
+    function InitializeNewslotMenu(){
         $(".menu").menu({ 
             position: { my: "bottom", at: "right-5 top+5" },
             select: function(e, u){
                 var slot_type = u.item.find(">div:eq(0)").attr("id").replace(/([^_]+)_launcher/,"$1");
-                self.SlotFactory.SlotFactory.make(slot_type)
+                GeneralStructure.SlotFactory.SlotFactory.make(slot_type)
                     .LoadParams()
                     .ShowWindow();
                 }
             });
+    }
+
+    /**
+     *
+     * Lisää toiminnallisuuden messuslotteihin
+     *
+     **/
+    function InitializeSlotFunctionality(){
         $(".slot:last-of-type").after("<div class='drop-target'></div>");
         $(".remove-link").click(RemoveSlot);
-        $(".slot").on("dragstart",GeneralStructure.DragAndDrop.DragStart);
-        $(".drop-target")
-            .on("dragover",GeneralStructure.DragAndDrop.DragOver)
-            .on("dragleave",GeneralStructure.DragAndDrop.DragLeave)
-            .on("drop",GeneralStructure.DragAndDrop.Drop)
         $(".edit-link").click(function(){
-            //Jos käyttäjä haluaa muokata slottia, pyydä olio slottitehtaahlta:
+            //Jos käyttäjä haluaa muokata slottia, pyydä olio slottitehtaalta:
             var $container = $(this).parents(".slot");
             var slot_type = $container.find(".slot_type").val();
             //hack:
@@ -1428,6 +1434,17 @@ var GeneralStructure = function(){
                 .LoadParams()
                 .ShowWindow();
         });
+    }
+
+    /**
+     *
+     * Alusta kaikki messun rakenneosiin liittyvät tapahtumat
+     *
+     **/
+    function Initialize(){
+        InitializeNewslotMenu();
+        InitializeSlotFunctionality();
+        GeneralStructure.DragAndDrop.Initialize();
         //Vain testaamista varten: lisäillään vähän id:itä
         //$(".menu").find("li").each(function(){if($(this).text()=="Laulu")$(this).attr({"id":"addsongmenu"});});
     }
@@ -2272,6 +2289,8 @@ GeneralStructure.DataLoading = function(){
                 action: "add_new_slot",
                 params: this.slot_params
             };
+            //Haetaan tietokannasta viimeisimmän tämän tyypin diasisällön id ja
+            //vasta sitten jatketaan
             $.getJSON("php/ajax/Loader.php",
                 {
                     action : "check_last_index_of_segment_type",
@@ -2391,6 +2410,19 @@ GeneralStructure.DragAndDrop = function(){
 
     var currently_dragged_no;
 
+    /**
+     *
+     * Liittää messuslotteihin raahaamiseen liittyvät toiminnot
+     *
+     **/
+    function Initialize(){
+        $(".slot").on("dragstart",GeneralStructure.DragAndDrop.DragStart);
+        $(".drop-target")
+            .on("dragover",GeneralStructure.DragAndDrop.DragOver)
+            .on("dragleave",GeneralStructure.DragAndDrop.DragLeave)
+            .on("drop",GeneralStructure.DragAndDrop.Drop)
+    }
+
 
     /**
      *
@@ -2471,7 +2503,7 @@ GeneralStructure.DragAndDrop = function(){
 
 
     return {
-        DragStart,
+        Initialize,
     }
 
 }();

@@ -109,6 +109,8 @@ GeneralStructure.DataLoading = function(){
                 action: "add_new_slot",
                 params: this.slot_params
             };
+            //Haetaan tietokannasta viimeisimmän tämän tyypin diasisällön id ja
+            //vasta sitten jatketaan
             $.getJSON("php/ajax/Loader.php",
                 {
                     action : "check_last_index_of_segment_type",

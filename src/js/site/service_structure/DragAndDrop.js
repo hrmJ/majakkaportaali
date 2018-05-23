@@ -4,6 +4,19 @@ GeneralStructure.DragAndDrop = function(){
 
     var currently_dragged_no;
 
+    /**
+     *
+     * Liittää messuslotteihin raahaamiseen liittyvät toiminnot
+     *
+     **/
+    function Initialize(){
+        $(".slot").on("dragstart",GeneralStructure.DragAndDrop.DragStart);
+        $(".drop-target")
+            .on("dragover",GeneralStructure.DragAndDrop.DragOver)
+            .on("dragleave",GeneralStructure.DragAndDrop.DragLeave)
+            .on("drop",GeneralStructure.DragAndDrop.Drop)
+    }
+
 
     /**
      *
@@ -84,7 +97,7 @@ GeneralStructure.DragAndDrop = function(){
 
 
     return {
-        DragStart,
+        Initialize,
     }
 
 }();
