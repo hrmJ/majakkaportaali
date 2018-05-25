@@ -63,7 +63,7 @@ class StructureTest extends TestCase{
     public function testLoadInfoSlide()
     {
         $struct = new Structure($this->con, $this->m);
-        $this->assertTrue(sizeof($struct->LoadInfoSlide(1))>0);
+        $this->assertTrue(sizeof($struct->LoadSlide(1, "infosegments"))>0);
     }
 
     /**
@@ -72,7 +72,7 @@ class StructureTest extends TestCase{
     public function testLoadSongSlide()
     {
         $struct = new Structure($this->con, $this->m);
-        $this->assertTrue(sizeof($struct->LoadSongSlide(1))>0);
+        $this->assertTrue(sizeof($struct->LoadSlide(1,"songsegments"))>0);
     }
 
     /**
@@ -107,8 +107,8 @@ class StructureTest extends TestCase{
             "imgname" => NULL,
             "imgposition" => "left"
             ];
-        $struct->UpdateInfoSlide(1, $params);
-        $newinfo = $struct->LoadInfoSlide(1);
+        $struct->UpdateSlide(1, "infosegments", $params);
+        $newinfo = $struct->LoadSlide(1, "infosegments");
         $this->assertRegExp("/Tällanen info/",$newinfo["maintext"]);
     }
 
@@ -127,7 +127,7 @@ class StructureTest extends TestCase{
             "imgposition" => "left",
             ];
         $oldmax = $this->con->max("infosegments","id");
-        $struct->InsertInfoSlide($params);
+        $struct->InsertSlide($params, "infosegments");
         $newmax = $this->con->max("infosegments","id");
         $this->assertGreaterThan($oldmax, $newmax);
     }
@@ -151,6 +151,24 @@ class StructureTest extends TestCase{
         $newmax = $this->con->max("presentation_structure","id");
         $this->assertGreaterThan($oldmax, $newmax);
     }
+
+    /**
+     * Testaa, että lauludian tallentaminen onnistuu
+     */
+    public function testSaveSongSlide()
+    {
+        $struct = new Structure($this->con, $this->m);
+        $params = [
+            "songdescription" =>  "Tällanen laulu nyt sitten!",
+            "restrictedto" =>  NULL,
+            "singlename" =>  "testilaulu",
+            "multiname" =>  NULL
+            ];
+        $struct->UpdateSongSlide(1, $params);
+        $newinfo = $struct->LoadSongSlide(1);
+        $this->assertRegExp("/Tällanen laulu/",$newinfo["songdescription"]);
+    }
+
 
 }
 

@@ -28,7 +28,7 @@ GeneralStructure.DataLoading = function(){
             $.getJSON("php/ajax/Loader.php",
                 {
                     "action": "get_" + this.slideclass.replace(".",""),
-                    "id" : this.id,
+                    "id" : this.slide_id,
                 },
                 //This method is child-specific, cf. infoslide.js, songslide.js etc
                 this.FillInData.bind(this));
@@ -59,7 +59,7 @@ GeneralStructure.DataLoading = function(){
                 else{
                     self.UpdateSlot(callback);
                 }
-            })
+            });
             return this;
         };
 
@@ -71,9 +71,9 @@ GeneralStructure.DataLoading = function(){
          *
          */
         source.prototype.SetSlotParams = function(){
-            console.log(this.slide_params);
             this.slot_params = {
                 "slot_name" : this.$lightbox.find(".segment-name").val(),
+                "slot_number" : this.slot_number,
                 "slot_type" : this.segment_type,
                 "id_in_type_table" : null,
                 "addedclass" : this.$lightbox.find("select[name='addedclass']").val(),
@@ -92,7 +92,14 @@ GeneralStructure.DataLoading = function(){
          *
          */
         source.prototype.UpdateSlot = function(callback){
-            $.post("php/ajax/Saver.php", this.slot_params, callback.bind(this));
+            params = {
+                params: this.slot_params,
+                id: this.id,
+                action: "save_slot"
+            };
+            console.log("saving:");
+            console.log(params);
+            $.post("php/ajax/Saver.php", params, callback.bind(this));
         };
 
         /**

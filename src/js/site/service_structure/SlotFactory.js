@@ -33,8 +33,11 @@ GeneralStructure.SlotFactory = function(){
         // kun luodaan uutta, liitä lightbox sivun yläreunan diviin
         slot.$container = $container || $(".structural-element-add");
         var $content_id = slot.$container.find(".content_id");
+        var $slot_id = slot.$container.find(".slot_id");
         var $header_id = slot.$container.find(".header_id");
-        slot.id = ($content_id ? $content_id.val() : 0);
+        slot.slide_id = ($content_id ? $content_id.val() : 0);
+        slot.id = ($slot_id ? $slot_id.val() : 0);
+        console.log(slot.id);
         slot.header_id = ($header_id ? $header_id.val() : 0);
         slot.previewparams = {segment_type: slot.segment_type};
         slot.previewhtml = "";

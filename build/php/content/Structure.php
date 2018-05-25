@@ -84,7 +84,7 @@ class Structure{
     }
 
     /**
-     * Muokkaa segmentin tyypistä järkevä suomenkielinen selite.
+     * Muokkaa segmentin tyypistä järkevän suomenkielisen selitteen.
      */
     public function FormatSlotType($name){
         switch($name){
@@ -113,36 +113,49 @@ class Structure{
 
     /**
      *
-     * Lataa yhden infodian sisällön
+     * Lataa yhden dian sisällön
      *
      * @param $id dian tunniste
-     * 
+     * @param $table  taulu, josta ladataan
+     r 
      */
-    public function LoadInfoSlide($id){
-        $data =  $this->con->select("infosegments", [
-            "maintext", 
-            "header",
-            "genheader",
-            "subgenheader",
-            "imgname",
-            "imgposition"
-        ],
-        ["id"=>$id]
-        );
+    public function LoadSlide($id, $table){
+        switch($table){
+            case "infosegments":
+                $params = [
+                    "maintext", 
+                    "header",
+                    "genheader",
+                    "subgenheader",
+                    "imgname",
+                    "imgposition"
+                ];
+                break;
+            case "songsegments":
+                $params = [
+                    "songdescription",
+                    "restrictedto",
+                    "singlename", 
+                    "multiname"
+                ];
+                break;
+        }
+        $data =  $this->con->select($table, $params, ["id"=>$id]);
         if($data)
             return $data[0];
     }
 
     /**
      *
-     * Tallentaa muokatun infodian sisällön
+     * Tallentaa muokatun dian sisällön
      *
      * @param $id dian tunniste
      * @param $params tallennettavat parametrit
+     * @param $table  taulu, josta ladataan
      * 
      */
-    public function UpdateInfoSlide($id, $params){
-        $data =  $this->con->update("infosegments", $params, ["id"=>$id]);
+    public function UpdateSlide($id, $table, $params){
+        $data =  $this->con->update($table, $params, ["id"=>$id]);
         return $this;
     }
 
@@ -151,10 +164,11 @@ class Structure{
      * Syöttää uuden infodian sisällön
      *
      * @param $params tallennettavat parametrit
+     * @param $table  taulu, josta ladataan
      * 
      */
-    public function InsertInfoSlide($params){
-        $data =  $this->con->insert("infosegments", $params);
+    public function InsertSlide($params, $table){
+        $data =  $this->con->insert($table, $params);
         return $this;
     }
 
@@ -172,25 +186,7 @@ class Structure{
         return $this;
     }
 
-    /**
-     *
-     * Lataa yhden lauludian sisällön
-     *
-     * @param $id dian tunniste
-     * 
-     */
-    public function LoadSongSlide($id){
-        $data =   $this->con->select("songsegments", [
-            "songdescription",
-            "restrictedto",
-            "singlename", 
-            "multiname"
-        ],
-        ["id"=>$id]
-        );
-        if($data)
-            return $data[0];
-    }
+
 
     /**
      *

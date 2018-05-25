@@ -21,7 +21,6 @@ GeneralStructure.SlotFactory.infoslide = function(){
      **/
     this.FillInData = function(data){
         var self = this;
-        console.log(data);
         self.$lightbox.find(".slide-header").val(data.header);
         self.$lightbox.find(".infoslidetext").val(data.maintext);
         if(data.imgname){ 
@@ -49,6 +48,7 @@ GeneralStructure.SlotFactory.infoslide = function(){
         var maintext = this.$lightbox.find(".slidetext").val();
         this.slide_params = {
                 maintext:maintext,
+                id: this.slide_id,
                 header:this.$lightbox.find(".slide-header").val(),
                 genheader: this.$lightbox.find("[type='checkbox']").get(0).checked ? "Majakkamessu" : "",
                 subgenheader: this.$lightbox.find("[type='checkbox']").get(0).checked ? "Messun aihe" : "",

@@ -71,15 +71,15 @@ switch($params["action"]){
         break;
     case "get_infoslide":
         $structure = new Structure($database, $m);
-        echo json_encode($structure->LoadInfoSlide($params["id"]));
+        echo json_encode($structure->LoadSlide($params["id"], "infosegments"));
         break;
     case "get_songslide":
         $structure = new Structure($database, $m);
-        echo json_encode($structure->LoadSongSlide($params["id"]));
+        echo json_encode($structure->LoadSlide($params["id"], "songsegments"));
         break;
     case "get_bibleslide":
         $structure = new Structure($database, $m);
-        echo json_encode($structure->LoadBibleSlide($params["id"]));
+        echo json_encode($structure->LoadSlide($params["id"],"biblesegments"));
         break;
     case "get_slideclass_names":
         $structure = new Structure($database, $m);
