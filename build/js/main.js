@@ -1479,7 +1479,6 @@ GeneralStructure.SlotFactory.songslide = function(){
      *
      **/
     this.FillInData = function(data){
-        console.log(data.restrictedto);
         if(data.multiname){
             this.$lightbox.find("[value='multisong']").get(0).checked=true;
             this.$lightbox.find(".multisongheader").val(data.multiname).show();
@@ -1499,7 +1498,13 @@ GeneralStructure.SlotFactory.songslide = function(){
      *
      **/
     this.SetSlideParams = function(){
-    
+        this.slide_params = {
+            songdescription: this.$lightbox.find(".songdescription").val(data.songdescription),
+            singlename: "",
+            multiname: "",
+            restrictedto: ""
+        }
+        return this;
     }
 
     /**

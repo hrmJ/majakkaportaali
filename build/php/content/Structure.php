@@ -148,20 +148,30 @@ class Structure{
     /**
      *
      * Tallentaa muokatun dian sisällön
+     * TAI slotin sisällön, jos $table-parametrina "presentation_structure"
      *
      * @param $id dian tunniste
      * @param $params tallennettavat parametrit
-     * @param $table  taulu, josta ladataan
+     * @param $table  taulu, johon ladataan
      * 
      */
     public function UpdateSlide($id, $table, $params){
-        $data =  $this->con->update($table, $params, ["id"=>$id]);
+        $this->con->update($table, $params, ["id"=>$id]);
+        if($table == "presentation_structure"){
+            $data = $this->con->select($table, "*");
+            $i = 1;
+            foreach($data as $row){
+                #Varmistetaan, että slottien numerointi alkaa 1:stä
+                $this->con->update($table, ["slot_number" => $i], ["id"=>$row["id"]]);
+                $i++;
+            }
+        }
         return $this;
     }
 
     /**
      *
-     * Syöttää uuden infodian sisällön
+     * Syöttää uuden dian sisällön 
      *
      * @param $params tallennettavat parametrit
      * @param $table  taulu, josta ladataan
