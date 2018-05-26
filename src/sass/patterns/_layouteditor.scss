@@ -62,14 +62,12 @@
 .with-preview{
     //Esikatseluelementti esimerkiksi taustakuville
     display:flex;
-    flex-flow: row nowrap;
+    flex-flow: column wrap;
     justify-content: space-between;
     padding-top:0.4em;
     padding-bottom:0.4em;
-
     >div:first-of-type{
-        flex:1 1 40%;
-        margin-right:0.4em;
+        margin-bottom:1em;
     }
 }
 
@@ -160,3 +158,18 @@
     padding-bottom:1em;
 }
 
+@media only screen and (min-width: 920px){
+
+
+    .with-preview{
+        //Esikatseluelementti esimerkiksi taustakuville
+        display:flex;
+        flex-flow: row nowrap;
+
+        >div:first-of-type{
+            flex:1 1 40%;
+            margin-right:0.4em;
+        }
+    }
+
+}

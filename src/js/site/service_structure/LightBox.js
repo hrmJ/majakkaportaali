@@ -75,7 +75,7 @@ GeneralStructure.LightBox = function(){
                     });
             this.$lightbox.css(
                 {
-                 "width":$(".innercontent").width(),
+                 "width":$(".innercontent").width() - 40 + "px",
                  "top":  $("nav .dropdown").is(":visible") ? "-250px" : "-50px"
                 }
             ).show();

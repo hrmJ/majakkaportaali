@@ -32,6 +32,16 @@ GeneralStructure.SlotFactory.songslide = function(){
         $("[value='restrictedsong']").click(function(){ 
             self.$lightbox.find(".restrictionlist").toggle();
         });
+
+        self.$lightbox.find("[value='multisong']").click(function(){ 
+            var $f = self.$lightbox.find(".multisongheader");
+            if(!$f.is("visible")){
+                $f.show();
+            }
+            else{
+                $f.hide();
+            }
+        });
     };
 
 
@@ -65,7 +75,7 @@ GeneralStructure.SlotFactory.songslide = function(){
         function extractLast( term ) {
           return split( term ).pop();
         }
-        self.$container.find(".restrictionlist")
+        self.$container.find("[name='restrictions_input']")
             // don't navigate away from the field on tab when selecting an item
             .on( "keydown", function( event ) {
               if ( event.keyCode === $.ui.keyCode.TAB &&

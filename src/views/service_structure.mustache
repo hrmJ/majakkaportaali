@@ -90,13 +90,31 @@
             <h2 class="subwindow-opener">Lisävalinnat</h2>
             <section class="controller-subwindow">
                 <div class="some-margin">
-                    <input type="checkbox" value="multisong">Useita lauluja?</input>
-                    <input type='text' class='multisongheader hidden' placeholder='Anna yhteinen otsikko kaikille lauluille'></input>
+                    <div class='basic-flex'>
+                        <div><input type="checkbox" value="multisong"></input></div>
+                        <div>Useita lauluja?</div>
+                    </div>
+                    <div class="some-margin multisongheader hidden">
+                        <div>
+                            <input type='text' class='longinput'></input>
+                        </div>
+                        <div class='small-label some-margin'>
+                            Anna yhteinen otsikko kaikille lauluille
+                        </div>
+                    </div>
                 </div>
                 <div "slidemodel-flex">
-                    <div>
-                        <input type="checkbox" value="restrictedsong">Käytä rajattua laulujen listaa avoimen kentän sijasta?</input>
-                        <input type='text' class='restrictionlist hidden' placeholder='Kirjoita hyväksyttyjen laulujen nimet pilkulla erotettuna'></input>
+                    <div class="basic-flex">
+                        <div><input type="checkbox" value="restrictedsong"></input></div>
+                        <div>Käytä rajattua laulujen listaa avoimen kentän sijasta?</div>
+                    </div>
+                    <div class="some-margin restrictionlist hidden">
+                        <div>
+                            <input type='text' name='restrictions_input' class='longinput'></input>
+                        </div>
+                        <div class='small-label some-margin'>
+                            Kirjoita hyväksyttyjen laulujen nimet pilkulla erotettuna
+                        </div>
                     </div>
                     <div id="autocomptarget">
                         <!-- Tänne tulostetaan selattavia lauluja laulujen rajausta varten -->
