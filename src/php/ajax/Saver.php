@@ -53,6 +53,15 @@ switch($params["action"]){
             $struct->InsertInfoSlide($params["params"], "infosegments");
         }
         break;
+    case "save_slide":
+        $struct = new Structure($database, $m);
+        if(isset($params["id"])){
+            $struct->UpdateSlide($params["id"], $params["table"], $params["params"]);
+        }
+        else{
+            $struct->InsertSlide($params["params"], $params["table"]);
+        }
+        break;
     case "save_slot":
         $struct = new Structure($database, $m);
         $struct->UpdateSlide($params["id"], "presentation_structure", $params["params"]);

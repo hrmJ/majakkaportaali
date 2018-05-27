@@ -27,8 +27,11 @@ $m = new Mustache_Engine(array(
     ));
 
 
+$struct = new content\Structure($database, $m);
+
 if($_POST["action"] == "remove_slide"){
     $database->delete("presentation_structure",  ["id" => $_POST["id"]]);
+    $struct->UpdateSlotOrder();
 }
 else if ($_POST["action"] == "load_slots"){
     $struct = new content\Structure($database, $m);

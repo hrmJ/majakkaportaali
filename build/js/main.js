@@ -1684,7 +1684,6 @@ GeneralStructure.SlotFactory = function(){
         slot.$preview_window = $(`<div class='preview-window'>
                                   <iframe scrolling='no' frameBorder='0'></iframe>
                                   <button>Sulje esikatselu</button></div>`);
-        // kun luodaan uutta, liitä lightbox sivun yläreunan diviin
         slot.$container = $container || $(".structural-element-add");
         var $content_id = slot.$container.find(".content_id");
         var $slot_id = slot.$container.find(".slot_id");
@@ -1768,7 +1767,7 @@ GeneralStructure.LightBox = function(){
                     .appendTo($buttons)
             };
             this.$lightbox.append($buttons);
-            this.$container.prepend(this.$lightbox);
+            this.$container.append(this.$lightbox);
             this.InitializeInjectableData();
             $("[value='multisong']")
                 .click(function(){
@@ -2258,10 +2257,12 @@ GeneralStructure.DataLoading = function(){
             callback = callback || function(){};
             var self = this;
             params = {
-                action: "save_" + this.segment_type,
-                id: this.id,
+                action: "save_slide",
+                table: this.segment_type + "s",
+                id: this.slide_id,
                 params: this.slide_params
             };
+            console.log(params);
             $.post("php/ajax/Saver.php", params,function(){
                 self.SetSlotParams();
                 if(!self.id){
@@ -2308,8 +2309,6 @@ GeneralStructure.DataLoading = function(){
                 id: this.id,
                 action: "save_slot"
             };
-            console.log("saving:");
-            console.log(params);
             $.post("php/ajax/Saver.php", params, callback.bind(this));
         };
 

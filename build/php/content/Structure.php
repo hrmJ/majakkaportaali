@@ -25,10 +25,10 @@ class Structure{
     public $template_engine;
     public $slotstring;
 
-    /*
-     *
-     *
-     */
+        /*
+         *
+         *
+         */
     public function __construct(\Medoo\Medoo $con, $m){
         $this->con = $con;
         $this->template_engine = $m;
@@ -158,16 +158,29 @@ class Structure{
     public function UpdateSlide($id, $table, $params){
         $this->con->update($table, $params, ["id"=>$id]);
         if($table == "presentation_structure"){
-            $data = $this->con->select($table, "*");
-            $i = 1;
-            foreach($data as $row){
-                #Varmistetaan, että slottien numerointi alkaa 1:stä
-                $this->con->update($table, ["slot_number" => $i], ["id"=>$row["id"]]);
-                $i++;
-            }
+            $this->UpdateSlotOrder();
         }
         return $this;
     }
+
+    /**
+     *
+     * Päivittää slottien järjestyksen oikeaksi esim. slottien poiston jne. jälkeen
+     *
+     * 
+     */
+    public function UpdateSlotOrder(){
+        $data = $this->con->select("presentation_structure", "*");
+        $i = 1;
+        var_dump($data);
+        foreach($data as $row){
+            #Varmistetaan, että slottien numerointi alkaa 1:stä
+            $this->con->update("presentation_structure", ["slot_number" => $i], ["id"=>$row["id"]]);
+            $i++;
+        }
+        return $this;
+    }
+
 
     /**
      *

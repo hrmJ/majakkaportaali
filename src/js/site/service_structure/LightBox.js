@@ -39,7 +39,7 @@ GeneralStructure.LightBox = function(){
                     .appendTo($buttons)
             };
             this.$lightbox.append($buttons);
-            this.$container.prepend(this.$lightbox);
+            this.$container.append(this.$lightbox);
             this.InitializeInjectableData();
             $("[value='multisong']")
                 .click(function(){

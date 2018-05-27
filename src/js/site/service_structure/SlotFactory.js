@@ -30,7 +30,6 @@ GeneralStructure.SlotFactory = function(){
         slot.$preview_window = $(`<div class='preview-window'>
                                   <iframe scrolling='no' frameBorder='0'></iframe>
                                   <button>Sulje esikatselu</button></div>`);
-        // kun luodaan uutta, liitä lightbox sivun yläreunan diviin
         slot.$container = $container || $(".structural-element-add");
         var $content_id = slot.$container.find(".content_id");
         var $slot_id = slot.$container.find(".slot_id");

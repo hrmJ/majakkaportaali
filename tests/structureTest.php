@@ -164,11 +164,21 @@ class StructureTest extends TestCase{
             "singlename" =>  "testilaulu",
             "multiname" =>  NULL
             ];
-        $struct->UpdateSongSlide(1, $params);
-        $newinfo = $struct->LoadSongSlide(1);
+        $struct->UpdateSlide(1, "songsegments", $params);
+        $newinfo = $struct->LoadSlide(1, "songsegments");
         $this->assertRegExp("/Tällanen laulu/",$newinfo["songdescription"]);
     }
 
+
+
+    /**
+     * Testaa, että slottien järjestyksen korjaaminen sujuu
+     */
+    public function testUpdateSlotOrder()
+    {
+        $struct = new Structure($this->con, $this->m);
+        $struct->UpdateSlotOrder();
+    }
 
 }
 

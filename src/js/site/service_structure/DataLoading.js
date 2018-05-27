@@ -47,10 +47,12 @@ GeneralStructure.DataLoading = function(){
             callback = callback || function(){};
             var self = this;
             params = {
-                action: "save_" + this.segment_type,
-                id: this.id,
+                action: "save_slide",
+                table: this.segment_type + "s",
+                id: this.slide_id,
                 params: this.slide_params
             };
+            console.log(params);
             $.post("php/ajax/Saver.php", params,function(){
                 self.SetSlotParams();
                 if(!self.id){
@@ -97,8 +99,6 @@ GeneralStructure.DataLoading = function(){
                 id: this.id,
                 action: "save_slot"
             };
-            console.log("saving:");
-            console.log(params);
             $.post("php/ajax/Saver.php", params, callback.bind(this));
         };
 
