@@ -65,7 +65,8 @@ main {
   flex-flow: column wrap;
   align-items: stretch;
   flex: 0 0 90%;
-  width: 95%; }
+  width: 90%;
+  padding-left: 1em; }
 
 .basic-flex {
   display: flex; }
@@ -151,6 +152,9 @@ nav {
 
 .closer_div {
   margin: 1em 0 1em 0; }
+
+a i {
+  color: #747474; }
 
 .hamburger-icon {
   cursor: pointer;
@@ -618,8 +622,13 @@ h3 {
   border: 1px solid #dadada;
   padding: 0.5em;
   margin-bottom: 0px;
-  justify-content: space-between;
   cursor: pointer; }
+  .slot > div:not(:first-child):not(.last-child) {
+    margin-right: 0.5em; }
+  .slot > div:first-child {
+    width: 1em; }
+  .slot > div:nth-child(2) {
+    flex: 1 1 auto; }
 
 .drop-target {
   width: 100%;

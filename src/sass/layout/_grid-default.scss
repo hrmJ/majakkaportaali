@@ -63,7 +63,8 @@ main{
     flex-flow: column wrap;
     align-items:stretch;
     flex: 0 0 $tablewidth;
-    width:95%;
+    width:90%;
+    padding-left:1em;
 }
 
 .basic-flex{

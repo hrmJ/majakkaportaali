@@ -50,6 +50,9 @@ nav{
     margin: 1em 0 1em 0;
 }
 
+a i {
+    color:darken($datarowbg,40);
+}
 
 
 @include hamburger-icon($navfg, $navheight - 5px);

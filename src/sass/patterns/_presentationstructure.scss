@@ -43,18 +43,24 @@
     border:1px solid $datarowbg;
     padding:0.5em;
     margin-bottom:0px;
-    justify-content:space-between;
     @include pointer;
 
-    >div{
-        
+    >div:not(:first-child):not(.last-child){
+        margin-right:0.5em;
+    }
+
+    >div:first-child{
+        width:1em;
+    }
+
+    >div:nth-child(2){
+        flex: 1 1 auto;
     }
 }
 
 .drop-target{
     width:100%;
-    height:1em;
-}
+    height:1em; }
 
 .drop-highlight{
     margin:0.5em;
