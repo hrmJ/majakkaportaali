@@ -55,11 +55,11 @@ switch($params["action"]){
         break;
     case "save_slide":
         $struct = new Structure($database, $m);
-        if(isset($params["id"])){
-            $struct->UpdateSlide($params["id"], $params["table"], $params["params"]);
+        if(!$params["id"]){
+            $struct->InsertSlide($params["params"], $params["table"]);
         }
         else{
-            $struct->InsertSlide($params["params"], $params["table"]);
+            $struct->UpdateSlide($params["id"], $params["table"], $params["params"]);
         }
         break;
     case "save_slot":

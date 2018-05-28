@@ -1491,19 +1491,11 @@ GeneralStructure.SlotFactory.songslide = function(){
         this.$lightbox.find(".songdescription").val(data.songdescription);
         this.AddAutoComplete();
 
-        $("[value='restrictedsong']").click(function(){ 
-            self.$lightbox.find(".restrictionlist").toggle();
+        //Lisää toiminnallisuus valintalaatikkoihin
+        $("[type='checkbox']").click(function(){ 
+            $(this).parents(".checkbox-parent").next().toggle();
         });
 
-        self.$lightbox.find("[value='multisong']").click(function(){ 
-            var $f = self.$lightbox.find(".multisongheader");
-            if(!$f.is("visible")){
-                $f.show();
-            }
-            else{
-                $f.hide();
-            }
-        });
     };
 
 
@@ -1690,7 +1682,6 @@ GeneralStructure.SlotFactory = function(){
         var $header_id = slot.$container.find(".header_id");
         slot.slide_id = ($content_id ? $content_id.val() : 0);
         slot.id = ($slot_id ? $slot_id.val() : 0);
-        console.log(slot.id);
         slot.header_id = ($header_id ? $header_id.val() : 0);
         slot.previewparams = {segment_type: slot.segment_type};
         slot.previewhtml = "";
@@ -1769,10 +1760,6 @@ GeneralStructure.LightBox = function(){
             this.$lightbox.append($buttons);
             this.$container.append(this.$lightbox);
             this.InitializeInjectableData();
-            $("[value='multisong']")
-                .click(function(){
-                    self.$container.find(".multisongheader").toggle(); 
-                });
             if(this.slideclass==".songslide") this.AddAutoComplete();
         };
 
@@ -2230,14 +2217,14 @@ GeneralStructure.DataLoading = function(){
         source.prototype.LoadParams = function(){
             //Huolehdi siitä, että kuvanvalintavalikot ovat näkyvissä ennen tietojen lataamista
             this.AddImageLoader();
-            this.slot_number = this.$container.find(".slot-number").text();
+            this.slot_number = this.$container.find(".slot-number").text() || $(".slot").length + 1 ;
             this.slot_name = this.$container.find(".slot_name_orig").val();
             this.$lightbox.find(".segment-name").val(this.slot_name);
 
             var self = this;
             $.getJSON("php/ajax/Loader.php",
                 {
-                    "action": "get_" + this.slideclass.replace(".",""),
+                    "action": "get_" + this.segment_type.replace("segment","slide"),
                     "id" : this.slide_id,
                 },
                 //This method is child-specific, cf. infoslide.js, songslide.js etc
@@ -2262,7 +2249,6 @@ GeneralStructure.DataLoading = function(){
                 id: this.slide_id,
                 params: this.slide_params
             };
-            console.log(params);
             $.post("php/ajax/Saver.php", params,function(){
                 self.SetSlotParams();
                 if(!self.id){
@@ -2334,7 +2320,8 @@ GeneralStructure.DataLoading = function(){
                     segment_type: this.segment_type
                 }, 
                 function(max_id){
-                    params.content_id = max_id;
+                    params.params.content_id = max_id;
+                    params.params.slot_number = max_id;
                     $.post("php/ajax/Saver.php", params, callback.bind(this));
                 });
         };

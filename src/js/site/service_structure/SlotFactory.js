@@ -36,7 +36,6 @@ GeneralStructure.SlotFactory = function(){
         var $header_id = slot.$container.find(".header_id");
         slot.slide_id = ($content_id ? $content_id.val() : 0);
         slot.id = ($slot_id ? $slot_id.val() : 0);
-        console.log(slot.id);
         slot.header_id = ($header_id ? $header_id.val() : 0);
         slot.previewparams = {segment_type: slot.segment_type};
         slot.previewhtml = "";

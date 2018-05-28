@@ -20,14 +20,14 @@ GeneralStructure.DataLoading = function(){
         source.prototype.LoadParams = function(){
             //Huolehdi siitä, että kuvanvalintavalikot ovat näkyvissä ennen tietojen lataamista
             this.AddImageLoader();
-            this.slot_number = this.$container.find(".slot-number").text();
+            this.slot_number = this.$container.find(".slot-number").text() || $(".slot").length + 1 ;
             this.slot_name = this.$container.find(".slot_name_orig").val();
             this.$lightbox.find(".segment-name").val(this.slot_name);
 
             var self = this;
             $.getJSON("php/ajax/Loader.php",
                 {
-                    "action": "get_" + this.slideclass.replace(".",""),
+                    "action": "get_" + this.segment_type.replace("segment","slide"),
                     "id" : this.slide_id,
                 },
                 //This method is child-specific, cf. infoslide.js, songslide.js etc
@@ -52,7 +52,6 @@ GeneralStructure.DataLoading = function(){
                 id: this.slide_id,
                 params: this.slide_params
             };
-            console.log(params);
             $.post("php/ajax/Saver.php", params,function(){
                 self.SetSlotParams();
                 if(!self.id){
@@ -124,7 +123,8 @@ GeneralStructure.DataLoading = function(){
                     segment_type: this.segment_type
                 }, 
                 function(max_id){
-                    params.content_id = max_id;
+                    params.params.content_id = max_id;
+                    params.params.slot_number = max_id;
                     $.post("php/ajax/Saver.php", params, callback.bind(this));
                 });
         };

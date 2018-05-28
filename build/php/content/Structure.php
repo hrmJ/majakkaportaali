@@ -191,7 +191,7 @@ class Structure{
      * 
      */
     public function InsertSlide($params, $table){
-        $data =  $this->con->insert($table, $params);
+        $this->con->insert($table, $params);
         return $this;
     }
 

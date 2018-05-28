@@ -41,10 +41,6 @@ GeneralStructure.LightBox = function(){
             this.$lightbox.append($buttons);
             this.$container.append(this.$lightbox);
             this.InitializeInjectableData();
-            $("[value='multisong']")
-                .click(function(){
-                    self.$container.find(".multisongheader").toggle(); 
-                });
             if(this.slideclass==".songslide") this.AddAutoComplete();
         };
 

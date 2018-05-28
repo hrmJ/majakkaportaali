@@ -29,19 +29,11 @@ GeneralStructure.SlotFactory.songslide = function(){
         this.$lightbox.find(".songdescription").val(data.songdescription);
         this.AddAutoComplete();
 
-        $("[value='restrictedsong']").click(function(){ 
-            self.$lightbox.find(".restrictionlist").toggle();
+        //Lisää toiminnallisuus valintalaatikkoihin
+        $("[type='checkbox']").click(function(){ 
+            $(this).parents(".checkbox-parent").next().toggle();
         });
 
-        self.$lightbox.find("[value='multisong']").click(function(){ 
-            var $f = self.$lightbox.find(".multisongheader");
-            if(!$f.is("visible")){
-                $f.show();
-            }
-            else{
-                $f.hide();
-            }
-        });
     };
 
 
