@@ -1482,11 +1482,13 @@ GeneralStructure.SlotFactory.songslide = function(){
         var self = this;
         if(data.multiname){
             this.$lightbox.find("[value='multisong']").get(0).checked=true;
-            this.$lightbox.find(".multisongheader").val(data.multiname).show();
+            this.$lightbox.find(".multisongheader").show();
+            this.$lightbox.find(".multisongheader input[type='text']").val(data.multiname);
         }
         if(data.restrictedto){
             this.$lightbox.find("[value='restrictedsong']").get(0).checked=true;
-            this.$lightbox.find(".restrictionlist").val(data.restrictedto).show();
+            this.$lightbox.find(".restrictionlist").show();
+            this.$lightbox.find("[name=restrictions_input]").val(data.restrictedto);
         }
         this.$lightbox.find(".songdescription").val(data.songdescription);
         this.AddAutoComplete();
@@ -1510,8 +1512,12 @@ GeneralStructure.SlotFactory.songslide = function(){
         this.slide_params = {
             songdescription: this.$lightbox.find(".songdescription").val(),
             singlename: this.$lightbox.find(".segment-name").val(),
-            multiname: ($multiheader.length ? $multiheader.val() : null),
-            restrictedto: null
+            multiname: $multiheader.find("input[type='text']").val(),
+            restrictedto: this.$lightbox.find("[name='restrictions_input']").val()
+        }
+        if(!this.$lightbox.find("[value='restrictedsong']").get(0).checked){
+            //Jos ei ruksia rajoita-laatikossa, ignooraa kirjoitetut rajoitukset
+            this.slide_params.restrictedto = "";
         }
         return this;
     }
