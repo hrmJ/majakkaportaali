@@ -56,14 +56,6 @@ else{
             $loader= new data\InfoSegmentSaver($database, $params);
             $loader->SetContentId()->SetSlotData();
             break;
-        case "update_numbers":
-            foreach($_POST["newids"] as $idpair){
-                $database->update("presentation_structure", 
-                    ["slot_number" => $idpair["newnumber"]],
-                    ["id" => $idpair["slot_id"]] 
-                );
-            }
-            break;
         case "update_headertemplate":
             $database->update("headers",
                 [

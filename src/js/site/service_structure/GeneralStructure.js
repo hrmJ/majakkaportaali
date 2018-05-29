@@ -48,13 +48,12 @@ var GeneralStructure = function(){
      *
      **/
     function SaveSlotOrder(newids){
+        console.log(newids);
         //Save the changes
-        $.post("php/ajax/Structure.php",{
-        "action":"save",
-        "slideclass":"update_numbers",
-        "segment_type":"update_numbers",
-        "newids":newids
-        }, ReloadSlots);
+        $.post("php/ajax/Saver.php",{
+            "action":"update_slot_order",
+            "newids":newids },
+            ReloadSlots);
     }
 
 
@@ -114,7 +113,8 @@ var GeneralStructure = function(){
 
     return {
          Initialize,
-         ReloadSlots
+         ReloadSlots,
+         SaveSlotOrder
     }
     
 

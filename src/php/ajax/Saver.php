@@ -70,6 +70,14 @@ switch($params["action"]){
         $struct = new Structure($database, $m);
         $struct->InsertNewSlot($params["params"]);
         break;
+    case "update_slot_order":
+        foreach($params["newids"] as $idpair){
+            $database->update("presentation_structure", 
+                ["slot_number" => $idpair["newnumber"]],
+                ["id" => $idpair["slot_id"]] 
+            );
+        }
+        break;
 }
 
 

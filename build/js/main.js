@@ -1386,13 +1386,12 @@ var GeneralStructure = function(){
      *
      **/
     function SaveSlotOrder(newids){
+        console.log(newids);
         //Save the changes
-        $.post("php/ajax/Structure.php",{
-        "action":"save",
-        "slideclass":"update_numbers",
-        "segment_type":"update_numbers",
-        "newids":newids
-        }, ReloadSlots);
+        $.post("php/ajax/Saver.php",{
+            "action":"update_slot_order",
+            "newids":newids },
+            ReloadSlots);
     }
 
 
@@ -1452,7 +1451,8 @@ var GeneralStructure = function(){
 
     return {
          Initialize,
-         ReloadSlots
+         ReloadSlots,
+         SaveSlotOrder
     }
     
 
@@ -2446,11 +2446,20 @@ GeneralStructure.DragAndDrop = function(){
      *
      **/
     function Initialize(){
-        $(".slot").on("dragstart",GeneralStructure.DragAndDrop.DragStart);
-        $(".drop-target")
-            .on("dragover",GeneralStructure.DragAndDrop.DragOver)
-            .on("dragleave",GeneralStructure.DragAndDrop.DragLeave)
-            .on("drop",GeneralStructure.DragAndDrop.Drop)
+        $(".slot").draggable( {
+                revert: true,
+                start: DragStart,
+                stop: CleanUp
+            });
+        $(".drop-target").droppable({
+                drop: Drop,
+                over: DragOver,
+                classes: {
+                  "ui-droppable-active": "songslot_waiting",
+                  "ui-droppable-hover": "songslot_taking",
+                },
+                out: DragLeave
+            });
     }
 
 
@@ -2461,9 +2470,31 @@ GeneralStructure.DragAndDrop = function(){
      *
      **/
     function DragStart(){
-        $(".slot").addClass("drop-hide");
-        $(this).removeClass("drop-hide");
         currently_dragged_no = $(this).find(".slot-number").text() * 1;
+    }
+
+    /**
+     *
+     * Poista raahauksen aikana lisätyt luokat, tekstit ym.
+     *
+     **/
+    function CleanUp(){
+        $(".drop-highlight").text("").removeClass("drop-highlight");
+        //songslot_waiting
+    }
+
+
+    /**
+     *
+     * Määrittelee, mitä tapahtuu, kun raahattu
+     * elementti poistuu slottien välisen alueen
+     * päältä
+     *
+     * @param event funktion käynnistänyt tapahtuma
+     *
+     **/
+    function DragLeave(){
+        $(this).text("").removeClass("drop-highlight");
     }
 
 
@@ -2475,26 +2506,10 @@ GeneralStructure.DragAndDrop = function(){
      * @param event funktion käynnistänyt tapahtuma
      *
      **/
-    function DragOver(event){
-        event.preventDefault();  
-        event.stopPropagation();
+    function DragOver(){
         $(this).addClass("drop-highlight").text("Siirrä tähän");
     }
 
-    /**
-     *
-     * Määrittelee, mitä tapahtuu, kun raahattu
-     * elementti poistuu slottien välisen alueen
-     * päältä
-     *
-     * @param event funktion käynnistänyt tapahtuma
-     *
-     **/
-    function DragLeave(event){
-        event.preventDefault();  
-        event.stopPropagation();
-        $(this).text("").removeClass("drop-highlight");
-    }
 
     /**
      *
@@ -2525,6 +2540,7 @@ GeneralStructure.DragAndDrop = function(){
             else if(thisno>prevno && thisno != currently_dragged_no) newno = thisno*1 +1;
             else if(thisno==prevno && thisno >currently_dragged_no) newno = thisno*1 -1;
             else if(thisno==prevno) newno = thisno;
+            console.log({"slot_id":id,"newnumber":newno});
             newids.push({"slot_id":id,"newnumber":newno});
             });
 

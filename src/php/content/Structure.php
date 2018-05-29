@@ -172,7 +172,6 @@ class Structure{
     public function UpdateSlotOrder(){
         $data = $this->con->select("presentation_structure", "*");
         $i = 1;
-        var_dump($data);
         foreach($data as $row){
             #Varmistetaan, että slottien numerointi alkaa 1:stä
             $this->con->update("presentation_structure", ["slot_number" => $i], ["id"=>$row["id"]]);
