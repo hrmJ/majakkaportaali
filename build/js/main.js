@@ -1494,7 +1494,7 @@ GeneralStructure.SlotFactory.songslide = function(){
         this.AddAutoComplete();
 
         //Lisää toiminnallisuus valintalaatikkoihin
-        $("[type='checkbox']").click(function(){ 
+        this.$lightbox.find("[type='checkbox']").click(function(){ 
             $(this).parents(".checkbox-parent").next().toggle();
         });
 
