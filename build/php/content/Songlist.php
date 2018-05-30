@@ -138,66 +138,39 @@ class Songlist{
     public function LoadSongSlots(){
         //Hae ensin kaikki lauluslotit rakenteesta (TODO: messukohtaisesti)
         $slots = $this->con->select("presentation_structure",
-            ["slot_name", "content_id"],
+            ["slot_name", "content_id", "slot_number"],
             ["slot_type" => "songsegment"],
-            ["ORDER" => ["slot_number" => "ASC"]]);
+            ['ORDER' => [ 'slot_number' => 'ASC' ]]
+            );
+        $this->slots_as_string = "";
         foreach($slots as $slot){
-            //Hae jokaisen lauluslotin tarkemmat yksityiskohdat ja se, onko
-            //kyseessä monta laulua samasta tyypistä vai ainoastaan yksi laulu
-            $details = $this->con->get("songsegments",
-                ["id", "songdescription", "restrictedto", "singlename", "multiname"],
-                ["id" => $slot["content_id"]]);
-            $multi = ($details["multiname"] == "" ? false: true);
-            $restr = ($details["restrictedto"] == "" ? false: true);
-            if($restr){
-                //Valinnat rajoitettu vain tiettyihin lauluihin
-                $container = $this->template_engine->loadTemplate('restrictedsong'); 
-                $container_params = ["select", "SELECT"];
-            }
-            else if($multi){
-                //Monta laulua samaan slottiin
-                $container = $this->template_engine->loadTemplate('multisong'); 
-                $titles = $this->con->select("servicesongs", 
-                    "song_title",
-                    ["AND" => [
-                        "service_id" => $this->id,
-                        "stype" => $details["singlename"]
-                    ]]);
-                if(!$titles)
-                    $titles = Array("");
-                $songslots = "";
-                foreach($titles as $title){
-                    $output = $this->template_engine->loadTemplate('singlesong'); 
-                    $songslots  .= "\n" . $output->render([
-                        "category" => $slot["slot_name"],
-                        "name" => "",
-                        "value" => $title,
-                        "isparent" => ""
-                    ]);
-                }
-                $container_params = [
-                    "multisongheader" => $details["multiname"],
-                    "songslots" => $songslots
-                ];
-            }
-            else{
-                //Tavallinen tapaus: vain yksi laulu yhdessä slotissa
-                $container = $this->template_engine->loadTemplate('singlesong'); 
-                $title = $this->con->get("servicesongs", 
-                    "song_title", 
-                    ["AND" => [
-                        "service_id" => $this->id],
-                        "songtype" => $details["singlename"]
-                    ]);
-                if(!$title)
-                    $title = "";
-                $container_params = ["value" => $title, "isparent" => "slot-parent"] ;
-            }
-            $container_params = array_merge($container_params, ["category" => $slot["slot_name"]]);
-            $this->slots_as_string .= $container->render($container_params);
+            $multi = $this->con->get("songsegments","multiname",["id"=>$slot["content_id"]]);
+            $output = $this->template_engine->loadTemplate('singlesong'); 
+            $this->slots_as_string  .= "\n" . $output->render([
+                    "category" => $slot["slot_name"],
+                    "name" => "",
+                    "value" => "",
+                    "isparent" => ($multi ? "multisong" : "")
+                ]);
         }
-
         return $this;
+    }
+
+    /**
+     * Lataa kaikki yhden "kontin" sisältämät lauluslotit
+     *
+     * @param segment_name minkä tyypin lauluja haetaan
+     *
+     */
+    public function LoadSlotsToCont($segment_name){
+        $slots = $this->con->select("servicesongs",
+            ["song_title","multisong_position"],
+            ["service_id" => $this->id,
+            "songtype" => $segment_name],
+            ["ORDER" => "multisong_position"]
+        );
+        //multisong_position?
+        return($slots);
     }
 
 

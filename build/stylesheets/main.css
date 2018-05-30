@@ -451,7 +451,7 @@ h3 {
   background: grey;
   color: white; }
 
-.songslot {
+.slotcontainer {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -459,7 +459,7 @@ h3 {
   border-radius: 10px;
   border: 1px solid #a7a7a7;
   padding: 1em; }
-  .songslot > div:first-child {
+  .slotcontainer > div:first-child {
     margin-bottom: 0.8em;
     font-family: "Open Sans Condensed", sans-serif; }
 

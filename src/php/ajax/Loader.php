@@ -65,6 +65,10 @@ switch($params["action"]){
         $songlist = new Songlist($database, $params["service_id"], $m);
         echo $songlist->LoadSongSlots()->slots_as_string;
         break;
+    case "load_slots_to_container":
+        $songlist = new Songlist($database, $params["service_id"], $m);
+        echo json_encode($songlist->LoadSlotsToCont($params["cont_name"]));
+        break;
     case "get_service_specific_slots":
         $structure = new Structure($database, $m);
         echo $structure->LoadSlots()->slotstring;

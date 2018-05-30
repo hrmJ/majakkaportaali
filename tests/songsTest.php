@@ -45,7 +45,7 @@ class SongsTest extends TestCase
     {
         $songlist = new Songlist($this->con, 2, $this->m);
         $songlist->LoadSongSlots();
-        $this->assertRegExp("/songslot/",$songlist->slots_as_string);
+        $this->assertRegExp("/slotcontainer/",$songlist->slots_as_string);
     }
 
 
@@ -88,6 +88,16 @@ class SongsTest extends TestCase
         $this->assertTrue($songlist->CheckTitle("Ukko Nooa"));
         $this->assertFalse($songlist->CheckTitle("lkjsadlasd"));
         $this->assertFalse($songlist->CheckTitle(""));
+    }
+
+
+    /**
+     * Testaa kontin sisäisten slottien latausta
+     */
+    public function testLoadSlotsToCont()
+    {
+        $songlist = new Songlist($this->con, 2, $this->m);
+        $songlist->LoadSlotsToCont("alkulaulu");
     }
 
 }

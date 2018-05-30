@@ -574,18 +574,72 @@ var SongSlots = function(){
 
     /**
      *
-     * Luo jokaisesta lauluslotista oma olionsa, joka kuuntelee
+     * Luo jokaisesta lauluslotista oma olionsa, joka kuuntelee siihen
+     * liittyviä tapahtumia, kuten laulujen raahaamista.
      *
      * @param slot_data ajax-response, joka sisältää tiedot tähän messuun tallennetuista lauluista
      *
      **/
     function InitializeSlots(slot_data){
+        //TODO: multisongs!
         $("#songslots").html(slot_data);
-        $(".songslot").each(function(){
+        $(".slotcontainer").each(function(){
+            var Cont = new SlotContainer();
+            Cont.SetName( $(this).find(".cont_name").text());
+            Cont.FetchSlots();
             var slot  = new SongSlot($(this));
             slot.AttachEvents();
         });
     }
+
+    /**
+     *
+     * Yhden tai useamman laulun sisältävä slotti
+     * tai pikemminkin niiden  "kontti"
+     *
+     * @param $slot_div yhden laulun sisältävä div
+     *
+     **/
+    var SlotContainer = function(){
+
+        /**
+         *
+         * Asettaa nimen
+         *
+         * @param name asetettava nimi
+         *
+         */
+        this.SetName = function(name){
+            this.name = name;
+            return this;
+        };
+
+        /**
+         *
+         * Hakee käikki tämän kontin sisältämät laulut
+         *
+         **/
+        this.FetchSlots = function(){
+            console.log("fetching..");
+            $.getJSON("php/ajax/Loader.php",{
+                action: "load_slots_to_container",
+                service_id: Service.GetServiceId(),
+                cont_name: this.name
+            }, this.SetSlots.bind(this));
+        }
+
+        /**
+         *
+         * Syöttää kontin sisältämien lauluslottien mukaisen datan paikalleen
+         *
+         * @param slots taulukko niistä sloteista, joita ajax-response palauttaa
+         *
+         **/
+        this.SetSlots = function(slots){
+            console.log(slots);
+        }
+
+    };
 
 
     /**
@@ -664,6 +718,7 @@ var SongSlots = function(){
             //cf. https://stackoverflow.com/questions/20279484/how-to-access-the-correct-this-inside-a-callback?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
 
             //Attach a listener for dropping
+            console.log("Attaching droppability...");
             this.$slot.droppable({
                 drop: this.AttachSong,
                       classes: {

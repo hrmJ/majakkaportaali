@@ -63,7 +63,7 @@ class StructureTest extends TestCase{
     public function testLoadInfoSlide()
     {
         $struct = new Structure($this->con, $this->m);
-        $this->assertTrue(sizeof($struct->LoadSlide(1, "infosegments"))>0);
+        $this->assertTrue(sizeof($struct->LoadSlide($this->con->max("infosegments","id"), "infosegments"))>0);
     }
 
     /**
@@ -72,7 +72,7 @@ class StructureTest extends TestCase{
     public function testLoadSongSlide()
     {
         $struct = new Structure($this->con, $this->m);
-        $this->assertTrue(sizeof($struct->LoadSlide(1,"songsegments"))>0);
+        $this->assertTrue(sizeof($struct->LoadSlide($this->con->max("songsegments","id"),"songsegments"))>0);
     }
 
     /**
@@ -107,8 +107,8 @@ class StructureTest extends TestCase{
             "imgname" => NULL,
             "imgposition" => "left"
             ];
-        $struct->UpdateSlide(1, "infosegments", $params);
-        $newinfo = $struct->LoadSlide(1, "infosegments");
+        $struct->UpdateSlide($this->con->max("infosegments","id"), "infosegments", $params);
+        $newinfo = $struct->LoadSlide($this->con->max("infosegments","id"), "infosegments");
         $this->assertRegExp("/Tällanen info/",$newinfo["maintext"]);
     }
 
@@ -164,9 +164,10 @@ class StructureTest extends TestCase{
             "singlename" =>  "testilaulu",
             "multiname" =>  NULL
             ];
-        $struct->UpdateSlide(1, "songsegments", $params);
-        $newinfo = $struct->LoadSlide(1, "songsegments");
+        $struct->UpdateSlide($this->con->max("songsegments","id"), "songsegments", $params);
+        $newinfo = $struct->LoadSlide($this->con->max("songsegments","id"), "songsegments");
         $this->assertRegExp("/Tällanen laulu/",$newinfo["songdescription"]);
+        $this->con->delete("songsegments",["id"=>$this->con->max("songsegments","id")]);
     }
 
 
@@ -178,6 +179,8 @@ class StructureTest extends TestCase{
     {
         $struct = new Structure($this->con, $this->m);
         $struct->UpdateSlotOrder();
+        $this->con->delete("presentation_structure",["slot_name" => "Testilaulu"]);
+        $this->con->delete("presentation_structure",["slot_name" => "Tervetulosanat"]);
     }
 
 }
