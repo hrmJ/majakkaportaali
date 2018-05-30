@@ -7,7 +7,7 @@
 var GeneralStructure = function(){
 
     var adder;
-    var currently_dragged_no;
+    var slot_types = [ "infoslide", "songslide"];
 
     /**
      *
@@ -48,7 +48,6 @@ var GeneralStructure = function(){
      *
      **/
     function SaveSlotOrder(newids){
-        console.log(newids);
         //Save the changes
         $.post("php/ajax/Saver.php",{
             "action":"update_slot_order",
@@ -67,9 +66,11 @@ var GeneralStructure = function(){
             position: { my: "bottom", at: "right-5 top+5" },
             select: function(e, u){
                 var slot_type = u.item.find(">div:eq(0)").attr("id").replace(/([^_]+)_launcher/,"$1");
-                GeneralStructure.SlotFactory.SlotFactory.make(slot_type)
-                    .LoadParams()
-                    .ShowWindow();
+                if(slot_types.indexOf(slot_type)>-1){
+                    GeneralStructure.SlotFactory.SlotFactory.make(slot_type)
+                        .LoadParams()
+                        .ShowWindow();
+                }
                 }
             });
     }
