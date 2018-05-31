@@ -165,8 +165,10 @@ class Songlist{
     public function LoadSlotsToCont($segment_name){
         $slots = $this->con->select("servicesongs",
             ["song_title","multisong_position"],
-            ["service_id" => $this->id,
-            "songtype" => $segment_name],
+            [
+                "service_id" => $this->id,
+                "songtype" => $segment_name
+            ],
             ["ORDER" => "multisong_position"]
         );
         //multisong_position?

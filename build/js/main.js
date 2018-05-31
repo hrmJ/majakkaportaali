@@ -568,7 +568,7 @@ var SongSlots = function(){
             action: "get_song_slots",
             service_id: Service.GetServiceId()
             }, 
-            InitializeSlots);
+            InitializeContainers);
     }
 
 
@@ -580,15 +580,15 @@ var SongSlots = function(){
      * @param slot_data ajax-response, joka sisältää tiedot tähän messuun tallennetuista lauluista
      *
      **/
-    function InitializeSlots(slot_data){
+    function InitializeContainers(slot_data){
         //TODO: multisongs!
         $("#songslots").html(slot_data);
         $(".slotcontainer").each(function(){
-            var Cont = new SlotContainer();
+            var Cont = new SlotContainer($(this));
             Cont.SetName( $(this).find(".cont_name").text());
             Cont.FetchSlots();
             var slot  = new SongSlot($(this));
-            slot.AttachEvents();
+            //slot.AttachEvents();
         });
     }
 
@@ -597,10 +597,12 @@ var SongSlots = function(){
      * Yhden tai useamman laulun sisältävä slotti
      * tai pikemminkin niiden  "kontti"
      *
-     * @param $slot_div yhden laulun sisältävä div
+     * @param $div kontti representaatio DOMissa
      *
      **/
-    var SlotContainer = function(){
+    var SlotContainer = function($div){
+
+        this.$div = $div;
 
         /**
          *
@@ -636,8 +638,36 @@ var SongSlots = function(){
          *
          **/
         this.SetSlots = function(slots){
-            console.log(slots);
+            var self = this;
+            $.each(slots,function(idx,slot){
+                var slot = new SongSlot(slot.song_title,
+                    slot.multisong_position, self.$div);
+                slot.Create().AttachEvents();
+            });
         }
+
+        /**
+         *
+         * Lisää painikkeet, joilla voidaan lisätä tai vähentää lauluja tästä
+         * "kontista"
+         *
+         *
+         **/
+        this.SetMultisongButtons = function(){
+            //USE fontawesome icons?
+            var $add = $("");
+            var $remove = $("");
+            this.$div.after($("<div class='buttons_cont'></div>")
+                .append($add).append($remove));
+            var self = this;
+            $.each(slots,function(idx,slot){
+                var slot = new SongSlot(slot.song_title,
+                    slot.multisong_position, self.$div);
+                slot.Create().AttachEvents();
+            });
+        }
+
+
 
     };
 
@@ -647,19 +677,36 @@ var SongSlots = function(){
      * Yksi lauluslotti, joka kuvaa esim. alkulaulua tai yhtä
      * ylistyslauluista
      *
-     * @param $slot_div yhden laulun sisältävä div
+     * @param title valitun laulun nimi (jos joku laulu jo valittu)
+     * @param position valitun laulun järjestysnumero tässä "kontissa"
+     * @param $cont slotin sisältävä "kontti" DOMissa
      *
      **/
-    var SongSlot = function($slot_div){
+    var SongSlot = function(title, position, $cont){
 
         var self = this;
-        this.$slot = $slot_div;
+        this.title = title;
+        this.position = position;
+        this.$cont = $cont;
 
+        /**
+         *
+         * Lisää DOMiin divin, jossa varsinainen slotti on kuvattuna
+         *
+         **/
+        this.Create = function(){
+            this.$div = $(`<div>
+                <input type="hidden" class=" " value="${this.position}"> 
+                <input type="text" class="songinput " value="${this.title}"> 
+                </div>`);
+            this.$cont.append(this.$div);
+            return this;
+        };
 
 
         /**
          *
-         * Liittää tähän slottiin jokin laulu esimerkiksi sen jälkeen, kun
+         * Liittää tähän slottiin jonkin laulun esimerkiksi sen jälkeen, kun
          * käyttäjä on raahannnut laululistan selauksen jälkeen näytölle
          * jääneen laulun slotin päälle.
          *
@@ -681,7 +728,7 @@ var SongSlots = function(){
          **/
         this.CheckLyrics = function(){
             var self = this;
-            var title = this.$slot.find(".songinput:eq(0)").val();
+            var title = this.$div.find(".songinput:eq(0)").val();
             $.getJSON("php/ajax/Loader.php",{
                     action:  "check_song_title",
                     service_id: Service.GetServiceId(),
@@ -705,21 +752,22 @@ var SongSlots = function(){
         
         };
 
+        /**
+         *
+         * Liittää lauluslottiin kuuluvat tapahtumat
+         *
+         **/
         this.AttachEvents = function(){
-            //Attach a listener for autocomplete:
-            //Also for 
-            //https://jqueryui.com/autocomplete/#remote
-            this.$slot.find(".songinput").autocomplete( {
+            this.$div.find(".songinput").autocomplete( {
                 source: LoadSongTitles,
                 minLength: 2,
                 select: this.CheckLyrics.bind(this),
                 }
             ).on("change paste keyup",self.CheckLyrics.bind(this));
-            //cf. https://stackoverflow.com/questions/20279484/how-to-access-the-correct-this-inside-a-callback?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
 
             //Attach a listener for dropping
             console.log("Attaching droppability...");
-            this.$slot.droppable({
+            this.$div.droppable({
                 drop: this.AttachSong,
                       classes: {
                         "ui-droppable-active": "songslot_waiting",
