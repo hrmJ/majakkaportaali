@@ -586,9 +586,7 @@ var SongSlots = function(){
         $(".slotcontainer").each(function(){
             var Cont = new SlotContainer($(this));
             Cont.SetName( $(this).find(".cont_name").text());
-            Cont.FetchSlots();
-            var slot  = new SongSlot($(this));
-            //slot.AttachEvents();
+            Cont.SetMultisongButtons().FetchSlots();
         });
     }
 
@@ -602,7 +600,7 @@ var SongSlots = function(){
      **/
     var SlotContainer = function($div){
 
-        this.$div = $div;
+        this.$ul = $("<ul></ul>").appendTo($div);
 
         /**
          *
@@ -641,9 +639,20 @@ var SongSlots = function(){
             var self = this;
             $.each(slots,function(idx,slot){
                 var slot = new SongSlot(slot.song_title,
-                    slot.multisong_position, self.$div);
+                    slot.multisong_position, self.$ul);
                 slot.Create().AttachEvents();
             });
+            //Finally, attach
+            this.AddSortability();
+        }
+
+        /**
+         *
+         * Lisää järjestelymahdollisuuden konttiin, jossa monta lauluslottia
+         *
+         **/
+        this.AddSortability = function(){
+            this.$ul.find("li").draggable({"handle": ".slot_handle"});
         }
 
         /**
@@ -654,20 +663,45 @@ var SongSlots = function(){
          *
          **/
         this.SetMultisongButtons = function(){
+            //TODO: painikkeet yksittäisen laulun poistamiseen mistä kohtaa 
+            //tahansa EIKÄ niinkään, että koko kontin lopussa miinuspainike
+            //Plussapainike kylläkin
             //USE fontawesome icons?
-            var $add = $("");
-            var $remove = $("");
-            this.$div.after($("<div class='buttons_cont'></div>")
-                .append($add).append($remove));
-            var self = this;
-            $.each(slots,function(idx,slot){
-                var slot = new SongSlot(slot.song_title,
-                    slot.multisong_position, self.$div);
-                slot.Create().AttachEvents();
-            });
-        }
+            var $add = $(`<i class="fa fa-plus" aria-hidden="false"></i>`)
+                            .click(this.AddNewSlot.bind(this));
+            this.$ul.append(
+                $("<div class='buttons_cont'></div>").append($add)
+            );
+
+            return this;
+        };
 
 
+        /**
+         *
+         * Lisää tämän kontin alle uuden slotin
+         *
+         **/
+        this.AddNewSlot = function(){
+            var slot_no = this.$ul.find(".songinput").length;
+            var slot = new SongSlot("", slot_no, this.$ul);
+            slot.Create().AttachEvents();
+            this.AddSortability();
+        };
+
+
+        /**
+         *
+         * Poistaa tämän kontin alta slotin
+         *
+         * @param ...?
+         *
+         **/
+        this.RemoveSlot = function(){
+            
+
+
+        };
 
     };
 
@@ -695,14 +729,38 @@ var SongSlots = function(){
          *
          **/
         this.Create = function(){
-            this.$div = $(`<div>
-                <input type="hidden" class=" " value="${this.position}"> 
-                <input type="text" class="songinput " value="${this.title}"> 
-                </div>`);
-            this.$cont.append(this.$div);
+            this.$div = $(`<li class="songslot">
+                <div>
+                    <input type="hidden" class=" " value="${this.position}"> 
+                    <input type="text" class="songinput " value="${this.title}"> 
+                </div>
+                </li>`);
+            var $move_icon = $("<div class='slot_handle'><i class='fa fa-arrows'></i></div>");
+            //NO; WE NEED SORTABLE!!!!
+            $move_icon.appendTo(this.$div);
+            var $remove_icon = $("<div><i class='fa fa-trash'></i></div>");
+            $remove_icon.click(this.Remove.bind(this)).appendTo(this.$div);
+            var $buttons_cont = this.$cont.find(".buttons_cont");
+            if($buttons_cont.length){
+                $buttons_cont.before(this.$div);
+            }
+            else{
+                //Jos kyseessä ei ole monen laulun kontti
+                this.$cont.append(this.$div);
+            }
             return this;
         };
 
+
+        /**
+         *
+         * Poistaa tämän laulun kontista
+         *
+         **/
+        this.Remove = function(){
+            //..vain jos ei viimeinen
+            console.log("Removing...");
+        };
 
         /**
          *
