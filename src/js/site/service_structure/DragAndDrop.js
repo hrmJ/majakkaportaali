@@ -3,6 +3,19 @@ var GeneralStructure = GeneralStructure || {};
 GeneralStructure.DragAndDrop = function(){
 
     var currently_dragged_no;
+    var drop_callback;
+
+    /**
+     *
+     * Asettaa funktion, joka ajetaan, kun järjesteltävä elementti on
+     * tiputettu. Oletuksena ajax-funktio. 
+     *
+     * @param callback funktio, jota käytetään
+     *
+     **/
+    function SetDropCallBack(callback){
+        drop_callback = callback;
+    }
 
     /**
      *
@@ -89,9 +102,10 @@ GeneralStructure.DragAndDrop = function(){
      * Määrittelee, mitä tapahtuu, kun käyttäjä on tiputtanut raahaamansa elementin kohteeseen.
      *
      * @param event funktion käynnistänyt tapahtuma
+     * @param callback funktio, joka ajetaan kun uudet numerot laskettu
      *
      **/
-    function Drop(event){
+    function Drop(event, callback){
         event.preventDefault();  
         event.stopPropagation();
         var prevno = $(this).prev().find(".slot-number").text();
@@ -116,12 +130,14 @@ GeneralStructure.DragAndDrop = function(){
             newids.push({"slot_id":id,"newnumber":newno});
             });
 
-        GeneralStructure.SaveSlotOrder(newids);
+        drop_callback(newids);
+        //GeneralStructure.SaveSlotOrder(newids);
     }
 
 
     return {
         Initialize,
+        SetDropCallBack,
     }
 
 }();

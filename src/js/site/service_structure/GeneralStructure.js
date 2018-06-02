@@ -95,6 +95,8 @@ var GeneralStructure = function(){
                 .LoadParams()
                 .ShowWindow();
         });
+
+        GeneralStructure.DragAndDrop.SetDropCallBack(SaveSlotOrder);
         GeneralStructure.DragAndDrop.Initialize(".slot",".drop-target");
     }
 
