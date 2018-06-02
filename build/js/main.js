@@ -2649,8 +2649,8 @@ GeneralStructure.DragAndDrop = function(){
 
             var options = {
                     revert: true,
-                    start: self.DragStart,
-                    stop: self.CleanUp
+                    start: self.DragStart.bind(this),
+                    stop: self.CleanUp.bind(this)
             };
             if(this.dd_params.draghandle){
                 options.handle = this.dd_params.handle;
@@ -2725,22 +2725,22 @@ GeneralStructure.DragAndDrop = function(){
          * Määrittelee, mitä tapahtuu, kun käyttäjä on tiputtanut raahaamansa elementin kohteeseen.
          *
          * @param event funktion käynnistänyt tapahtuma
-         * @param callback funktio, joka ajetaan kun uudet numerot laskettu
          *
          **/
-        this.Drop = function(event, callback){
+        this.Drop = function(event){
             var self = this;
             event.preventDefault();  
             event.stopPropagation();
             var prevno = $(event.target).prev().find(self.dd_params.number).text();
             if(prevno=="") prevno = 0;
             var newids = [];
-            console.log("PREVNO: " + prevno);
             $(this.dd_params.draggables).each(function(){
                 var thisno = $(this).find(self.dd_params.number).text()*1;
-                console.log("THISNO: " + thisno);
                 var id = $(this).find(self.dd_params.id_class).val()*1;
                 var newno = thisno*1;
+                console.log("PREVNO: " + prevno);
+                console.log("thisno: " + thisno);
+                console.log("cur: " + self.currently_dragged_no);
                 if(thisno == self.currently_dragged_no){
                     newno = prevno*1 + 1;
                     if(prevno > self.currently_dragged_no)
@@ -2764,8 +2764,7 @@ GeneralStructure.DragAndDrop = function(){
                 newids.push(keypair);
                 });
 
-            //this.dd_params.drop_callback(newids);
-            //GeneralStructure.SaveSlotOrder(newids);
+            this.dd_params.drop_callback(newids);
         };
         
     
