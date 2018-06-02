@@ -98,7 +98,7 @@ var GeneralStructure = function(){
                 .ShowWindow();
         });
 
-        GeneralStructure.DragAndDrop.Initialize(
+        sortable_slot_list =  new GeneralStructure.DragAndDrop.SortableList(
             {
                 draggables: ".slot",
                 droppables: ".drop-target",
@@ -108,6 +108,7 @@ var GeneralStructure = function(){
                 idkey: "slot_id",
             }
             );
+        sortable_slot_list.Initialize();
     }
 
     /**
