@@ -1610,6 +1610,7 @@ var GeneralStructure = function(){
                 number: ".slot-number",
                 id_class: ".slot_id",
                 idkey: "slot_id",
+                handle: ".drag_handle"
             }
             );
         sortable_slot_list.Initialize();
@@ -2650,11 +2651,9 @@ GeneralStructure.DragAndDrop = function(){
             var options = {
                     revert: true,
                     start: self.DragStart.bind(this),
-                    stop: self.CleanUp.bind(this)
+                    stop: self.CleanUp.bind(this),
+                    handle: this.dd_params.handle
             };
-            if(this.dd_params.draghandle){
-                options.handle = this.dd_params.handle;
-            }
             $(this.dd_params.draggables).draggable(options);
 
             $(this.dd_params.droppables).droppable({
@@ -2677,6 +2676,7 @@ GeneralStructure.DragAndDrop = function(){
          **/
         this.DragStart = function(event){
             this.currently_dragged_no = $(event.target).find(".slot-number").text() * 1;
+            $(event.target).addClass("dragging");
             console.log(this.currently_dragged_no);
         };
 
@@ -2685,8 +2685,9 @@ GeneralStructure.DragAndDrop = function(){
          * Poista raahauksen aikana lisätyt luokat, tekstit ym.
          *
          **/
-        this.CleanUp = function(){
+        this.CleanUp = function(event){
             $(".drop-highlight").text("").removeClass("drop-highlight");
+            $(event.target).removeClass("dragging");
             //songslot_waiting
         };
 
@@ -2715,7 +2716,8 @@ GeneralStructure.DragAndDrop = function(){
          *
          **/
         this.DragOver = function(event){
-            $(event.target).addClass("drop-highlight").text("Siirrä tähän");
+            //$(event.target).addClass("drop-highlight").text("Siirrä tähän");
+            //$(event.target).addClass("drop-highlight");
         };
 
 

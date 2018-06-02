@@ -106,6 +106,7 @@ var GeneralStructure = function(){
                 number: ".slot-number",
                 id_class: ".slot_id",
                 idkey: "slot_id",
+                handle: ".drag_handle"
             }
             );
         sortable_slot_list.Initialize();

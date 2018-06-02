@@ -43,7 +43,6 @@
     border:1px solid $datarowbg;
     padding:0.5em;
     margin-bottom:0px;
-    @include pointer;
 
     >div:not(:first-child):not(.last-child){
         margin-right:0.5em;
@@ -63,10 +62,10 @@
     height:1em; }
 
 .drop-highlight{
-    margin:0.5em;
-    border:1px dashed darken($datarowbg,20);
-    padding:0.5em;
-    height:5em;
+//    margin:0.5em;
+//    border:1px dashed darken($datarowbg,20);
+//    padding:0.5em;
+//    width:100%;
 }
 
 .drop-hide{
@@ -74,6 +73,9 @@
         color:lighten($datarowbg,5);
         border:lighten($datarowbg,5);
     }
+}
+
+.dragging{
 }
 
 //Div, jonka sisällä select-emenetti jolla määritellään dian luokka
