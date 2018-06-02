@@ -119,9 +119,11 @@ var SongSlots = function(){
          **/
         this.AddSortability = function(){
             this.$ul.find(".between-slots").remove();
+            console.log("MORO");
             this.$ul.find("li").draggable({"handle": ".slot_handle"})
-                .before("<li class='between-slots'>TEST</li>");
-            this.$ul.find("li:last-of-type").after("<li class='between-slots'>TEST</li>");
+                .before("<li class='between-slots'></li>");
+            this.$ul.find("li:last-of-type").after("<li class='between-slots'></li>");
+            this.$ul.find(".between-slots").droppable();
         }
 
         /**

@@ -8,14 +8,22 @@ GeneralStructure.DragAndDrop = function(){
      *
      * Liittää messuslotteihin raahaamiseen liittyvät toiminnot
      *
+     * @param draggables mitä raahataan
+     * @param droppables mihin raahataan
+     *
      **/
-    function Initialize(){
-        $(".slot").draggable( {
+    function Initialize(draggables, droppables, draghandle){
+        var options = {
                 revert: true,
                 start: DragStart,
                 stop: CleanUp
-            });
-        $(".drop-target").droppable({
+        };
+        if(draghandle){
+            options.handle = draghandle;
+        }
+        $(draggables).draggable(options);
+
+        $(droppables).droppable({
                 drop: Drop,
                 over: DragOver,
                 classes: {

@@ -21,7 +21,6 @@ var GeneralStructure = function(){
             {"action":"load_slots"},
             function(){
                 InitializeSlotFunctionality();
-                GeneralStructure.DragAndDrop.Initialize();
             }
         );
     }
@@ -96,6 +95,7 @@ var GeneralStructure = function(){
                 .LoadParams()
                 .ShowWindow();
         });
+        GeneralStructure.DragAndDrop.Initialize(".slot",".drop-target");
     }
 
     /**
@@ -106,7 +106,6 @@ var GeneralStructure = function(){
     function Initialize(){
         InitializeNewslotMenu();
         InitializeSlotFunctionality();
-        GeneralStructure.DragAndDrop.Initialize();
         //Vain testaamista varten: lisäillään vähän id:itä
         //$(".menu").find("li").each(function(){if($(this).text()=="Laulu")$(this).attr({"id":"addsongmenu"});});
     }

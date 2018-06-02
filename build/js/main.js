@@ -653,9 +653,11 @@ var SongSlots = function(){
          **/
         this.AddSortability = function(){
             this.$ul.find(".between-slots").remove();
+            console.log("MORO");
             this.$ul.find("li").draggable({"handle": ".slot_handle"})
-                .before("<li class='between-slots'>TEST</li>");
-            this.$ul.find("li:last-of-type").after("<li class='between-slots'>TEST</li>");
+                .before("<li class='between-slots'></li>");
+            this.$ul.find("li:last-of-type").after("<li class='between-slots'></li>");
+            this.$ul.find(".between-slots").droppable();
         }
 
         /**
@@ -1523,7 +1525,6 @@ var GeneralStructure = function(){
             {"action":"load_slots"},
             function(){
                 InitializeSlotFunctionality();
-                GeneralStructure.DragAndDrop.Initialize();
             }
         );
     }
@@ -1598,6 +1599,7 @@ var GeneralStructure = function(){
                 .LoadParams()
                 .ShowWindow();
         });
+        GeneralStructure.DragAndDrop.Initialize(".slot",".drop-target");
     }
 
     /**
@@ -1608,7 +1610,6 @@ var GeneralStructure = function(){
     function Initialize(){
         InitializeNewslotMenu();
         InitializeSlotFunctionality();
-        GeneralStructure.DragAndDrop.Initialize();
         //Vain testaamista varten: lisäillään vähän id:itä
         //$(".menu").find("li").each(function(){if($(this).text()=="Laulu")$(this).attr({"id":"addsongmenu"});});
     }
@@ -2609,14 +2610,22 @@ GeneralStructure.DragAndDrop = function(){
      *
      * Liittää messuslotteihin raahaamiseen liittyvät toiminnot
      *
+     * @param draggables mitä raahataan
+     * @param droppables mihin raahataan
+     *
      **/
-    function Initialize(){
-        $(".slot").draggable( {
+    function Initialize(draggables, droppables, draghandle){
+        var options = {
                 revert: true,
                 start: DragStart,
                 stop: CleanUp
-            });
-        $(".drop-target").droppable({
+        };
+        if(draghandle){
+            options.handle = draghandle;
+        }
+        $(draggables).draggable(options);
+
+        $(droppables).droppable({
                 drop: Drop,
                 over: DragOver,
                 classes: {
