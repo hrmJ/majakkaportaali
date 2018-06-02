@@ -47,6 +47,8 @@ var GeneralStructure = function(){
      *
      **/
     function SaveSlotOrder(newids){
+        console.log("MOOROO");
+        console.log(newids);
         //Save the changes
         $.post("php/ajax/Saver.php",{
             "action":"update_slot_order",
@@ -96,8 +98,16 @@ var GeneralStructure = function(){
                 .ShowWindow();
         });
 
-        GeneralStructure.DragAndDrop.SetDropCallBack(SaveSlotOrder);
-        GeneralStructure.DragAndDrop.Initialize(".slot",".drop-target");
+        GeneralStructure.DragAndDrop.Initialize(
+            {
+                draggables: ".slot",
+                droppables: ".drop-target",
+                drop_callback: SaveSlotOrder,
+                number: ".slot-number",
+                id_class: ".slot_id",
+                idkey: "slot_id",
+            }
+            );
     }
 
     /**

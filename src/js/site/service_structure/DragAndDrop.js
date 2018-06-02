@@ -3,40 +3,37 @@ var GeneralStructure = GeneralStructure || {};
 GeneralStructure.DragAndDrop = function(){
 
     var currently_dragged_no;
-    var drop_callback;
+    var dd_params;
 
-    /**
-     *
-     * Asettaa funktion, joka ajetaan, kun järjesteltävä elementti on
-     * tiputettu. Oletuksena ajax-funktio. 
-     *
-     * @param callback funktio, jota käytetään
-     *
-     **/
-    function SetDropCallBack(callback){
-        drop_callback = callback;
-    }
 
     /**
      *
      * Liittää messuslotteihin raahaamiseen liittyvät toiminnot
      *
-     * @param draggables mitä raahataan
-     * @param droppables mihin raahataan
+     * @param parameters mudossa 
+     *
+     * {
+     *    draggables: ".css_class",
+     *    droppables: ".css_class",
+     *    drop_callback: function_reference,
+     * }
      *
      **/
-    function Initialize(draggables, droppables, draghandle){
+    function Initialize(parameters){
+
+        dd_params = parameters;
+
         var options = {
                 revert: true,
                 start: DragStart,
                 stop: CleanUp
         };
-        if(draghandle){
-            options.handle = draghandle;
+        if(dd_params.draghandle){
+            options.handle = dd_params.handle;
         }
-        $(draggables).draggable(options);
+        $(dd_params.draggables).draggable(options);
 
-        $(droppables).droppable({
+        $(dd_params.droppables).droppable({
                 drop: Drop,
                 over: DragOver,
                 classes: {
@@ -108,13 +105,13 @@ GeneralStructure.DragAndDrop = function(){
     function Drop(event, callback){
         event.preventDefault();  
         event.stopPropagation();
-        var prevno = $(this).prev().find(".slot-number").text();
+        var prevno = $(this).prev().find(dd_params.number).text();
         if(prevno=="") prevno = 0;
         var newids = [];
         console.log("PREVNO: " + prevno);
-        $(".slot").each(function(){
-            var thisno = $(this).find(".slot-number").text()*1;
-            var id = $(this).find(".slot_id").val()*1;
+        $(dd_params.draggables).each(function(){
+            var thisno = $(this).find(dd_params.number).text()*1;
+            var id = $(this).find(dd_params.id_class).val()*1;
             var newno = thisno*1;
             if(thisno == currently_dragged_no){
                 newno = prevno*1 + 1;
@@ -126,18 +123,20 @@ GeneralStructure.DragAndDrop = function(){
             else if(thisno>prevno && thisno != currently_dragged_no) newno = thisno*1 +1;
             else if(thisno==prevno && thisno >currently_dragged_no) newno = thisno*1 -1;
             else if(thisno==prevno) newno = thisno;
-            console.log({"slot_id":id,"newnumber":newno});
-            newids.push({"slot_id":id,"newnumber":newno});
+            idkey = dd_params.idkey;
+            var keypair = {"newnumber" : newno};
+            keypair[dd_params.idkey] = id;
+            console.log({idkey:id, "newnumber":newno});
+            newids.push(keypair);
             });
 
-        drop_callback(newids);
+        dd_params.drop_callback(newids);
         //GeneralStructure.SaveSlotOrder(newids);
     }
 
 
     return {
         Initialize,
-        SetDropCallBack,
     }
 
 }();
