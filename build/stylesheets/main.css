@@ -466,6 +466,10 @@ h3 {
   .slotcontainer ul {
     padding: 0; }
 
+.slot_number {
+  width: 0px;
+  display: none; }
+
 .songslots ul {
   margin: 0; }
 

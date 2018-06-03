@@ -133,7 +133,7 @@ var Service = function(){
 
         Comments.LoadComments();
         Comments.CreateThemeSelect();
-        SongSlots.LoadSongsToSlots();
+        SongSlots.LoadSongsToSlots(TabObjects.Songs);
         SongLists.LoadSongLists();
         $("#prepared_for_insertion").hide()
             .draggable({

@@ -540,6 +540,8 @@ var Comments = function(){
 var SongSlots = function(){
 
 
+    //TODO: tallenna muutokset automaattisesti, jos n minuuttia tallentamatta
+
     /**
      *
      * Hakee tietokannassa olevien laulujen nimet
@@ -562,8 +564,10 @@ var SongSlots = function(){
      *
      * Hakee nyt käsiteltävässä messussa käytössä olevat laulut
      *
+     * @param songtab Laulut-välilehti omana olionaan
+     *
      **/
-    function LoadSongsToSlots(){
+    function LoadSongsToSlots(songtab){
         $.get("php/ajax/Loader.php", {
             action: "get_song_slots",
             service_id: Service.GetServiceId()
@@ -571,6 +575,15 @@ var SongSlots = function(){
             InitializeContainers);
     }
 
+
+    /**
+     *
+     * Tallentaa muutokset lauluslottien järjestykseen yhden "kontin" sisällä 
+     *
+     **/
+    function SaveSlotOrder(newids){
+        console.log(newids);
+    }
 
     /**
      *
@@ -659,6 +672,19 @@ var SongSlots = function(){
             this.$ul.find(".between-slots").remove();
             this.$ul.find("li").before("<li class='between-slots'></li>");
             this.$ul.find("li:last-of-type").after("<li class='between-slots'></li>");
+
+            //sortable_slot_list =  new GeneralStructure.DragAndDrop.SortableList(
+            //    {
+            //        draggables: ".songslot",
+            //        droppables: ".between-slots",
+            //        drop_callback: SaveSlotOrder,
+            //        number: ".slot-number",
+            //        id_class: ".slot_id",
+            //        idkey: "slot_id",
+            //        handle: ".slot_handle"
+            //    }
+            //    );
+            //sortable_slot_list.Initialize();
         }
 
         /**
@@ -737,7 +763,7 @@ var SongSlots = function(){
         this.Create = function(){
             this.$div = $(`<li class="songslot">
                 <div>
-                    <input type="hidden" class=" " value="${this.position}"> 
+                    <span  class='slot_number hidden'>${this.position}</span>
                     <input type="text" class="songinput " value="${this.title}"> 
                 </div>
                 <div class='slot_handle'><i class='fa fa-arrows'></i></div>
@@ -1156,7 +1182,7 @@ var Service = function(){
 
         Comments.LoadComments();
         Comments.CreateThemeSelect();
-        SongSlots.LoadSongsToSlots();
+        SongSlots.LoadSongsToSlots(TabObjects.Songs);
         SongLists.LoadSongLists();
         $("#prepared_for_insertion").hide()
             .draggable({
