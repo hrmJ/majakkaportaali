@@ -124,25 +124,16 @@ GeneralStructure.DragAndDrop = function(){
                 var thisno = $(this).find(self.dd_params.number).text()*1;
                 var id = $(this).find(self.dd_params.id_class).val()*1;
                 var newno = thisno*1;
-                console.log("PREVNO: " + prevno);
-                console.log("thisno: " + thisno);
-                console.log("cur: " + self.currently_dragged_no);
                 if(thisno == self.currently_dragged_no){
                     newno = prevno*1 + 1;
                     if(prevno > self.currently_dragged_no)
                         newno -= 1;
                 }
                 else if(thisno>self.currently_dragged_no && thisno > prevno) newno = thisno;
-                else if(thisno>self.currently_dragged_no && thisno <= prevno) {
-                    console.log("CUR " + self.currently_dragged_no);
-                    newno = thisno -1;
-                    console.log("NOW " + newno);
-                }
+                else if(thisno>self.currently_dragged_no && thisno <= prevno) newno = thisno -1;
                 else if(thisno>prevno && thisno != self.currently_dragged_no) newno = thisno*1 +1;
                 else if(thisno==prevno && thisno >  self.currently_dragged_no) newno = thisno*1 -1;
                 else if(thisno==prevno) newno = thisno;
-                //PREVENT zeros
-                //newno = newno || 1;
 
                 var keypair = {"newnumber" : newno};
                 keypair[self.dd_params.idkey] = id;

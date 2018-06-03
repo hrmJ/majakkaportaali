@@ -66,7 +66,7 @@ var SongSlots = function(){
      **/
     var SlotContainer = function($div){
 
-        this.$ul = $("<ul></ul>").appendTo($div);
+        this.$ul = $("<ul></ul>").appendTo($div.find(".songslots"));
 
         /**
          *
@@ -86,7 +86,7 @@ var SongSlots = function(){
          *
          **/
         this.FetchSlots = function(){
-            console.log("fetching..");
+            console.log("fetching.." + this.name);
             $.getJSON("php/ajax/Loader.php",{
                 action: "load_slots_to_container",
                 service_id: Service.GetServiceId(),
@@ -103,9 +103,13 @@ var SongSlots = function(){
          **/
         this.SetSlots = function(slots){
             var self = this;
-            $.each(slots,function(idx,slot){
-                var slot = new SongSlot(slot.song_title,
-                    slot.multisong_position, self.$ul);
+            if(!slots.length){
+                //Jos ei vielä yhtään laulua määritelty
+                slots = [{song_title:"",multisong_position:""}];
+            }
+            $.each(slots,function(idx,slot_data){
+                var slot = new SongSlot(slot_data.song_title,
+                    slot_data.multisong_position, self.$ul);
                 slot.Create().AttachEvents();
             });
             //Finally, attach
@@ -119,11 +123,8 @@ var SongSlots = function(){
          **/
         this.AddSortability = function(){
             this.$ul.find(".between-slots").remove();
-            console.log("MORO");
-            this.$ul.find("li").draggable({"handle": ".slot_handle"})
-                .before("<li class='between-slots'></li>");
+            this.$ul.find("li").before("<li class='between-slots'></li>");
             this.$ul.find("li:last-of-type").after("<li class='between-slots'></li>");
-            this.$ul.find(".between-slots").droppable();
         }
 
         /**
@@ -140,7 +141,7 @@ var SongSlots = function(){
             //USE fontawesome icons?
             var $add = $(`<i class="fa fa-plus" aria-hidden="false"></i>`)
                             .click(this.AddNewSlot.bind(this));
-            this.$ul.append(
+            this.$ul.parents(".slotcontainer").append(
                 $("<div class='buttons_cont'></div>").append($add)
             );
 
@@ -205,20 +206,11 @@ var SongSlots = function(){
                     <input type="hidden" class=" " value="${this.position}"> 
                     <input type="text" class="songinput " value="${this.title}"> 
                 </div>
+                <div class='slot_handle'><i class='fa fa-arrows'></i></div>
                 </li>`);
-            var $move_icon = $("<div class='slot_handle'><i class='fa fa-arrows'></i></div>");
-            //NO; WE NEED SORTABLE!!!!
-            $move_icon.appendTo(this.$div);
             var $remove_icon = $("<div><i class='fa fa-trash'></i></div>");
             $remove_icon.click(this.Remove.bind(this)).appendTo(this.$div);
-            var $buttons_cont = this.$cont.find(".buttons_cont");
-            if($buttons_cont.length){
-                $buttons_cont.before(this.$div);
-            }
-            else{
-                //Jos kyseessä ei ole monen laulun kontti
-                this.$cont.append(this.$div);
-            }
+            this.$cont.append(this.$div);
             return this;
         };
 
