@@ -109,10 +109,14 @@ foreach($ids as $id){
 }
 #
 #
-$con->update("responsibilities", ["responsible" => "Neymar"], ["service_id" => 2]);
-$con->update("responsibilities", ["responsible" => "Coutinho"], ["service_id" => 2]);
-$con->update("responsibilities", ["responsible" => "Casemiro"], ["service_id" => 3]);
-$con->update("responsibilities", ["responsible" => "Allison"], ["service_id" => 3]);
+$con->update("responsibilities", ["responsible" => "Neymar"], ["service_id" => 2, , "responsibility"  => "juontaja"]);
+$con->update("responsibilities", ["responsible" => "Coutinho"], ["service_id" => 2, "responsibility"  => "liturgi"]);
+$con->update("responsibilities", ["responsible" => "Casemiro"], ["service_id" => 2,  "responsibility"  => "saarna"]);
+$con->update("responsibilities", ["responsible" => "Allison and the boys"], ["service_id" => 2, "responsibility"  => "bändi"]);
+$con->update("responsibilities", ["responsible" => "Neymar"], ["service_id" => 3, , "responsibility"  => "juontaja"]);
+$con->update("responsibilities", ["responsible" => "Miranda"], ["service_id" => 3, "responsibility"  => "liturgi"]);
+$con->update("responsibilities", ["responsible" => "Willian"], ["service_id" => 3,  "responsibility"  => "saarna"]);
+$con->update("responsibilities", ["responsible" => "Marcello and hair"], ["service_id" => 3, "responsibility"  => "bändi"]);
  
 #//Feikkikommentteja
 

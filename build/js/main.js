@@ -668,19 +668,6 @@ var SongSlots = function(){
         }
 
 
-        /**
-         *
-         *  Päivitä varsinaisten slottien välissä olevat "pseudo-slotit"
-         *
-         *  @param event tapahtuma, joka on käynnissä 
-         *
-         **/
-        this.RefreshSlotInter = function(event){
-            var $ul = this.$ul || $(event.target).parents("ul");
-            $ul.find(".between-slots").remove();
-            $ul.find("li").before("<li class='between-slots'></li>");
-            $ul.find("li:last-of-type").after("<li class='between-slots'></li>");
-        }
 
         /**
          *
@@ -688,8 +675,7 @@ var SongSlots = function(){
          *
          **/
         this.AddSortability = function(){
-            this.RefreshSlotInter();
-            sortable_slot_list =  new GeneralStructure.DragAndDrop.SortableList(
+            sortable_slot_list =  new GeneralStructure.DragAndDrop.SortableList(this.$ul,
                 {
                     draggables: ".songslot",
                     droppables: ".between-slots",
@@ -698,12 +684,11 @@ var SongSlots = function(){
                     id_class: ".slot_id",
                     idkey: "slot_id",
                     handle: ".slot_handle",
-                },
-                this.RefreshSlotInter
+                }
                 );
             //$(".songslot").removeClass("ui-droppable")
             sortable_slot_list.Initialize();
-        }
+        };
 
 
         /**
@@ -2668,16 +2653,16 @@ GeneralStructure.DragAndDrop = function(){
      * liittää. Jquery uI:n sortable olisi ollut kiva, muttei toimi mobiilissa
      * edes touch and punch -hackillä.
      *
+     * @param $ul järjesteltäväksi tarkoitetun listan jquery-representaatio
      * @param dd_params jqueri ui draggable + droppable -asetukset
-     * @param inter_callback funktio, joka asettaa listan osien väliin tarvittavat pseudoelementit
      *
      **/
-    var SortableList = function(dd_params, inter_callback){
+    var SortableList = function($ul, dd_params){
 
+        this.$ul = $ul;
         this.currently_dragged_no = undefined;
         this.$currently_dragged = undefined;
         this.dd_params = dd_params;
-        this.SetInters = inter_callback;
         
         
 
@@ -2705,8 +2690,22 @@ GeneralStructure.DragAndDrop = function(){
             };
             $(this.dd_params.draggables).draggable(options);
             this.AddDroppables();
+            this.RefreshPseudoSlots();
         };
 
+
+        /**
+         *
+         *  Päivitä (tai luo) varsinaisten slottien välissä olevat
+         *  "pseudo-slotit", joita käytetään osoittamaan paikat, jonne
+         *  raahattavan elementin voi tiputtaa.
+         *
+         **/
+        this.RefreshPseudoSlots = function(){
+            this.$ul.find(".between-slots").remove();
+            this.$ul.find("li").before("<li class='between-slots'></li>");
+            this.$ul.find("li:last-of-type").after("<li class='between-slots'></li>");
+        }
 
         /**
          *

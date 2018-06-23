@@ -648,6 +648,9 @@ h3 {
   .slidemodel-flex-column > div + div {
     margin-top: 1em; }
 
+.structural-slots {
+  padding-left: 0; }
+
 .slot {
   position: relative;
   display: flex;

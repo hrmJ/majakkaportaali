@@ -134,19 +134,6 @@ var SongSlots = function(){
         }
 
 
-        /**
-         *
-         *  Päivitä varsinaisten slottien välissä olevat "pseudo-slotit"
-         *
-         *  @param event tapahtuma, joka on käynnissä 
-         *
-         **/
-        this.RefreshSlotInter = function(event){
-            var $ul = this.$ul || $(event.target).parents("ul");
-            $ul.find(".between-slots").remove();
-            $ul.find("li").before("<li class='between-slots'></li>");
-            $ul.find("li:last-of-type").after("<li class='between-slots'></li>");
-        }
 
         /**
          *
@@ -154,8 +141,7 @@ var SongSlots = function(){
          *
          **/
         this.AddSortability = function(){
-            this.RefreshSlotInter();
-            sortable_slot_list =  new GeneralStructure.DragAndDrop.SortableList(
+            sortable_slot_list =  new GeneralStructure.DragAndDrop.SortableList(this.$ul,
                 {
                     draggables: ".songslot",
                     droppables: ".between-slots",
@@ -164,12 +150,11 @@ var SongSlots = function(){
                     id_class: ".slot_id",
                     idkey: "slot_id",
                     handle: ".slot_handle",
-                },
-                this.RefreshSlotInter
+                }
                 );
             //$(".songslot").removeClass("ui-droppable")
             sortable_slot_list.Initialize();
-        }
+        };
 
 
         /**
