@@ -100,6 +100,18 @@ class SongsTest extends TestCase
         $songlist->LoadSlotsToCont("alkulaulu");
     }
 
+
+    /**
+     *
+     * Testaa kontin sisäisten slottien järjestyksen tallennusta 
+     *
+     */
+    public function testSaveSongOrder()
+    {
+        $songlist = new Songlist($this->con, 2, $this->m);
+        $songlist->LoadSlotsToCont("alkulaulu");
+    }
+
 }
 
 

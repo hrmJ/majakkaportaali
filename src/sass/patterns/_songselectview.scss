@@ -11,6 +11,9 @@
     background:yellow;
 }
 
+.between-slots{
+    height:1em;
+}
 
 .songslot_taking{
     background:grey;
@@ -53,13 +56,14 @@
 
     ul {
         margin:0;
+
+        .songslot, .between-slots{
+            margin-top:0;
+        }
     }
 
 }
 
-li.songslot + li{
-    margin-top:0;
-}
 
 
 .buttons_cont{

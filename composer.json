@@ -9,6 +9,10 @@
 	}
 	],
 	"autoload":{
-        "psr-4":{"Portal\\":"src"}
+        "psr-4":{"Portal\\":"src/php"}
+	},
+	"require": {
+		"catfan/medoo": "^1.5",
+		"mustache/mustache": "^2.12"
 	}
 }

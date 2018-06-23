@@ -176,6 +176,25 @@ class Songlist{
     }
 
 
+    /**
+     * Tallentaa yhden "kontin" sisältämien lauluslottien järjestyksen
+     *
+     * @param segment_name minkä tyypin lauluja haetaan
+     *
+     */
+    public function SaveContOrder($songs){
+        $slots = $this->con->select("servicesongs",
+            ["song_title","multisong_position"],
+            [
+                "service_id" => $this->id,
+                "songtype" => $segment_name
+            ],
+            ["ORDER" => "multisong_position"]
+        );
+        //multisong_position?
+        return($slots);
+    }
+
 }
 
 

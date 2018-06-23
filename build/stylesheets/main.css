@@ -447,6 +447,9 @@ h3 {
 .songslot_wating {
   background: yellow; }
 
+.between-slots {
+  height: 1em; }
+
 .songslot_taking {
   background: grey;
   color: white; }
@@ -472,9 +475,8 @@ h3 {
 
 .songslots ul {
   margin: 0; }
-
-li.songslot + li {
-  margin-top: 0; }
+  .songslots ul .songslot, .songslots ul .between-slots {
+    margin-top: 0; }
 
 .buttons_cont {
   margin-top: 1em;

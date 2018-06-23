@@ -5,6 +5,7 @@
  **/
 var SongSlots = function(){
 
+    var songs_tab;
 
     //TODO: tallenna muutokset automaattisesti, jos n minuuttia tallentamatta
 
@@ -14,7 +15,6 @@ var SongSlots = function(){
      *
      **/
     function LoadSongTitles(request, response){
-        console.log("test..");
         $.getJSON("php/ajax/Loader.php",{
             action: "get_song_titles",
             service_id: Service.GetServiceId(),
@@ -34,6 +34,7 @@ var SongSlots = function(){
      *
      **/
     function LoadSongsToSlots(songtab){
+        songs_tab = songtab;
         $.get("php/ajax/Loader.php", {
             action: "get_song_slots",
             service_id: Service.GetServiceId()
@@ -47,8 +48,9 @@ var SongSlots = function(){
      * Tallentaa muutokset lauluslottien järjestykseen yhden "kontin" sisällä 
      *
      **/
-    function SaveSlotOrder(newids){
-        console.log(newids);
+    function SaveSlotOrder($parent_el){
+        var $slots = $parent_el.find(".songslot");
+        console.log($slots.length);
     }
 
     /**
@@ -125,8 +127,25 @@ var SongSlots = function(){
                     slot_data.multisong_position, self.$ul);
                 slot.Create().AttachEvents();
             });
-            //Finally, attach
+            //Finally, attach drag and drop events
             this.AddSortability();
+            //Lisää välilehtiolioon muutosten tarkkailutoiminto
+            this.$ul.find("input[type='text']").on("change paste keyup",songs_tab.MonitorChanges.bind(songs_tab));
+        }
+
+
+        /**
+         *
+         *  Päivitä varsinaisten slottien välissä olevat "pseudo-slotit"
+         *
+         *  @param event tapahtuma, joka on käynnissä 
+         *
+         **/
+        this.RefreshSlotInter = function(event){
+            var $ul = this.$ul || $(event.target).parents("ul");
+            $ul.find(".between-slots").remove();
+            $ul.find("li").before("<li class='between-slots'></li>");
+            $ul.find("li:last-of-type").after("<li class='between-slots'></li>");
         }
 
         /**
@@ -135,23 +154,23 @@ var SongSlots = function(){
          *
          **/
         this.AddSortability = function(){
-            this.$ul.find(".between-slots").remove();
-            this.$ul.find("li").before("<li class='between-slots'></li>");
-            this.$ul.find("li:last-of-type").after("<li class='between-slots'></li>");
-
-            //sortable_slot_list =  new GeneralStructure.DragAndDrop.SortableList(
-            //    {
-            //        draggables: ".songslot",
-            //        droppables: ".between-slots",
-            //        drop_callback: SaveSlotOrder,
-            //        number: ".slot-number",
-            //        id_class: ".slot_id",
-            //        idkey: "slot_id",
-            //        handle: ".slot_handle"
-            //    }
-            //    );
-            //sortable_slot_list.Initialize();
+            this.RefreshSlotInter();
+            sortable_slot_list =  new GeneralStructure.DragAndDrop.SortableList(
+                {
+                    draggables: ".songslot",
+                    droppables: ".between-slots",
+                    drop_callback: SaveSlotOrder,
+                    number: ".slot-number",
+                    id_class: ".slot_id",
+                    idkey: "slot_id",
+                    handle: ".slot_handle",
+                },
+                this.RefreshSlotInter
+                );
+            //$(".songslot").removeClass("ui-droppable")
+            sortable_slot_list.Initialize();
         }
+
 
         /**
          *
@@ -312,15 +331,6 @@ var SongSlots = function(){
                 }
             ).on("change paste keyup",self.CheckLyrics.bind(this));
 
-            //Attach a listener for dropping
-            console.log("Attaching droppability...");
-            this.$div.droppable({
-                drop: this.AttachSong,
-                      classes: {
-                        "ui-droppable-active": "songslot_waiting",
-                        "ui-droppable-hover": "songslot_taking"
-              },
-            });
         }
 
 

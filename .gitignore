@@ -3,7 +3,7 @@ node_modules
 phpDocumentor.phar
 docs/php/graphs/
 docs/php/reports/
-config.ini
+*config.ini
 .sass-cache
 *.*~
 *virsi_1*txt
