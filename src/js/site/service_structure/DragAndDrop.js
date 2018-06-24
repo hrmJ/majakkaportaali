@@ -44,7 +44,7 @@ GeneralStructure.DragAndDrop = function(){
                     handle: this.dd_params.handle,
                     axis: axis || "y",
                     refreshPositions: true,
-                    cursor: "crosshair",
+                    cursor: "move",
                     opacity:0.99,
                     zIndex:100,
                     //snapMode: "inner",
@@ -107,8 +107,9 @@ GeneralStructure.DragAndDrop = function(){
             var $el = $(event.target);
             this.$currently_dragged = $el;
             $el.prev(".between-slots").hide();
+            //$el.next(".between-slots").hide();
             $el.addClass("dragging");
-            this.$ul.find(".between-slots").addClass("drop-highlight");
+            //this.$ul.find(".between-slots").addClass("drop-highlight");
         };
 
         /**

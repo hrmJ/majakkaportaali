@@ -691,7 +691,8 @@ h3 {
   -moz-box-shadow: 2px 2px 8px 4px #5f5f5f;
   -webkit-box-shadow: 2px 2px 8px 4px #5f5f5f;
   box-shadow: 2px 2px 8px 4px #5f5f5f;
-  background: white; }
+  background: white;
+  margin-top: -10px; }
 
 .class-adder {
   position: relative; }
