@@ -57,13 +57,17 @@
     ul {
         margin:0;
 
-        .songslot, .between-slots{
+        .songslot{
             margin-top:0;
         }
     }
 
 }
 
+.between-slots{
+    margin-top:0;
+    margin-bottom:0;
+}
 
 
 .buttons_cont{

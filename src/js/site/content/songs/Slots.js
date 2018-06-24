@@ -144,7 +144,6 @@ var SongSlots = function(){
             sortable_slot_list =  new GeneralStructure.DragAndDrop.SortableList(this.$ul,
                 {
                     draggables: ".songslot",
-                    droppables: ".between-slots",
                     drop_callback: SaveSlotOrder,
                     number: ".slot-number",
                     id_class: ".slot_id",
@@ -152,7 +151,6 @@ var SongSlots = function(){
                     handle: ".slot_handle",
                 }
                 );
-            //$(".songslot").removeClass("ui-droppable")
             sortable_slot_list.Initialize();
         };
 

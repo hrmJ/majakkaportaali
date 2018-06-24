@@ -82,7 +82,6 @@ var GeneralStructure = function(){
      *
      **/
     function InitializeSlotFunctionality(){
-        $(".slot:last-of-type").after("<div class='drop-target'></div>");
         $(".remove-link").click(RemoveSlot);
         $(".edit-link").click(function(){
             //Jos käyttäjä haluaa muokata slottia, pyydä olio slottitehtaalta:
@@ -99,14 +98,15 @@ var GeneralStructure = function(){
         });
 
         sortable_slot_list =  new GeneralStructure.DragAndDrop.SortableList(
+            $(".structural-slots:eq(0)"),
             {
                 draggables: ".slot",
-                droppables: ".drop-target",
                 drop_callback: SaveSlotOrder,
                 number: ".slot-number",
                 id_class: ".slot_id",
                 idkey: "slot_id",
-                handle: ".drag_handle"
+                handle: ".drag_handle",
+                numberclass: ".slot-number"
             }
             );
         sortable_slot_list.Initialize();

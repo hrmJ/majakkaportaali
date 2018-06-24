@@ -34,18 +34,27 @@ GeneralStructure.DragAndDrop = function(){
          * }
          *
          **/
-        this.Initialize = function(){
+        this.Initialize = function(axis){
 
             var self = this;
             var options = {
                     revert: true,
                     start: self.DragStart.bind(this),
                     stop: self.CleanUp.bind(this),
-                    handle: this.dd_params.handle
+                    handle: this.dd_params.handle,
+                    axis: axis || "y",
+                    refreshPositions: true,
+                    cursor: "crosshair",
+                    opacity:0.99,
+                    zIndex:100,
+                    //snapMode: "inner",
+                    //snap: true,
             };
-            $(this.dd_params.draggables).draggable(options);
-            this.AddDroppables();
-            this.RefreshPseudoSlots();
+            this.numberclass = this.dd_params.numberclass || undefined;
+            this.draggables = this.dd_params.draggables;
+            this.$ul.find(this.dd_params.draggables).draggable(options);
+            this.RefreshPseudoSlots().AddDroppables();
+            return this;
         };
 
 
@@ -53,13 +62,19 @@ GeneralStructure.DragAndDrop = function(){
          *
          *  Päivitä (tai luo) varsinaisten slottien välissä olevat
          *  "pseudo-slotit", joita käytetään osoittamaan paikat, jonne
-         *  raahattavan elementin voi tiputtaa.
+         *  raahattavan elementin voi tiputtaa/
          *
          **/
         this.RefreshPseudoSlots = function(){
+            var self = this;
             this.$ul.find(".between-slots").remove();
             this.$ul.find("li").before("<li class='between-slots'></li>");
             this.$ul.find("li:last-of-type").after("<li class='between-slots'></li>");
+            this.$ul.find(this.draggables).each(function(idx,el){
+                //Jos listassa on näkyvillä numeroita, päivitä ne
+                $(this).find(self.numberclass).text(idx+1);
+            });
+            return this;
         }
 
         /**
@@ -69,15 +84,16 @@ GeneralStructure.DragAndDrop = function(){
          **/
         this.AddDroppables = function(){
             var self = this;
-            $(this.dd_params.droppables).droppable({
+            this.$ul.find(".between-slots").droppable({
                     drop: self.Drop.bind(this),
                     over: self.DragOver.bind(this),
                     classes: {
-                      "ui-droppable-active": "songslot_waiting",
-                      "ui-droppable-hover": "songslot_taking",
+                      //"ui-droppable-active": "songslot_waiting",
+                      "ui-droppable-hover": "structural_slot_taking",
                     },
                     out: self.DragLeave.bind(this)
                 });
+            return this;
         }
 
 
@@ -90,21 +106,9 @@ GeneralStructure.DragAndDrop = function(){
         this.DragStart = function(event){
             var $el = $(event.target);
             this.$currently_dragged = $el;
-            var $number = $el.find(".slot-number");
-            if($number.length){
-                this.currently_dragged_no = $number.text() * 1;
-            }
-            else{
-                this.currently_dragged_no = $el.index(this.dd_params.draggables);
-                $el.prev().hide();
-                //$el.next().hide();
-                if (this.currently_dragged_no > 0){
-                }
-                if (this.currently_dragged_no == 0){
-                    //$el.parent().find(this.dd_params.droppables + ":eq(0)").remove();
-                }
-            }
-            $(event.target).addClass("dragging");
+            $el.prev(".between-slots").hide();
+            $el.addClass("dragging");
+            this.$ul.find(".between-slots").addClass("drop-highlight");
         };
 
         /**
@@ -113,13 +117,10 @@ GeneralStructure.DragAndDrop = function(){
          *
          **/
         this.CleanUp = function(event){
-            $(".drop-highlight").text("").removeClass("drop-highlight");
+            this.$ul.find(".between-slots").removeClass("drop-highlight").text("");
             $(event.target).removeClass("dragging");
-            if(this.SetInters){
-                this.SetInters(event);
-                this.AddDroppables();
-            }
-            //songslot_waiting
+            this.RefreshPseudoSlots().AddDroppables();
+            return this;
         };
 
 
@@ -133,8 +134,7 @@ GeneralStructure.DragAndDrop = function(){
          *
          **/
         this.DragLeave = function(event){
-            console.log("leaving..");
-            $(event.target).text("").removeClass("drop-highlight");
+            $(event.target).text("");
         }
 
 
@@ -147,7 +147,10 @@ GeneralStructure.DragAndDrop = function(){
          *
          **/
         this.DragOver = function(event){
-            //$(event.target).addClass("drop-highlight").text("Siirrä tähän");
+            //$(event.target).prev().css({"margin-bottom":"35px"});
+            //this.original_height = $(event.target).height();
+            //$(event.target).css({"margin-top":"1em"});
+            //$(event.target).text("Siirrä tähän");
             //$(event.target).addClass("drop-highlight");
         };
 
@@ -164,37 +167,7 @@ GeneralStructure.DragAndDrop = function(){
             var $el = $(event.target);
             var $parent_el = $el.parents("ul");
             this.$currently_dragged.insertAfter($el);
-            this.dd_params.drop_callback($parent_el);
-            return 0;
-            console.log($parent_el.text());
-            var self = this;
-            event.preventDefault();  
-            event.stopPropagation();
-            var prevno = $(event.target).prev().find(self.dd_params.number).text();
-            if(prevno=="") prevno = 0;
-            var newids = [];
-            $(this.dd_params.draggables).each(function(){
-                var thisno = $(this).find(self.dd_params.number).text()*1;
-                var id = $(this).find(self.dd_params.id_class).val()*1;
-                var newno = thisno*1;
-                if(thisno == self.currently_dragged_no){
-                    newno = prevno*1 + 1;
-                    if(prevno > self.currently_dragged_no)
-                        newno -= 1;
-                }
-                else if(thisno>self.currently_dragged_no && thisno > prevno) newno = thisno;
-                else if(thisno>self.currently_dragged_no && thisno <= prevno) newno = thisno -1;
-                else if(thisno>prevno && thisno != self.currently_dragged_no) newno = thisno*1 +1;
-                else if(thisno==prevno && thisno >  self.currently_dragged_no) newno = thisno*1 -1;
-                else if(thisno==prevno) newno = thisno;
-
-                var keypair = {"newnumber" : newno};
-                keypair[self.dd_params.idkey] = id;
-                console.log({idkey:id, "newnumber":newno});
-                newids.push(keypair);
-                });
-
-            this.dd_params.drop_callback(newids);
+            //this.dd_params.drop_callback($parent_el);
         };
         
     

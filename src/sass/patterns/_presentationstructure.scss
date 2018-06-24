@@ -5,6 +5,8 @@
     ul{
         width:10em;
     }
+
+
 }
 
 .slidemodel{
@@ -39,6 +41,11 @@
 
 .structural-slots{
     padding-left:0;
+    list-style-type:none;
+    .between-slots{
+        margin-top:0.1em;
+        margin-bottom:0.1em;
+    }
 }
 
 .slot{
@@ -66,10 +73,11 @@
     height:1em; }
 
 .drop-highlight{
-//    margin:0.5em;
-//    border:1px dashed darken($datarowbg,20);
-//    padding:0.5em;
-//    width:100%;
+    margin-top:0.5em;
+    margin-bottom:0.5em;
+    //border:1px dashed darken($datarowbg,20);
+    padding:0.5em;
+    width:100%;
 }
 
 .drop-hide{
@@ -80,6 +88,11 @@
 }
 
 .dragging{
+    //width:80%;
+    //margin-left:2em;
+    padding:0.3em;
+    @include shadow;
+    background:white;
 }
 
 //Div, jonka sisällä select-emenetti jolla määritellään dian luokka
@@ -103,6 +116,13 @@
     >div>span:first-child{
     }
 }
+
+.structural_slot_taking{
+    //width:80%;
+    //margin-left:2em;
+    background:$datarowbg;
+}
+
 
 .songslide{
 
