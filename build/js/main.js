@@ -1539,6 +1539,7 @@ var GeneralStructure = function(){
 
     var adder;
     var slot_types = [ "infoslide", "songslide"];
+    var sortable_slot_list = undefined;
 
     /**
      *
@@ -1574,13 +1575,16 @@ var GeneralStructure = function(){
      *
      * Tallentaa muutokset slottien järjestykseen
      *
-     * $param newids slottien järjestysnumerot siirron jälkeen
+     * @param $ul listan jquery-representaatio
      *
      **/
-    function SaveSlotOrder(newids){
-        console.log("MOOROO");
-        console.log(newids);
-        //Save the changes
+    function SaveSlotOrder($ul){
+        var newids = [];
+        $.each($ul.find("li:not(.between-slots)"),function(idx,el){
+            var slot_id = $(this).find(".slot_id").val();
+            console.log({"slot_id":slot_id,"newnumber":idx+1});
+            newids.push({"slot_id":slot_id,"newnumber":idx+1});
+        });
         $.post("php/ajax/Saver.php",{
             "action":"update_slot_order",
             "newids":newids },
@@ -1628,7 +1632,7 @@ var GeneralStructure = function(){
                 .ShowWindow();
         });
 
-        sortable_slot_list =  new GeneralStructure.DragAndDrop.SortableList(
+        sortable_slot_list =  sortable_slot_list || new GeneralStructure.DragAndDrop.SortableList(
             $(".structural-slots:eq(0)"),
             {
                 draggables: ".slot",
@@ -2658,7 +2662,6 @@ GeneralStructure.DragAndDrop = function(){
     var SortableList = function($ul, dd_params){
 
         this.$ul = $ul;
-        this.currently_dragged_no = undefined;
         this.$currently_dragged = undefined;
         this.dd_params = dd_params;
         
@@ -2678,6 +2681,7 @@ GeneralStructure.DragAndDrop = function(){
          *
          **/
         this.Initialize = function(axis){
+            this.$currently_dragged = undefined;
 
             var self = this;
             var options = {
@@ -2808,10 +2812,12 @@ GeneralStructure.DragAndDrop = function(){
          *
          **/
         this.Drop = function(event){
-            var $el = $(event.target);
-            var $parent_el = $el.parents("ul");
+            var $el = $(event.target),
+                q = ".slot_id[value='" + this.$currently_dragged.find(".slot_id").val() + "']",
+                old_number = this.$currently_dragged.find(".slot-number").text()*1;
             this.$currently_dragged.insertAfter($el);
-            //this.dd_params.drop_callback($parent_el);
+            var number_of_elements_with_dragged_slot_id = this.$ul.find(q).length;
+            this.dd_params.drop_callback(this.$ul);
         };
         
     

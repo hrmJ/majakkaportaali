@@ -15,7 +15,6 @@ GeneralStructure.DragAndDrop = function(){
     var SortableList = function($ul, dd_params){
 
         this.$ul = $ul;
-        this.currently_dragged_no = undefined;
         this.$currently_dragged = undefined;
         this.dd_params = dd_params;
         
@@ -35,6 +34,7 @@ GeneralStructure.DragAndDrop = function(){
          *
          **/
         this.Initialize = function(axis){
+            this.$currently_dragged = undefined;
 
             var self = this;
             var options = {
@@ -165,10 +165,12 @@ GeneralStructure.DragAndDrop = function(){
          *
          **/
         this.Drop = function(event){
-            var $el = $(event.target);
-            var $parent_el = $el.parents("ul");
+            var $el = $(event.target),
+                q = ".slot_id[value='" + this.$currently_dragged.find(".slot_id").val() + "']",
+                old_number = this.$currently_dragged.find(".slot-number").text()*1;
             this.$currently_dragged.insertAfter($el);
-            //this.dd_params.drop_callback($parent_el);
+            var number_of_elements_with_dragged_slot_id = this.$ul.find(q).length;
+            this.dd_params.drop_callback(this.$ul);
         };
         
     

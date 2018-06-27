@@ -8,6 +8,7 @@ var GeneralStructure = function(){
 
     var adder;
     var slot_types = [ "infoslide", "songslide"];
+    var sortable_slot_list = undefined;
 
     /**
      *
@@ -43,13 +44,16 @@ var GeneralStructure = function(){
      *
      * Tallentaa muutokset slottien järjestykseen
      *
-     * $param newids slottien järjestysnumerot siirron jälkeen
+     * @param $ul listan jquery-representaatio
      *
      **/
-    function SaveSlotOrder(newids){
-        console.log("MOOROO");
-        console.log(newids);
-        //Save the changes
+    function SaveSlotOrder($ul){
+        var newids = [];
+        $.each($ul.find("li:not(.between-slots)"),function(idx,el){
+            var slot_id = $(this).find(".slot_id").val();
+            console.log({"slot_id":slot_id,"newnumber":idx+1});
+            newids.push({"slot_id":slot_id,"newnumber":idx+1});
+        });
         $.post("php/ajax/Saver.php",{
             "action":"update_slot_order",
             "newids":newids },
@@ -97,7 +101,7 @@ var GeneralStructure = function(){
                 .ShowWindow();
         });
 
-        sortable_slot_list =  new GeneralStructure.DragAndDrop.SortableList(
+        sortable_slot_list =  sortable_slot_list || new GeneralStructure.DragAndDrop.SortableList(
             $(".structural-slots:eq(0)"),
             {
                 draggables: ".slot",
