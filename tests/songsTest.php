@@ -84,10 +84,9 @@ class SongsTest extends TestCase
     public function testCheckSongTitle()
     {
         $songlist = new Songlist($this->con, 2, $this->m);
-        #var_dump($songlist->GetTitles("a"));
-        $this->assertTrue($songlist->CheckTitle("Ukko Nooa"));
-        $this->assertFalse($songlist->CheckTitle("lkjsadlasd"));
-        $this->assertFalse($songlist->CheckTitle(""));
+        $this->assertTrue(sizeof($songlist->CheckTitle("Ukko Nooa"))>0);
+        $this->assertFalse(sizeof($songlist->CheckTitle("lkjsadlasd"))>0);
+        $this->assertFalse(sizeof($songlist->CheckTitle(""))>0);
     }
 
 

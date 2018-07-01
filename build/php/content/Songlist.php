@@ -86,18 +86,18 @@ class Songlist{
      *
      **/
     public function CheckTitle($title){
-        $res =  $this->con->select("songdata", "title", ["OR" =>
+        $res =  $this->con->select("songdata", "id", 
             [
-                "title" => strtolower("$title"),
-                "title" => strtoupper("$title")
-            ]]);
+                "title[!]" => "",
+                "OR" =>
+                    [
+                        "title" => strtolower("$title"),
+                        "title" => strtoupper("$title")
+                    ]
+            ]
+        );
 
-        if(sizeof($res)==1 and $res[0] == ""){
-            //Tyhjistä palauta false
-            return false;
-        }
-        //TODO: monta mätsiä nimen perusteella
-        return (sizeof($res)>0 ? true : false);
+        return $res;
     }
 
     /**
