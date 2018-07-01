@@ -5,7 +5,8 @@
  **/
 var SongSlots = function(){
 
-    var songs_tab;
+    var songs_tab,
+        sortable_slot_list;
 
     //TODO: tallenna muutokset automaattisesti, jos n minuuttia tallentamatta
 
@@ -141,7 +142,8 @@ var SongSlots = function(){
          *
          **/
         this.AddSortability = function(){
-            sortable_slot_list =  new GeneralStructure.DragAndDrop.SortableList(this.$ul,
+            sortable_slot_list =  sortable_slot_list || 
+                new GeneralStructure.DragAndDrop.SortableList(this.$ul,
                 {
                     draggables: ".songslot",
                     drop_callback: SaveSlotOrder,
@@ -283,21 +285,36 @@ var SongSlots = function(){
                     service_id: Service.GetServiceId(),
                     title: title
                     },
-                    self.IndicateLyrics
+                    self.IndicateLyrics.bind(self)
                     );
         };
+
+        /**
+         *
+         * Valitsee autocomplete-listasta jonkin laulun nimenl
+         *
+         **/
+        this.PickLyrics = function() {
+            this.IndicateLyrics(true);
+        }
 
         /**
          *
          *
          * Tulostaa informaation siitä, onko laulun sanoja tietokannassa
          *
-         * @param data getJSON-funktiolta saatu response
+         * @param lyrics_found löytyikö sanoja tämännimiseen lauluun
          *
          **/
-        this.IndicateLyrics = function(data){
+        this.IndicateLyrics = function(lyrics_found){
         
-            console.log(data);
+            if(lyrics_found){
+                this.$div.removeClass("no_lyrics").addClass("has_lyrics");
+            }
+            else{
+                this.$div.removeClass("has_lyrics").addClass("no_lyrics");
+            }
+
         
         };
 
@@ -310,7 +327,7 @@ var SongSlots = function(){
             this.$div.find(".songinput").autocomplete( {
                 source: LoadSongTitles,
                 minLength: 2,
-                select: this.CheckLyrics.bind(this),
+                select: this.PickLyrics.bind(this)
                 }
             ).on("change paste keyup",self.CheckLyrics.bind(this));
 

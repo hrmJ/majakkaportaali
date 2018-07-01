@@ -14,6 +14,11 @@
 @import 'layout/headings';
 @import 'layout/data_representation';
 
+
+//sisältösivut (service-sivun välilehdet)
+@import 'content/songs/slots';
+@import 'content/songs/lyrics';
+
 @import 'patterns/jquery_ui_customization';
 @import 'patterns/tables';
 @import 'patterns/comments';

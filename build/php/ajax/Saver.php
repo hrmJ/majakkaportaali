@@ -78,6 +78,14 @@ switch($params["action"]){
             );
         }
         break;
+    //case "update_songslot_order":
+    //    foreach($params["newids"] as $idpair){
+    //        $database->update("presentation_structure", 
+    //            ["slot_number" => $idpair["newnumber"]],
+    //            ["id" => $idpair["slot_id"]] 
+    //        );
+    //    }
+    //    break;
 }
 
 

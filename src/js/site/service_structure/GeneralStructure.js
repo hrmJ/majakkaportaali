@@ -101,7 +101,8 @@ var GeneralStructure = function(){
                 .ShowWindow();
         });
 
-        sortable_slot_list =  sortable_slot_list || new GeneralStructure.DragAndDrop.SortableList(
+        sortable_slot_list =  sortable_slot_list || 
+            new GeneralStructure.DragAndDrop.SortableList(
             $(".structural-slots:eq(0)"),
             {
                 draggables: ".slot",
@@ -124,8 +125,6 @@ var GeneralStructure = function(){
     function Initialize(){
         InitializeNewslotMenu();
         InitializeSlotFunctionality();
-        //Vain testaamista varten: lisäillään vähän id:itä
-        //$(".menu").find("li").each(function(){if($(this).text()=="Laulu")$(this).attr({"id":"addsongmenu"});});
     }
 
 
