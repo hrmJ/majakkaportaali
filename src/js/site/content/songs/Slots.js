@@ -22,6 +22,7 @@ var SongSlots = function(){
             title:request.term
         }, 
             function(data){
+                console.log(data);
                 response(data)
             }
         );
@@ -238,7 +239,9 @@ var SongSlots = function(){
                 </div>
                 <div class='slot_handle'><i class='fa fa-arrows'></i></div>
                 </li>`);
-            var $remove_icon = $("<div><i class='fa fa-trash'></i></div>");
+            var $edit_icon = $("<div class='slot_edit'><i class='fa fa-pencil'></i></div>");
+            var $remove_icon = $("<div class='slot_remove'><i class='fa fa-trash'></i></div>");
+            $edit_icon.click(this.Remove.bind(this)).appendTo(this.$div);
             $remove_icon.click(this.Remove.bind(this)).appendTo(this.$div);
             this.$cont.append(this.$div);
             return this;
@@ -277,9 +280,10 @@ var SongSlots = function(){
          * Tarkistaa, onko tämän laulun sanoja tietokannassa
          *
          **/
-        this.CheckLyrics = function(){
+        this.CheckLyrics = function(ev, item){
             var self = this;
-            var title = this.$div.find(".songinput:eq(0)").val();
+            //Jos käynnistetty klikkaamalla autocomplete-listaa, käytä sen arvoa
+            var title = (item ? item.item.value :  this.$div.find(".songinput:eq(0)").val());
             $.getJSON("php/ajax/Loader.php",{
                     action:  "check_song_title",
                     service_id: Service.GetServiceId(),
@@ -289,32 +293,25 @@ var SongSlots = function(){
                     );
         };
 
-        /**
-         *
-         * Valitsee autocomplete-listasta jonkin laulun nimenl
-         *
-         **/
-        this.PickLyrics = function() {
-            this.IndicateLyrics(true);
-        }
 
         /**
          *
          *
          * Tulostaa informaation siitä, onko laulun sanoja tietokannassa
          *
-         * @param lyrics_found löytyikö sanoja tämännimiseen lauluun
+         * @param song_ids id:t niistä lauluista, joita löydettiin
          *
          **/
-        this.IndicateLyrics = function(lyrics_found){
-        
-            if(lyrics_found){
+        this.IndicateLyrics = function(song_ids){
+            if(song_ids.length == 1){
                 this.$div.removeClass("no_lyrics").addClass("has_lyrics");
+            }
+            else if(song_ids.length > 1){
+                console.log("Multiple");
             }
             else{
                 this.$div.removeClass("has_lyrics").addClass("no_lyrics");
             }
-
         
         };
 
@@ -327,7 +324,7 @@ var SongSlots = function(){
             this.$div.find(".songinput").autocomplete( {
                 source: LoadSongTitles,
                 minLength: 2,
-                select: this.PickLyrics.bind(this)
+                select: this.CheckLyrics.bind(this)
                 }
             ).on("change paste keyup",self.CheckLyrics.bind(this));
 

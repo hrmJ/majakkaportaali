@@ -69,11 +69,17 @@ class Songlist{
      *
      **/
     public function GetTitles($title){
-        return $this->con->select("songdata", "title", ["OR" =>
-            [
+        $titles = $this->con->select("songdata",
+             ["title" =>  Medoo::raw('DISTINCT(title)')],
+             ["OR" => [
                 "title[~]" => strtolower("%$title%"),
                 "title[~]" => strtoupper("%$title%")
             ]]);
+        $returns = [];
+        foreach($titles as $title){
+            $returns[] =  $title["title"];
+        }
+        return $returns;
     }
 
     /**

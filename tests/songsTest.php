@@ -74,7 +74,7 @@ class SongsTest extends TestCase
     public function testLoadSongTitles()
     {
         $songlist = new Songlist($this->con, 2, $this->m);
-        #var_dump($songlist->GetTitles("a"));
+        #var_dump($songlist->GetTitles("Satu"));
         $this->assertTrue(sizeof($songlist->GetTitles("Ukk"))>0);
     }
 

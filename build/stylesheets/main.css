@@ -297,6 +297,9 @@ h3 {
   width: 0px;
   display: none; }
 
+.slot_edit {
+  margin-right: 0.3em; }
+
 .songslots ul {
   margin: 0; }
   .songslots ul .songslot {
