@@ -321,6 +321,12 @@ h3 {
   margin-right: 0.5em;
   color: red; }
 
+.no_indicator:before {
+  font-family: FontAwesome;
+  content: "\f00d";
+  visibility: hidden;
+  margin-right: 0.5em; }
+
 .ui-widget-header {
   background: none; }
 

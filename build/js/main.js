@@ -331,7 +331,7 @@ var Menus = function(){
      *
      * Yksinkertainen, koko ruudun peittävä menu
      *
-     **/
+     */
     var Covermenu = function(){
     
         /**
@@ -536,7 +536,7 @@ var Comments = function(){
  *
  * Moduuli yhden messun laulusloteista
  *
- **/
+ */
 var SongSlots = function(){
 
     var songs_tab,
@@ -759,14 +759,15 @@ var SongSlots = function(){
         this.title = title;
         this.position = position;
         this.$cont = $cont;
+        this.song_ids = [];
 
         /**
          *
          * Lisää DOMiin divin, jossa varsinainen slotti on kuvattuna
          *
-         **/
+         */
         this.Create = function(){
-            this.$div = $(`<li class="songslot">
+            this.$div = $(`<li class="songslot no_indicator">
                 <div>
                     <span  class='slot_number hidden'>${this.position}</span>
                     <input type="text" class="songinput " value="${this.title}"> 
@@ -775,7 +776,7 @@ var SongSlots = function(){
                 </li>`);
             var $edit_icon = $("<div class='slot_edit'><i class='fa fa-pencil'></i></div>");
             var $remove_icon = $("<div class='slot_remove'><i class='fa fa-trash'></i></div>");
-            $edit_icon.click(this.Remove.bind(this)).appendTo(this.$div);
+            $edit_icon.click(this.CheckDetails.bind(this)).appendTo(this.$div);
             $remove_icon.click(this.Remove.bind(this)).appendTo(this.$div);
             this.$cont.append(this.$div);
             return this;
@@ -786,10 +787,44 @@ var SongSlots = function(){
          *
          * Poistaa tämän laulun kontista
          *
-         **/
+         */
         this.Remove = function(){
             //..vain jos ei viimeinen
             console.log("Removing...");
+        };
+
+        /**
+         *
+         * Avaa ikkunan, jossa voi tarkkailla laulun yksityiskohtia ja esim. muokata sanoja
+         *
+         */
+        this.CheckDetails = function(){
+            $("#songdetails .version_cont").html("");
+            if(!this.song_ids.length){
+            
+            }
+            else if(this.song_ids.length > 1){
+                //Samasta laulusta monia versioita
+                this.LoadVersionPicker();
+            }
+            console.log(this.song_ids);
+            var songname = this.$div.find(".songinput").val();
+            $("#songdetails").find("h3").text(songname);
+            $("#songdetails").slideDown();
+        };
+
+        /**
+         *
+         * Luo valintamenun, jos monta eri laulua
+         *
+         */
+        this.LoadVersionPicker = function(){
+            var i,
+                $sel = $('<select><option>Valitse versio</option></select>');
+            $.each(this.song_ids,function(idx,val){
+                $sel.append(`<option value='${val}'>Versio ${idx+1}</option>`);
+            });
+            $sel.prependTo("#songdetails .version_cont").selectmenu();
         };
 
         /**
@@ -831,26 +866,28 @@ var SongSlots = function(){
         /**
          *
          *
-         * Tulostaa informaation siitä, onko laulun sanoja tietokannassa
+         * Näyttää informaation siitä, onko laulun sanoja tietokannassa. Lisää
+         * myös tiedon niistä laulujen id:istä, jotka valitulla laulun nimellä
+         * löytyvät.
+         *
+         * TODO: mahdollisuus klikata yksityiskohtaikkunasta vahvistus sille,
+         * että tähän ei tule sanoja.
          *
          * @param song_ids id:t niistä lauluista, joita löydettiin
          *
          **/
         this.IndicateLyrics = function(song_ids){
-            if(song_ids.length == 1){
-                this.$div.removeClass("no_lyrics").addClass("has_lyrics");
-            }
-            else if(song_ids.length > 1){
-                console.log("Multiple");
-            }
-            else{
+            this.song_ids = song_ids;
+            this.$div.removeClass("no_indicator");
+            if(!song_ids.length){
                 this.$div.removeClass("has_lyrics").addClass("no_lyrics");
             }
-        
+            else{
+                this.$div.removeClass("no_lyrics").addClass("has_lyrics");
+            }
         };
 
-        /**
-         *
+        /** 
          * Liittää lauluslottiin kuuluvat tapahtumat
          *
          **/
@@ -2846,13 +2883,10 @@ GeneralStructure.DragAndDrop = function(){
 
 }();
 
-/**
- *
- * Lisää toiminnallisuuden sivulle: lataa sisällön,
- * liittää eventit... Eri tavalla riippuen siitä, mikä osasivu ladattuna.
- *
- *
- */
+// Lisää toiminnallisuuden sivulle: lataa sisällön,
+// liittää eventit... Eri tavalla riippuen siitä, mikä osasivu ladattuna.
+
+
 $(function(){
     //Navigation etc:
     Menus.InitializeMenus();

@@ -1,0 +1,16 @@
+Satu meni saunaan
+
+Satu meni saunaan
+laittoi hatun naulaan
+Satu tuli saunasta
+Otti hatun naulasta
+
+Pirkko meni saunaan
+laittoi hatun naulaan
+Pirkko tuli saunasta
+Otti hatun naulasta
+
+Kerttu meni saunaan
+laittoi kengät naulaan
+Kerttu tuli saunasta
+Otti kengät naulasta

@@ -23,7 +23,7 @@ var Menus = function(){
      *
      * Yksinkertainen, koko ruudun peittävä menu
      *
-     **/
+     */
     var Covermenu = function(){
     
         /**

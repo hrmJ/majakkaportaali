@@ -1,10 +1,7 @@
-/**
- *
- * Lisää toiminnallisuuden sivulle: lataa sisällön,
- * liittää eventit... Eri tavalla riippuen siitä, mikä osasivu ladattuna.
- *
- *
- */
+// Lisää toiminnallisuuden sivulle: lataa sisällön,
+// liittää eventit... Eri tavalla riippuen siitä, mikä osasivu ladattuna.
+
+
 $(function(){
     //Navigation etc:
     Menus.InitializeMenus();

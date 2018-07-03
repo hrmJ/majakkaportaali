@@ -114,7 +114,7 @@ class Songlist{
      *
      * @return lista kirjaimista
      *
-     **/
+     */
     public function GetTitlesByLetter($letter){
         $songs = $this->con->select("songdata",
             "title",
@@ -134,6 +134,7 @@ class Songlist{
         }
         return $returns;
     }
+
 
     /**
      * Lataa tietokannasta kaikki messussa käytössä olevat laulutyypit

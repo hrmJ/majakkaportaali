@@ -1,0 +1,35 @@
+// Sanojen löytymisen indikointi
+
+.has_lyrics{
+
+    &:before{
+        font-family: FontAwesome;
+        content: "\f00c";
+        margin-right:0.5em;
+        color: green;
+    }
+
+}
+
+.no_lyrics{
+
+    &:before{
+        font-family: FontAwesome;
+        content: "\f00d";
+        margin-right:0.5em;
+        color: red;
+    }
+
+}
+
+
+.no_indicator{
+
+    &:before{
+        font-family: FontAwesome;
+        content: "\f00d";
+        visibility:hidden;
+        margin-right:0.5em;
+    }
+
+}
