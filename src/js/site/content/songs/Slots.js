@@ -226,6 +226,7 @@ var SongSlots = function(){
         this.position = position;
         this.$cont = $cont;
         this.song_ids = [];
+        this.$lyrics = undefined;
 
         /**
          *
@@ -233,7 +234,8 @@ var SongSlots = function(){
          *
          */
         this.Create = function(){
-            this.$div = $(`<li class="songslot no_indicator">
+            this.$div = $(`
+                <li class="songslot no_indicator">
                 <div>
                     <span  class='slot_number hidden'>${this.position}</span>
                     <input type="text" class="songinput " value="${this.title}"> 
@@ -268,6 +270,9 @@ var SongSlots = function(){
             $("#songdetails .version_cont").html("");
             if(!this.song_ids.length){
             
+            }
+            else if(this.song_ids.length == 1){
+                SongLists.SetLyrics(this.song_ids[0], "#songdetails .lyrics");
             }
             else if(this.song_ids.length > 1){
                 //Samasta laulusta monia versioita
@@ -327,6 +332,7 @@ var SongSlots = function(){
                     self.IndicateLyrics.bind(self)
                     );
         };
+
 
 
         /**

@@ -42,7 +42,7 @@ SongListView = function(){
      */
     this.SelectAction = function(launcher){
         //Lisää himmennin muulle näytölle
-        BlurContent();
+        Utilities.BlurContent();
         //Tallenna laulun nimi käyttöä varten
         self.active_launcher = launcher;
         launcher.parent()

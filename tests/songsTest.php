@@ -102,13 +102,13 @@ class SongsTest extends TestCase
 
     /**
      *
-     * Testaa kontin sisäisten slottien järjestyksen tallennusta 
+     * Testaa sanojen hakemista.
      *
      */
-    public function testSaveSongOrder()
+    public function testFetchLyrics()
     {
         $songlist = new Songlist($this->con, 2, $this->m);
-        $songlist->LoadSlotsToCont("alkulaulu");
+        $this->assertFalse(empty($songlist->FetchLyricsById(2)));
     }
 
 

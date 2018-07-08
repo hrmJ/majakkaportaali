@@ -53,7 +53,7 @@ GeneralStructure.LightBox = function(){
          *
          */
         source.prototype.SetLightBox = function($el){
-            BlurContent();
+            Utilities.BlurContent();
             //Tuo templatesta varsinainen diansyöttövalikko ja ylätunnisteen syöttövalikko
             this.$lightbox.html("")
                 .prepend(

@@ -17,7 +17,7 @@ var Comments = function(){
         $(this).animate({"height":"6em"}); 
         var $details = $(this).parent().parent().find(".commentdetails:eq(0)");
         $details.show();
-        ScrollToCenter($details);
+        Utilities.ScrollToCenter($details);
     }
 
 

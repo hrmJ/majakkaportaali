@@ -79,8 +79,8 @@ var Service = function(){
      **/
     TabFactory.prototype.AfterSavedChanges = function(response){
         this.MonitorChanges();
-        var msg = new Message("Muutokset tallennettu", this.$div);
-        msg.Show();
+        var msg = new Utilities.Message("Muutokset tallennettu", this.$div);
+        msg.Show(2000);
     };
 
 

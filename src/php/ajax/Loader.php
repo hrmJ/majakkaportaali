@@ -120,6 +120,10 @@ switch($params["action"]){
     case "check_last_index_of_segment_type":
         echo json_encode($database->max($params["segment_type"] . "s","id"));
         break;
+    case "fetch_lyrics":
+        $songlist = new Songlist($database, $sid, $m);
+        echo json_encode($songlist->FetchLyricsById($params["song_id"]));
+        break;
 }
 
 

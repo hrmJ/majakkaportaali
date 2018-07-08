@@ -3,7 +3,7 @@
  * Moduuli erilaisille laulujen selauslistoille
  *
  *
- **/
+ */
 var SongLists = function(){
 
     var waiting_for_attachment = undefined;
@@ -153,6 +153,33 @@ var SongLists = function(){
         return waiting_for_attachment;
     }
 
+    /**
+     *
+     * Hakee laulun sanat tietokannasta
+     *
+     * @param id laulun id tietokannassa
+     * @param targetselector css-selektori, jolla paikannetaan se kohta, johon sanat lisätään.
+     *
+     */
+    function SetLyrics(id, targetselector){
+        var split_pattern = /\n{2,}/;
+        $(targetselector).html("");
+        $.getJSON("php/ajax/Loader.php",{
+            action: "fetch_lyrics",
+            song_id: id,
+        }, function(versetext){
+            if (versetext.verses){
+                versetext = versetext.verses;
+            }
+            verses = versetext.trim().split(split_pattern);
+            $.each(verses, function(idx, verse){
+                if (verse){
+                    $(targetselector).append(`<p>${verse}</p>`);
+                }
+            });
+        });
+    
+    };
 
 
     AlphabeticalSonglist.prototype = Object.create(Songlist.prototype);
@@ -161,7 +188,8 @@ var SongLists = function(){
     return {
 
         LoadSongLists,
-        GetWaitingForAttachment
+        GetWaitingForAttachment,
+        SetLyrics
 
     };
 

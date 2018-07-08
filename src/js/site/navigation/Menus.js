@@ -36,7 +36,7 @@ var Menus = function(){
         this.OpenMenu = function($launcher){
             var target = $launcher.attr("class").replace(/.*covermenu-target_(songlist)/g, "$1");
             $("#" + target).show();
-            BlurContent();
+            Utilities.BlurContent();
         }
 
 
