@@ -319,11 +319,8 @@ var SongSlots = function(){
                 
             }
 
-            if(this.song_ids.length == 1){
-                SongLists.SetLyrics(this.song_ids[0], "#songdetails .lyrics");
-            }
-            else if(this.song_ids.length > 1){
-                //Samasta laulusta monia versioita
+            SongLists.SetLyrics(this.song_ids[0], "#songdetails .lyrics");
+            if(this.song_ids.length > 1){
                 this.LoadVersionPicker();
             }
 
@@ -343,12 +340,27 @@ var SongSlots = function(){
          */
         this.LoadVersionPicker = function(){
             var i,
-                $sel = $('<select><option>Valitse versio</option></select>');
+                $sel = $('<select></select>');
             $.each(this.song_ids,function(idx,val){
                 $sel.append(`<option value='${val}'>Versio ${idx+1}</option>`);
             });
             $sel.prependTo("#songdetails .version_cont").selectmenu();
+            $sel.on("selectmenuchange", self.SetVersion.bind(this));
         };
+
+        /**
+         *
+         * Vaihtaa käytössä olevan version
+         *
+         * @param e tapahtuma
+         * @param itm jquery-ui:n selectmenusta valittu elementti
+         *
+         */
+        this.SetVersion = function(e, itm){
+            this.picked_id = itm.item.value;
+            SongLists.SetLyrics(this.picked_id, "#songdetails .lyrics");
+        }
+
 
         /**
          *
