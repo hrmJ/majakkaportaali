@@ -206,16 +206,35 @@ class Songlist{
     /**
      * Hakee laulun sanat sen id:n perusteella
      *
-     * @param $idid laulun id
+     * @param $id laulun id
      *
      */
     public function FetchLyricsById($id){
-        $text = $this->con->get("songdata",
-            ["verses"],
-            ["id" => $id],
+        $text = $this->con->select("versedata",
+            "verse",
+            ["song_id" => $id],
             ["ORDER" => "id"]);
         //multisong_position?
         return($text);
+    }
+
+    /**
+     *
+     * Tallentaa muokatut laulun sanat sen id:n perusteella
+     *
+     * @param $id laulun id
+     * @param $verses taulukko säkeistöistä
+     *
+     */
+    public function SaveEditedLyrics($id, $verses){
+        $this->con->delete("versedata", ["song_id" => $id]);
+        foreach($verses as $verse){
+            $this->con->insert("versedata", [
+                "song_id" => $id,
+                "verse" => $verse
+            ]);
+        }
+        //multisong_position?
     }
 
 

@@ -111,6 +111,23 @@ class SongsTest extends TestCase
         $this->assertFalse(empty($songlist->FetchLyricsById(2)));
     }
 
+    /**
+     *
+     * Testaa sanojen tallentamista.
+     *
+     */
+    public function testSaveLyrics()
+    {
+        $verses = ["Eukko Nooa, Eukko Nooa oli kunnon emäntä.", 
+            "kun hän meni saunaan, laittoi laukun naulaan", 
+            "lalla laa l al al slkdja lskdj laksjd lakjdlakjdlkasj dlksajd"];
+        $songlist = new Songlist($this->con, 2, $this->m);
+        $songlist->SaveEditedLyrics(2, $verses);
+        $verses = $songlist->FetchLyricsById(2);
+        $this->assertRegExp("/Eukko/", $verses[0]["verse"]);
+    }
+
+
 
 }
 

@@ -868,6 +868,7 @@ var SongSlots = function(){
         var self = this;
         this.title = title;
         this.position = position;
+        this.picked_id = undefined;
         this.$cont = $cont;
         this.song_ids = [];
         this.$lyrics = undefined;
@@ -905,24 +906,75 @@ var SongSlots = function(){
             console.log("Removing...");
         };
 
+
+        /**
+         *
+         * Muokkaa olemassaolevia sanoja
+         *
+         */
+        this.EditWords = function(){
+            $("#songdetails .lyrics_id").val(this.picked_id);
+            $.getJSON("php/ajax/Loader.php",{
+                action: "fetch_lyrics",
+                song_id: this.picked_id,
+            }, function(verses){
+                var text = "";
+                $.each(verses, function(idx, verse){
+                    text += "\n\n" + verse.verse;
+                });
+                $("#songdetails .below_lyrics").show();
+                $("#songdetails .lyrics")
+                    .html("")
+                    .append(`<textarea class='edited_lyrics'>${text.trim()}</textarea>`);
+            });
+        };
+
+
+
+        /**
+         *
+         * Lisää uuden version tästä laulusta
+         *
+         */
+        this.AddNewVersion = function(){
+            console.log("Adding version...");
+        };
+
         /**
          *
          * Avaa ikkunan, jossa voi tarkkailla laulun yksityiskohtia ja esim. muokata sanoja
          *
          */
         this.CheckDetails = function(){
-            $("#songdetails .version_cont").html("");
+            //Käytä oletuksena ensimmäistä versiota ko. laulusta
+            this.picked_id = this.picked_id || this.song_ids[0];
+            $("#songdetails .version_cont, #songdetails_actions, #songdetails .lyrics").html("");
             if(!this.song_ids.length){
-            
+                var li_items = [];
             }
-            else if(this.song_ids.length == 1){
+            else{
+                var li_items = [
+                    $(`<li class='edit_words_li'>Muokkaa sanoja</li>`)
+                        .click(this.EditWords.bind(this)),
+                    $(`<li class='new_version_li'>
+                    Lisää uusi laulu tai versio samalla nimellä </li>`)
+                        .click(this.AddNewVersion.bind(this))
+                ];
+                
+            }
+
+            if(this.song_ids.length == 1){
                 SongLists.SetLyrics(this.song_ids[0], "#songdetails .lyrics");
             }
             else if(this.song_ids.length > 1){
                 //Samasta laulusta monia versioita
                 this.LoadVersionPicker();
             }
-            console.log(this.song_ids);
+
+            $.each(li_items,function(idx, $el){
+                $("#songdetails_actions").append($el);
+            });
+
             var songname = this.$div.find(".songinput").val();
             $("#songdetails").find("h3").text(songname);
             $("#songdetails").slideDown();
@@ -1178,10 +1230,25 @@ var SongLists = function(){
      *
      * Lataa kaikki selattavat kategoriat (eri listat)
      *
-     **/
+     */
     function LoadSongLists(){
         var alphalist = new AlphabeticalSonglist();
         alphalist.GetAndSetSubCategories();
+    }
+
+    /**
+     *
+     * Valmistaa laululistoihin ja sanoihin liittyvät toiminnot
+     *
+     */
+    function Initialize(){
+        LoadSongLists();
+        $("#save_lyrics").click(function(){
+            var id = $("#songdetails .lyrics_id").val(),
+                newtext = $("#songdetails .edited_lyrics").val();
+            $("#songdetails .below_lyrics").hide();
+            SaveEditedLyrics(id, newtext, "#songdetails .lyrics");
+        });
     }
 
     /**
@@ -1203,23 +1270,42 @@ var SongLists = function(){
      */
     function SetLyrics(id, targetselector){
         var split_pattern = /\n{2,}/;
+        console.log(id);
         $(targetselector).html("");
         $.getJSON("php/ajax/Loader.php",{
             action: "fetch_lyrics",
             song_id: id,
-        }, function(versetext){
-            if (versetext.verses){
-                versetext = versetext.verses;
-            }
-            verses = versetext.trim().split(split_pattern);
+        }, function(verses){
             $.each(verses, function(idx, verse){
-                if (verse){
-                    $(targetselector).append(`<p>${verse}</p>`);
+                var text = verse.verse.replace("\n","<br>\n");
+                if (text){
+                    $(targetselector).append(
+                        `<li>
+                            <div><input type='checkbox' checked='yes'></input></div>
+                            <div>${text}</div>
+                        </li>`
+                    );
                 }
             });
         });
     
     };
+
+    /**
+     *
+     * Talentaa muokatut sanat.
+     *
+     */
+    function SaveEditedLyrics(id, newtext, targetselector){
+        var split_pattern = /\n{2,}/,
+            verses = newtext.trim().split(split_pattern);
+        $.get("php/ajax/Saver.php",{
+            action: "save_edited_lyrics",
+            song_id: id,
+            newtext: verses
+        }, function(){SetLyrics(id, targetselector)});
+    
+    }
 
 
     AlphabeticalSonglist.prototype = Object.create(Songlist.prototype);
@@ -1227,9 +1313,9 @@ var SongLists = function(){
 
     return {
 
-        LoadSongLists,
+        Initialize,
         GetWaitingForAttachment,
-        SetLyrics
+        SetLyrics,
 
     };
 
@@ -1371,7 +1457,7 @@ var Service = function(){
         Comments.LoadComments();
         Comments.CreateThemeSelect();
         SongSlots.LoadSongsToSlots(TabObjects.Songs);
-        SongLists.LoadSongLists();
+        SongLists.Initialize();
         $("#prepared_for_insertion").hide()
             .draggable({
                 revert: "valid"

@@ -138,10 +138,25 @@ var SongLists = function(){
      *
      * Lataa kaikki selattavat kategoriat (eri listat)
      *
-     **/
+     */
     function LoadSongLists(){
         var alphalist = new AlphabeticalSonglist();
         alphalist.GetAndSetSubCategories();
+    }
+
+    /**
+     *
+     * Valmistaa laululistoihin ja sanoihin liittyvät toiminnot
+     *
+     */
+    function Initialize(){
+        LoadSongLists();
+        $("#save_lyrics").click(function(){
+            var id = $("#songdetails .lyrics_id").val(),
+                newtext = $("#songdetails .edited_lyrics").val();
+            $("#songdetails .below_lyrics").hide();
+            SaveEditedLyrics(id, newtext, "#songdetails .lyrics");
+        });
     }
 
     /**
@@ -163,23 +178,42 @@ var SongLists = function(){
      */
     function SetLyrics(id, targetselector){
         var split_pattern = /\n{2,}/;
+        console.log(id);
         $(targetselector).html("");
         $.getJSON("php/ajax/Loader.php",{
             action: "fetch_lyrics",
             song_id: id,
-        }, function(versetext){
-            if (versetext.verses){
-                versetext = versetext.verses;
-            }
-            verses = versetext.trim().split(split_pattern);
+        }, function(verses){
             $.each(verses, function(idx, verse){
-                if (verse){
-                    $(targetselector).append(`<p>${verse}</p>`);
+                var text = verse.verse.replace("\n","<br>\n");
+                if (text){
+                    $(targetselector).append(
+                        `<li>
+                            <div><input type='checkbox' checked='yes'></input></div>
+                            <div>${text}</div>
+                        </li>`
+                    );
                 }
             });
         });
     
     };
+
+    /**
+     *
+     * Talentaa muokatut sanat.
+     *
+     */
+    function SaveEditedLyrics(id, newtext, targetselector){
+        var split_pattern = /\n{2,}/,
+            verses = newtext.trim().split(split_pattern);
+        $.get("php/ajax/Saver.php",{
+            action: "save_edited_lyrics",
+            song_id: id,
+            newtext: verses
+        }, function(){SetLyrics(id, targetselector)});
+    
+    }
 
 
     AlphabeticalSonglist.prototype = Object.create(Songlist.prototype);
@@ -187,9 +221,9 @@ var SongLists = function(){
 
     return {
 
-        LoadSongLists,
+        Initialize,
         GetWaitingForAttachment,
-        SetLyrics
+        SetLyrics,
 
     };
 

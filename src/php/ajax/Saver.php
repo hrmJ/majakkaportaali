@@ -78,6 +78,10 @@ switch($params["action"]){
             );
         }
         break;
+    case "save_edited_lyrics":
+        $songlist = new Songlist($database, 0, $m);
+        $songlist->SaveEditedLyrics($params["song_id"], $params["newtext"]);
+        break;
     //case "update_songslot_order":
     //    foreach($params["newids"] as $idpair){
     //        $database->update("presentation_structure", 

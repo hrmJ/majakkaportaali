@@ -75,8 +75,23 @@ CREATE TABLE songdata (
   title varchar(300) DEFAULT NULL,
   composer varchar(300) DEFAULT NULL,
   lyrics varchar(300) DEFAULT NULL,
-  verses text DEFAULT NULL,
+  version_description varchar(300) DEFAULT NULL,
   PRIMARY KEY (id)
+) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
+
+
+--
+-- Table structure for table `versedata`
+--
+
+CREATE TABLE versedata (
+  id int(10) unsigned NOT NULL AUTO_INCREMENT,
+  song_id int(10) unsigned NOT NULL,
+  verse varchar(999) DEFAULT NULL,
+  versetype varchar(99) DEFAULT 'verse',
+  PRIMARY KEY (id),
+  KEY `song_index` (`song_id`),
+  FOREIGN KEY (`song_id`) REFERENCES `songdata` (`id`) ON DELETE CASCADE
 ) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
 
 

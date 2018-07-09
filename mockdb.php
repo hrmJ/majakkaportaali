@@ -62,8 +62,14 @@ foreach ($dir as $fileinfo) {
         $songtext = file_get_contents("mocksongdata/" . $fileinfo->getFilename());
         $slines = preg_split("/\n{2}/", $songtext);
         $title = $slines[0];
-        $verses = implode("\n\n",array_slice($slines,1));
-        $con->insert("songdata", Array("title"=>$title,"verses"=>utf8_encode($verses)));
+        $con->insert("songdata", Array("title"=>$title));
+        $id = $con->max("songdata","id");
+        foreach($slines as $idx=>$verse){
+            if($idx > 0){
+                $con->insert("versedata", Array("verse"=>$verse, "song_id" => $id));
+            }
+        }
+        #$verses = implode("\n\n",array_slice($slines,1));
     }
 }
 

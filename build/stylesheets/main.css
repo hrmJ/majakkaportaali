@@ -310,6 +310,25 @@ h3 {
   margin-top: 0;
   margin-bottom: 0; }
 
+.lyrics {
+  padding: 0;
+  margin-left: 0; }
+  .lyrics li {
+    list-style-type: none;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center; }
+    .lyrics li + li {
+      margin-top: 1em; }
+    .lyrics li div:first-child {
+      margin-right: 0.5em; }
+  .lyrics textarea {
+    width: 70%;
+    min-height: 60vh; }
+
+.below_lyrics {
+  display: none; }
+
 .has_lyrics:before {
   font-family: FontAwesome;
   content: "\f00c";
