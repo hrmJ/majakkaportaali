@@ -128,6 +128,26 @@ class SongsTest extends TestCase
     }
 
 
+    /**
+     *
+     * Testaa uusien sanojen tallentamista.
+     *
+     */
+    public function testAddLyrics()
+    {
+        $verses = ["Eukko Nooa, Eukko Nooa oli kunnon emäntä.", 
+            "kun hän meni saunaan, laittoi laukun naulaan", 
+            "lalla laa l al al slkdja lskdj laksjd lakjdlakjdlkasj dlksajd"];
+        $songlist = new Songlist($this->con, 2, $this->m);
+        $songlist->AddLyrics("Testilaulu", $verses);
+        $id = $this->con->max("songdata","id");
+        $last_title = $this->con->get("songdata","title",["id"=>$id]);
+        $this->assertTrue($last_title == "Testilaulu");
+        if($last_title == "Testilaulu"){
+            $this->con->delete("versedata",["song_id"=>$id]);
+            $this->con->delete("songdata",["id"=>$id]);
+        }
+    }
 
 }
 

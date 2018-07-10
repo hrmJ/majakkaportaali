@@ -218,6 +218,29 @@ class Songlist{
         return($text);
     }
 
+
+    /**
+     *
+     * Lisää uudet laulun sanat: joko kokonaan uuden laulun tai uuden version
+     *
+     * @param $title laulun nimi
+     * @param $verses taulukko säkeistöistä
+     *
+     */
+    public function AddLyrics($title, $verses){
+        $this->con->insert("songdata", [
+            "title" => $title
+        ]);
+        $id = $this->con->max("songdata","id");
+        foreach($verses as $verse){
+            $this->con->insert("versedata", [
+                "song_id" => $id,
+                "verse" => $verse
+            ]);
+        }
+        //multisong_position?
+    }
+
     /**
      *
      * Tallentaa muokatut laulun sanat sen id:n perusteella

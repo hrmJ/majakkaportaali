@@ -80,7 +80,14 @@ switch($params["action"]){
         break;
     case "save_edited_lyrics":
         $songlist = new Songlist($database, 0, $m);
-        $songlist->SaveEditedLyrics($params["song_id"], $params["newtext"]);
+        if(is_numeric($params["song_id"])){
+            //Jos muokataan vanhoja sanoja
+            $songlist->SaveEditedLyrics($params["song_id"], $params["newtext"]);
+        }
+        else{
+            //Jos syötetään uusi versio tai laulu
+            $songlist->AddLyrics($params["song_id"], $params["newtext"]);
+        }
         break;
     //case "update_songslot_order":
     //    foreach($params["newids"] as $idpair){

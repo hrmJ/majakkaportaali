@@ -185,7 +185,7 @@ var SongLists = function(){
             song_id: id,
         }, function(verses){
             $.each(verses, function(idx, verse){
-                var text = verse.verse.replace("\n","<br>\n");
+                var text = verse.verse.replace(/\n/g,"<br>\n");
                 if (text){
                     $(targetselector).append(
                         `<li>
@@ -201,7 +201,7 @@ var SongLists = function(){
 
     /**
      *
-     * Talentaa muokatut sanat.
+     * Talentaa muokatut sanat tai uuden version.
      *
      */
     function SaveEditedLyrics(id, newtext, targetselector){

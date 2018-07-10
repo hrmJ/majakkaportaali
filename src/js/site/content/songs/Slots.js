@@ -225,6 +225,7 @@ var SongSlots = function(){
         this.title = title;
         this.position = position;
         this.picked_id = undefined;
+        this.songname = undefined;
         this.$cont = $cont;
         this.song_ids = [];
         this.$lyrics = undefined;
@@ -286,14 +287,17 @@ var SongSlots = function(){
         };
 
 
-
         /**
          *
          * Lisää uuden version tästä laulusta
          *
          */
         this.AddNewVersion = function(){
-            console.log("Adding version...");
+            $("#songdetails .below_lyrics").show();
+            $("#songdetails .lyrics_id").val(this.songname);
+            $("#songdetails .lyrics")
+                .html("")
+                .append(`<textarea class='edited_lyrics'></textarea>`);
         };
 
         /**
@@ -328,8 +332,8 @@ var SongSlots = function(){
                 $("#songdetails_actions").append($el);
             });
 
-            var songname = this.$div.find(".songinput").val();
-            $("#songdetails").find("h3").text(songname);
+            this.songname = this.$div.find(".songinput").val();
+            $("#songdetails").find("h3").text(this.songname);
             $("#songdetails").slideDown();
         };
 

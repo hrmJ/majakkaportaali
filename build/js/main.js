@@ -869,6 +869,7 @@ var SongSlots = function(){
         this.title = title;
         this.position = position;
         this.picked_id = undefined;
+        this.songname = undefined;
         this.$cont = $cont;
         this.song_ids = [];
         this.$lyrics = undefined;
@@ -930,14 +931,17 @@ var SongSlots = function(){
         };
 
 
-
         /**
          *
          * Lisää uuden version tästä laulusta
          *
          */
         this.AddNewVersion = function(){
-            console.log("Adding version...");
+            $("#songdetails .below_lyrics").show();
+            $("#songdetails .lyrics_id").val(this.songname);
+            $("#songdetails .lyrics")
+                .html("")
+                .append(`<textarea class='edited_lyrics'></textarea>`);
         };
 
         /**
@@ -972,8 +976,8 @@ var SongSlots = function(){
                 $("#songdetails_actions").append($el);
             });
 
-            var songname = this.$div.find(".songinput").val();
-            $("#songdetails").find("h3").text(songname);
+            this.songname = this.$div.find(".songinput").val();
+            $("#songdetails").find("h3").text(this.songname);
             $("#songdetails").slideDown();
         };
 
@@ -1289,7 +1293,7 @@ var SongLists = function(){
             song_id: id,
         }, function(verses){
             $.each(verses, function(idx, verse){
-                var text = verse.verse.replace("\n","<br>\n");
+                var text = verse.verse.replace(/\n/g,"<br>\n");
                 if (text){
                     $(targetselector).append(
                         `<li>
@@ -1305,7 +1309,7 @@ var SongLists = function(){
 
     /**
      *
-     * Talentaa muokatut sanat.
+     * Talentaa muokatut sanat tai uuden version.
      *
      */
     function SaveEditedLyrics(id, newtext, targetselector){
