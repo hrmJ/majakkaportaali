@@ -312,14 +312,14 @@ var SongSlots = function(){
             this.picked_id = this.picked_id || this.song_ids[0];
             this.songname = this.$div.find(".songinput").val();
             $("#songdetails").find(".version_cont, .lyrics").html("");
-            SongLists.SetLyrics(this.picked_id, "#songdetails .lyrics");
+            SongLists.SetLyrics(this.picked_id, $("#songdetails .lyrics"));
             this.PrintEditActions();
 
             $("#songdetails").find("h3").text(this.songname);
             $("#songdetails").slideDown();
 
-            //Varmista, että versiot päivitetään asettamalla
-            //callback
+            //Varmista, että versiot päivitetään 
+            //asettamalla callback
             SongLists.SetEditedLyricsCallback(function(){
                 var input_id_val = $("#songdetails .lyrics_id").val();
                 self.picked_id = input_id_val || self.picked_id;
@@ -350,7 +350,6 @@ var SongSlots = function(){
                             .click(self.AddNewVersion.bind(self))
                     ]
                 };
-            console.log("STATUS is... " + lyrics_status);
             $("#songdetails_actions").html("");
             $.each(edit_actions[lyrics_status],function(idx, $el){
                 $("#songdetails_actions").append($el);
@@ -409,7 +408,7 @@ var SongSlots = function(){
             this.picked_id = itm.item.value;
             $("#songdetails .lyrics_id").val(this.picked_id);
             console.log("set: " + this.picked_id);
-            SongLists.SetLyrics(this.picked_id, "#songdetails .lyrics");
+            SongLists.SetLyrics(this.picked_id, $("#songdetails .lyrics"));
         }
 
         /**

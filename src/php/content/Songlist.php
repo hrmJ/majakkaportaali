@@ -117,7 +117,7 @@ class Songlist{
      */
     public function GetTitlesByLetter($letter){
         $songs = $this->con->select("songdata",
-            "title",
+            ["title" =>  Medoo::raw('DISTINCT(title)')],
             ["OR" => 
                 [
                 "title[~]" => strtolower($letter) . "%",
