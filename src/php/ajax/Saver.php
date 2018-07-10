@@ -83,10 +83,12 @@ switch($params["action"]){
         if(is_numeric($params["song_id"])){
             //Jos muokataan vanhoja sanoja
             $songlist->SaveEditedLyrics($params["song_id"], $params["newtext"]);
+            echo $params["song_id"];
         }
         else{
             //Jos syötetään uusi versio tai laulu
             $songlist->AddLyrics($params["song_id"], $params["newtext"]);
+            echo $database->max("songdata","id");
         }
         break;
     //case "update_songslot_order":

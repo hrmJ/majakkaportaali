@@ -873,6 +873,7 @@ var SongSlots = function(){
         this.$cont = $cont;
         this.song_ids = [];
         this.$lyrics = undefined;
+        this.newsongtext = "";
 
         /**
          *
@@ -951,35 +952,75 @@ var SongSlots = function(){
          */
         this.CheckDetails = function(){
             //Käytä oletuksena ensimmäistä versiota ko. laulusta
+            var self = this;
             this.picked_id = this.picked_id || this.song_ids[0];
-            $("#songdetails .version_cont, #songdetails_actions, #songdetails .lyrics").html("");
-            if(!this.song_ids.length){
-                var li_items = [];
-            }
-            else{
-                var li_items = [
-                    $(`<li class='edit_words_li'>Muokkaa sanoja</li>`)
-                        .click(this.EditWords.bind(this)),
-                    $(`<li class='new_version_li'>
-                    Lisää uusi laulu tai versio samalla nimellä </li>`)
-                        .click(this.AddNewVersion.bind(this))
-                ];
-                
-            }
-
-            SongLists.SetLyrics(this.song_ids[0], "#songdetails .lyrics");
-            if(this.song_ids.length > 1){
-                this.LoadVersionPicker();
-            }
-
-            $.each(li_items,function(idx, $el){
-                $("#songdetails_actions").append($el);
-            });
-
             this.songname = this.$div.find(".songinput").val();
+            $("#songdetails").find(".version_cont, .lyrics").html("");
+            SongLists.SetLyrics(this.picked_id, "#songdetails .lyrics");
+            this.PrintEditActions();
+
             $("#songdetails").find("h3").text(this.songname);
             $("#songdetails").slideDown();
+
+            //Varmista, että versiot päivitetään asettamalla
+            //callback
+            SongLists.SetEditedLyricsCallback(function(){
+                var input_id_val = $("#songdetails .lyrics_id").val();
+                self.picked_id = input_id_val || self.picked_id;
+                $.when(self.RefreshVersions(
+                    self.LoadVersionPicker.bind(self)
+                )).done(self.PrintEditActions.bind(self));
+            });
         };
+
+        /**
+         *
+         * Lisää toiminnallisuuden laulun tarkasteluikkunaan
+         *
+         */
+        this.PrintEditActions = function(){
+            var lyrics_status = (this.song_ids.length ? "has_lyrics" : "no_lyrics"),
+                edit_actions = {
+                    no_lyrics : [
+                        $(`<li class='new_version_li'>
+                        Lisää lauluun sanat</li>`)
+                            .click(self.AddNewVersion.bind(self))
+                    ],
+                    has_lyrics: [
+                        $(`<li class='edit_words_li'>Muokkaa sanoja</li>`)
+                            .click(self.EditWords.bind(self)),
+                        $(`<li class='new_version_li'>
+                        Lisää uusi laulu tai versio samalla nimellä </li>`)
+                            .click(self.AddNewVersion.bind(self))
+                    ]
+                };
+            console.log("STATUS is... " + lyrics_status);
+            $("#songdetails_actions").html("");
+            $.each(edit_actions[lyrics_status],function(idx, $el){
+                $("#songdetails_actions").append($el);
+            });
+        }
+
+
+        /**
+         *
+         * Päivittää laulusta saatavilla olevat versiot
+         *
+         */
+        this.RefreshVersions = function(callback){
+            var self = this;
+            return $.getJSON("php/ajax/Loader.php",{
+                    action:  "check_song_title",
+                    service_id: Service.GetServiceId(),
+                    title: this.songname
+                    },
+                function(ids){
+                   self.song_ids = ids;
+                    if(callback) 
+                        callback();
+                });
+                    //callback.bind(this));
+        }
 
         /**
          *
@@ -987,13 +1028,17 @@ var SongSlots = function(){
          *
          */
         this.LoadVersionPicker = function(){
-            var i,
-                $sel = $('<select></select>');
-            $.each(this.song_ids,function(idx,val){
-                $sel.append(`<option value='${val}'>Versio ${idx+1}</option>`);
-            });
-            $sel.prependTo("#songdetails .version_cont").selectmenu();
-            $sel.on("selectmenuchange", self.SetVersion.bind(this));
+            if(this.song_ids.length > 1){
+                var i,
+                    $sel = $('<select class="version_picker_select"></select>');
+                $("#songdetails .version_picker_select").remove();
+                $.each(this.song_ids,function(idx,val){
+                    $sel.append(`<option value='${val}'>Versio ${idx+1}</option>`);
+                });
+                $sel.prependTo("#songdetails .version_cont").selectmenu();
+                $sel.on("selectmenuchange", self.SetVersion.bind(this));
+                $sel.val(this.picked_id).selectmenu("refresh");
+            }
         };
 
         /**
@@ -1006,9 +1051,10 @@ var SongSlots = function(){
          */
         this.SetVersion = function(e, itm){
             this.picked_id = itm.item.value;
+            $("#songdetails .lyrics_id").val(this.picked_id);
+            console.log("set: " + this.picked_id);
             SongLists.SetLyrics(this.picked_id, "#songdetails .lyrics");
         }
-
 
         /**
          *
@@ -1114,7 +1160,8 @@ var SongSlots = function(){
  */
 var SongLists = function(){
 
-    var waiting_for_attachment = undefined;
+    var waiting_for_attachment,
+        edited_lyrics_callback; 
 
     /**
      * Lista, josta käyttäjä näkee kaikki selattavissa olevat laulut
@@ -1263,7 +1310,7 @@ var SongLists = function(){
             var id = $("#songdetails .lyrics_id").val(),
                 newtext = $("#songdetails .edited_lyrics").val();
             $("#songdetails .below_lyrics").hide();
-            SaveEditedLyrics(id, newtext, "#songdetails .lyrics");
+            SaveEditedLyrics(id, newtext, "#songdetails .lyrics", "#songdetails .lyrics_id");
         });
     }
 
@@ -1284,9 +1331,8 @@ var SongLists = function(){
      * @param targetselector css-selektori, jolla paikannetaan se kohta, johon sanat lisätään.
      *
      */
-    function SetLyrics(id, targetselector){
+    function SetLyrics(id, targetselector, callback){
         var split_pattern = /\n{2,}/;
-        console.log(id);
         $(targetselector).html("");
         $.getJSON("php/ajax/Loader.php",{
             action: "fetch_lyrics",
@@ -1303,6 +1349,8 @@ var SongLists = function(){
                     );
                 }
             });
+            if(edited_lyrics_callback)
+                edited_lyrics_callback();
         });
     
     };
@@ -1312,15 +1360,31 @@ var SongLists = function(){
      * Talentaa muokatut sanat tai uuden version.
      *
      */
-    function SaveEditedLyrics(id, newtext, targetselector){
+    function SaveEditedLyrics(id, newtext, targetselector, idselector){
         var split_pattern = /\n{2,}/,
             verses = newtext.trim().split(split_pattern);
         $.get("php/ajax/Saver.php",{
             action: "save_edited_lyrics",
             song_id: id,
             newtext: verses
-        }, function(){SetLyrics(id, targetselector)});
+        }, function(saved_id){
+            if (idselector){
+                //Jos halutaan muuttaa jonkin elementin arvoa
+                //uuden id:n mukaiseksi
+                $(idselector).val(saved_id*1);
+            }
+            SetLyrics(saved_id*1, targetselector)
+        });
     
+    }
+
+    /**
+     *
+     * Asettaa funktion, joka ajetaan sen jälkeen, kun sanat ladattu
+     *
+     */
+    function SetEditedLyricsCallback(callback){
+        edited_lyrics_callback = callback;
     }
 
 
@@ -1332,6 +1396,7 @@ var SongLists = function(){
         Initialize,
         GetWaitingForAttachment,
         SetLyrics,
+        SetEditedLyricsCallback,
 
     };
 

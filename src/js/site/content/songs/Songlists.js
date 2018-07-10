@@ -6,7 +6,8 @@
  */
 var SongLists = function(){
 
-    var waiting_for_attachment = undefined;
+    var waiting_for_attachment,
+        edited_lyrics_callback; 
 
     /**
      * Lista, josta käyttäjä näkee kaikki selattavissa olevat laulut
@@ -155,7 +156,7 @@ var SongLists = function(){
             var id = $("#songdetails .lyrics_id").val(),
                 newtext = $("#songdetails .edited_lyrics").val();
             $("#songdetails .below_lyrics").hide();
-            SaveEditedLyrics(id, newtext, "#songdetails .lyrics");
+            SaveEditedLyrics(id, newtext, "#songdetails .lyrics", "#songdetails .lyrics_id");
         });
     }
 
@@ -176,9 +177,8 @@ var SongLists = function(){
      * @param targetselector css-selektori, jolla paikannetaan se kohta, johon sanat lisätään.
      *
      */
-    function SetLyrics(id, targetselector){
+    function SetLyrics(id, targetselector, callback){
         var split_pattern = /\n{2,}/;
-        console.log(id);
         $(targetselector).html("");
         $.getJSON("php/ajax/Loader.php",{
             action: "fetch_lyrics",
@@ -195,6 +195,8 @@ var SongLists = function(){
                     );
                 }
             });
+            if(edited_lyrics_callback)
+                edited_lyrics_callback();
         });
     
     };
@@ -204,15 +206,31 @@ var SongLists = function(){
      * Talentaa muokatut sanat tai uuden version.
      *
      */
-    function SaveEditedLyrics(id, newtext, targetselector){
+    function SaveEditedLyrics(id, newtext, targetselector, idselector){
         var split_pattern = /\n{2,}/,
             verses = newtext.trim().split(split_pattern);
         $.get("php/ajax/Saver.php",{
             action: "save_edited_lyrics",
             song_id: id,
             newtext: verses
-        }, function(){SetLyrics(id, targetselector)});
+        }, function(saved_id){
+            if (idselector){
+                //Jos halutaan muuttaa jonkin elementin arvoa
+                //uuden id:n mukaiseksi
+                $(idselector).val(saved_id*1);
+            }
+            SetLyrics(saved_id*1, targetselector)
+        });
     
+    }
+
+    /**
+     *
+     * Asettaa funktion, joka ajetaan sen jälkeen, kun sanat ladattu
+     *
+     */
+    function SetEditedLyricsCallback(callback){
+        edited_lyrics_callback = callback;
     }
 
 
@@ -224,6 +242,7 @@ var SongLists = function(){
         Initialize,
         GetWaitingForAttachment,
         SetLyrics,
+        SetEditedLyricsCallback,
 
     };
 
