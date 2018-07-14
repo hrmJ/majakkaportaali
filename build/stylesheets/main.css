@@ -142,7 +142,6 @@ nav {
   top: 2em;
   left: 0.3em;
   width: 80%;
-  min-height: 2em;
   background: white;
   border: 1px solid black;
   padding: 0.2em 1em 1em 1em;
@@ -329,10 +328,6 @@ h3 {
 .below_lyrics {
   display: none; }
 
-.insert_box {
-  font-size: 0.7em;
-  font-style: italic; }
-
 .has_lyrics:before {
   font-family: FontAwesome;
   content: "\f00c";
@@ -363,6 +358,41 @@ h3 {
 .songlist_subcat .lyrics {
   font-style: italic;
   font-size: 0.7em; }
+
+.insert_box {
+  font-size: 0.7em;
+  font-style: italic; }
+
+.slot_waiting {
+  background: #a6a6a640;
+  border-bottom: none;
+  border-radius: 2px;
+  border: 1px dashed; }
+
+.slot_recieve {
+  background: lightgreen;
+  border-bottom: none;
+  border-radius: 2px;
+  border: 1px dashed; }
+
+.attaching_title {
+  margin: 0;
+  padding: 0; }
+
+.insert_box_dragging {
+  height: 1.5em;
+  max-width: 14em;
+  padding: 0.3em;
+  overflow: hidden; }
+
+.lyrics_handle {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  margin-top: 0.4em; }
+  .lyrics_handle .fa {
+    font-size: 1.2em;
+    margin-right: 1em; }
 
 .ui-widget-header {
   background: none; }

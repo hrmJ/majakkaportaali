@@ -11,13 +11,13 @@
 @import 'layout/forms';
 @import 'layout/songlist-default.scss';
 @import 'layout/songlist-non-mobile.scss';
-@import 'layout/headings';
-@import 'layout/data_representation';
+@import 'layout/headings'; @import 'layout/data_representation';
 
 
 //sisältösivut (service-sivun välilehdet)
 @import 'content/songs/slots';
 @import 'content/songs/lyrics';
+@import 'content/songs/lyrics_dragging';
 
 @import 'patterns/jquery_ui_customization';
 @import 'patterns/tables';

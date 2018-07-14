@@ -91,7 +91,8 @@ GeneralStructure.DragAndDrop = function(){
                       //"ui-droppable-active": "songslot_waiting",
                       "ui-droppable-hover": "structural_slot_taking",
                     },
-                    out: self.DragLeave.bind(this)
+                    out: self.DragLeave.bind(this),
+                    accept: self.dd_params.drop_accept || "*"
                 });
             return this;
         }

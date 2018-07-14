@@ -796,6 +796,7 @@ var SongSlots = function(){
                     id_class: ".slot_id",
                     idkey: "slot_id",
                     handle: ".slot_handle",
+                    drop_accept: ".songslot"
                 }
                 );
             sortable_slot_list.Initialize();
@@ -808,7 +809,7 @@ var SongSlots = function(){
          * "kontista"
          *
          *
-         **/
+         */
         this.SetMultisongButtons = function(){
             //TODO: painikkeet yksittäisen laulun poistamiseen mistä kohtaa 
             //tahansa EIKÄ niinkään, että koko kontin lopussa miinuspainike
@@ -889,6 +890,16 @@ var SongSlots = function(){
                 </div>
                 <div class='slot_handle'><i class='fa fa-arrows'></i></div>
                 </li>`);
+            this.$div.find(".songinput").droppable({
+                accept: "#prepared_for_insertion",
+                drop: function(e, ui){
+                    console.log($(ui.draggable).text());
+                },
+                classes: {
+                    "ui-droppable-active": "slot_waiting",
+                    "ui-droppable-hover": "slot_recieve",
+                }
+            });
             var $edit_icon = $("<div class='slot_edit'><i class='fa fa-pencil'></i></div>");
             var $remove_icon = $("<div class='slot_remove'><i class='fa fa-trash'></i></div>");
             $edit_icon.click(this.CheckDetails.bind(this)).appendTo(this.$div);
@@ -1160,7 +1171,7 @@ var SongSlots = function(){
 var SongLists = function(){
 
     var waiting_for_attachment,
-        edited_lyrics_callback; 
+        edited_lyrics_callback;
 
     /**
      * Lista, josta käyttäjä näkee kaikki selattavissa olevat laulut
@@ -1236,7 +1247,10 @@ var SongLists = function(){
             var self = this,
                 $li= $(`
                         <li class='songlist_song_container'>
-                            <span class='song_title'>${title}</span>
+                            <span class='song_title'>
+                                ${title}
+                                <input type='hidden' class='song_id'></input>
+                            </span>
                             <ul class='lyrics'></ul>
                         </li>
                     `);
@@ -1291,6 +1305,7 @@ var SongLists = function(){
                     if(ids.length == 1){
                         SetLyrics(ids[0], $li.find(".lyrics"), true);
                         $li.find(".song_title").addClass("songlist_entry");
+                        //$li.find(".song_id").val(ids[0]);
                     }
                     else{
                         //Monta versiota
@@ -1300,6 +1315,7 @@ var SongLists = function(){
                         $.each(ids, function(idx, this_id){
                             var $this_li = self.GetVersionLink("Versio "  + (idx +1));
                             $this_li.find(".song_title").addClass("songlist_entry");
+                            //$li.find(".song_id").val(this_id);
                             $ul.append($this_li);
                             $.when(SetLyrics(this_id, $this_li.find(".lyrics"), true)).done(
                                 function(){
@@ -1327,8 +1343,11 @@ var SongLists = function(){
                 .find(".song_title").text();
             $("#songlist").hide();
             $(".blurcover").remove();
-            $("#prepared_for_insertion").show()
-                .find("h4").text(waiting_for_attachment);
+            $("#prepared_for_insertion")
+                .find("h4").text(waiting_for_attachment)
+                .find(".song_id").val($(ev.target).find(".song_id"))
+                .show();
+            console.log("ID on: " + $(ev.target).find(".song_id"));
         };
 
     }
@@ -1631,7 +1650,24 @@ var Service = function(){
         SongLists.Initialize();
         $("#prepared_for_insertion").hide()
             .draggable({
-                revert: "valid"
+                revert: true,
+                refreshPositions: true,
+                cursor: "move",
+                opacity:0.89,
+                zIndex:100,
+                start: function(e){
+                     $(e.target).find(".attach_instructions").hide();
+                     $(e.target).find("h4").addClass("attaching_title");
+                },
+                stop: function(e){
+                     $(e.target).find(".attach_instructions").show();
+                     $(e.target).find("h4").removeClass("attaching_title");
+                },
+                classes: {
+                    "ui-draggable-dragging": "insert_box_dragging"
+                },
+                handle: ".fa-arrows",
+                //snap:".songinput",
             });
         //Luodaana kustakin välilehdestä oma olionsa
     }
@@ -3231,7 +3267,8 @@ GeneralStructure.DragAndDrop = function(){
                       //"ui-droppable-active": "songslot_waiting",
                       "ui-droppable-hover": "structural_slot_taking",
                     },
-                    out: self.DragLeave.bind(this)
+                    out: self.DragLeave.bind(this),
+                    accept: self.dd_params.drop_accept || "*"
                 });
             return this;
         }

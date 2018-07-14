@@ -137,7 +137,24 @@ var Service = function(){
         SongLists.Initialize();
         $("#prepared_for_insertion").hide()
             .draggable({
-                revert: "valid"
+                revert: true,
+                refreshPositions: true,
+                cursor: "move",
+                opacity:0.89,
+                zIndex:100,
+                start: function(e){
+                     $(e.target).find(".attach_instructions").hide();
+                     $(e.target).find("h4").addClass("attaching_title");
+                },
+                stop: function(e){
+                     $(e.target).find(".attach_instructions").show();
+                     $(e.target).find("h4").removeClass("attaching_title");
+                },
+                classes: {
+                    "ui-draggable-dragging": "insert_box_dragging"
+                },
+                handle: ".fa-arrows",
+                //snap:".songinput",
             });
         //Luodaana kustakin välilehdestä oma olionsa
     }

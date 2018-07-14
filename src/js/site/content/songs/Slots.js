@@ -152,6 +152,7 @@ var SongSlots = function(){
                     id_class: ".slot_id",
                     idkey: "slot_id",
                     handle: ".slot_handle",
+                    drop_accept: ".songslot"
                 }
                 );
             sortable_slot_list.Initialize();
@@ -164,7 +165,7 @@ var SongSlots = function(){
          * "kontista"
          *
          *
-         **/
+         */
         this.SetMultisongButtons = function(){
             //TODO: painikkeet yksittäisen laulun poistamiseen mistä kohtaa 
             //tahansa EIKÄ niinkään, että koko kontin lopussa miinuspainike
@@ -245,6 +246,16 @@ var SongSlots = function(){
                 </div>
                 <div class='slot_handle'><i class='fa fa-arrows'></i></div>
                 </li>`);
+            this.$div.find(".songinput").droppable({
+                accept: "#prepared_for_insertion",
+                drop: function(e, ui){
+                    console.log($(ui.draggable).text());
+                },
+                classes: {
+                    "ui-droppable-active": "slot_waiting",
+                    "ui-droppable-hover": "slot_recieve",
+                }
+            });
             var $edit_icon = $("<div class='slot_edit'><i class='fa fa-pencil'></i></div>");
             var $remove_icon = $("<div class='slot_remove'><i class='fa fa-trash'></i></div>");
             $edit_icon.click(this.CheckDetails.bind(this)).appendTo(this.$div);
