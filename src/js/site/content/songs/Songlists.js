@@ -82,7 +82,7 @@ var SongLists = function(){
         this.GetVersionLink = function(title){
             var self = this,
                 $li= $(`
-                        <li>
+                        <li class='songlist_song_container'>
                             <span class='song_title'>${title}</span>
                             <ul class='lyrics'></ul>
                         </li>
@@ -100,16 +100,23 @@ var SongLists = function(){
          *
          */
         this.ShowVersionInfo = function(e){
-                    //Estetään subheading-elementin sulkeutuminen takaisin
-                    e.stopPropagation();
-                    $(e.target).parent().find(".lyrics_actions").remove();
-                    $(e.target).parent().find(".song_title")
-                        .after(`<ul class='lyrics_actions'>
-                        <li><a href='javascript:void(0);'>Käytä tässä messussa</a></li>
-                        <li><a href='javascript:void(0);'>Tutki / muokkaa</a></li>
-                        </ul>`);
-                    this.ShowSongVersions($(e.target).parent());
-                    //self.PrepareSongForInsertion($(this));
+                    var self = this,
+                        li_elements = [
+                        $("<li><a href='javascript:void(0);'>Käytä tässä messussa</a></li>")
+                            .click(self.PrepareSongForInsertion.bind(this)),
+                        $("<li><a href='javascript:void(0);'>Tutki / muokkaa</a></li>")
+                            .click(function(){console.log("Tutkin...");})],
+                        $ul = $("<ul class=lyrics_actions></ul>");
+            //Estetään subheading-elementin sulkeutuminen takaisin
+            e.stopPropagation();
+            $(e.target).parent().find(".lyrics_actions").remove();
+            $.each(li_elements, function(){
+                $ul.append($(this));
+            });
+            $(e.target).parent().find(".song_title")
+                .after($ul);
+            this.ShowSongVersions($(e.target).parent());
+                    
         };
         
 
@@ -157,11 +164,14 @@ var SongLists = function(){
          * Erottaa listasta valitun laulun, niin että se voidaan
          * liittää osaksi messua.
          *
-         * @param $launcher tapahtuman laukaissut laulu
+         * @param ev tapahtuma
          *
          **/
-        this.PrepareSongForInsertion = function($launcher){
-            waiting_for_attachment =  $launcher.text();
+        this.PrepareSongForInsertion = function(ev){
+            var $launcher = $(ev.target);
+            waiting_for_attachment =  $launcher
+                .parents(".songlist_song_container")
+                .find(".song_title").text();
             $("#songlist").hide();
             $(".blurcover").remove();
             $("#prepared_for_insertion").show()

@@ -329,6 +329,10 @@ h3 {
 .below_lyrics {
   display: none; }
 
+.insert_box {
+  font-size: 0.7em;
+  font-style: italic; }
+
 .has_lyrics:before {
   font-family: FontAwesome;
   content: "\f00c";
