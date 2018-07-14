@@ -83,10 +83,8 @@ var SongLists = function(){
             var self = this,
                 $li= $(`
                         <li class='songlist_song_container'>
-                            <span class='song_title'>
-                                ${title}
-                                <input type='hidden' class='song_id'></input>
-                            </span>
+                            <span class='song_title'>${title}</span>
+                            <input class='song_id' type='hidden'></input>
                             <ul class='lyrics'></ul>
                         </li>
                     `);
@@ -141,7 +139,7 @@ var SongLists = function(){
                     if(ids.length == 1){
                         SetLyrics(ids[0], $li.find(".lyrics"), true);
                         $li.find(".song_title").addClass("songlist_entry");
-                        //$li.find(".song_id").val(ids[0]);
+                        $li.find(".song_id").val(ids[0]);
                     }
                     else{
                         //Monta versiota
@@ -150,8 +148,9 @@ var SongLists = function(){
                         $ul = $("<ul></ul>").appendTo($li);
                         $.each(ids, function(idx, this_id){
                             var $this_li = self.GetVersionLink("Versio "  + (idx +1));
+                            console.log("MOOheee");
                             $this_li.find(".song_title").addClass("songlist_entry");
-                            //$li.find(".song_id").val(this_id);
+                            $this_li.find(".song_id").val(this_id);
                             $ul.append($this_li);
                             $.when(SetLyrics(this_id, $this_li.find(".lyrics"), true)).done(
                                 function(){
@@ -173,7 +172,8 @@ var SongLists = function(){
          *
          **/
         this.PrepareSongForInsertion = function(ev){
-            var $launcher = $(ev.target);
+            var $launcher = $(ev.target),
+                song_id = $(ev.target).parents(".songlist_song_container:eq(0)").find(".song_id").val();
             waiting_for_attachment =  $launcher
                 .parents(".songlist_song_container")
                 .find(".song_title").text();
@@ -181,9 +181,9 @@ var SongLists = function(){
             $(".blurcover").remove();
             $("#prepared_for_insertion")
                 .find("h4").text(waiting_for_attachment)
-                .find(".song_id").val($(ev.target).find(".song_id"))
+                .find(".song_id").val(song_id)
                 .show();
-            console.log("ID on: " + $(ev.target).find(".song_id"));
+            console.log("ID on: " + song_id);
         };
 
     }
