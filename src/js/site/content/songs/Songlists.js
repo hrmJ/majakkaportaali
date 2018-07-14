@@ -129,11 +129,12 @@ var SongLists = function(){
          *
          */
         this.ShowSongVersions = function($li){
-            var self = this;
+            var self = this,
+                title = $li.find(".song_title").text();
             $.getJSON("php/ajax/Loader.php",{
                     action:  "check_song_title",
                     service_id: Service.GetServiceId(),
-                    title: $li.find(".song_title").text()
+                    title: title
                     },
                 function(ids){
                     if(ids.length == 1){
@@ -148,7 +149,6 @@ var SongLists = function(){
                         $ul = $("<ul></ul>").appendTo($li);
                         $.each(ids, function(idx, this_id){
                             var $this_li = self.GetVersionLink("Versio "  + (idx +1));
-                            console.log("MOOheee");
                             $this_li.find(".song_title").addClass("songlist_entry");
                             $this_li.find(".song_id").val(this_id);
                             $ul.append($this_li);
@@ -173,17 +173,15 @@ var SongLists = function(){
          **/
         this.PrepareSongForInsertion = function(ev){
             var $launcher = $(ev.target),
-                song_id = $(ev.target).parents(".songlist_song_container:eq(0)").find(".song_id").val();
-            waiting_for_attachment =  $launcher
-                .parents(".songlist_song_container")
-                .find(".song_title").text();
+                parent_lis = $launcher.parents(".songlist_song_container"),
+                song_id = $(parent_lis[0]).find(".song_id").val(),
+                song_title = $(parent_lis[parent_lis.length-1]).find(".song_title:eq(0)").text();
+            waiting_for_attachment =  song_title;
             $("#songlist").hide();
             $(".blurcover").remove();
-            $("#prepared_for_insertion")
-                .find("h4").text(waiting_for_attachment)
-                .find(".song_id").val(song_id)
-                .show();
-            console.log("ID on: " + song_id);
+            $("#prepared_for_insertion").find("h4").text(song_title);
+            $("#prepared_for_insertion").find(".song_id").val(song_id);
+            $("#prepared_for_insertion").show();
         };
 
     }

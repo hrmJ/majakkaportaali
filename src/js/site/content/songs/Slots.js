@@ -242,15 +242,14 @@ var SongSlots = function(){
                 <li class="songslot no_indicator">
                 <div>
                     <span  class='slot_number hidden'>${this.position}</span>
-                    <input type="text" class="songinput " value="${this.title}"> 
+                    <input type="text" class="songinput" value="${this.title}"> 
+                    <input type="hidden" class="song_id" value="${this.picked_id}"> 
                 </div>
                 <div class='slot_handle'><i class='fa fa-arrows'></i></div>
                 </li>`);
             this.$div.find(".songinput").droppable({
                 accept: "#prepared_for_insertion",
-                drop: function(e, ui){
-                    console.log($(ui.draggable).text());
-                },
+                drop: this.AcceptDroppedSong.bind(this),
                 classes: {
                     "ui-droppable-active": "slot_waiting",
                     "ui-droppable-hover": "slot_recieve",
@@ -262,6 +261,24 @@ var SongSlots = function(){
             $remove_icon.click(this.Remove.bind(this)).appendTo(this.$div);
             this.$cont.append(this.$div);
             return this;
+        };
+
+
+        /**
+         *
+         * Ottaa laulun arvon raahatusta elementistä
+         *
+         */
+        this.AcceptDroppedSong = function(e, ui){
+            this.$div.find(".songinput").val(
+                    $(ui.draggable).find(".song_title").text()
+                );
+            this.$div.find(".song_id").val(
+                    $(ui.draggable).find(".song_id").val()
+                );
+            $("#prepared_for_insertion").hide();
+            this.picked_id = $(ui.draggable).find(".song_id").val();
+            this.CheckLyrics();
         };
 
 
@@ -327,6 +344,7 @@ var SongSlots = function(){
             this.PrintEditActions();
 
             $("#songdetails").find("h3").text(this.songname);
+            $("#songdetails").find(".song_id").val(this.picked_id);
             $("#songdetails").slideDown();
 
             //Varmista, että versiot päivitetään 
