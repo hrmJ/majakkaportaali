@@ -425,6 +425,8 @@ var Utilities = function(){
  **/
 var Menus = function(){
 
+    menus = {};
+
     var Hamburgermenu = function(){
 
         this.Initialize = function(){
@@ -441,8 +443,35 @@ var Menus = function(){
      *
      * Yksinkertainen, koko ruudun peittävä menu
      *
+     * @param name menun nimi. Tämän on oltava html:ssä elementin id sekä
+     * lisäksi menun avaavan elementin css-luokkana muodossa covermenu-target_nimi
+     *
      */
-    var Covermenu = function(){
+    var Covermenu = function(name){
+
+
+        this.name = name;
+        this.$menu = $("#" + name);
+        this.$launcher = $(".covermenu-target_" + this.name);
+
+
+        /**
+         *
+         * Alustaa menun toiminnallisuuden
+         *
+         */
+        this.Initialize = function(){
+            var $close = $(`<div class='closer_div' id='close_covermenu'>
+                   <a href='javascript:void(0);'>Sulje valikko</a>
+                </div>`)
+                .click(this.CloseMenu.bind(this))
+                .prependTo(this.$menu);
+            if(this.$launcher.length){
+                this.$launcher.click(this.OpenMenu.bind(this));
+            }
+        
+        }
+
     
         /**
          *
@@ -452,32 +481,19 @@ var Menus = function(){
          *
          **/
         this.OpenMenu = function($launcher){
-            var target = $launcher.attr("class").replace(/.*covermenu-target_(songlist)/g, "$1");
-            $("#" + target).show();
+            this.$menu.show();
             Utilities.BlurContent();
         }
 
-
         /**
          *
-         * Alustaa itse menujen toiminnallisuuden:
-         * sulkulinkki ym.
+         * Sulkee oikean menun, kun klikattu oikeaa linkkiä
+         *
          *
          **/
-        this.Initialize = function(){
-           var self = this;
-           console.log("Initializing cover menus...");
-           var $closerdiv = $(`
-                <div class='closer_div' id='close_covermenu'>
-                    <a href='javascript:void(0);'>Sulje valikko</a>
-                </div>`);
-            $closerdiv.click(function(){
-                $(this).parents(".covermenu").hide();
-                $(".blurcover").remove();
-            });
-            $(".covermenu").find('.closerdiv').remove();
-            $(".covermenu").prepend($closerdiv.clone(true));
-            $(".covermenu-launcher").click(function(){self.OpenMenu($(this))});
+        this.CloseMenu = function(){
+            this.$menu.hide();
+            $(".blurcover").remove();
         }
         
     }
@@ -492,8 +508,12 @@ var Menus = function(){
             $(this).toggleClass("opened");
         });
 
-        var covermenu = new Covermenu();
-        covermenu.Initialize();
+        $(".covermenu").each(function(){
+            var name = $(this).attr("id");
+            menus[name] = new Covermenu(name);
+            menus[name].Initialize();
+        });
+
     
     }
 
@@ -502,6 +522,7 @@ var Menus = function(){
 
     return {
         InitializeMenus,
+        menus
     }
 
 
@@ -862,15 +883,15 @@ var SongSlots = function(){
      * @param title valitun laulun nimi (jos joku laulu jo valittu)
      * @param position valitun laulun järjestysnumero tässä "kontissa"
      * @param $cont slotin sisältävä "kontti" DOMissa
+     * @param picked_id valitun laulun id (jos joku laulu jo valittu)
      *
      **/
-    var SongSlot = function(title, position, $cont){
+    var SongSlot = function(title, position, $cont, picked_id){
 
         var self = this;
         this.title = title;
         this.position = position;
-        this.picked_id = undefined;
-        this.songname = undefined;
+        this.picked_id = picked_id;
         this.$cont = $cont;
         this.song_ids = [];
         this.$lyrics = undefined;
@@ -967,7 +988,7 @@ var SongSlots = function(){
          */
         this.AddNewVersion = function(){
             $("#songdetails .below_lyrics").show();
-            $("#songdetails .lyrics_id").val(this.songname);
+            $("#songdetails .lyrics_id").val(this.title);
             $("#songdetails .lyrics")
                 .html("")
                 .append(`<textarea class='edited_lyrics'></textarea>`);
@@ -982,12 +1003,16 @@ var SongSlots = function(){
             //Käytä oletuksena ensimmäistä versiota ko. laulusta
             var self = this;
             this.picked_id = this.picked_id || this.song_ids[0];
-            this.songname = this.$div.find(".songinput").val();
+            //If no $div set, use the original title
+            // -- this means we're using a pseudo-songslot
+            // launched by e.g.  a songlist
+            this.title = (this.$div ? this.$div.find(".songinput").val() : this.title);
+
             $("#songdetails").find(".version_cont, .lyrics").html("");
             SongLists.SetLyrics(this.picked_id, $("#songdetails .lyrics"));
             this.PrintEditActions();
 
-            $("#songdetails").find("h3").text(this.songname);
+            $("#songdetails").find("h3").text(this.title);
             $("#songdetails").find(".song_id").val(this.picked_id);
             $("#songdetails").slideDown();
 
@@ -1040,7 +1065,7 @@ var SongSlots = function(){
             return $.getJSON("php/ajax/Loader.php",{
                     action:  "check_song_title",
                     service_id: Service.GetServiceId(),
-                    title: this.songname
+                    title: this.title
                     },
                 function(ids){
                    self.song_ids = ids;
@@ -1175,6 +1200,7 @@ var SongSlots = function(){
     return {
     
         LoadSongsToSlots,
+        SongSlot
     
     };
 
@@ -1189,7 +1215,8 @@ var SongSlots = function(){
 var SongLists = function(){
 
     var waiting_for_attachment,
-        edited_lyrics_callback;
+        edited_lyrics_callback,
+        current_song;
 
     /**
      * Lista, josta käyttäjä näkee kaikki selattavissa olevat laulut
@@ -1288,7 +1315,7 @@ var SongLists = function(){
                         $("<li><a href='javascript:void(0);'>Käytä tässä messussa</a></li>")
                             .click(self.PrepareSongForInsertion.bind(this)),
                         $("<li><a href='javascript:void(0);'>Tutki / muokkaa</a></li>")
-                            .click(function(){console.log("Tutkin...");})],
+                            .click(self.ExamineSong.bind(this))],
                         $ul = $("<ul class=lyrics_actions></ul>");
             //Estetään subheading-elementin sulkeutuminen takaisin
             e.stopPropagation();
@@ -1354,17 +1381,54 @@ var SongLists = function(){
          *
          **/
         this.PrepareSongForInsertion = function(ev){
+            ev.stopPropagation();
+            this.GetCurrentSong(ev);
+            waiting_for_attachment =  this.current_song.title;
+            $("#songlist").hide();
+            $(".blurcover").remove();
+            $("#prepared_for_insertion").find("h4").text(this.current_song.title);
+            $("#prepared_for_insertion").find(".song_id").val(this.current_song.id);
+            $("#prepared_for_insertion").show();
+        };
+
+        /**
+         *
+         * Avaa erillisen tilan listasta valitun yksittäisen laulun tutkimista
+         * ja esimerkiksi sanojen muokkaamista varten
+         *
+         * @param ev tapahtuma
+         *
+         **/
+        this.ExamineSong = function(ev){
+            ev.stopPropagation();
+            this.GetCurrentSong(ev);
+            var slot = new SongSlots.SongSlot(this.current_song.title,
+                0,
+                undefined,
+                this.current_song.id);
+        };
+
+        /**
+         *
+         * Hakee tiedon siitä, mitä laulua nyt tutkitaan
+         *
+         * @param ev tapahtuma
+         *
+         */
+        this.GetCurrentSong = function(ev){
             var $launcher = $(ev.target),
                 parent_lis = $launcher.parents(".songlist_song_container"),
                 song_id = $(parent_lis[0]).find(".song_id").val(),
                 song_title = $(parent_lis[parent_lis.length-1]).find(".song_title:eq(0)").text();
-            waiting_for_attachment =  song_title;
-            $("#songlist").hide();
-            $(".blurcover").remove();
-            $("#prepared_for_insertion").find("h4").text(song_title);
-            $("#prepared_for_insertion").find(".song_id").val(song_id);
-            $("#prepared_for_insertion").show();
-        };
+
+            this.current_song =  {
+                id : song_id,
+                title: song_title
+            };
+
+            return this;
+        
+        }
 
     }
 

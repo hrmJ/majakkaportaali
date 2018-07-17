@@ -7,7 +7,8 @@
 var SongLists = function(){
 
     var waiting_for_attachment,
-        edited_lyrics_callback;
+        edited_lyrics_callback,
+        current_song;
 
     /**
      * Lista, josta käyttäjä näkee kaikki selattavissa olevat laulut
@@ -106,7 +107,7 @@ var SongLists = function(){
                         $("<li><a href='javascript:void(0);'>Käytä tässä messussa</a></li>")
                             .click(self.PrepareSongForInsertion.bind(this)),
                         $("<li><a href='javascript:void(0);'>Tutki / muokkaa</a></li>")
-                            .click(function(){console.log("Tutkin...");})],
+                            .click(self.ExamineSong.bind(this))],
                         $ul = $("<ul class=lyrics_actions></ul>");
             //Estetään subheading-elementin sulkeutuminen takaisin
             e.stopPropagation();
@@ -172,17 +173,54 @@ var SongLists = function(){
          *
          **/
         this.PrepareSongForInsertion = function(ev){
+            ev.stopPropagation();
+            this.GetCurrentSong(ev);
+            waiting_for_attachment =  this.current_song.title;
+            $("#songlist").hide();
+            $(".blurcover").remove();
+            $("#prepared_for_insertion").find("h4").text(this.current_song.title);
+            $("#prepared_for_insertion").find(".song_id").val(this.current_song.id);
+            $("#prepared_for_insertion").show();
+        };
+
+        /**
+         *
+         * Avaa erillisen tilan listasta valitun yksittäisen laulun tutkimista
+         * ja esimerkiksi sanojen muokkaamista varten
+         *
+         * @param ev tapahtuma
+         *
+         **/
+        this.ExamineSong = function(ev){
+            ev.stopPropagation();
+            this.GetCurrentSong(ev);
+            var slot = new SongSlots.SongSlot(this.current_song.title,
+                0,
+                undefined,
+                this.current_song.id);
+        };
+
+        /**
+         *
+         * Hakee tiedon siitä, mitä laulua nyt tutkitaan
+         *
+         * @param ev tapahtuma
+         *
+         */
+        this.GetCurrentSong = function(ev){
             var $launcher = $(ev.target),
                 parent_lis = $launcher.parents(".songlist_song_container"),
                 song_id = $(parent_lis[0]).find(".song_id").val(),
                 song_title = $(parent_lis[parent_lis.length-1]).find(".song_title:eq(0)").text();
-            waiting_for_attachment =  song_title;
-            $("#songlist").hide();
-            $(".blurcover").remove();
-            $("#prepared_for_insertion").find("h4").text(song_title);
-            $("#prepared_for_insertion").find(".song_id").val(song_id);
-            $("#prepared_for_insertion").show();
-        };
+
+            this.current_song =  {
+                id : song_id,
+                title: song_title
+            };
+
+            return this;
+        
+        }
 
     }
 

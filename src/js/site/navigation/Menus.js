@@ -7,6 +7,8 @@
  **/
 var Menus = function(){
 
+    menus = {};
+
     var Hamburgermenu = function(){
 
         this.Initialize = function(){
@@ -23,8 +25,35 @@ var Menus = function(){
      *
      * Yksinkertainen, koko ruudun peittävä menu
      *
+     * @param name menun nimi. Tämän on oltava html:ssä elementin id sekä
+     * lisäksi menun avaavan elementin css-luokkana muodossa covermenu-target_nimi
+     *
      */
-    var Covermenu = function(){
+    var Covermenu = function(name){
+
+
+        this.name = name;
+        this.$menu = $("#" + name);
+        this.$launcher = $(".covermenu-target_" + this.name);
+
+
+        /**
+         *
+         * Alustaa menun toiminnallisuuden
+         *
+         */
+        this.Initialize = function(){
+            var $close = $(`<div class='closer_div' id='close_covermenu'>
+                   <a href='javascript:void(0);'>Sulje valikko</a>
+                </div>`)
+                .click(this.CloseMenu.bind(this))
+                .prependTo(this.$menu);
+            if(this.$launcher.length){
+                this.$launcher.click(this.OpenMenu.bind(this));
+            }
+        
+        }
+
     
         /**
          *
@@ -34,32 +63,19 @@ var Menus = function(){
          *
          **/
         this.OpenMenu = function($launcher){
-            var target = $launcher.attr("class").replace(/.*covermenu-target_(songlist)/g, "$1");
-            $("#" + target).show();
+            this.$menu.show();
             Utilities.BlurContent();
         }
 
-
         /**
          *
-         * Alustaa itse menujen toiminnallisuuden:
-         * sulkulinkki ym.
+         * Sulkee oikean menun, kun klikattu oikeaa linkkiä
+         *
          *
          **/
-        this.Initialize = function(){
-           var self = this;
-           console.log("Initializing cover menus...");
-           var $closerdiv = $(`
-                <div class='closer_div' id='close_covermenu'>
-                    <a href='javascript:void(0);'>Sulje valikko</a>
-                </div>`);
-            $closerdiv.click(function(){
-                $(this).parents(".covermenu").hide();
-                $(".blurcover").remove();
-            });
-            $(".covermenu").find('.closerdiv').remove();
-            $(".covermenu").prepend($closerdiv.clone(true));
-            $(".covermenu-launcher").click(function(){self.OpenMenu($(this))});
+        this.CloseMenu = function(){
+            this.$menu.hide();
+            $(".blurcover").remove();
         }
         
     }
@@ -74,8 +90,12 @@ var Menus = function(){
             $(this).toggleClass("opened");
         });
 
-        var covermenu = new Covermenu();
-        covermenu.Initialize();
+        $(".covermenu").each(function(){
+            var name = $(this).attr("id");
+            menus[name] = new Covermenu(name);
+            menus[name].Initialize();
+        });
+
     
     }
 
@@ -84,6 +104,7 @@ var Menus = function(){
 
     return {
         InitializeMenus,
+        menus
     }
 
 

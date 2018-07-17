@@ -218,15 +218,15 @@ var SongSlots = function(){
      * @param title valitun laulun nimi (jos joku laulu jo valittu)
      * @param position valitun laulun järjestysnumero tässä "kontissa"
      * @param $cont slotin sisältävä "kontti" DOMissa
+     * @param picked_id valitun laulun id (jos joku laulu jo valittu)
      *
      **/
-    var SongSlot = function(title, position, $cont){
+    var SongSlot = function(title, position, $cont, picked_id){
 
         var self = this;
         this.title = title;
         this.position = position;
-        this.picked_id = undefined;
-        this.songname = undefined;
+        this.picked_id = picked_id;
         this.$cont = $cont;
         this.song_ids = [];
         this.$lyrics = undefined;
@@ -323,7 +323,7 @@ var SongSlots = function(){
          */
         this.AddNewVersion = function(){
             $("#songdetails .below_lyrics").show();
-            $("#songdetails .lyrics_id").val(this.songname);
+            $("#songdetails .lyrics_id").val(this.title);
             $("#songdetails .lyrics")
                 .html("")
                 .append(`<textarea class='edited_lyrics'></textarea>`);
@@ -338,12 +338,16 @@ var SongSlots = function(){
             //Käytä oletuksena ensimmäistä versiota ko. laulusta
             var self = this;
             this.picked_id = this.picked_id || this.song_ids[0];
-            this.songname = this.$div.find(".songinput").val();
+            //If no $div set, use the original title
+            // -- this means we're using a pseudo-songslot
+            // launched by e.g.  a songlist
+            this.title = (this.$div ? this.$div.find(".songinput").val() : this.title);
+
             $("#songdetails").find(".version_cont, .lyrics").html("");
             SongLists.SetLyrics(this.picked_id, $("#songdetails .lyrics"));
             this.PrintEditActions();
 
-            $("#songdetails").find("h3").text(this.songname);
+            $("#songdetails").find("h3").text(this.title);
             $("#songdetails").find(".song_id").val(this.picked_id);
             $("#songdetails").slideDown();
 
@@ -396,7 +400,7 @@ var SongSlots = function(){
             return $.getJSON("php/ajax/Loader.php",{
                     action:  "check_song_title",
                     service_id: Service.GetServiceId(),
-                    title: this.songname
+                    title: this.title
                     },
                 function(ids){
                    self.song_ids = ids;
@@ -531,6 +535,7 @@ var SongSlots = function(){
     return {
     
         LoadSongsToSlots,
+        SongSlot
     
     };
 
