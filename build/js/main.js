@@ -1429,6 +1429,10 @@ var SongLists = function(){
             $("#songdetails .below_lyrics").hide();
             SaveEditedLyrics(id, newtext, $("#songdetails .lyrics"), "#songdetails .lyrics_id");
         });
+        $("#prepared_for_insertion .cancel_link").click(function(){
+            $("#prepared_for_insertion").hide();
+            $(".covermenu-target_songlist").click();
+        })
     }
 
     /**
