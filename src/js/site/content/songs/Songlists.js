@@ -198,6 +198,7 @@ var SongLists = function(){
                 0,
                 undefined,
                 this.current_song.id);
+            slot.CheckDetails();
         };
 
         /**

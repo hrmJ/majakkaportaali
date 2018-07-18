@@ -63,6 +63,9 @@ var Menus = function(){
          *
          **/
         this.OpenMenu = function($launcher){
+            //Varmista ensin, että kaikki muut covermenut ovat peitettyinä,
+            //koska näitä voi olla kerrallaan näkyvissä vain yksi.
+            $(".covermenu").hide();
             this.$menu.show();
             Utilities.BlurContent();
         }
