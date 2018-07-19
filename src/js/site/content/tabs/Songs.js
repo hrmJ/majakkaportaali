@@ -5,6 +5,9 @@
  **/
 Service.TabFactory.Songs = function(){
 
+    this.action = "save_songs";
+
+
     /**
      *
      *
@@ -13,6 +16,8 @@ Service.TabFactory.Songs = function(){
         var TODO_MAKE_POSSIBLE = undefined;
         if (this.CheckLyricsOk() || TODO_MAKE_POSSIBLE){
             console.log("SAVING");
+            console.log(this.action);
+            this.__proto__.SaveTabData.bind(this)();
         }
         else{
             console.log("Not saving.");
@@ -62,12 +67,17 @@ Service.TabFactory.Songs = function(){
      **/
     this.GetTabData = function(){
         var data = [];
-        this.$div.find(".songslot").each(function(){
-            data.push({
-                song_title: $(this).find("div:eq(0)").text(),
-                songtype: $(this).parents(".slot_container").find(".cont_name").text(),
+        this.$div.find(".slotcontainer").each(function(idx, cont){
+            $.each($(cont).find(".songslot"), function(slot_no,slot){
+                console.log("LOOK: " + $(slot).find(".song_id").val() || 'BÖÖ');
+                data.push({
+                    song_title: $(slot).find(".songinput").val() || '',
+                    song_id: $(slot).find(".song_id").val() || null,
+                    songtype: $(cont).find(".cont_name").text(),
+                });
             });
         });
+        return data;
     };
 
 };

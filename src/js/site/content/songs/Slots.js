@@ -5,8 +5,7 @@
  */
 var SongSlots = function(){
 
-    var songs_tab,
-        sortable_slot_list;
+    var songs_tab;
 
     //TODO: tallenna muutokset automaattisesti, jos n minuuttia tallentamatta
 
@@ -84,6 +83,7 @@ var SongSlots = function(){
     var SlotContainer = function($div){
 
         this.$ul = $("<ul></ul>").appendTo($div.find(".songslots"));
+        this.sortable_slot_list = undefined;
 
         /**
          *
@@ -124,15 +124,19 @@ var SongSlots = function(){
                 //Jos ei vielä yhtään laulua määritelty
                 slots = [{song_title:"",multisong_position:""}];
             }
-            $.each(slots,function(idx,slot_data){
+            $.each(slots, function(idx, slot_data){
+                console.log(slot_data);
                 var slot = new SongSlot(slot_data.song_title,
-                    slot_data.multisong_position, self.$ul);
-                slot.Create().AttachEvents();
+                    slot_data.multisong_position, 
+                    self.$ul,
+                    slot_data.song_id);
+                slot.Create().AttachEvents().CheckLyrics();
             });
             //Finally, attach drag and drop events
             this.AddSortability();
             //Lisää välilehtiolioon muutosten tarkkailutoiminto
-            this.$ul.find("input[type='text']").on("change paste keyup",songs_tab.MonitorChanges.bind(songs_tab));
+            this.$ul.find("input[type='text']").on("change paste keyup",
+                songs_tab.MonitorChanges.bind(songs_tab));
         }
 
 
@@ -143,7 +147,7 @@ var SongSlots = function(){
          *
          **/
         this.AddSortability = function(){
-            sortable_slot_list =  sortable_slot_list || 
+            this.sortable_slot_list =  this.sortable_slot_list || 
                 new GeneralStructure.DragAndDrop.SortableList(this.$ul,
                 {
                     draggables: ".songslot",
@@ -155,7 +159,7 @@ var SongSlots = function(){
                     drop_accept: ".songslot"
                 }
                 );
-            sortable_slot_list.Initialize();
+            this.sortable_slot_list.Initialize();
         };
 
 
@@ -226,7 +230,7 @@ var SongSlots = function(){
         var self = this;
         this.title = title;
         this.position = position;
-        this.picked_id = picked_id;
+        this.picked_id = picked_id || '';
         this.$cont = $cont;
         this.song_ids = [];
         this.$lyrics = undefined;
@@ -497,6 +501,9 @@ var SongSlots = function(){
         this.IndicateLyrics = function(song_ids){
             this.song_ids = song_ids;
             this.$div.removeClass("no_indicator");
+            //Valitse oletuksena versioista ensimmäinen
+            this.$div.find(".song_id").val(song_ids[0]);
+            this.picked_id = song_ids[0];
             if(!song_ids.length){
                 this.$div.removeClass("has_lyrics").addClass("no_lyrics");
             }
@@ -516,6 +523,8 @@ var SongSlots = function(){
                 select: this.CheckLyrics.bind(this)
                 }
             ).on("change paste keyup",self.CheckLyrics.bind(this));
+
+            return this;
 
         }
 

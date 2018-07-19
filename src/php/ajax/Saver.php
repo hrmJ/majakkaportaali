@@ -44,6 +44,10 @@ switch($params["action"]){
         $service = new Service($database, $params["service_id"]);
         $service->SaveDetails($params["data"]);
         break;
+    case "save_songs":
+        $service = new Service($database, $params["service_id"]);
+        $service->SaveSongs($params["data"]);
+        break;
     case "save_infosegment":
         $struct = new Structure($database, $m);
         if(isset($params["id"])){
@@ -91,14 +95,6 @@ switch($params["action"]){
             echo $database->max("songdata","id");
         }
         break;
-    //case "update_songslot_order":
-    //    foreach($params["newids"] as $idpair){
-    //        $database->update("presentation_structure", 
-    //            ["slot_number" => $idpair["newnumber"]],
-    //            ["id" => $idpair["slot_id"]] 
-    //        );
-    //    }
-    //    break;
 }
 
 

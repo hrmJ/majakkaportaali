@@ -86,6 +86,28 @@ class ServiceTest extends TestCase
         $this->assertTrue($service->GetTheme() == "Teeemaa"); 
     }
 
+    /**
+     *
+     * Testaa yhden tietyn messun laulujen tallentamista
+     *
+     */
+    public function testSaveServiceSongs()
+    {
+        $service = new Service($this->con, 2);
+        $service->SaveSongs([
+                    ["song_id" => 2,
+                    "song_title" => "Ukko Nooa",
+                    "songtype" => "Alkulaulu"],
+                    ["song_id" => 3,
+                    "song_title" => "Satu meni saunaan",
+                    "songtype" => "Alkulaulu"]
+        ]);
+        $this->assertTrue(sizeof($this->con->select("servicesongs", "song_id", [
+            "songtype" => "Alkulaulu"
+        ]))>0);
+    }
+
+
 
 }
 

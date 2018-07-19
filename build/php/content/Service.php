@@ -104,6 +104,28 @@ class Service{
     }
 
 
+    /**
+     *
+     * Tallentaa muutokset messussa laulettaviin lauluihin
+     *
+     * @param Array $data taulukko muotoa [["responsible" => x, "responsibility" => "x"], ...]
+     *
+     */
+    public function SaveSongs($data){
+        $this->con->delete("servicesongs", ["service_id" => $this->id]);
+        foreach($data as $entry){
+            $this->con->insert("servicesongs",
+                [
+                    "service_id" => $this->id,
+                    "song_title" => $entry["song_title"],
+                    "song_id" => $entry["song_id"],
+                    "songtype" => $entry["songtype"]
+                ]
+                );
+        }
+        return $this;
+    }
+
 }
 
 

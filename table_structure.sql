@@ -57,9 +57,9 @@ CREATE TABLE `responsibilities` (
 CREATE TABLE servicesongs (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
   service_id int(10) unsigned NOT NULL,
-  song_title varchar(200) NOT NULL DEFAULT '',
-  songtype varchar(100) DEFAULT NULL,
-  multisong_position int(2) unsigned NOT NULL DEFAULT 0, -- se, kuinka mones ylistyslaulu tms kyseessä on
+  song_title varchar(200) DEFAULT '',
+  song_id int(19),
+  songtype varchar(100) NOT NULL,
   PRIMARY KEY (id),
   KEY service_index (service_id),
   CONSTRAINT servicesongs_ibfk_1 FOREIGN KEY (service_id) REFERENCES services (id) ON DELETE CASCADE
@@ -73,6 +73,7 @@ CREATE TABLE servicesongs (
 CREATE TABLE songdata (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
   title varchar(300) DEFAULT NULL,
+  tags varchar(9999) DEFAULT '',
   composer varchar(300) DEFAULT NULL,
   lyrics varchar(300) DEFAULT NULL,
   version_description varchar(300) DEFAULT NULL,
