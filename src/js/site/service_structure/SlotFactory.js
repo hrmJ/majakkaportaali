@@ -1,21 +1,26 @@
 
 var GeneralStructure = GeneralStructure || {};
 
+/**
+ *
+ * Factory-pattern eri rakennetyyppejä edustavien olioiden luomiseksi
+ *
+ */
 GeneralStructure.SlotFactory = function(){
 
 
     /**
      *
-     * Factory-pattern eri välilehtiä edustavien olioiden luomiseksi
+     * Factory-pattern eri rakennetyyppejä edustavien olioiden luomiseksi
      *
-     **/
+     */
     function SlotFactory(){
         this.tabdata = [];
     }
 
     /**
      *
-     * Tuottaa yhden välilehtiolion haluttua tyyppiä
+     * Tuottaa yhden rakenneolion haluttua tyyppiä
      *
      * @param slot_type luotavan slotin tyyppi 
      *

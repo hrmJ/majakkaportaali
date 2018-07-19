@@ -7,7 +7,9 @@ apt install -y nginx \
     php7.2-fpm php7.2-mysql php7.2-mbstring php7.2-xml \
     nodejs npm \
     composer phpunit \
-    ruby2.5 ruby2.5-dev 
+    ruby2.5 ruby2.5-dev \
+    wget \ 
+    python3-sqlalchemy python3-pymysql
 
 # Install sass from ruby
 gem install sass

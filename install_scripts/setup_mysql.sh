@@ -4,6 +4,7 @@
 PASSWDDB="$(openssl rand -base64 12)"
 UNAME="majakkap_user"
 printf " un = $UNAME \n pw = $PASSWDDB \n dbname = majakkaportaali \n hostname = localhost\n" > ../config.ini
+printf " [DB] \n un = $UNAME \n pw = $PASSWDDB \n dbname = majakkaportaali \n hostname = localhost\n" > ../config_py.ini
 
 mysql -e "DROP DATABASE if EXISTS majakkaportaali;"
 mysql -e "CREATE DATABASE majakkaportaali /*\!40100 DEFAULT CHARACTER SET utf8 */;"

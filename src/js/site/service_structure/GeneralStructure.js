@@ -125,6 +125,7 @@ var GeneralStructure = function(){
     function Initialize(){
         InitializeNewslotMenu();
         InitializeSlotFunctionality();
+        BibleModule.AttachAddressPicker($(".bs_test"));
     }
 
 
@@ -138,3 +139,5 @@ var GeneralStructure = function(){
 
 
 }();
+
+

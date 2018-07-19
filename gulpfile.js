@@ -86,6 +86,7 @@ gulp.task("js",function(){
                    "service_structure/InjectableData",
                    "service_structure/DataLoading",
                    "service_structure/DragAndDrop",
+                   "plugins/BibleModule",
                    "actions"
                    ];
     var jsprefix = folder.src + "js/site/";

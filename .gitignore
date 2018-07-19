@@ -4,6 +4,7 @@ phpDocumentor.phar
 docs/php/graphs/
 docs/php/reports/
 *config.ini
+*config_py.ini
 .sass-cache
 *.*~
 *virsi_1*txt
@@ -22,5 +23,4 @@ docs/php/reports/
 *virsi_09*txt
 build/assets/images/*
 src/assets/images/*jpg
-
 /vendor/

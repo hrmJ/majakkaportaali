@@ -1,0 +1,65 @@
+
+$biblepreview:#f9ff9f;
+
+.bs_test{
+    margin:1em 0 1em 0;
+}
+
+
+.biblecontentadder .contentadder-open{
+    padding-bottom:1em;
+}
+
+.versepreview{
+    display:none;
+    position:absolute;
+    max-width:25vw;
+    height:1.2em;
+    font-size:0.8em;
+    left:24vw;
+    padding:0.2em;
+    z-index:3;
+    background:$biblepreview;
+    border:1px solid grey;
+    border-radius:2px;
+    color:grey;
+    overflow: hidden;
+    text-overflow: "...";
+    white-space: nowrap;
+    @include shadow;
+}
+
+.selector-wrapper{
+    display:flex;
+    flex-flow:row wrap;
+    justify-content:space-between;
+
+    > div:nth-child(3){
+        display:flex;
+        flex-flow:row;
+        justify-content:flex-end;
+    }
+
+    > div:nth-child(2){
+        display:flex;
+        flex-flow:row;
+        justify-content:center;
+    }
+
+}
+
+.between-verse-selectors{
+    width:100%;
+    display:none;
+}
+
+
+.testament_select{
+    display: flex;
+    flex-flow: row wrap;
+    margin-bottom:0.5em;
+}
+
+[name='testament']{
+    font-size:0.7em;
+}
