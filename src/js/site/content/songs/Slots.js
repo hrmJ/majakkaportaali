@@ -134,9 +134,6 @@ var SongSlots = function(){
             });
             //Finally, attach drag and drop events
             this.AddSortability();
-            //Lisää välilehtiolioon muutosten tarkkailutoiminto
-            this.$ul.find("input[type='text']").on("change paste keyup",
-                songs_tab.MonitorChanges.bind(songs_tab));
         }
 
 
@@ -195,6 +192,8 @@ var SongSlots = function(){
             var slot = new SongSlot("", slot_no, this.$ul);
             slot.Create().AttachEvents();
             this.AddSortability();
+            //Varmista, että uuden slotin lisääminen lasketaan muutokseksi
+            songs_tab.MonitorChanges();
         };
 
 
@@ -264,6 +263,9 @@ var SongSlots = function(){
             $edit_icon.click(this.CheckDetails.bind(this)).appendTo(this.$div);
             $remove_icon.click(this.Remove.bind(this)).appendTo(this.$div);
             this.$cont.append(this.$div);
+            //Lisää välilehtiolioon muutosten tarkkailutoiminto
+            this.$div.find("input[type='text']").on("change paste keyup",
+                songs_tab.MonitorChanges.bind(songs_tab));
             return this;
         };
 
