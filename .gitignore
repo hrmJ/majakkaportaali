@@ -24,3 +24,4 @@ docs/php/reports/
 build/assets/images/*
 src/assets/images/*jpg
 /vendor/
+*__pycache__*
