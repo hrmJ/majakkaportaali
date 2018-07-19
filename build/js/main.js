@@ -720,6 +720,7 @@ var SongSlots = function(){
     function SaveSlotOrder($parent_el){
         var $slots = $parent_el.find(".songslot");
         console.log($slots.length);
+        songs_tab.MonitorChanges();
     }
 
     /**
