@@ -285,6 +285,7 @@ var SongSlots = function(){
             $("#prepared_for_insertion").hide();
             this.picked_id = $(ui.draggable).find(".song_id").val();
             this.CheckLyrics();
+            songs_tab.MonitorChanges();
         };
 
 
@@ -450,22 +451,6 @@ var SongSlots = function(){
             SongLists.SetLyrics(this.picked_id, $("#songdetails .lyrics"));
         }
 
-        /**
-         *
-         * Liittää tähän slottiin jonkin laulun esimerkiksi sen jälkeen, kun
-         * käyttäjä on raahannnut laululistan selauksen jälkeen näytölle
-         * jääneen laulun slotin päälle.
-         *
-         * @param drop_event  mahdollinen pudotustapahtuma, joka kuuluu lauluslotti-diviin
-         *
-         **/ 
-        this.AttachSong = function(drop_event){
-            if(drop_event){
-                $("#prepared_for_insertion").hide();
-                var $target = $(drop_event.target);
-            }
-            $target.find(".songinput").val(SongLists.GetWaitingForAttachment());
-        }
 
         /**
          *
@@ -511,6 +496,14 @@ var SongSlots = function(){
             }
             else{
                 this.$div.removeClass("no_lyrics").addClass("has_lyrics");
+            }
+
+            if(!this.$div.find(".songinput").val()){
+                //Älä ota huomioon tyhjiä slotteja
+                this.$div
+                    .removeClass("no_lyrics")
+                    .removeClass("has_lyrics")
+                    .addClass("no_indicator");
             }
         };
 

@@ -36,7 +36,6 @@ Service.TabFactory.Songs = function(){
             nolyr = [];
         $(".songslot").each(function(){
             var title = $(this).find(".songinput").val();
-            console.log(title);
             if($(this).hasClass("no_lyrics") && nolyr.indexOf(title) == -1){
                 msg.Add(title);
                 nolyr.push(title);
