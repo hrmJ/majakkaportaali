@@ -41,21 +41,32 @@ class BibleTest extends TestCase
     /**
      * Testaa kirjojen nimien lataamista
      */
-    public function testLoadBookNames() {
+    public function testLoadBookNames()
+    {
         $loader = new BibleLoader("nt", $this->con);
-        $booknames = $loader->LoadBooknames();
+        $loader->LoadBooknames();
         $this->assertTrue(in_array("Matt", $loader->GetData()));
     }
 
-//    /**
-//     * Testaa lukujen nimien lataamista
-//     */
-//    public function testLoadChapterNames()
-//    {
-//        $loader = new BibleLoader("nt", $this->con);
-//        $booknames = $loader->LoadChapters();
-//        $this->assertTrue(in_array("Matt", $loader->GetData()));
-//    }
+    /**
+     * Testaa lukujen nimien lataamista
+     */
+    public function testLoadChapters()
+    {
+        $loader = new BibleLoader("nt", $this->con);
+        $loader->LoadChapters("Matt");
+        $this->assertTrue(sizeof($loader->GetData())==28);
+    }
+
+    /**
+     * Testaa jakeiden nimien lataamista
+     */
+    public function testLoadVerses()
+    {
+        $loader = new BibleLoader("nt", $this->con);
+        $loader->LoadVerses("Matt",1);
+        $this->assertTrue(sizeof($loader->GetData())==25);
+    }
 
 }
 

@@ -64,6 +64,16 @@ switch($params["action"]){
         $loader->LoadBooknames();
         echo json_encode($loader->GetData());
         break;
+    case "load_chapters":
+        $loader = new BibleLoader($params["testament"], $database_bible);
+        $loader->LoadChapters($params["book"]);
+        echo json_encode($loader->GetData());
+        break;
+    case "load_verses":
+        $loader = new BibleLoader($params["testament"], $database_bible);
+        $loader->LoadVerses($params["book"], $params["chapter"]);
+        echo json_encode($loader->GetData());
+        break;
     case "load_comments":
         $comment= new Comment($database, $params["service_id"], $m);
         echo $comment->LoadAll();

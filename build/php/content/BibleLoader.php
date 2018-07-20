@@ -55,15 +55,16 @@ class BibleLoader{
      *
      */
     public function LoadChapters($bookname){
-        $this->data = $this->con->query("SELECT DISTINCT 
+        $this->data = [];
+        $data = $this->con->query("SELECT DISTINCT 
             q.chapterno FROM
             (SELECT chapterno, id FROM {$this->testament} 
             WHERE book = :bookname 
             order by id) as q",
             ["bookname"=>$bookname])->fetchAll();
-        #foreach($data as $row){
-        #    $this->data[] = $row["book"];
-        #}
+        foreach($data as $row){
+            $this->data[] = $row["chapterno"];
+        }
         return $this;
     }
 
@@ -75,7 +76,16 @@ class BibleLoader{
      *
      */
     public function LoadVerses($bookname, $chapterno){
-        $this->data = $this->con->q("SELECT DISTINCT q.verseno FROM (SELECT verseno, id from {$this->testament} WHERE book = :bookname and chapterno = :chapterno order by id) as q",Array("bookname"=>$bookname,"chapterno"=>$chapterno),"all_flat");
+        $this->data = [];
+        $data = $this->con->query("SELECT DISTINCT q.verseno FROM
+            (SELECT verseno, id from {$this->testament} 
+            WHERE book = :bookname and chapterno = :chapterno 
+            order by id) as q",
+            ["bookname"=>$bookname,"chapterno"=>$chapterno])->fetchAll();
+        foreach($data as $row){
+            $this->data[] = $row["verseno"];
+        }
+        return $this;
     }
 
     /**

@@ -3509,6 +3509,8 @@ var BibleModule = function(){
             end: {},
         };
 
+        this.testament = "";
+
         this.$picker = $(`<div> 
                     <div class='testament_select'>
                         <div><input type="radio" name="testament" value="ot">Vanha testamentti</input></div>
@@ -3561,7 +3563,9 @@ var BibleModule = function(){
          *
          */
         this.AddPickerEvents = function(){
-            this.$picker.find("[name='testament']").click(this.LoadBookNames.bind(this));
+            this.$picker.find("[name='testament']").click(this.GetBookNames.bind(this));
+            this.$picker.find(".book").change(this.GetChapters.bind(this));
+            this.$picker.find(".chapter").change(this.GetVerses.bind(this));
             //$(".book, .chapter, .verse")
             //    .click(function(){pres.controls.biblecontentadder.LoadBooknames($(this))})
             //    .change(function(){pres.controls.biblecontentadder.PreLoad($(this))});
@@ -3571,42 +3575,106 @@ var BibleModule = function(){
             //         $(".endverse").remove();
             //         $(".between-verse-selectors, .versepreview").hide();
             //    }
-            //});
+            //});;
             //
             return this;
         }
 
         /**
          *
-         * 
-         * @param ev funktion laukaissut tapahtuma
+         * Lataa Raamatun kirjojen nimet tietokannasta (joko ut tai vt)
          *
          */
-        this.LoadBookNames = function(ev){
-            var $launcher = $(ev.target);
-            if($launcher.get(0).tagName=="SELECT" && $(".book:eq(0)").children().length<5){
-                alert("Valitse ensin vanha tai uusi testamentti.");
-            }
-            else if($launcher.attr("name")=="testament"){
-                //Lataa kirjojen nimet select-elementtiin
-                this.$picker.find(".book option:gt(0)").remove();
-                $.getJSON("php/ajax/Loader.php",
-                    {
-                        "action": "load_booknames",
-                        "testament": this.$picker.find("[name='testament']:checked").val()
-                    },
-                    function(data){
-                        console.log(data);
-                        //$.each(data, function(idx,bookname){
-                        //    $("<option></option>").text(bookname).appendTo(".book")
-                        //})}
-                    }
-                    );
-                //Poista vanhat luvut ja jakeet
-                this.$picker.find(".book, .chapter, .verse").find("option:gt(0)").remove();
-            }
+        this.GetBookNames = function(){
+            this.testament = this.$picker.find("[name='testament']:checked").val();
+            this.book = '';
+            this.verse = '';
+            $.getJSON("php/ajax/Loader.php",
+                {
+                    "action": "load_booknames",
+                    "testament": this.testament
+                },this.SetBookNames.bind(this));
+        };
+
+
+        /**
+         *
+         * Lataa yhden raamatun kirjan luvut
+         *
+         */
+        this.GetChapters = function(){
+            this.book = this.$picker.find(".book").val();
+            this.verse = '';
+            $.getJSON("php/ajax/Loader.php",
+                {
+                    "action": "load_chapters",
+                    "testament": this.testament,
+                    "book": this.book
+                }, this.SetChapters.bind(this));
         }
 
+
+        /**
+         *
+         * Lataa yhden raamatun kirjan luvun jakeet
+         *
+         */
+        this.GetVerses = function(){
+            this.chapter = this.$picker.find(".chapter").val();
+            $.getJSON("php/ajax/Loader.php",
+                {
+                    "action": "load_verses",
+                    "testament": this.testament,
+                    "book": this.book,
+                    "chapter": this.chapter
+                }, this.SetVerses.bind(this));
+        }
+
+
+        /**
+         *
+         * Liittää Raamatun kirjojen nimet valitsimiin
+         *
+         * @param data taulukko kirjojen nimistä
+         * 
+         */
+        this.SetBookNames = function(data){
+            var self = this;
+            this.$picker.find(".book, .chapter, .verse").find("option:gt(0)").remove();
+            //ES2015 testi: TODO muista yhteensopiva versio
+            $(data.map(bookname => `<option>${bookname}</option>`).join("\n"))
+                .appendTo(self.$picker.find(".book"));
+        };
+
+        /**
+         *
+         * Liittää kirjan lukujen numerot valitsimeen
+         *
+         * @param data taulukko lukujen numeroista
+         * 
+         */
+        this.SetChapters = function(data){
+            var self = this;
+            this.$picker.find(".chapter, .verse").find("option:gt(0)").remove();
+            //ES2015 testi: TODO muista yhteensopiva versio
+            $(data.map(ch => `<option>${ch*1}</option>`).join("\n"))
+                .appendTo(self.$picker.find(".chapter"));
+        };
+
+        /**
+         *
+         * Liittää luvun jakeiden numerot valitsimeen
+         *
+         * @param data taulukko jakeiden numeroista
+         * 
+         */
+        this.SetVerses = function(data){
+            var self = this;
+            this.$picker.find(".verse").find("option:gt(0)").remove();
+            //ES2015 testi: TODO muista yhteensopiva versio
+            $(data.map(verseno => `<option>${verseno*1}</option>`).join("\n"))
+                .appendTo(self.$picker.find(".verse"));
+        };
 
     
     };
