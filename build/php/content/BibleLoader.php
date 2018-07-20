@@ -9,8 +9,21 @@ use PDO;
 /**
  * Lataa raamatuntekstejä ja jakeiden osoitteita tietokannasta.
  *
+ * @param $data lataajan tuottama data taulukkona
+ *
  */
 class BibleLoader{
+
+    private $data = [];
+
+    /**
+     *
+     * Palauttaa kerätyn datan
+     *
+     */
+    public function GetData(){
+        return $this->data;
+    }
 
     /**
      * @param string $path polku tietokantakonfiguraatioon
@@ -25,9 +38,13 @@ class BibleLoader{
      * Lataa kirjojen nimet ko. testamentissa
      */
     public function LoadBookNames(){
-        $this->data = $this->con->query("SELECT DISTINCT q.book FROM
-            (SELECT  book, id FROM {$this->testament} order by id) as
-            q")->fetchAll();
+        $this->data = [];
+        $data = $this->con->query("SELECT DISTINCT q.book FROM
+            (SELECT  book, id FROM {$this->testament} order by id) 
+            as q")->fetchAll();
+        foreach($data as $row){
+            $this->data[] = $row["book"];
+        }
         return $this;
     }
 
@@ -38,7 +55,16 @@ class BibleLoader{
      *
      */
     public function LoadChapters($bookname){
-        $this->data = $this->con->q("SELECT DISTINCT q.chapterno FROM (SELECT chapterno, id FROM {$this->testament} WHERE book = :bookname order by id) as q",Array("bookname"=>$bookname),"all_flat");
+        $this->data = $this->con->query("SELECT DISTINCT 
+            q.chapterno FROM
+            (SELECT chapterno, id FROM {$this->testament} 
+            WHERE book = :bookname 
+            order by id) as q",
+            ["bookname"=>$bookname])->fetchAll();
+        #foreach($data as $row){
+        #    $this->data[] = $row["book"];
+        #}
+        return $this;
     }
 
     /**

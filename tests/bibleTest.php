@@ -17,7 +17,7 @@ class BibleTest extends TestCase
         $config = parse_ini_file("config.ini");
         $database = new Medoo([
         'database_type' => 'mysql',
-        'database_name' => $config["dbname"],
+        'database_name' => 'bibles',
         'server' => 'localhost',
         'username' => $config["un"],
         'password' => $config["pw"],
@@ -41,12 +41,21 @@ class BibleTest extends TestCase
     /**
      * Testaa kirjojen nimien lataamista
      */
-    public function testLoadBookNames()
-    {
+    public function testLoadBookNames() {
         $loader = new BibleLoader("nt", $this->con);
         $booknames = $loader->LoadBooknames();
-        $this->assertTrue(in_array("");
+        $this->assertTrue(in_array("Matt", $loader->GetData()));
     }
+
+//    /**
+//     * Testaa lukujen nimien lataamista
+//     */
+//    public function testLoadChapterNames()
+//    {
+//        $loader = new BibleLoader("nt", $this->con);
+//        $booknames = $loader->LoadChapters();
+//        $this->assertTrue(in_array("Matt", $loader->GetData()));
+//    }
 
 }
 

@@ -16,12 +16,22 @@ use Portal\content\Service;
 use Portal\content\Structure;
 use Portal\content\Servicelist;
 use Portal\content\Songlist;
+use Portal\content\BibleLoader;
 
 
 $config = parse_ini_file("../../../config.ini");
 $database = new Medoo([
     'database_type' => 'mysql',
     'database_name' => $config["dbname"],
+    'server' => 'localhost',
+    'username' => $config["un"],
+    'password' => $config["pw"],
+    'charset' => 'utf8'
+]);
+
+$database_bible = new Medoo([
+    'database_type' => 'mysql',
+    'database_name' => 'bibles',
     'server' => 'localhost',
     'username' => $config["un"],
     'password' => $config["pw"],
@@ -44,6 +54,15 @@ switch($params["action"]){
             ->SetCommentator($params["commentator"])
             ->SetReplyTo($params["replyto"])
             ->Save();
+        break;
+    case "load_comments":
+        $comment= new Comment($database, $params["service_id"], $m);
+        echo $comment->LoadAll();
+        break;
+    case "load_booknames":
+        $loader = new BibleLoader($params["testament"], $database_bible);
+        $loader->LoadBooknames();
+        echo json_encode($loader->GetData());
         break;
     case "load_comments":
         $comment= new Comment($database, $params["service_id"], $m);

@@ -109,18 +109,26 @@ var BibleModule = function(){
          */
         this.LoadBookNames = function(ev){
             var $launcher = $(ev.target);
-            console.log(ev.target);
             if($launcher.get(0).tagName=="SELECT" && $(".book:eq(0)").children().length<5){
                 alert("Valitse ensin vanha tai uusi testamentti.");
             }
             else if($launcher.attr("name")=="testament"){
-                ////Lataa kirjojen nimet select-elementtiin
-                //$(".book option:gt(0)").remove();
-                //$.getJSON("php/loadbibleverses.php",{"testament":$("[name='testament']:checked").val()},
-                //    function(data){
-                //        $.each(data, function(idx,bookname){$("<option></option>").text(bookname).appendTo(".book") } )});
-                ////Poista vanhat luvut ja jakeet
-                //$(".book, .chapter, .verse").find("option:gt(0)").remove();
+                //Lataa kirjojen nimet select-elementtiin
+                this.$picker.find(".book option:gt(0)").remove();
+                $.getJSON("php/ajax/Loader.php",
+                    {
+                        "action": "load_booknames",
+                        "testament": this.$picker.find("[name='testament']:checked").val()
+                    },
+                    function(data){
+                        console.log(data);
+                        //$.each(data, function(idx,bookname){
+                        //    $("<option></option>").text(bookname).appendTo(".book")
+                        //})}
+                    }
+                    );
+                //Poista vanhat luvut ja jakeet
+                this.$picker.find(".book, .chapter, .verse").find("option:gt(0)").remove();
             }
         }
 
