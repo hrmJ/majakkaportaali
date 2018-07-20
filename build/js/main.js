@@ -3529,6 +3529,7 @@ var BibleModule = function(){
             });
             this.endpicker.SetAddress(this.startpicker.GetAddress(), 
                 this.startpicker.testament);
+            this.startpicker.$picker.find(".between-verse-selectors").slideDown("slow");
             this.endpicker.$picker.show();
         //};
         };
@@ -3568,9 +3569,6 @@ var BibleModule = function(){
                                 <div class="versepreview"></div>
                             </div>
                         </div>
-                        <div>
-                        <div class="arrow_box between-verse-selectors">Mihin asti?</div>
-                    </div>
                 </div>
             </div>`);
 
@@ -3776,10 +3774,15 @@ var BibleModule = function(){
     var StartAddressPicker = function(){
         this.type = "start";
         BibleAddressPicker.call(this);
+
         $(`<div class='testament_select'>
             <div><input type="radio" name="testament" value="ot">Vanha testamentti</input></div>
             <div><input type="radio" name="testament" value="nt">Uusi testamentti</input></div>
         </div>`).prependTo(this.$picker);
+
+        $(`<div>
+        <div class="arrow_box between-verse-selectors">Mihin asti?</div>
+        </div>`).appendTo(this.$picker);
     };
 
     StartAddressPicker.prototype = Object.create(BibleAddressPicker.prototype);

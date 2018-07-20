@@ -435,7 +435,8 @@ h3 {
 
 .between-verse-selectors {
   width: 100%;
-  display: none; }
+  display: none;
+  margin: 0.9em 0 0.9em 0; }
 
 .testament_select {
   display: flex;
@@ -454,6 +455,36 @@ h3 {
 .ui-widget-header {
   border: none;
   border-bottom: 1px solid #ddd; }
+
+.arrow_box {
+  position: relative;
+  background: #e6e6e6;
+  border: 1px solid grey;
+  text-align: center;
+  color: #1a1a1a;
+  font-size: 0.8em; }
+
+.arrow_box:after, .arrow_box:before {
+  top: 100%;
+  left: 50%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none; }
+
+.arrow_box:after {
+  border-color: rgba(213, 213, 213, 0);
+  border-top-color: #e6e6e6;
+  border-width: 7px;
+  margin-left: -7px; }
+
+.arrow_box:before {
+  border-color: rgba(255, 255, 255, 0);
+  border-top-color: grey;
+  border-width: 8px;
+  margin-left: -8px; }
 
 .data-container {
   display: flex;
