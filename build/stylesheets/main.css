@@ -403,7 +403,7 @@ h3 {
 .versepreview {
   display: none;
   position: absolute;
-  max-width: 25vw;
+  max-width: 65vw;
   height: 1.2em;
   font-size: 0.8em;
   left: 24vw;

@@ -91,6 +91,7 @@ var BibleModule = function(){
             this.$picker.find("[name='testament']").click(this.GetBookNames.bind(this));
             this.$picker.find(".book").change(this.GetChapters.bind(this));
             this.$picker.find(".chapter").change(this.GetVerses.bind(this));
+            this.$picker.find(".verse").change(this.PreviewVerse.bind(this));
             //$(".book, .chapter, .verse")
             //    .click(function(){pres.controls.biblecontentadder.LoadBooknames($(this))})
             //    .change(function(){pres.controls.biblecontentadder.PreLoad($(this))});
@@ -201,6 +202,29 @@ var BibleModule = function(){
                 .appendTo(self.$picker.find(".verse"));
         };
 
+
+        /**
+         *
+         * Näyttää esikatselunäkymän jakeesta
+         * 
+         */
+        this.PreviewVerse = function(){
+            var self = this;
+            this.verse = this.$picker.find(".verse").val();
+            $.getJSON("php/ajax/Loader.php",
+                {
+                    "action": "load_verse_content",
+                    "testament": this.testament,
+                    "startverse": [this.book, this.chapter, this.verse],
+                    "endverse": null,
+                }, function(verse){
+                    self.$picker.find(".versepreview")
+                        .text(verse[0])
+                        .fadeIn()
+                        .click(function(){$(this).fadeOut()});
+                    setTimeout(x => (self.$picker.find(".versepreview").fadeOut()), 4000);
+                });
+        };
     
     };
 

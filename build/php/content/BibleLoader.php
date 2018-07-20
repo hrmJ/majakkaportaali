@@ -95,13 +95,27 @@ class BibleLoader{
      * @param array $end Taulukko muotoa (book,chapter,verse)
      *
      */
-    public function LoadBibleVerses($start, $end){
-        $this->data = $this->con->q("SELECT content FROM {$this->testament} WHERE id BETWEEN 
-                (SELECT id FROM {$this->testament} WHERE book = :startbook AND chapterno = :startchapter AND verseno = :startverse)
+    public function LoadVerseContent($start, $end=null){
+        $end = ($end ? $end : $start);
+        $this->data = [];
+        $data = $this->con->query("SELECT content FROM {$this->testament} 
+                WHERE id BETWEEN 
+                    (SELECT id FROM {$this->testament} 
+                        WHERE book = :startbook AND 
+                              chapterno = :startchapter AND 
+                               verseno = :startverse)
                 AND
-                (SELECT id FROM {$this->testament} WHERE book = :endbook AND chapterno = :endchapter AND verseno = :endverse)",
-                Array("startbook"=>$start[0],"startchapter"=>$start[1],"startverse"=>$start[2],
-                      "endbook"=>$end[0],"endchapter"=>$end[1],"endverse"=>$end[2]),"all_flat");
+                    (SELECT id FROM {$this->testament}
+                         WHERE book = :endbook AND 
+                                chapterno = :endchapter AND 
+                                verseno = :endverse)",
+                ["startbook"=>$start[0],"startchapter"=>$start[1],"startverse"=>$start[2],
+                      "endbook"=>$end[0],"endchapter"=>$end[1],"endverse"=>$end[2]])->fetchAll();
+
+        foreach($data as $row){
+            $this->data[] = $row["content"];
+        }
+
         return $this;
     }
 

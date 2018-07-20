@@ -68,6 +68,17 @@ class BibleTest extends TestCase
         $this->assertTrue(sizeof($loader->GetData())==25);
     }
 
+
+    /**
+     * Testaa jakeiden esikatselua
+     */
+    public function testPreviewVerse()
+    {
+        $loader = new BibleLoader("nt", $this->con);
+        $loader->LoadVerseContent(["Matt",1,1]);
+        $this->assertRegExp("/Jeesuksen/", $loader->GetData()[0]);
+    }
+
 }
 
 
