@@ -15,11 +15,50 @@ var BibleModule = function(){
      *
      */
     function AttachAddressPicker($parent_el){
-    
-        var picker = new BibleAddressPicker();
-        picker.AttachTo($parent_el).AddPickerEvents();
-    
+        var picker = new PickerPair();
+        picker.Initialize($parent_el);
     }
+
+    /**
+     *
+     * Alku- ja loppujakeen valitsimen muodostama kokonaisuus
+     *
+     * @param $parent_el elementti, johon valitsin liitetään
+     *
+     */
+    var PickerPair = function($parent_el){ 
+
+        this.Initialize = function($parent_el){
+            this.startpicker = new StartAddressPicker();
+            this.startpicker.AttachTo($parent_el).AddPickerEvents();
+            this.endpicker = new EndAddressPicker();
+            this.endpicker.AddPickerEvents();
+            this.endpicker.$picker
+                .insertAfter(this.startpicker.$picker)
+                .hide();
+            this.startpicker.$picker
+                .find(".verse").change(this.AttachEndPicker.bind(this));
+        }
+
+        /**
+         *
+         * Liittää loppujakeen valitsimen.
+         *
+         */
+        this.AttachEndPicker = function(){
+            var self = this;
+            $.each([".book",".chapter",".verse"],function(idx, type){
+                self.endpicker.$picker.find(type).html(
+                    self.startpicker.$picker.find(type).html()
+                );
+            });
+            this.endpicker.SetAddress(this.startpicker.GetAddress(), 
+                this.startpicker.testament);
+            this.endpicker.$picker.show();
+        //};
+        };
+
+    };
 
 
     /**
@@ -29,18 +68,12 @@ var BibleModule = function(){
      */
     var BibleAddressPicker = function(){ 
 
-        this.address = {
-            start: {},
-            end: {},
-        };
-
         this.testament = "";
+        this.book = "";
+        this.chapter = "";
+        this.verse = "";
 
         this.$picker = $(`<div> 
-                    <div class='testament_select'>
-                        <div><input type="radio" name="testament" value="ot">Vanha testamentti</input></div>
-                        <div><input type="radio" name="testament" value="nt">Uusi testamentti</input></div>
-                    </div>
                     <div class="verseselector startverse">
                         <div class="selector-wrapper">
                             <div>
@@ -67,10 +100,9 @@ var BibleModule = function(){
             </div>`);
 
 
-
         /**
          *
-         * Liitä valitsin DOMiin
+         * Liittää valitsimen DOMiin
          *
          * @param $parent_el jquery-representaatio elementistä, jonka sisälle syötetään
          *
@@ -81,6 +113,39 @@ var BibleModule = function(){
             return this;
         };
 
+        /**
+         *
+         * Palauttaa tämänhetkisen osoitteen muodossa {book:..,chapter:...,verse:...}
+         *
+         */
+        this.GetAddress = function(){
+            var address = {}
+                self = this;
+            $.each(["book","chapter","verse"],function(idx, type){
+                address[type] = self.$picker.find("." + type).val();
+            });
+
+            return address;
+        };
+
+
+        /**
+         *
+         * Asettaa osoitteen valmiiksi määritellyn olion perusteella
+         *
+         * @param address osoite muodossa {book:..,chapter:...,verse:...}
+         * @param testament nt tai ot
+         *
+         */
+        this.SetAddress = function(address, testament){
+            var self = this;
+            self.testament = testament;
+            $.each(Object.keys(address), function(idx, type){
+                self.$picker.find("." + type).val(address[type]);
+                self[type] = address[type];
+            });
+            return this;
+        };
 
         /**
          *
@@ -230,132 +295,31 @@ var BibleModule = function(){
 
     /**
      *
+     * Valitsin sille jakeelle, josta asti valitaan. Perii BibleAddressPicker:stä.
      *
      */
-    BibleAddressPicker.prototype = {
+    var StartAddressPicker = function(){
+        this.type = "start";
+        BibleAddressPicker.call(this);
+        $(`<div class='testament_select'>
+            <div><input type="radio" name="testament" value="ot">Vanha testamentti</input></div>
+            <div><input type="radio" name="testament" value="nt">Uusi testamentti</input></div>
+        </div>`).prependTo(this.$picker);
+    };
 
+    StartAddressPicker.prototype = Object.create(BibleAddressPicker.prototype);
 
-        /**
-         *
-         * Lataa kirjojen nimet tietokannasta (joka vanhasta tai uudesta testamentista)
-         *
-         * @param object $launcher jquery-elementti, joka tapahtuman laukaisi (joko radiobuttonit tai lista)
-         *
-         */
-        LoadBooknames: function($launcher){
-            if($launcher.get(0).tagName=="SELECT" && $(".book:eq(0)").children().length<5){
-                alert("Valitse ensin vanha tai uusi testamentti.");
-            }
-            else if($launcher.attr("name")=="testament"){
-                //Lataa kirjojen nimet select-elementtiin
-                $(".book option:gt(0)").remove();
-                $.getJSON("php/loadbibleverses.php",{"testament":$("[name='testament']:checked").val()},
-                    function(data){
-                        $.each(data, function(idx,bookname){$("<option></option>").text(bookname).appendTo(".book") } )});
-                //Poista vanhat luvut ja jakeet
-                $(".book, .chapter, .verse").find("option:gt(0)").remove();
-            }
-        },
+    /**
+     *
+     * Valitsin sille jakeelle, johon asti valitaan. Perii BibleAddressPicker:stä.
+     *
+     */
+    var EndAddressPicker = function(){
+        this.type = "end";
+        BibleAddressPicker.call(this);
+    };
 
-        /**
-         * Lataa kappaleiden tai jakeiden lukumäärä valitun kirjan nimen / kappaleen perusteella
-         *
-         *
-         * @param object launcher toiminnon laukaissut kirjanvalitsin
-         *
-         */
-        PreLoad: function($launcher){
-            //etsi seuraava select-elementti
-            var self = this;
-            var $selectparent = $launcher.parents(".verseselector");
-            var $subselect = $launcher.parent().next().find("select")
-            if($subselect.length>0) $subselect.find("option:gt(0)").remove();
-
-            var params = {"testament": $("[name='testament']:checked").val(),
-                          "book": $selectparent.find(".book").val(),
-                          "chapter": $selectparent.find(".chapter").val(),
-                          "verse": $selectparent.find(".verse").val()};
-
-            //Jos haetaan ylemmän tason elementtejä, poista oliosta alemman tason muuttujat
-            if($launcher.hasClass("book") || $launcher.hasClass("chapter")) delete params.verse;
-            if($launcher.hasClass("book")) delete params.chapter;
-
-            $.getJSON("php/loadbibleverses.php",params, function(data){
-                    if($launcher.hasClass("verse")){ 
-                        self.ShowVersePreview($selectparent, data);
-                        self.CreateTitle();
-                        self.LoadContent();
-                    }
-                    else{
-                        $.each(data, function(idx,chapter){$("<option></option>").text(chapter).appendTo($subselect) });
-                        $subselect.parent().next().find("select option:gt(0)").remove();
-                    }
-            });
-
-        },
-
-        /**
-         * Näyttää pienen esikatseluikkunan siitä Raamatun jakeesta, joka valittu
-         *
-         * @param  object $selectparent se elementti, jonka lapsena käytetty jakeen valitsin on
-         * @param  array data ajax-kyselyn palauttama taulukko jakeista
-         *
-         */
-        ShowVersePreview: function($selectparent,data){
-                //Näytä jakeen esikatselu ja tee siitä klikkauksella poistettava
-                $selectparent.find(".versepreview").text(data[0]).fadeIn().click(function(){$(this).fadeOut()});
-                if($selectparent.hasClass("startverse") && $selectparent.find(".between-verse-selectors").is(":hidden")){
-                    $selectparent.find(".between-verse-selectors").slideDown("slow");
-                    $selectparent.find(".verseselector").text(data[0]).fadeIn().click(function(){$(this).fadeOut()});
-                    //Lisää viimeisen jakeen valitsin
-                    var $endverseselectors = $selectparent.clone(true).insertAfter($selectparent);
-                    $endverseselectors.find(".between-verse-selectors").remove();
-                    //Kopioi lähtöjakeen osoite loppujakeeseen
-                    $selectparent.find("select").each(function(){
-                        $endverseselectors.find("." + $(this).attr("class")).val($(this).val());
-                    })
-                    $(".verseselector:eq(1)").removeClass("startverse").addClass("endverse");
-                }
-        },
-
-        /**
-         * Merkitse muistiin Raamatunkohdan alku- ja loppukohta
-         */
-        UpdateAddress: function(){
-            var self = this;
-            $(".startverse select").each(function(){ self.address.start[$(this).attr("class")] = $(this).val()});
-            $(".endverse select").each(function(){ self.address.end[$(this).attr("class")] = $(this).val()});
-        },
-
-        /**
-         * Luo jquery-elementti, joka syötetään Raamatunkohdan otsikoksi
-         */
-        CreateTitle: function(){
-            var self = this;
-            var addresstext = "";
-            this.UpdateAddress();
-            $.each(this.address.start, function(key,val){
-                var sep = key == "chapter" ? ":" : " ";
-                addresstext += val + sep; });
-            addresstext = addresstext.trim();
-
-            if (!(self.address.start.book == self.address.end.book && 
-                self.address.start.chapter == self.address.end.chapter && 
-                self.address.start.verse == self.address.end.verse)){
-                    //Jos ei sama alku- ja loppujae
-                    if (self.address.start.chapter == self.address.end.chapter){
-                        //Jos sama luku
-                        addresstext += "-" + self.address.end.verse;
-                    }
-                    else{
-                        //Jos eri luku
-                        addresstext += "-" + self.address.end.chapter  + ":"  + self.address.end.verse;
-                    }
-                }
-            this.$title = $("<h2></h2>").text(addresstext);
-            },
-
-    } 
+    EndAddressPicker.prototype = Object.create(BibleAddressPicker.prototype);
 
 
     return {
