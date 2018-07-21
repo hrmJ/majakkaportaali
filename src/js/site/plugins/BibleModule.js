@@ -143,6 +143,10 @@ var BibleModule = function(){
          *
          */
         this.Edit = function(){
+            console.log(this.startpicker.testament);
+            this.startpicker.$picker
+                .find("[value='" + this.startpicker.testament + "']")
+                .prop({"checked":true});
             this.$status.hide();
             this.startpicker.$picker.show();
             this.endpicker.$picker.show();
