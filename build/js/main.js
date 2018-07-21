@@ -2288,7 +2288,7 @@ var GeneralStructure = function(){
     function Initialize(){
         InitializeNewslotMenu();
         InitializeSlotFunctionality();
-        BibleModule.AttachAddressPicker($(".bs_test"));
+        BibleModule.AttachAddressPicker($(".bs_test"),"Evankeliumi");
     }
 
 
@@ -3487,11 +3487,87 @@ var BibleModule = function(){
      * Liittää raamatunosoitteiden poimijan käyytäjän määrittelemään elementtiin
      *
      * @param $parent_el jquery-representaatio elementistä, jonka sisälle syötetään
+     * @param title Raamatunkohdan otsikko / rooli
      *
      */
-    function AttachAddressPicker($parent_el){
-        var picker = new PickerPair();
-        picker.Initialize($parent_el);
+    function AttachAddressPicker($parent_el, title){
+        var title = title || "";
+        var cont = new PickerContainer(title);
+        cont.Initialize();
+        cont.AttachTo($parent_el);
+    }
+
+    /**
+     *
+     * (Mahdollisesti) usean jaeparin muodostama kokonaisuus
+     *
+     * @param title Raamatunkohdan otsikko / rooli
+     *
+     */
+    var PickerContainer = function(title){ 
+
+        this.$header = $(`<div class='bible_address_container'>
+                            <div class='address_name'>
+                                ${title}
+                            </div>
+                            <div class='address_information'>
+                                <span class='visible_address'>Ei määritetty</span>
+                                <input type='hidden' class='saved_address'></input>
+                            </div>
+                            <div class='bible_address_starter'>
+                                <button class='define_address'>Näytä</button>
+                            </div>
+                        </div>`);
+        this.$cont = $(`<div class='address_pickers'>
+                        </div>`);
+
+        /**
+         *
+         * Liittää mukaan tapahtumat
+         *
+         */
+        this.Initialize = function(){
+            this.$header.find(".define_address").click(this.ShowPickers.bind(this));
+            this.AddPickerPair();
+        };
+
+        /**
+         *
+         * Liittää osaksi DOMia
+         *
+         * @param $parent_el elementti, johon valitsin liitetään
+         *
+         */
+        this.AttachTo = function($parent_el){
+            this.$header.appendTo($parent_el);
+            this.$cont.insertAfter($parent_el);
+        };
+
+        /**
+         *
+         * Näyttää raamatunkohtien valitsimet.
+         *
+         */
+        this.ShowPickers = function(){
+            var self = this,
+                text = self.$header.find(".define_address").text();
+            this.$cont.slideToggle(function(){
+                self.$header.find(".define_address").text(
+                    (text == "Näytä" ? "Piilota" : "Näytä") 
+                );
+            });
+        };
+
+
+        /**
+         *
+         * Lisää uuden alku- + loppujaeparin
+         *
+         */
+        this.AddPickerPair = function(){
+            var picker = new PickerPair();
+            picker.Initialize(this.$cont);
+        };
     }
 
     /**
@@ -3503,16 +3579,81 @@ var BibleModule = function(){
      */
     var PickerPair = function($parent_el){ 
 
+        this.$status = $("<div class='bible_address_status'><span class='status_text'></span></div>");
+        this.startpicker = new StartAddressPicker();
+        this.endpicker = new EndAddressPicker();
+
         this.Initialize = function($parent_el){
-            this.startpicker = new StartAddressPicker();
+            this.$confirm_link = $("<a href='javascript:void(0);'>Valmis</a>").click(this.Confirm.bind(this));;
+            this.$edit_link = $("<i class='fa fa-pencil addr_edit_link'></i>")
+                .click(this.Edit.bind(this))
+                .appendTo(this.$status);
             this.startpicker.AttachTo($parent_el).AddPickerEvents();
-            this.endpicker = new EndAddressPicker();
             this.endpicker.AddPickerEvents();
             this.endpicker.$picker
                 .insertAfter(this.startpicker.$picker)
                 .hide();
             this.startpicker.$picker
                 .find(".verse").change(this.AttachEndPicker.bind(this));
+            this.$controls = $("<div class='hidden'></div>")
+                .append(this.$confirm_link)
+                .insertAfter(this.endpicker.$picker);
+            this.$status.insertBefore(this.startpicker.$picker);
+        }
+
+
+        /**
+         *
+         * Muokkaa kerran jo vahvistettua
+         *
+         */
+        this.Edit = function(){
+            this.$status.hide();
+            this.startpicker.$picker.show();
+            this.endpicker.$picker.show();
+            this.$confirm_link.show();
+        };
+
+
+        /**
+         *
+         * Vahvistaa valitun raamatunkohdan
+         *
+         */
+        this.Confirm = function(){
+            var addr = this.GetHumanReadableAddress();
+            this.startpicker.$picker.hide();
+            this.endpicker.$picker.hide();
+            this.$status.find(".status_text").text(addr);
+            this.startpicker.$picker.parents(".address_pickers")
+                .prev()
+                .find(".address_information").text(addr);
+            this.$confirm_link.hide()
+            this.$status.show();
+        }
+
+        /**
+         *
+         * Muodostaa helposti luettavissa olevan merkkijonon osoitteesta.
+         *
+         */
+        this.GetHumanReadableAddress = function(){
+            var start = this.startpicker.GetAddress(),
+                end = this.endpicker.GetAddress(),
+                addr = start.book + ' ' + start.chapter;
+            if(start.book !== end.book){
+                addr += ":" + start.verse + " - " + end.book + " " + end.chapter + ": " + end.verse;
+            }
+            else if(start.chapter == end.chapter && start.verse == end.verse) {
+                addr += ":" + start.verse;
+            }
+            else if(start.chapter == end.chapter) {
+                addr += ":" + start.verse + " - " +  end.verse;
+            }
+            else if(start.chapter !== end.chapter) {
+                addr += ":" + start.verse + " - " +  end.chapter + ": " + end.verse;
+            }
+            return  addr;
         }
 
         /**
@@ -3531,6 +3672,7 @@ var BibleModule = function(){
                 this.startpicker.testament);
             this.startpicker.$picker.find(".between-verse-selectors").slideDown("slow");
             this.endpicker.$picker.show();
+            this.$controls.show();
         //};
         };
 
@@ -3764,6 +3906,7 @@ var BibleModule = function(){
                 });
         };
     
+
     };
 
     /**
@@ -3795,7 +3938,12 @@ var BibleModule = function(){
     var EndAddressPicker = function(){
         this.type = "end";
         BibleAddressPicker.call(this);
+        $("<div class='after-verse-selectors'></div>")
+            .appendTo(this.$picker);
+
+
     };
+
 
     EndAddressPicker.prototype = Object.create(BibleAddressPicker.prototype);
 

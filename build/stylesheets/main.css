@@ -446,6 +446,29 @@ h3 {
 [name='testament'] {
   font-size: 0.7em; }
 
+.bible_address_container {
+  display: flex;
+  flex-flow: row wrap; }
+  .bible_address_container div:first-child {
+    font-weight: bold; }
+  .bible_address_container div:not(:first-child) {
+    margin-left: 0.5em; }
+
+.bible_address_status {
+  display: none; }
+  .bible_address_status .fa {
+    margin-left: 0.6em; }
+
+.address_pickers {
+  display: none;
+  padding: 0.3em;
+  margin-bottom: 1em; }
+
+.after-verse-selectors {
+  margin-top: 1em; }
+  .after-verse-selectors a {
+    color: #0d0d0d; }
+
 .ui-widget-header {
   background: none; }
 
@@ -951,7 +974,8 @@ ul.contentlist {
   padding: 2em;
   position: absolute;
   top: 1em;
-  left: 1em; }
+  left: 1em;
+  z-index: 999; }
   .msgbox h3 {
     color: white; }
   .msgbox footer {

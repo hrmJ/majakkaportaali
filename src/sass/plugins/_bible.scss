@@ -64,3 +64,43 @@ $biblepreview:#f9ff9f;
 [name='testament']{
     font-size:0.7em;
 }
+
+.bible_address_container{
+    display:flex;
+    flex-flow: row wrap;
+
+    div:first-child{
+        font-weight:bold;
+    }
+    
+
+
+    div:not(:first-child) {
+        margin-left:0.5em;
+    }
+}
+
+//Tähän tulostetaan, kun jakeet valittu
+.bible_address_status{
+    display:none;
+    .fa {
+        margin-left:0.6em;
+    }
+}
+
+
+//sisältää Raamatun jakeiden valitsimet, aluksi piilotettu
+.address_pickers{
+    display:none;
+    padding:0.3em;
+    margin-bottom:1em;
+}
+
+.after-verse-selectors{
+    margin-top: 1em;
+    a{
+        color: lighten(black,5%);
+    }
+}
+
+
