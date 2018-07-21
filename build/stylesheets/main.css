@@ -446,12 +446,12 @@ h3 {
 [name='testament'] {
   font-size: 0.7em; }
 
-.bible_address_container {
+.bible_address_header {
   display: flex;
   flex-flow: row wrap; }
-  .bible_address_container div:first-child {
+  .bible_address_header div:first-child {
     font-weight: bold; }
-  .bible_address_container div:not(:first-child) {
+  .bible_address_header div:not(:first-child) {
     margin-left: 0.5em; }
 
 .bible_address_status {

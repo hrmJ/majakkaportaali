@@ -31,7 +31,8 @@ var BibleModule = function(){
      */
     var PickerContainer = function(title){ 
 
-        this.$header = $(`<div class='bible_address_container'>
+        this.$supercont = $(`<div class='bible_address_container'>`);
+        this.$header = $(`<div class='bible_address_header'>
                             <div class='address_name'>
                                 ${title}
                             </div>
@@ -65,8 +66,9 @@ var BibleModule = function(){
          *
          */
         this.AttachTo = function($parent_el){
-            this.$header.appendTo($parent_el);
-            this.$cont.insertAfter($parent_el);
+            this.$supercont.appendTo($parent_el);
+            this.$header.appendTo(this.$supercont);
+            this.$cont.insertAfter(this.$header);
             this.$addmore_link = $("<i class='fa fa-plus add_picker_pair'></i>")
                 .click(this.AddPickerPair.bind(this));
             this.$addmore_link_cont = $("<div class='add_picker_pair'></div>")
