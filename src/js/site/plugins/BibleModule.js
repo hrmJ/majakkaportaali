@@ -46,6 +46,7 @@ var BibleModule = function(){
         this.$cont = $(`<div class='address_pickers'>
                         </div>`);
 
+
         /**
          *
          * Liittää mukaan tapahtumat
@@ -66,6 +67,15 @@ var BibleModule = function(){
         this.AttachTo = function($parent_el){
             this.$header.appendTo($parent_el);
             this.$cont.insertAfter($parent_el);
+            this.$addmore_link = $("<i class='fa fa-plus add_picker_pair'></i>")
+                .click(this.AddPickerPair.bind(this));
+            this.$addmore_link_cont = $("<div class='add_picker_pair'></div>")
+                .append(this.$addmore_link)
+                .insertAfter(this.$cont)
+                .hide();
+            if(this.$cont.find(".fa-pencil").is(":visible")){
+                this.$addmore_link_cont.show();
+            }
         };
 
         /**
@@ -150,9 +160,13 @@ var BibleModule = function(){
             this.startpicker.$picker.hide();
             this.endpicker.$picker.hide();
             this.$status.find(".status_text").text(addr);
+
             this.startpicker.$picker.parents(".address_pickers")
                 .prev()
                 .find(".address_information").text(addr);
+            this.startpicker.$picker.parents(".address_pickers")
+                .next().show();
+
             this.$confirm_link.hide()
             this.$status.show();
         }
