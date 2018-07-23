@@ -16,8 +16,11 @@ GeneralStructure.DataLoading = function(){
          * Hae dian sisältötiedot tietokannasta: tyypistä riippuen vähintään nimi ja luokka,
          * mahdollisesti myös teksti, laulun nimi, kuvat, ylätunniste jne.
          *
+         * @param new_slot jos määritetty, kyseessä on uusi slotti eikä vanhan datan lataus
+         *
          */
-        source.prototype.LoadParams = function(){
+        source.prototype.LoadParams = function(new_slot){
+            var new_slot = new_slot || false;
             //Huolehdi siitä, että kuvanvalintavalikot ovat näkyvissä ennen tietojen lataamista
             this.AddImageLoader();
             this.slot_number = this.$container.find(".slot-number").text() || $(".slot").length + 1 ;
@@ -25,13 +28,15 @@ GeneralStructure.DataLoading = function(){
             this.$lightbox.find(".segment-name").val(this.slot_name);
 
             var self = this;
-            $.getJSON("php/ajax/Loader.php",
-                {
-                    "action": "get_" + this.segment_type.replace("segment","slide"),
-                    "id" : this.slide_id,
-                },
-                //This method is child-specific, cf. infoslide.js, songslide.js etc
-                this.FillInData.bind(this));
+            if(!new_slot){
+                $.getJSON("php/ajax/Loader.php",
+                    {
+                        "action": "get_" + this.segment_type.replace("segment","slide"),
+                        "id" : this.slide_id,
+                    },
+                    //This method is child-specific, cf. infoslide.js, songslide.js etc
+                    this.FillInData.bind(this));
+            }
 
             return this;
         };

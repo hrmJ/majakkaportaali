@@ -112,6 +112,27 @@ CREATE TABLE liturgicalsongs (
 ) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
 
 
+--
+-- Table structure for table `serviceverses`. Messuissa käytettävät
+-- raamatunkohdat.
+--
+
+CREATE TABLE serviceverses (
+  id int(10) unsigned NOT NULL AUTO_INCREMENT,
+  service_id int(10) unsigned NOT NULL,
+  testament varchar(200) DEFAULT '',
+  startbook varchar(200) DEFAULT '',
+  endbook varchar(200) DEFAULT '',
+  startchapter int(2),
+  endchapter int(2),
+  startverse int(3),
+  endverse int(3),
+  PRIMARY KEY (id),
+  KEY service_index (service_id),
+  CONSTRAINT serviceverses_ibfk_1 FOREIGN KEY (service_id) REFERENCES services (id) ON DELETE CASCADE
+);
+
+
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;

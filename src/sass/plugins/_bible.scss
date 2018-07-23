@@ -32,7 +32,7 @@ $biblepreview:#f9ff9f;
 .selector-wrapper{
     display:flex;
     flex-flow:row wrap;
-    justify-content:space-between;
+    //justify-content:space-between;
 
     > div:nth-child(3){
         display:flex;
@@ -72,8 +72,6 @@ $biblepreview:#f9ff9f;
     div:first-child{
         font-weight:bold;
     }
-    
-
 
     div:not(:first-child) {
         margin-left:0.5em;
@@ -88,12 +86,22 @@ $biblepreview:#f9ff9f;
     }
 }
 
+.bible_address_container{
+    border:1px dashed darkgrey;
+    padding:0.4em;
+
+}
 
 //sisältää Raamatun jakeiden valitsimet, aluksi piilotettu
 .address_pickers{
     display:none;
     padding:0.3em;
     margin-bottom:1em;
+}
+
+.pickerpair{
+    background: lightgrey;
+    padding:0.7em;
 }
 
 .after-verse-selectors{
@@ -104,3 +112,13 @@ $biblepreview:#f9ff9f;
 }
 
 
+//Monta raamatunkohtavalitsinta peräkkäin
+.biblesegment_list{
+    padding:0;
+    list-style-type:none;
+
+    li + li {
+        margin-top:0.6em;
+    }
+
+}

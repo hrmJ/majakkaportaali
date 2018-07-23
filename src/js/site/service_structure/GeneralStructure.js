@@ -7,7 +7,7 @@
 var GeneralStructure = function(){
 
     var adder;
-    var slot_types = [ "infoslide", "songslide"];
+    var slot_types = [ "infoslide", "songslide", "bibleslide"];
     var sortable_slot_list = undefined;
 
     /**
@@ -73,7 +73,7 @@ var GeneralStructure = function(){
                 var slot_type = u.item.find(">div:eq(0)").attr("id").replace(/([^_]+)_launcher/,"$1");
                 if(slot_types.indexOf(slot_type)>-1){
                     GeneralStructure.SlotFactory.SlotFactory.make(slot_type)
-                        .LoadParams()
+                        .LoadParams(true)
                         .ShowWindow();
                 }
                 }
@@ -125,7 +125,7 @@ var GeneralStructure = function(){
     function Initialize(){
         InitializeNewslotMenu();
         InitializeSlotFunctionality();
-        BibleModule.AttachAddressPicker($(".bs_test"),"Evankeliumi");
+        //BibleModule.AttachAddressPicker($(".bs_test"),"Evankeliumi");
     }
 
 

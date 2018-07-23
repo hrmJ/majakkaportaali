@@ -125,6 +125,7 @@ var Service = function(){
             TabFactory.make($(this));
         })
         TabObjects.Details.GetTheme(TabObjects.Details.SetTheme);
+        TabObjects.Details.GetBibleSegments(TabObjects.Details.SetBibleSegments);
         TabObjects.People.GetResponsibles(TabObjects.People.SetResponsibles);
         TabObjects.Structure.GetStructure(TabObjects.Structure.SetStructure);
         for(this_tab in TabObjects){

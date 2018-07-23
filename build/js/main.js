@@ -1731,6 +1731,7 @@ var Service = function(){
             TabFactory.make($(this));
         })
         TabObjects.Details.GetTheme(TabObjects.Details.SetTheme);
+        TabObjects.Details.GetBibleSegments(TabObjects.Details.SetBibleSegments);
         TabObjects.People.GetResponsibles(TabObjects.People.SetResponsibles);
         TabObjects.Structure.GetStructure(TabObjects.Structure.SetStructure);
         for(this_tab in TabObjects){
@@ -1891,6 +1892,53 @@ Service.TabFactory.Details = function(){
 
     /**
      *
+     * Hakee messuun liittyvät raamatunkohdat
+     *
+     * @param callback funktio, joka ajetaan kun lataus on valmis
+     *
+     *
+     **/
+    this.GetBibleSegments = function(callback){
+        console.log("getting bible segments...");
+        $.getJSON("php/ajax/Loader.php",{
+            action: "get_service_verses",
+            service_id: service_id
+            }, callback.bind(this));
+    };
+
+
+    /**
+     *
+     * Hakee käikki tämän kontin sisältämät laulut
+     *
+     **/
+    this.FetchSlots = function(){
+        console.log("fetching.." + this.name);
+        $.getJSON("php/ajax/Loader.php",{
+            action: "load_slots_to_container",
+            service_id: Service.GetServiceId(),
+            cont_name: this.name
+        }, this.SetSlots.bind(this));
+    }
+
+    /**
+     *
+     * Tallentaa messuun liittyvien raamatunkohtien sisällön
+     *
+     * @param segments messuun liittyvät raamatunkohdat
+     *
+     **/
+    this.SetBibleSegments = function(segments){
+        var $segment_list = $("#biblesegments_in_service").html("");
+        $.each(segments,function(idx, segment){
+            var $li = $("<li></li>").appendTo($segment_list);
+            BibleModule.AttachAddressPicker($li, segment.slot_name);
+        });
+    };
+
+
+    /**
+     *
      * Kerää kaiken välilehden sisältämän datan joko tallentamista
      * varten tai jotta voitaisiin nähdä, onko tehty muutoksia.
      *
@@ -1900,7 +1948,7 @@ Service.TabFactory.Details = function(){
                 {"type":"theme","value":$("#service_theme").val()}
             ];
         return data;
-    }
+    };
 
 
 
@@ -2170,7 +2218,7 @@ var Servicelist = function(){
 var GeneralStructure = function(){
 
     var adder;
-    var slot_types = [ "infoslide", "songslide"];
+    var slot_types = [ "infoslide", "songslide", "bibleslide"];
     var sortable_slot_list = undefined;
 
     /**
@@ -2236,7 +2284,7 @@ var GeneralStructure = function(){
                 var slot_type = u.item.find(">div:eq(0)").attr("id").replace(/([^_]+)_launcher/,"$1");
                 if(slot_types.indexOf(slot_type)>-1){
                     GeneralStructure.SlotFactory.SlotFactory.make(slot_type)
-                        .LoadParams()
+                        .LoadParams(true)
                         .ShowWindow();
                 }
                 }
@@ -2288,7 +2336,7 @@ var GeneralStructure = function(){
     function Initialize(){
         InitializeNewslotMenu();
         InitializeSlotFunctionality();
-        BibleModule.AttachAddressPicker($(".bs_test"),"Evankeliumi");
+        //BibleModule.AttachAddressPicker($(".bs_test"),"Evankeliumi");
     }
 
 
@@ -2428,8 +2476,36 @@ GeneralStructure.SlotFactory = GeneralStructure.SlotFactory || {};
  *
  */
 GeneralStructure.SlotFactory.bibleslide = function(){
+
     this.slideclass = ".bibleslide";
     this.segment_type = "biblesegment";
+
+    /**
+     *
+     * Lisää ajax-ladatun datan slottiin
+     *
+     * @param data dian tiedot ajax-responssina 
+     *
+     **/
+    this.FillInData = function(data){
+        var self = this;
+    };
+
+
+    /**
+     *
+     * Kerää diaan liittyvän informaation tallentamista tai esikatselua
+     * varten
+     *
+     **/
+    this.SetSlideParams = function(){
+        this.slide_params = {
+            segment_name: this.$lightbox.find(".segment-name").val(),
+        }
+        return this;
+    }
+
+
 }
 
 
@@ -3069,8 +3145,11 @@ GeneralStructure.DataLoading = function(){
          * Hae dian sisältötiedot tietokannasta: tyypistä riippuen vähintään nimi ja luokka,
          * mahdollisesti myös teksti, laulun nimi, kuvat, ylätunniste jne.
          *
+         * @param new_slot jos määritetty, kyseessä on uusi slotti eikä vanhan datan lataus
+         *
          */
-        source.prototype.LoadParams = function(){
+        source.prototype.LoadParams = function(new_slot){
+            var new_slot = new_slot || false;
             //Huolehdi siitä, että kuvanvalintavalikot ovat näkyvissä ennen tietojen lataamista
             this.AddImageLoader();
             this.slot_number = this.$container.find(".slot-number").text() || $(".slot").length + 1 ;
@@ -3078,13 +3157,15 @@ GeneralStructure.DataLoading = function(){
             this.$lightbox.find(".segment-name").val(this.slot_name);
 
             var self = this;
-            $.getJSON("php/ajax/Loader.php",
-                {
-                    "action": "get_" + this.segment_type.replace("segment","slide"),
-                    "id" : this.slide_id,
-                },
-                //This method is child-specific, cf. infoslide.js, songslide.js etc
-                this.FillInData.bind(this));
+            if(!new_slot){
+                $.getJSON("php/ajax/Loader.php",
+                    {
+                        "action": "get_" + this.segment_type.replace("segment","slide"),
+                        "id" : this.slide_id,
+                    },
+                    //This method is child-specific, cf. infoslide.js, songslide.js etc
+                    this.FillInData.bind(this));
+            }
 
             return this;
         };
@@ -3507,16 +3588,13 @@ var BibleModule = function(){
     var PickerContainer = function(title){ 
 
         this.$supercont = $(`<div class='bible_address_container'>`);
-        this.$header = $(`<div class='bible_address_header'>
+        this.$header = $(`<div class='bible_address_header closed'>
                             <div class='address_name'>
                                 ${title}
                             </div>
                             <div class='address_information'>
-                                <span class='visible_address'>Ei määritetty</span>
+                                <span class='visible_address'></span>
                                 <input type='hidden' class='saved_address'></input>
-                            </div>
-                            <div class='bible_address_starter'>
-                                <button class='define_address'>Näytä</button>
                             </div>
                         </div>`);
         this.$cont = $(`<div class='address_pickers'>
@@ -3529,7 +3607,7 @@ var BibleModule = function(){
          *
          */
         this.Initialize = function(){
-            this.$header.find(".define_address").click(this.ShowPickers.bind(this));
+            this.$header.click(this.ShowPickers.bind(this));
             this.AddPickerPair();
         };
 
@@ -3548,7 +3626,7 @@ var BibleModule = function(){
                 .click(this.AddPickerPair.bind(this));
             this.$addmore_link_cont = $("<div class='add_picker_pair'></div>")
                 .append(this.$addmore_link)
-                .insertAfter(this.$cont)
+                .appendTo(this.$cont)
                 .hide();
             if(this.$cont.find(".fa-pencil").is(":visible")){
                 this.$addmore_link_cont.show();
@@ -3561,12 +3639,9 @@ var BibleModule = function(){
          *
          */
         this.ShowPickers = function(){
-            var self = this,
-                text = self.$header.find(".define_address").text();
+            var self = this;
             this.$cont.slideToggle(function(){
-                self.$header.find(".define_address").text(
-                    (text == "Näytä" ? "Piilota" : "Näytä") 
-                );
+               self.$header.toggleClass("opened").toggleClass("closed");
             });
         };
 
@@ -3579,6 +3654,10 @@ var BibleModule = function(){
         this.AddPickerPair = function(){
             var picker = new PickerPair();
             picker.Initialize(this.$cont);
+            if(this.$addmore_link_cont){
+                this.$addmore_link_cont.insertAfter(picker.$cont).hide();
+            }
+            //this.$addmore_link_cont.after(picker.$controls);
         };
     }
 
@@ -3596,11 +3675,13 @@ var BibleModule = function(){
         this.endpicker = new EndAddressPicker();
 
         this.Initialize = function($parent_el){
+            console.log("Mooo");
+            this.$cont = $("<div class='pickerpair'></div>").appendTo($parent_el);
             this.$confirm_link = $("<a href='javascript:void(0);'>Valmis</a>").click(this.Confirm.bind(this));;
             this.$edit_link = $("<i class='fa fa-pencil addr_edit_link'></i>")
                 .click(this.Edit.bind(this))
                 .appendTo(this.$status);
-            this.startpicker.AttachTo($parent_el).AddPickerEvents();
+            this.startpicker.AttachTo(this.$cont).AddPickerEvents();
             this.endpicker.AddPickerEvents();
             this.endpicker.$picker
                 .insertAfter(this.startpicker.$picker)
@@ -3628,6 +3709,7 @@ var BibleModule = function(){
             this.startpicker.$picker.show();
             this.endpicker.$picker.show();
             this.$confirm_link.show();
+            this.$cont.addClass("pickerpair");
         };
 
 
@@ -3641,12 +3723,13 @@ var BibleModule = function(){
             this.startpicker.$picker.hide();
             this.endpicker.$picker.hide();
             this.$status.find(".status_text").text(addr);
+            this.$cont.removeClass("pickerpair");
 
             this.startpicker.$picker.parents(".address_pickers")
                 .prev()
                 .find(".address_information").text(addr);
-            this.startpicker.$picker.parents(".address_pickers")
-                .next().show();
+            this.startpicker.$picker.parents(".bible_address_container:eq(0)")
+                .find(".add_picker_pair").show();
 
             this.$confirm_link.hide()
             this.$status.show();
@@ -3711,7 +3794,7 @@ var BibleModule = function(){
         this.chapter = "";
         this.verse = "";
 
-        this.$picker = $(`<div> 
+        this.$picker = $(`<div class='bible_address_picker'> 
                     <div class="verseselector startverse">
                         <div class="selector-wrapper">
                             <div>
@@ -3792,17 +3875,6 @@ var BibleModule = function(){
             this.$picker.find(".book").change(this.GetChapters.bind(this));
             this.$picker.find(".chapter").change(this.GetVerses.bind(this));
             this.$picker.find(".verse").change(this.PreviewVerse.bind(this));
-            //$(".book, .chapter, .verse")
-            //    .click(function(){pres.controls.biblecontentadder.LoadBooknames($(this))})
-            //    .change(function(){pres.controls.biblecontentadder.PreLoad($(this))});
-            ////Poista loppujae, jos määritelty uusi alkujakeen kirja /  luku / testamentti
-            //$("[value='ot'],[value='nt'],.book,.chapter").click(function(){
-            //    if($(this).parents(".endverse").length==0){
-            //         $(".endverse").remove();
-            //         $(".between-verse-selectors, .versepreview").hide();
-            //    }
-            //});;
-            //
             return this;
         }
 

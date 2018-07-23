@@ -158,6 +158,10 @@ switch($params["action"]){
         $songlist = new Songlist($database, $sid, $m);
         echo json_encode($songlist->FetchLyricsById($params["song_id"]));
         break;
+    case "get_service_verses":
+        $service = new Service($database, $params["service_id"]);
+        echo json_encode($service->GetBibleSegments());
+        break;
 }
 
 

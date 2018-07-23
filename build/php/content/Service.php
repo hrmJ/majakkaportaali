@@ -45,6 +45,20 @@ class Service{
         return $this->con->get("services","theme",["id" => $this->id]);
     }
 
+    /*
+     * Hakee messuihin tavallisesti liittyvät raamatunkohdat
+     *
+     * TODO: messukohtaiset
+     *
+     */
+    public function GetBibleSegments(){
+        $slots = $this->con->select("presentation_structure",
+            ["slot_name", "content_id", "slot_number"],
+            ["slot_type" => "biblesegment"],
+            ['ORDER' => [ 'slot_number' => 'ASC' ]]
+            );
+        return $slots;
+    }
 
 
     /*

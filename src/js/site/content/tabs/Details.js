@@ -42,6 +42,53 @@ Service.TabFactory.Details = function(){
 
     /**
      *
+     * Hakee messuun liittyvät raamatunkohdat
+     *
+     * @param callback funktio, joka ajetaan kun lataus on valmis
+     *
+     *
+     **/
+    this.GetBibleSegments = function(callback){
+        console.log("getting bible segments...");
+        $.getJSON("php/ajax/Loader.php",{
+            action: "get_service_verses",
+            service_id: service_id
+            }, callback.bind(this));
+    };
+
+
+    /**
+     *
+     * Hakee käikki tämän kontin sisältämät laulut
+     *
+     **/
+    this.FetchSlots = function(){
+        console.log("fetching.." + this.name);
+        $.getJSON("php/ajax/Loader.php",{
+            action: "load_slots_to_container",
+            service_id: Service.GetServiceId(),
+            cont_name: this.name
+        }, this.SetSlots.bind(this));
+    }
+
+    /**
+     *
+     * Tallentaa messuun liittyvien raamatunkohtien sisällön
+     *
+     * @param segments messuun liittyvät raamatunkohdat
+     *
+     **/
+    this.SetBibleSegments = function(segments){
+        var $segment_list = $("#biblesegments_in_service").html("");
+        $.each(segments,function(idx, segment){
+            var $li = $("<li></li>").appendTo($segment_list);
+            BibleModule.AttachAddressPicker($li, segment.slot_name);
+        });
+    };
+
+
+    /**
+     *
      * Kerää kaiken välilehden sisältämän datan joko tallentamista
      * varten tai jotta voitaisiin nähdä, onko tehty muutoksia.
      *
@@ -51,7 +98,7 @@ Service.TabFactory.Details = function(){
                 {"type":"theme","value":$("#service_theme").val()}
             ];
         return data;
-    }
+    };
 
 
 

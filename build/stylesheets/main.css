@@ -394,6 +394,35 @@ h3 {
     font-size: 1.2em;
     margin-right: 1em; }
 
+.slidemodel {
+  position: relative;
+  left: -10px;
+  padding-left: 0.4em; }
+
+.slidemodel-flex {
+  display: flex;
+  flex-flow: column;
+  margin-bottom: 2em; }
+  .slidemodel-flex > div textarea {
+    width: 90%;
+    min-height: 7em; }
+
+.slidemodel-flex-column {
+  display: flex;
+  flex-flow: column; }
+  .slidemodel-flex-column > div {
+    flex: 1 1;
+    display: flex; }
+    .slidemodel-flex-column > div div:first-child {
+      width: 8em; }
+  .slidemodel-flex-column > div + div {
+    margin-top: 1em; }
+
+.small_label {
+  font-size: 0.8em; }
+  .small_label div:first-child {
+    margin-bottom: 0.4em; }
+
 .bs_test {
   margin: 1em 0 1em 0; }
 
@@ -422,8 +451,7 @@ h3 {
 
 .selector-wrapper {
   display: flex;
-  flex-flow: row wrap;
-  justify-content: space-between; }
+  flex-flow: row wrap; }
   .selector-wrapper > div:nth-child(3) {
     display: flex;
     flex-flow: row;
@@ -459,15 +487,29 @@ h3 {
   .bible_address_status .fa {
     margin-left: 0.6em; }
 
+.bible_address_container {
+  border: 1px dashed darkgrey;
+  padding: 0.4em; }
+
 .address_pickers {
   display: none;
   padding: 0.3em;
   margin-bottom: 1em; }
 
+.pickerpair {
+  background: lightgrey;
+  padding: 0.7em; }
+
 .after-verse-selectors {
   margin-top: 1em; }
   .after-verse-selectors a {
     color: #0d0d0d; }
+
+.biblesegment_list {
+  padding: 0;
+  list-style-type: none; }
+  .biblesegment_list li + li {
+    margin-top: 0.6em; }
 
 .ui-widget-header {
   background: none; }
@@ -821,29 +863,6 @@ h3 {
   position: relative; }
   .structural-element-add ul {
     width: 10em; }
-
-.slidemodel {
-  position: relative;
-  left: -10px; }
-
-.slidemodel-flex {
-  display: flex;
-  flex-flow: column;
-  margin-bottom: 2em; }
-  .slidemodel-flex > div textarea {
-    width: 90%;
-    min-height: 7em; }
-
-.slidemodel-flex-column {
-  display: flex;
-  flex-flow: column; }
-  .slidemodel-flex-column > div {
-    flex: 1 1;
-    display: flex; }
-    .slidemodel-flex-column > div div:first-child {
-      width: 8em; }
-  .slidemodel-flex-column > div + div {
-    margin-top: 1em; }
 
 .structural-slots {
   padding-left: 0;

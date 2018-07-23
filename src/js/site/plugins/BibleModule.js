@@ -32,16 +32,13 @@ var BibleModule = function(){
     var PickerContainer = function(title){ 
 
         this.$supercont = $(`<div class='bible_address_container'>`);
-        this.$header = $(`<div class='bible_address_header'>
+        this.$header = $(`<div class='bible_address_header closed'>
                             <div class='address_name'>
                                 ${title}
                             </div>
                             <div class='address_information'>
-                                <span class='visible_address'>Ei määritetty</span>
+                                <span class='visible_address'></span>
                                 <input type='hidden' class='saved_address'></input>
-                            </div>
-                            <div class='bible_address_starter'>
-                                <button class='define_address'>Näytä</button>
                             </div>
                         </div>`);
         this.$cont = $(`<div class='address_pickers'>
@@ -54,7 +51,7 @@ var BibleModule = function(){
          *
          */
         this.Initialize = function(){
-            this.$header.find(".define_address").click(this.ShowPickers.bind(this));
+            this.$header.click(this.ShowPickers.bind(this));
             this.AddPickerPair();
         };
 
@@ -73,7 +70,7 @@ var BibleModule = function(){
                 .click(this.AddPickerPair.bind(this));
             this.$addmore_link_cont = $("<div class='add_picker_pair'></div>")
                 .append(this.$addmore_link)
-                .insertAfter(this.$cont)
+                .appendTo(this.$cont)
                 .hide();
             if(this.$cont.find(".fa-pencil").is(":visible")){
                 this.$addmore_link_cont.show();
@@ -86,12 +83,9 @@ var BibleModule = function(){
          *
          */
         this.ShowPickers = function(){
-            var self = this,
-                text = self.$header.find(".define_address").text();
+            var self = this;
             this.$cont.slideToggle(function(){
-                self.$header.find(".define_address").text(
-                    (text == "Näytä" ? "Piilota" : "Näytä") 
-                );
+               self.$header.toggleClass("opened").toggleClass("closed");
             });
         };
 
@@ -104,6 +98,10 @@ var BibleModule = function(){
         this.AddPickerPair = function(){
             var picker = new PickerPair();
             picker.Initialize(this.$cont);
+            if(this.$addmore_link_cont){
+                this.$addmore_link_cont.insertAfter(picker.$cont).hide();
+            }
+            //this.$addmore_link_cont.after(picker.$controls);
         };
     }
 
@@ -121,11 +119,13 @@ var BibleModule = function(){
         this.endpicker = new EndAddressPicker();
 
         this.Initialize = function($parent_el){
+            console.log("Mooo");
+            this.$cont = $("<div class='pickerpair'></div>").appendTo($parent_el);
             this.$confirm_link = $("<a href='javascript:void(0);'>Valmis</a>").click(this.Confirm.bind(this));;
             this.$edit_link = $("<i class='fa fa-pencil addr_edit_link'></i>")
                 .click(this.Edit.bind(this))
                 .appendTo(this.$status);
-            this.startpicker.AttachTo($parent_el).AddPickerEvents();
+            this.startpicker.AttachTo(this.$cont).AddPickerEvents();
             this.endpicker.AddPickerEvents();
             this.endpicker.$picker
                 .insertAfter(this.startpicker.$picker)
@@ -153,6 +153,7 @@ var BibleModule = function(){
             this.startpicker.$picker.show();
             this.endpicker.$picker.show();
             this.$confirm_link.show();
+            this.$cont.addClass("pickerpair");
         };
 
 
@@ -166,12 +167,13 @@ var BibleModule = function(){
             this.startpicker.$picker.hide();
             this.endpicker.$picker.hide();
             this.$status.find(".status_text").text(addr);
+            this.$cont.removeClass("pickerpair");
 
             this.startpicker.$picker.parents(".address_pickers")
                 .prev()
                 .find(".address_information").text(addr);
-            this.startpicker.$picker.parents(".address_pickers")
-                .next().show();
+            this.startpicker.$picker.parents(".bible_address_container:eq(0)")
+                .find(".add_picker_pair").show();
 
             this.$confirm_link.hide()
             this.$status.show();
@@ -236,7 +238,7 @@ var BibleModule = function(){
         this.chapter = "";
         this.verse = "";
 
-        this.$picker = $(`<div> 
+        this.$picker = $(`<div class='bible_address_picker'> 
                     <div class="verseselector startverse">
                         <div class="selector-wrapper">
                             <div>
@@ -317,17 +319,6 @@ var BibleModule = function(){
             this.$picker.find(".book").change(this.GetChapters.bind(this));
             this.$picker.find(".chapter").change(this.GetVerses.bind(this));
             this.$picker.find(".verse").change(this.PreviewVerse.bind(this));
-            //$(".book, .chapter, .verse")
-            //    .click(function(){pres.controls.biblecontentadder.LoadBooknames($(this))})
-            //    .change(function(){pres.controls.biblecontentadder.PreLoad($(this))});
-            ////Poista loppujae, jos määritelty uusi alkujakeen kirja /  luku / testamentti
-            //$("[value='ot'],[value='nt'],.book,.chapter").click(function(){
-            //    if($(this).parents(".endverse").length==0){
-            //         $(".endverse").remove();
-            //         $(".between-verse-selectors, .versepreview").hide();
-            //    }
-            //});;
-            //
             return this;
         }
 
