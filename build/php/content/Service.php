@@ -61,6 +61,38 @@ class Service{
     }
 
 
+
+    /*
+     * Hakee yksittäiseen messuun määritetyt raamatunkohdat
+     *
+     */
+    public function GetBibleSegmentsContent(){
+        $data = [];
+        $slots = $this->con->select("serviceverses",
+            [
+            "testament", "startbook",
+            "endbook", "startchapter", "endchapter",
+            "startverse", "endverse", "segment_name"
+            ],
+            ["service_id" => $this->id],
+            ['ORDER' => [ 'id' => 'ASC' ]]
+            );
+        foreach($slots as $slot){
+            $data[$slot["segment_name"]] = [
+                "testament" => $slot["testament"],
+                "startbook" => $slot["startbook"],
+                "endbook" => $slot["endbook"], 
+                "startchapter" => $slot[ "startchapter"],
+                "endchapter" => $slot["endchapter"],
+                "startverse" => $slot["startverse"],
+                "endverse" => $slot["endverse"], 
+                "segment_name" => $slot["segment_name"]
+            ];
+        }
+
+        return $data;
+    }
+
     /*
      * Hakee messuun tarvittavat vastuuroolit ja niissä toimivat ihmiset
      *
@@ -101,6 +133,8 @@ class Service{
      *
      */
     public function SaveDetails($data){
+        $this->con->delete("serviceverses",["service_id" => $this->id]);
+
         foreach($data as $entry){
             switch($entry["type"]){
                 case "theme":
@@ -111,6 +145,20 @@ class Service{
                         [ 
                             "id" => $this->id
                         ]);
+                    break;
+                case "bible":
+                    $this->con->insert("serviceverses", [
+                        "service_id" => $this->id,
+                        "testament" => $entry["testament"],
+                        "startbook" => $entry["startbook"],
+                        "startverse" => $entry["startverse"],
+                        "startchapter" => $entry["startchapter"],
+                        "endbook" => $entry["endbook"],
+                        "endchapter" => $entry["endchapter"],
+                        "endverse" => $entry["endverse"],
+                        "segment_name" => $entry["segment_name"]
+                        ]
+                    );
                     break;
             }
         }

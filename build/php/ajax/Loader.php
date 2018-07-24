@@ -162,6 +162,10 @@ switch($params["action"]){
         $service = new Service($database, $params["service_id"]);
         echo json_encode($service->GetBibleSegments());
         break;
+    case "get_bible_segments_content":
+        $service = new Service($database, $params["service_id"]);
+        echo json_encode($service->GetBibleSegmentsContent());
+        break;
 }
 
 

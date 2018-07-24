@@ -120,6 +120,7 @@ CREATE TABLE liturgicalsongs (
 CREATE TABLE serviceverses (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
   service_id int(10) unsigned NOT NULL,
+  segment_name varchar(200) DEFAULT '',
   testament varchar(200) DEFAULT '',
   startbook varchar(200) DEFAULT '',
   endbook varchar(200) DEFAULT '',

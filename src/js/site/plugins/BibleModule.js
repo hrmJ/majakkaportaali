@@ -18,8 +18,8 @@ var BibleModule = function(){
     function AttachAddressPicker($parent_el, title){
         var title = title || "";
         var cont = new PickerContainer(title);
-        cont.Initialize();
         cont.AttachTo($parent_el);
+        return cont;
     }
 
     /**
@@ -31,6 +31,9 @@ var BibleModule = function(){
      */
     var PickerContainer = function(title){ 
 
+        this.title = title;
+        this.callback = undefined;
+        this.picker_pairs = [];
         this.$supercont = $(`<div class='bible_address_container'>`);
         this.$header = $(`<div class='bible_address_header closed'>
                             <div class='address_name'>
@@ -44,6 +47,17 @@ var BibleModule = function(){
         this.$cont = $(`<div class='address_pickers'>
                         </div>`);
 
+
+        /**
+         *
+         * Asettaa funktion tarkkailemaan valitsimissa tapahtuvia muutoksia
+         *
+         * @param callback asetettava funktio
+         *
+         */
+        this.SetCallBack = function(callback){
+            this.callback = callback;
+        }
 
         /**
          *
@@ -98,9 +112,13 @@ var BibleModule = function(){
         this.AddPickerPair = function(){
             var picker = new PickerPair();
             picker.Initialize(this.$cont);
+            if(this.callback){
+                picker.SetCallBack(this.callback);
+            }
             if(this.$addmore_link_cont){
                 this.$addmore_link_cont.insertAfter(picker.$cont).hide();
             }
+            this.picker_pairs.push(picker);
             //this.$addmore_link_cont.after(picker.$controls);
         };
     }
@@ -114,6 +132,7 @@ var BibleModule = function(){
      */
     var PickerPair = function($parent_el){ 
 
+        this.callback = undefined;
         this.$status = $("<div class='bible_address_status'><span class='status_text'></span></div>");
         this.startpicker = new StartAddressPicker();
         this.endpicker = new EndAddressPicker();
@@ -145,7 +164,6 @@ var BibleModule = function(){
          *
          */
         this.Edit = function(){
-            console.log(this.startpicker.testament);
             this.startpicker.$picker
                 .find("[value='" + this.startpicker.testament + "']")
                 .prop({"checked":true});
@@ -156,6 +174,17 @@ var BibleModule = function(){
             this.$cont.addClass("pickerpair");
         };
 
+        /**
+         *
+         * Asettaa funktion tarkkailemaan valitsimissa tapahtuvia muutoksia
+         *
+         * @param callback asetettava funktio
+         *
+         */
+        this.SetCallBack = function(callback){
+            this.callback = callback;
+        }
+
 
         /**
          *
@@ -163,6 +192,7 @@ var BibleModule = function(){
          *
          */
         this.Confirm = function(){
+            console.log("now");
             var addr = this.GetHumanReadableAddress();
             this.startpicker.$picker.hide();
             this.endpicker.$picker.hide();
@@ -177,6 +207,11 @@ var BibleModule = function(){
 
             this.$confirm_link.hide()
             this.$status.show();
+
+            if(this.callback){
+                console.log("inside cf");
+                this.callback();
+            }
         }
 
         /**
@@ -300,12 +335,32 @@ var BibleModule = function(){
          *
          */
         this.SetAddress = function(address, testament){
-            var self = this;
+            var self = this
+                booknames = undefined,
+                chapters = undefined,
+                verses = undefined;
             self.testament = testament;
-            $.each(Object.keys(address), function(idx, type){
-                self.$picker.find("." + type).val(address[type]);
-                self[type] = address[type];
-            });
+            if(this.$picker.find(".book").length < 2){
+                console.log("fetching information...");
+                //Jos ei valmiiksi ladattuja kirjojen, kappaleiden ym. nimiä
+                $.when(self.GetBookNames(testament))
+                    .done(function(){
+                        $.when(self.GetChapters(self.book))
+                            .done(function(){
+                                $.when(self.GetChapters(self.book))
+                                    .done(function(){
+                                        console.log("done!");
+                                        //self.SetAddress(address, testament)
+                                });
+                            });
+                        });
+            }
+            else{
+                $.each(Object.keys(address), function(idx, type){
+                    self.$picker.find("." + type).val(address[type]);
+                    self[type] = address[type];
+                });
+            }
             return this;
         };
 
@@ -326,12 +381,14 @@ var BibleModule = function(){
          *
          * Lataa Raamatun kirjojen nimet tietokannasta (joko ut tai vt)
          *
+         * @param testament jos testamentti määritelty erikseen
+         *
          */
-        this.GetBookNames = function(){
-            this.testament = this.$picker.find("[name='testament']:checked").val();
+        this.GetBookNames = function(testament){
+            this.testament = testament || this.$picker.find("[name='testament']:checked").val();
             this.book = '';
             this.verse = '';
-            $.getJSON("php/ajax/Loader.php",
+            return $.getJSON("php/ajax/Loader.php",
                 {
                     "action": "load_booknames",
                     "testament": this.testament
@@ -343,11 +400,13 @@ var BibleModule = function(){
          *
          * Lataa yhden raamatun kirjan luvut
          *
+         * @param book jos kirja määritelty erikseen
+         *
          */
-        this.GetChapters = function(){
-            this.book = this.$picker.find(".book").val();
+        this.GetChapters = function(book){
+            this.book = book || this.$picker.find(".book").val();
             this.verse = '';
-            $.getJSON("php/ajax/Loader.php",
+            return $.getJSON("php/ajax/Loader.php",
                 {
                     "action": "load_chapters",
                     "testament": this.testament,
@@ -360,10 +419,12 @@ var BibleModule = function(){
          *
          * Lataa yhden raamatun kirjan luvun jakeet
          *
+         * @param chapter jos luku määritelty erikseen
+         *
          */
-        this.GetVerses = function(){
-            this.chapter = this.$picker.find(".chapter").val();
-            $.getJSON("php/ajax/Loader.php",
+        this.GetVerses = function(chapter){
+            this.chapter = chapter || this.$picker.find(".chapter").val();
+            return $.getJSON("php/ajax/Loader.php",
                 {
                     "action": "load_verses",
                     "testament": this.testament,
@@ -381,6 +442,7 @@ var BibleModule = function(){
          * 
          */
         this.SetBookNames = function(data){
+            console.log("Booknames", data);
             var self = this;
             this.$picker.find(".book, .chapter, .verse").find("option:gt(0)").remove();
             //ES2015 testi: TODO muista yhteensopiva versio

@@ -6,6 +6,7 @@
 Service.TabFactory.Details = function(){
 
     this.action = "save_details";
+    this.bible_segments = [];
 
 
     /**
@@ -79,11 +80,54 @@ Service.TabFactory.Details = function(){
      *
      **/
     this.SetBibleSegments = function(segments){
-        var $segment_list = $("#biblesegments_in_service").html("");
+        var $segment_list = $("#biblesegments_in_service").html(""),
+            self = this;
         $.each(segments,function(idx, segment){
-            var $li = $("<li></li>").appendTo($segment_list);
-            BibleModule.AttachAddressPicker($li, segment.slot_name);
+            var $li = $("<li class=''></li>").appendTo($segment_list);
+            var picker = BibleModule.AttachAddressPicker($li, segment.slot_name);
+            picker.SetCallBack(self.MonitorChanges.bind(self));
+            picker.Initialize();
+            self.bible_segments.push(picker);
         });
+        this.SetBibleSegmentContent();
+    };
+
+    /**
+     *
+     * Hakee tietokannasta sen, mitä sisältöä raamatunkohtaslotteihin on määritelty
+     *
+     */
+    this.SetBibleSegmentContent = function(){
+        var self = this;
+        $.getJSON("php/ajax/Loader.php",{
+            action: "get_bible_segments_content",
+            service_id: Service.GetServiceId(),
+        }, function(data){
+            console.log(data);
+            $.each(self.bible_segments, function(idx, seg){
+                $.each(seg.picker_pairs, function(pair_idx, picker_pair){
+                    picker_pair.startpicker.SetAddress(
+                        {
+                        book: data[seg.title].startbook,
+                        chapter: data[seg.title].startchapter,
+                        verse: data[seg.title].startverse
+                        },
+                        data[seg.title].testament
+                        );
+                    picker_pair.endpicker.SetAddress(
+                        {
+                        book: data[seg.title].endbook,
+                        chapter: data[seg.title].endchapter,
+                        verse: data[seg.title].endverse
+                        },
+                        data[seg.title].testament
+                        );
+                    });
+                });
+            });
+        
+            self.tabdata = self.GetTabData();
+
     };
 
 
@@ -97,6 +141,24 @@ Service.TabFactory.Details = function(){
         var data = [
                 {"type":"theme","value":$("#service_theme").val()}
             ];
+        $.each(this.bible_segments, function(idx, seg){
+            $.each(seg.picker_pairs, function(pair_idx, picker_pair){
+                var start = picker_pair.startpicker.GetAddress(),
+                    end = picker_pair.endpicker.GetAddress();
+                data.push({
+                    type: "bible",
+                    segment_name: seg.title,
+                    service_id: Service.GetServiceId(),
+                    testament: picker_pair.startpicker.testament,
+                    startbook: start.book,
+                    startchapter: start.chapter,
+                    startverse: start.verse,
+                    endbook: end.book,
+                    endchapter: end.chapter,
+                    endverse: end.verse,
+                });
+            });
+        });
         return data;
     };
 

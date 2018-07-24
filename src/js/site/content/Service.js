@@ -41,13 +41,14 @@ var Service = function(){
      *
      **/
     TabFactory.prototype.SaveTabData = function(){
-        self = this;
+        var self = this,
+            protoself = (this.AfterSavedChanges ? this : this.__proto__);
         this.tabdata = this.GetTabData();
         $.post("php/ajax/Saver.php",{
             action: self.action,
             service_id: Service.GetServiceId(),
             data: self.tabdata
-            }, self.AfterSavedChanges.bind(self));
+            }, protoself.AfterSavedChanges.bind(protoself));
     };
 
     /**
@@ -58,6 +59,7 @@ var Service = function(){
      **/
     TabFactory.prototype.MonitorChanges = function(){
         var $tabheader = $(`.${this.tab_type}_tabheader`);
+        console.log(this.GetTabData());
         if(JSON.stringify(this.tabdata) !== JSON.stringify(this.GetTabData())){
             //Jos muutoksia, näytä tallenna-painike ja muutosindikaattorit
             this.$div.find(".save_tab_data").show();

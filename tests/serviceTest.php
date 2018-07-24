@@ -120,6 +120,18 @@ class ServiceTest extends TestCase
     }
 
 
+    /**
+     *
+     * Testaa yhden tietyn messun raamatunkohtien sisällön lataamista
+     *
+     */
+    public function testLoadBibleSegmentContent()
+    {
+        $service = new Service($this->con, 2);
+        $slots = $service->GetBibleSegmentsContent();
+        $this->assertTrue(sizeof($slots)>0);
+    }
+
 
 }
 
