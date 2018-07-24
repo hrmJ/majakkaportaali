@@ -59,7 +59,6 @@ var Service = function(){
      **/
     TabFactory.prototype.MonitorChanges = function(){
         var $tabheader = $(`.${this.tab_type}_tabheader`);
-        console.log(this.GetTabData());
         if(JSON.stringify(this.tabdata) !== JSON.stringify(this.GetTabData())){
             //Jos muutoksia, näytä tallenna-painike ja muutosindikaattorit
             this.$div.find(".save_tab_data").show();
