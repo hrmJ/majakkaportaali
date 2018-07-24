@@ -78,7 +78,10 @@ class Service{
             ['ORDER' => [ 'id' => 'ASC' ]]
             );
         foreach($slots as $slot){
-            $data[$slot["segment_name"]] = [
+            if(!array_key_exists($slot["segment_name"],$data)){
+                $data[$slot["segment_name"]] = [];
+            }
+            $data[$slot["segment_name"]][] = [
                 "testament" => $slot["testament"],
                 "startbook" => $slot["startbook"],
                 "endbook" => $slot["endbook"], 

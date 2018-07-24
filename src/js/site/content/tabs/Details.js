@@ -103,33 +103,36 @@ Service.TabFactory.Details = function(){
             action: "get_bible_segments_content",
             service_id: Service.GetServiceId(),
         }, function(data){
-            $.each(self.bible_segments, function(idx, seg){
-                $.each(seg.picker_pairs, function(pair_idx, picker_pair){
-                    $.when(picker_pair.startpicker.SetAddress(
-                        {
-                        book: data[seg.title].startbook,
-                        chapter: data[seg.title].startchapter,
-                        verse: data[seg.title].startverse
-                        },
-                        data[seg.title].testament),
-                        ).done(
-                            function(){
-                                $.when(
-                                picker_pair.endpicker.SetAddress(
-                                    {
-                                    book: data[seg.title].endbook,
-                                    chapter: data[seg.title].endchapter,
-                                    verse: data[seg.title].endverse
-                                    },
-                                    data[seg.title].testament
-                                    )).done(function(){
-                                        picker_pair.Confirm();
-                                        self.tabdata = self.GetTabData();
-                                    });
-                            }
-                        )
+                $.each(self.bible_segments, function(idx, seg){
+                    for(i=1;i<data[seg.title].length;i++){
+                        seg.AddPickerPair();
+                    }
+                    $.each(seg.picker_pairs, function(pair_idx, picker_pair){
+                        $.when(picker_pair.startpicker.SetAddress(
+                            {
+                            book: data[seg.title][pair_idx].startbook,
+                            chapter: data[seg.title][pair_idx].startchapter,
+                            verse: data[seg.title][pair_idx].startverse
+                            },
+                            data[seg.title][pair_idx].testament),
+                            ).done(
+                                function(){
+                                    $.when(
+                                    picker_pair.endpicker.SetAddress(
+                                        {
+                                        book: data[seg.title][pair_idx].endbook,
+                                        chapter: data[seg.title][pair_idx].endchapter,
+                                        verse: data[seg.title][pair_idx].endverse
+                                        },
+                                        data[seg.title][pair_idx].testament
+                                        )).done(function(){
+                                            picker_pair.Confirm();
+                                            self.tabdata = self.GetTabData();
+                                        });
+                                }
+                            )
+                        });
                     });
-                });
             });
         
 
