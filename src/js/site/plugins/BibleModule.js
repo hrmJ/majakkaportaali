@@ -150,7 +150,7 @@ var BibleModule = function(){
                 .hide();
             this.startpicker.$picker
                 .find(".verse").change(this.AttachEndPicker.bind(this));
-            this.$controls = $("<div class='hidden'></div>")
+            this.$controls = $("<div class='pickerpair_controls'></div>")
                 .append(this.$confirm_link)
                 .insertAfter(this.endpicker.$picker);
             this.$status.insertBefore(this.startpicker.$picker);
@@ -171,6 +171,7 @@ var BibleModule = function(){
             this.endpicker.$picker.show();
             this.$confirm_link.show();
             this.$cont.addClass("pickerpair");
+            this.startpicker.$picker.find(".between-verse-selectors").show();
         };
 
         /**
@@ -275,17 +276,17 @@ var BibleModule = function(){
                         <div class="selector-wrapper">
                             <div>
                                 <select class="book">
-                                    <option>Valitse kirja</option>
+                                    <option>Kirja</option>
                                 </select>
                             </div>
                             <div>
                                 <select class="chapter">
-                                    <option>Valitse luku</option>
+                                    <option>Luku</option>
                                 </select>
                             </div>
                             <div>
                                 <select class="verse">
-                                    <option>Valitse jae</option>
+                                    <option>Jae</option>
                                 </select>
                                 <div class="versepreview"></div>
                             </div>
@@ -340,20 +341,14 @@ var BibleModule = function(){
             self.book = address.book;
             self.chapter = address.chapter;
             self.verse = address.verse;
-            if(this.type == "end"){
-                console.log("stop");
-            }
             if(this.$picker.find(".book").length < 2){
                 //Jos ei valmiiksi ladattuja kirjojen, kappaleiden ym. nimiä
-                return $.when($.when(self.GetBookNames(testament))
+                return $.when($.when(self.GetBookNames())
                     .done(function(){
-                        $.when(self.GetChapters(address.book))
+                        $.when(self.GetChapters())
                             .done(function(){
-                                $.when(self.GetVerses(address.chapter))
+                                $.when(self.GetVerses())
                                     .done(function(){
-                                        if(self.type=="end"){
-                                            console.log(self.type);
-                                        }
                                         $.each(Object.keys(address), function(idx, type){
                                             self.$picker.find("." + type).val(address[type]);
                                         });
@@ -387,15 +382,19 @@ var BibleModule = function(){
          *
          * Lataa Raamatun kirjojen nimet tietokannasta (joko ut tai vt)
          *
-         * @param testament jos testamentti määritelty erikseen
+         * @param event tapahtuma
          *
          */
-        this.GetBookNames = function(testament){
-            this.testament = testament || this.$picker.find("[name='testament']:checked").val();
-            if(!testament){
+        this.GetBookNames = function(event){
+            if(event){
                 //Jos ajettu valintatapahtuman seurauksena eikä automaattisesti
+                this.testament = this.$picker.find("[name='testament']:checked").val();
                 this.book = '';
                 this.verse = '';
+                if(this.type=="start"){
+                    this.$picker.parents(".pickerpair")
+                        .find(".between-verse-selectors, .bible_address_picker:eq(1)").hide();
+                }
             }
             return $.getJSON("php/ajax/Loader.php",
                 {
@@ -409,12 +408,12 @@ var BibleModule = function(){
          *
          * Lataa yhden raamatun kirjan luvut
          *
-         * @param book jos kirja määritelty erikseen
+         * @param event tapahtuma
          *
          */
-        this.GetChapters = function(book){
-            this.book = book || this.$picker.find(".book").val();
-            if(!book){
+        this.GetChapters = function(event){
+            if(event){
+                this.book = this.$picker.find(".book").val();
                 this.verse = '';
             }
 
@@ -431,11 +430,13 @@ var BibleModule = function(){
          *
          * Lataa yhden raamatun kirjan luvun jakeet
          *
-         * @param chapter jos luku määritelty erikseen
+         * @param event tapahtuma
          *
          */
-        this.GetVerses = function(chapter){
-            this.chapter = chapter || this.$picker.find(".chapter").val();
+        this.GetVerses = function(event){
+            if(event){
+                this.chapter = this.$picker.find(".chapter").val();
+            }
             return $.getJSON("php/ajax/Loader.php",
                 {
                     "action": "load_verses",
