@@ -44,13 +44,16 @@ class Structure{
      *
      * Tekee rakenteesta messukohtaisen
      *
+     * @param $service_id messun id
+     * @param $create_if_not_exist luodaanko messuspesifin taulun sisältö, jos sitä ei ole
+     *
      */
-    public function SetAsServiceSpecific($service_id){
+    public function SetAsServiceSpecific($service_id, $create_if_not_exist=true){
         $this->service_id = $service_id;
         $this->table = "service_specific_presentation_structure";
         //Tarkistetaan, onko jo tälle messulle tallennettu omaa rakennetta
         $rows = $this->con->select("service_id",["service_id" => $this->service_id]);
-        if(!$rows){
+        if(!$rows and $create_if_not_exist){
             $this->service_specific_created = true;
             $slots = $this->con->select("presentation_structure",
                 array_merge($this->columns, ["id"]),
@@ -76,6 +79,12 @@ class Structure{
             array_merge($this->columns, ["id"]),
             ["service_id" => $this->service_id],
             ['ORDER' => [ 'slot_number' => 'ASC' ]]);
+        if($slots){
+            //HACK! Miksei Medoo sorttaa??
+            usort($slots, function ($item1, $item2) {
+                return $item1['slot_number'] <=> $item2['slot_number'];
+            });
+        }
         if(!$slots){
             //Ei löydy messuspesifiä rakennetta tai haetaan suoraan yleistä
             $slots = $this->con->select("presentation_structure", 
@@ -83,7 +92,7 @@ class Structure{
                 ['ORDER' => [ 'slot_number' => 'ASC' ]]);
         }
         $this->slotstring = "";
-        foreach($slots as $slot){
+        foreach($slots as $idx => $slot){
             $newslot = $this->template_engine->loadTemplate('slot'); 
             $name = (empty($slot["slot_name"]) ? "Nimetön segmentti" : $slot["slot_name"]);
             $this->slotstring .= "\n\n " . $newslot->render([
@@ -223,11 +232,15 @@ class Structure{
                 $where = [];
                 $params = $this->con->select("presentation_structure",$this->columns,["id" => $idpair["slot_id"]]);
                 foreach($this->columns as $colname){
-                    $where[colname] = $params[0][colname];
+                    if($params[0][$colname] and $colname != "slot_number"){
+                        $where[$colname] = $params[0][$colname];
+                    }
                 }
+                var_dump($where);
                 $fixed_ids[$idpair["slot_id"]] = $this->con->get($this->table, "id", $where);
             }
         };
+        var_dump($fixed_ids);
         foreach($newids as $idpair){
             $id = ($fixed_ids ? $fixed_ids[$idpair["slot_id"]] : $idpair["slot_id"]);
             $this->con->update($this->table, 

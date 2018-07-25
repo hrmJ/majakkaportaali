@@ -147,6 +147,11 @@ class SongsTest extends TestCase
             $this->con->delete("versedata",["song_id"=>$id]);
             $this->con->delete("songdata",["id"=>$id]);
         }
+
+            $slots = $this->con->select("service_specific_presentation_structure", 
+                "*",
+                ['ORDER' => [ 'slot_number' => 'ASC' ]]);
+        var_dump($slots);
     }
 
 

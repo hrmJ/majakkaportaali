@@ -26,7 +26,7 @@ Service.TabFactory.Structure = function(){
      **/
     this.GetStructure = function(callback){
         $.get("php/ajax/Loader.php",{
-            action : "get_service_specific_slots",
+            action : "load_slots",
             service_id: Service.GetServiceId()
         }, callback.bind(this));
     };

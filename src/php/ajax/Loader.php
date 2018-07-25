@@ -99,14 +99,17 @@ switch($params["action"]){
         $songlist = new Songlist($database, $params["service_id"], $m);
         echo $songlist->LoadSongSlots()->slots_as_string;
         break;
+    case "load_slots":
+        $structure = new Structure($database, $m);
+        if($params["service_id"] != 0){
+            //tarkoituksella != eikä !==
+            $structure->SetAsServiceSpecific($params["service_id"], false);
+        }
+        echo $structure->LoadSlots()->slotstring;
+        break;
     case "load_slots_to_container":
         $songlist = new Songlist($database, $params["service_id"], $m);
         echo json_encode($songlist->LoadSlotsToCont($params["cont_name"]));
-        break;
-    case "get_service_specific_slots":
-        $structure = new Structure($database, $m);
-        $structure->SetAsServiceSpecific($params["service_id"]);
-        echo $structure->LoadSlots()->slotstring;
         break;
     case "get_infoslide":
         $structure = new Structure($database, $m);

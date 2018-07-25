@@ -31,12 +31,12 @@ var GeneralStructure = function(){
      *
      **/
     function ReloadSlots(data){
-        $(".structural-slots").load("php/ajax/Structure.php",
-            {"action":"load_slots"},
-            function(){
-                InitializeSlotFunctionality();
-            }
-        );
+        console.log(data);
+        $(".structural-slots").load("php/ajax/Loader.php",
+            {
+                "action":"load_slots",
+                "service_id": service_id
+            }, InitializeSlotFunctionality);
     }
 
     /**

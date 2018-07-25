@@ -2052,7 +2052,7 @@ Service.TabFactory.Structure = function(){
      **/
     this.GetStructure = function(callback){
         $.get("php/ajax/Loader.php",{
-            action : "get_service_specific_slots",
+            action : "load_slots",
             service_id: Service.GetServiceId()
         }, callback.bind(this));
     };
@@ -2312,12 +2312,12 @@ var GeneralStructure = function(){
      *
      **/
     function ReloadSlots(data){
-        $(".structural-slots").load("php/ajax/Structure.php",
-            {"action":"load_slots"},
-            function(){
-                InitializeSlotFunctionality();
-            }
-        );
+        console.log(data);
+        $(".structural-slots").load("php/ajax/Loader.php",
+            {
+                "action":"load_slots",
+                "service_id": service_id
+            }, InitializeSlotFunctionality);
     }
 
     /**
