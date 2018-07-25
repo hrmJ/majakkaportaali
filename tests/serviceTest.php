@@ -129,7 +129,6 @@ class ServiceTest extends TestCase
     {
         $service = new Service($this->con, 2);
         $slots = $service->GetBibleSegmentsContent();
-        var_dump($slots);
         $this->assertTrue(sizeof($slots)>0);
     }
 

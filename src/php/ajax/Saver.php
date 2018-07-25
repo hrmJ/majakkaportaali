@@ -75,12 +75,12 @@ switch($params["action"]){
         $struct->InsertNewSlot($params["params"]);
         break;
     case "update_slot_order":
-        foreach($params["newids"] as $idpair){
-            $database->update("presentation_structure", 
-                ["slot_number" => $idpair["newnumber"]],
-                ["id" => $idpair["slot_id"]] 
-            );
+        $struct = new Structure($database, $m);
+        if($params["service_id"] != 0){
+            //tarkoituksella != eikä !==
+            $struct->SetAsServiceSpecific($params["service_id"]);
         }
+        $struct->SaveNewSlotOrder($params["newids"]);
         break;
     case "save_edited_lyrics":
         $songlist = new Songlist($database, 0, $m);

@@ -178,10 +178,22 @@ class StructureTest extends TestCase{
     public function testUpdateSlotOrder()
     {
         $struct = new Structure($this->con, $this->m);
-        $struct->UpdateSlotOrder();
+        $struct->RefreshSlotOrder();
         $this->con->delete("presentation_structure",["slot_name" => "Testilaulu"]);
         $this->con->delete("presentation_structure",["slot_name" => "Tervetulosanat"]);
     }
+
+
+    ///**
+    // * Testaa, että slottien uuden järjestyksen tallentaminen sujuu
+    // */
+    //public function testSaveNewSlotOrder()
+    //{
+    //    $struct = new Structure($this->con, $this->m);
+    //    $struct->UpdateSlotOrder();
+    //    $this->con->delete("presentation_structure",["slot_name" => "Testilaulu"]);
+    //    $this->con->delete("presentation_structure",["slot_name" => "Tervetulosanat"]);
+    //}
 
 }
 

@@ -31,7 +31,7 @@ $struct = new content\Structure($database, $m);
 
 if($_POST["action"] == "remove_slide"){
     $database->delete("presentation_structure",  ["id" => $_POST["id"]]);
-    $struct->UpdateSlotOrder();
+    $struct->RefreshSlotOrder();
 }
 else if ($_POST["action"] == "load_slots"){
     $struct = new content\Structure($database, $m);

@@ -689,7 +689,6 @@ var SongSlots = function(){
             title:request.term
         }, 
             function(data){
-                console.log(data);
                 response(data)
             }
         );
@@ -719,7 +718,6 @@ var SongSlots = function(){
      **/
     function SaveSlotOrder($parent_el){
         var $slots = $parent_el.find(".songslot");
-        console.log($slots.length);
         songs_tab.MonitorChanges();
     }
 
@@ -772,7 +770,6 @@ var SongSlots = function(){
          *
          **/
         this.FetchSlots = function(){
-            console.log("fetching.." + this.name);
             $.getJSON("php/ajax/Loader.php",{
                 action: "load_slots_to_container",
                 service_id: Service.GetServiceId(),
@@ -794,7 +791,6 @@ var SongSlots = function(){
                 slots = [{song_title:"",multisong_position:""}];
             }
             $.each(slots, function(idx, slot_data){
-                console.log(slot_data);
                 var slot = new SongSlot(slot_data.song_title,
                     slot_data.multisong_position, 
                     self.$ul,
@@ -2043,6 +2039,7 @@ Service.TabFactory.Structure = function(){
     this.SetStructure = function(html){
         $("#service_specific_structure").html(html);
         GeneralStructure.Initialize();
+        GeneralStructure.SetServiceid(Service.GetServiceId());
     };
 
 
@@ -2293,6 +2290,19 @@ var GeneralStructure = function(){
     var adder;
     var slot_types = [ "infoslide", "songslide", "bibleslide"];
     var sortable_slot_list = undefined;
+    var service_id = 0;
+
+
+    /**
+     *
+     * Tekee rakenteesta messukohtaisen asettamalla messun id:n parametriksi
+     *
+     * @param id messun id
+     *
+     **/
+    function SetServiceid(id){
+        service_id = id;
+    }
 
     /**
      *
@@ -2338,9 +2348,12 @@ var GeneralStructure = function(){
             console.log({"slot_id":slot_id,"newnumber":idx+1});
             newids.push({"slot_id":slot_id,"newnumber":idx+1});
         });
+        console.log(service_id);
         $.post("php/ajax/Saver.php",{
             "action":"update_slot_order",
-            "newids":newids },
+            "newids":newids,
+            "service_id": service_id
+            },
             ReloadSlots);
     }
 
@@ -2415,7 +2428,8 @@ var GeneralStructure = function(){
     return {
          Initialize,
          ReloadSlots,
-         SaveSlotOrder
+         SaveSlotOrder,
+         SetServiceid,
     }
     
 
@@ -4098,7 +4112,6 @@ var BibleModule = function(){
          * 
          */
         this.SetChapters = function(data){
-            console.log(data);
             var self = this;
             this.$picker.find(".chapter, .verse").find("option:gt(0)").remove();
             //ES2015 testi: TODO muista yhteensopiva versio

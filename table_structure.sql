@@ -220,6 +220,7 @@ CREATE TABLE headers (
 
 CREATE TABLE presentation_structure (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `service_id` int(10) DEFAULT NULL,
   slot_name varchar(300) DEFAULT NULL,
   slot_number int(3) DEFAULT NULL,
   slot_type varchar(300) DEFAULT NULL,

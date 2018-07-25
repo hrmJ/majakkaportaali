@@ -22,18 +22,37 @@ class Structure{
      *
      */
     protected $con;
+    protected $service_id = 0;
+    protected $table = "presentation_structure";
     public $template_engine;
     public $slotstring;
+    private $columns = ["id", "slot_name", "slot_type", "slot_number",
+        "content_id", "addedclass", "header_id"];
 
-        /*
-         *
-         *
-         */
+    /**
+     *
+     *
+     */
     public function __construct(\Medoo\Medoo $con, $m){
         $this->con = $con;
         $this->template_engine = $m;
     }
 
+
+    /**
+     *
+     * Tekee rakenteesta messukohtaisen
+     *
+     */
+    public function SetAsServiceSpecific($service_id){
+        //$this->service_id = $service_id;
+        //$this->table = "service_specific_presentation_structure";
+        ////Tarkistetaan, onko jo tälle messulle tallennettu omaa rakennetta
+        //$rows = $this->con->select("service_id",["service_id" => $this->service_id]);
+        //if(!$rows){
+        //    $slots = $this->con->select("*", "presentation_structure")
+        //}
+    }
 
     /**
      *
@@ -45,14 +64,13 @@ class Structure{
      */
     public function LoadSlots($service_id = 0){
         $slots = $this->con->select("service_specific_presentation_structure", 
-            ["id",  "slot_name", "slot_number", "slot_type", 
-            "content_id", "addedclass", "header_id"],
+            $this->columns,
             ["service_id" => $service_id],
             ['ORDER' => [ 'slot_number' => 'ASC' ]]);
         if(!$slots){
             //Ei löydy messuspesifiä rakennetta tai haetaan suoraan yleistä
             $slots = $this->con->select("presentation_structure", 
-                ["id", "slot_name", "slot_type", "slot_number", "content_id", "addedclass", "header_id"],
+                $this->columns,
                 ['ORDER' => [ 'slot_number' => 'ASC' ]]);
         }
         $this->slotstring = "";
@@ -158,7 +176,7 @@ class Structure{
     public function UpdateSlide($id, $table, $params){
         $this->con->update($table, $params, ["id"=>$id]);
         if($table == "presentation_structure"){
-            $this->UpdateSlotOrder();
+            $this->RefreshSlotOrder();
         }
         return $this;
     }
@@ -169,7 +187,7 @@ class Structure{
      *
      * 
      */
-    public function UpdateSlotOrder(){
+    public function RefreshSlotOrder(){
         $data = $this->con->select("presentation_structure", "*");
         $i = 1;
         foreach($data as $row){
@@ -179,6 +197,27 @@ class Structure{
         }
         return $this;
     }
+
+
+    /**
+     *
+     * Tallentaa slottien järjestyksen sen jälkeen kun käyttäjä on muuttanut sitä
+     * 
+     * @param $newids slottien uudet järjestysnumerot ryhmiteteltynä id:n mukaan
+     *
+     */
+    public function SaveNewSlotOrder($newids){
+        if($this->service_id){
+            $this->con->select("service_id",["service_id" => $this->service_id]);
+        }
+        foreach($newids as $idpair){
+            $this->con->update($this->table, 
+                ["slot_number" => $idpair["newnumber"]],
+                ["id" => $idpair["slot_id"]] 
+            );
+        }
+    }
+
 
 
     /**

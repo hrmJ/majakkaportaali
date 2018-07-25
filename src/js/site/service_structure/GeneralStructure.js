@@ -9,6 +9,19 @@ var GeneralStructure = function(){
     var adder;
     var slot_types = [ "infoslide", "songslide", "bibleslide"];
     var sortable_slot_list = undefined;
+    var service_id = 0;
+
+
+    /**
+     *
+     * Tekee rakenteesta messukohtaisen asettamalla messun id:n parametriksi
+     *
+     * @param id messun id
+     *
+     **/
+    function SetServiceid(id){
+        service_id = id;
+    }
 
     /**
      *
@@ -54,9 +67,12 @@ var GeneralStructure = function(){
             console.log({"slot_id":slot_id,"newnumber":idx+1});
             newids.push({"slot_id":slot_id,"newnumber":idx+1});
         });
+        console.log(service_id);
         $.post("php/ajax/Saver.php",{
             "action":"update_slot_order",
-            "newids":newids },
+            "newids":newids,
+            "service_id": service_id
+            },
             ReloadSlots);
     }
 
@@ -131,7 +147,8 @@ var GeneralStructure = function(){
     return {
          Initialize,
          ReloadSlots,
-         SaveSlotOrder
+         SaveSlotOrder,
+         SetServiceid,
     }
     
 

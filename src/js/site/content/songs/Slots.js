@@ -21,7 +21,6 @@ var SongSlots = function(){
             title:request.term
         }, 
             function(data){
-                console.log(data);
                 response(data)
             }
         );
@@ -51,7 +50,6 @@ var SongSlots = function(){
      **/
     function SaveSlotOrder($parent_el){
         var $slots = $parent_el.find(".songslot");
-        console.log($slots.length);
         songs_tab.MonitorChanges();
     }
 
@@ -104,7 +102,6 @@ var SongSlots = function(){
          *
          **/
         this.FetchSlots = function(){
-            console.log("fetching.." + this.name);
             $.getJSON("php/ajax/Loader.php",{
                 action: "load_slots_to_container",
                 service_id: Service.GetServiceId(),
@@ -126,7 +123,6 @@ var SongSlots = function(){
                 slots = [{song_title:"",multisong_position:""}];
             }
             $.each(slots, function(idx, slot_data){
-                console.log(slot_data);
                 var slot = new SongSlot(slot_data.song_title,
                     slot_data.multisong_position, 
                     self.$ul,

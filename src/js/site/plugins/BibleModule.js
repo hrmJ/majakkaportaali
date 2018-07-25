@@ -470,7 +470,6 @@ var BibleModule = function(){
          * 
          */
         this.SetChapters = function(data){
-            console.log(data);
             var self = this;
             this.$picker.find(".chapter, .verse").find("option:gt(0)").remove();
             //ES2015 testi: TODO muista yhteensopiva versio

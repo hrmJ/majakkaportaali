@@ -13,6 +13,7 @@ Service.TabFactory.Structure = function(){
     this.SetStructure = function(html){
         $("#service_specific_structure").html(html);
         GeneralStructure.Initialize();
+        GeneralStructure.SetServiceid(Service.GetServiceId());
     };
 
 
