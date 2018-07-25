@@ -181,6 +181,7 @@ class StructureTest extends TestCase{
         $struct->RefreshSlotOrder();
         $this->con->delete("presentation_structure",["slot_name" => "Testilaulu"]);
         $this->con->delete("presentation_structure",["slot_name" => "Tervetulosanat"]);
+        $params = $this->con->select("presentation_structure",["slot_name","addedclass"],["id" => 1]);
     }
 
 

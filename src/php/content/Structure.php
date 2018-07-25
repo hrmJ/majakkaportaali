@@ -26,7 +26,8 @@ class Structure{
     protected $table = "presentation_structure";
     public $template_engine;
     public $slotstring;
-    private $columns = ["id", "slot_name", "slot_type", "slot_number",
+    private $service_specific_created = false;
+    private $columns = ["slot_name", "slot_type", "slot_number",
         "content_id", "addedclass", "header_id"];
 
     /**
@@ -45,13 +46,20 @@ class Structure{
      *
      */
     public function SetAsServiceSpecific($service_id){
-        //$this->service_id = $service_id;
-        //$this->table = "service_specific_presentation_structure";
-        ////Tarkistetaan, onko jo tälle messulle tallennettu omaa rakennetta
-        //$rows = $this->con->select("service_id",["service_id" => $this->service_id]);
-        //if(!$rows){
-        //    $slots = $this->con->select("*", "presentation_structure")
-        //}
+        $this->service_id = $service_id;
+        $this->table = "service_specific_presentation_structure";
+        //Tarkistetaan, onko jo tälle messulle tallennettu omaa rakennetta
+        $rows = $this->con->select("service_id",["service_id" => $this->service_id]);
+        if(!$rows){
+            $this->service_specific_created = true;
+            $slots = $this->con->select("presentation_structure",
+                array_merge($this->columns, ["id"]),
+                ['ORDER' => [ 'slot_number' => 'ASC' ]]);
+            foreach($slots as $slot){
+                $slot["service_id"] = $this->service_id;
+                $this->con->insert("service_specific_presentation_structure", $slot);
+            }
+        }
     }
 
     /**
@@ -62,15 +70,16 @@ class Structure{
      * $service_id jos haetaan messuspesifiä rakennetta, messun id (oletus nolla)
      *
      */
-    public function LoadSlots($service_id = 0){
+    public function LoadSlots(){
+        //Kokeillaan ensin messukohtaista rakennetta
         $slots = $this->con->select("service_specific_presentation_structure", 
-            $this->columns,
-            ["service_id" => $service_id],
+            array_merge($this->columns, ["id"]),
+            ["service_id" => $this->service_id],
             ['ORDER' => [ 'slot_number' => 'ASC' ]]);
         if(!$slots){
             //Ei löydy messuspesifiä rakennetta tai haetaan suoraan yleistä
             $slots = $this->con->select("presentation_structure", 
-                $this->columns,
+                array_merge($this->columns, ["id"]),
                 ['ORDER' => [ 'slot_number' => 'ASC' ]]);
         }
         $this->slotstring = "";
@@ -83,10 +92,10 @@ class Structure{
                 "content_id" => $slot["content_id"],
                 "header_id" => $slot["header_id"],
                 "slot_type" => $this->FormatSlotType($slot["slot_type"]),
-                "slot_type_orig" =>$slot["slot_type"],
-                "slot_name_orig" =>$slot["slot_name"],
-                "slot_id" =>$slot["id"],
-                "name" =>$name,
+                "slot_type_orig" => $slot["slot_type"],
+                "slot_name_orig" => $slot["slot_name"],
+                "slot_id" => $slot["id"],
+                "name" => $name,
             ]);
         }
         return $this;
@@ -188,11 +197,11 @@ class Structure{
      * 
      */
     public function RefreshSlotOrder(){
-        $data = $this->con->select("presentation_structure", "*");
+        $data = $this->con->select($this->table, "*");
         $i = 1;
         foreach($data as $row){
             #Varmistetaan, että slottien numerointi alkaa 1:stä
-            $this->con->update("presentation_structure", ["slot_number" => $i], ["id"=>$row["id"]]);
+            $this->con->update($this->table, ["slot_number" => $i], ["id"=>$row["id"]]);
             $i++;
         }
         return $this;
@@ -207,13 +216,23 @@ class Structure{
      *
      */
     public function SaveNewSlotOrder($newids){
-        if($this->service_id){
-            $this->con->select("service_id",["service_id" => $this->service_id]);
-        }
+        $fixed_ids = [];
+        if($this->service_specific_created){
+            //Jos juuri luoto messukohtainen taulu, haetaan oikeat id:t
+            foreach($newids as $idpair){
+                $where = [];
+                $params = $this->con->select("presentation_structure",$this->columns,["id" => $idpair["slot_id"]]);
+                foreach($this->columns as $colname){
+                    $where[colname] = $params[0][colname];
+                }
+                $fixed_ids[$idpair["slot_id"]] = $this->con->get($this->table, "id", $where);
+            }
+        };
         foreach($newids as $idpair){
+            $id = ($fixed_ids ? $fixed_ids[$idpair["slot_id"]] : $idpair["slot_id"]);
             $this->con->update($this->table, 
                 ["slot_number" => $idpair["newnumber"]],
-                ["id" => $idpair["slot_id"]] 
+                ["id" => $id]
             );
         }
     }

@@ -105,6 +105,7 @@ switch($params["action"]){
         break;
     case "get_service_specific_slots":
         $structure = new Structure($database, $m);
+        $structure->SetAsServiceSpecific($params["service_id"]);
         echo $structure->LoadSlots()->slotstring;
         break;
     case "get_infoslide":
