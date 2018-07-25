@@ -1116,8 +1116,9 @@ var SongSlots = function(){
         this.SetVersion = function(e, itm){
             this.picked_id = itm.item.value;
             $("#songdetails .lyrics_id").val(this.picked_id);
-            console.log("set: " + this.picked_id);
+            this.$div.find(".song_id").val(this.picked_id);
             SongLists.SetLyrics(this.picked_id, $("#songdetails .lyrics"));
+            songs_tab.MonitorChanges();
         }
 
 
@@ -2041,6 +2042,7 @@ Service.TabFactory.Structure = function(){
      **/
     this.SetStructure = function(html){
         $("#service_specific_structure").html(html);
+        GeneralStructure.Initialize();
     };
 
 
@@ -2407,7 +2409,6 @@ var GeneralStructure = function(){
     function Initialize(){
         InitializeNewslotMenu();
         InitializeSlotFunctionality();
-        //BibleModule.AttachAddressPicker($(".bs_test"),"Evankeliumi");
     }
 
 
