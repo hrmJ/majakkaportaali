@@ -52,7 +52,7 @@ class Structure{
         $this->service_id = $service_id;
         $this->table = "service_specific_presentation_structure";
         //Tarkistetaan, onko jo tälle messulle tallennettu omaa rakennetta
-        $rows = $this->con->select("service_id",["service_id" => $this->service_id]);
+        $rows = $this->con->select($this->table, "*", ["service_id" => $this->service_id]);
         if(!$rows and $create_if_not_exist){
             $this->service_specific_created = true;
             $slots = $this->con->select("presentation_structure",
@@ -236,7 +236,6 @@ class Structure{
                         $where[$colname] = $params[0][$colname];
                     }
                 }
-                var_dump($where);
                 $fixed_ids[$idpair["slot_id"]] = $this->con->get($this->table, "id", $where);
             }
         };
