@@ -18,7 +18,7 @@ $(function(){
     }
     else if ($("body").hasClass("service_structure")){
         //Kaikkien messujen lista
-        GeneralStructure.Initialize();
+        GeneralStructure.Initialize(".structural-element-add");
         //Ehkä filtteröitynä?
     }
 

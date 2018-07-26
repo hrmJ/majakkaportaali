@@ -32,6 +32,7 @@
                 <li><a href="#">Kirjaudu ulos</a></li>
             </ul> 
         </div>
+        xx.xx.2018 | Näytä kaikki messut
     </nav>
     <div class="byline">{{{byline}}}</div>
     <main>
@@ -40,6 +41,184 @@
 
     </main>
 </div>
+
+<div class="hidden slide_models_parent">
+    <div class="infoslide slidemodel">
+        <h2 class="subwindow-opener slide-section-controller">Otsikot ja luokka</h2>
+        <div class="slidemodel-flex-column controller-subwindow">
+            <div class="class-adder">
+                <div>Luokka:</div> <div class="addedclass_span"></div>
+            </div>
+            <div>
+                <div>Tunniste:</div> <div><input type="text" class="segment-name"></input></div>
+            </div>
+            <div>
+                 <div>Otsikko:</div> <div><input type="text" class="slide-header" placeholder="Jos et halua otsikkoa, jätä tyhjäksi"></input></div>
+            </div>
+            <div>
+                <input type="checkbox" value="show-upper-header">Näytä koko messun otsikko</input>
+            </div>
+        </div>
+        <h2 class="subwindow-opener slide-section-controller">Kuva</h2>
+        <div class="slidemodel-flex controller-subwindow img-adder with-preview slide_img">
+            <div class="with-preview">
+                <div class="img-select-parent"></div>
+                <div class="preview"></div>
+            </div>
+            <div class="basic-flex">
+                <div>Kuvan sijainti</div>
+                <div>
+                    <select class="img-pos-select">
+                        <option value="left">Tekstin vasemmalla puolella</option>
+                        <option value="right">Tekstin oikealla puolella</option>
+                        <option value="top">Tekstin yläpuolella</option>
+                        <option value="bottom">Tekstin alapuolella</option>
+                        <option value="wholescreen">Koko ruutu</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <h2 class="subwindow-opener slide-section-controller">Teksti</h2>
+        <div class="controller-subwindow">
+            <div class="slidemodel-flex">
+                <div>
+                    <h3>Dian varsinainen teksti</h3>
+                    <div><textarea class='infoslidetext slidetext' placeholder="Kirjoita diassa leipätekstinä näytettävä informaatio tähän."></textarea></div>
+                </div>
+                <div class="injection_placeholder"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="songslide slidemodel">
+        <h2 class = "subwindow-opener">Laulun nimi ja luokka</h2>
+        <section class="slidemodel-flex-column controller-subwindow">
+            <div class="class-adder">
+                <div>Dian luokka: </div> <div class="addedclass_span"></div>
+            </div>
+            <div>
+                <div>Laulun nimi: </div>
+                <div><input type="text" class="segment-name" placeholder="Esim. alkulaulu"></input></div>
+            </div>
+        </section>
+        <h2 class = "subwindow-opener">Tarkempi kuvaus</h2>
+        <section class="slidemodel-flex-column controller-subwindow">
+            <div class="slidemodel-flex">
+                <div><textarea class='songslidetext songdescription' placeholder="Kirjoita kuvaus siitä, minkälaisia lauluja tässä yleensä pitäisi olla"></textarea></div>
+            </div>
+        </section>
+        <h2 class="subwindow-opener">Lisävalinnat</h2>
+        <section class="controller-subwindow">
+            <div class="some-margin">
+                <div class='basic-flex checkbox-parent'>
+                    <div><input type="checkbox" value="multisong"></input></div>
+                    <div>Useita lauluja?</div>
+                </div>
+                <div class="some-margin multisongheader hidden">
+                    <div> <input type='text' class='longinput'></input> </div>
+                    <div class='small-label some-margin'>
+                        Anna yhteinen otsikko kaikille lauluille
+                    </div>
+                </div>
+            </div>
+            <div "slidemodel-flex">
+                <div class="basic-flex checkbox-parent">
+                    <div><input type="checkbox" value="restrictedsong"></input></div>
+                    <div>Käytä rajattua laulujen listaa avoimen kentän sijasta?</div>
+                </div>
+                <div class="some-margin restrictionlist hidden">
+                    <div>
+                        <input type='text' name='restrictions_input' class='longinput'></input>
+                    </div>
+                    <div class='small-label some-margin'>
+                        Kirjoita hyväksyttyjen laulujen nimet pilkulla erotettuna
+                    </div>
+                </div>
+                <div id="autocomptarget">
+                    <!-- Tänne tulostetaan selattavia lauluja laulujen rajausta varten -->
+                </div>
+            </div>
+            <div> </div>
+        </section>
+        </div>
+
+
+    <div class="bibleslide slidemodel">
+        <div class="">
+            <div class="class-adder">
+                <div>Valitse dian luokka: </div> <div class="addedclass_span"></div>
+            </div>
+        </div>
+        <div class="">
+            <div class="small_label">
+                <div>Dian tunniste (esim. "Päivän evankeliumi")</div>
+                <div class=""><input type="text" class="segment-name" placeholder=""></input></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="hidden" id="headertemplate_container">
+
+        <h2 class="subwindow-opener slide-section-controller">Ylätunniste</h2>
+        <div class="controller-subwindow headertemplates">
+            <div>
+                <select name="header_select">
+                </select>
+            </div>
+            <div class="headertemplates_hiddencontent">
+                <div class="slidemodel-flex some-margin">
+                    <input type='checkbox' value='use_aside' name='header_type'> Sivutunniste eikä ylätunniste</input>
+                </div>
+                <div class="slidemodel-flex">
+                    <div>
+                        <h3>Ylätunnisteen teksti</h3>
+                        <div><textarea class='' placeholder="Esimerkiksi @messu:  @aihe . Jos et halua ylätunnistetta, jätä tyhjäksi. TODO: pudotusvalikko "></textarea></div>
+                    </div>
+                    <div class="injection_placeholder"></div>
+                </div>
+                <div class="slidemodel-flex img-adder with-preview">
+                    <div class="with-preview">
+                        <div class="img-select-parent"></div>
+                        <div class="preview"></div>
+                    </div>
+                    <div class="basic-flex">
+                        <div>Kuvan sijainti</div>
+                        <div>
+                            <select class="img-pos-select">
+                                <option value="left">Tekstin vasemmalla puolella</option>
+                                <option value="right">Tekstin oikealla puolella</option>
+                                <option value="top">Tekstin yläpuolella</option>
+                                <option value="bottom">Tekstin alapuolella</option>
+                                <option value="wholescreen">Koko ruutu</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+</div>
+
+
+</div>
+
+<div class="hidden">
+<div id='injected-data-container'>
+    <h3>Upota messudataa</h3>
+    <p>Voit lisätä diaan tietoja kyseisen päivän messusta. Voit valita 
+    syötettävän tiedon alla olevasta pudotusvalikosta tai määritellä
+    sen suoraan tekstikenttään {{- ja }}-merkkien väliin, esim. {{juontaja}}.
+    </p>
+    <div class="injected-data">
+    
+    </div>
+</div>
+
 
 </body>
 

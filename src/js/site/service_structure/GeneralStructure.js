@@ -23,6 +23,7 @@ var GeneralStructure = function(){
         service_id = id;
     }
 
+
     /**
      *
      * Lataa informaation messun rakenneosista
@@ -81,19 +82,32 @@ var GeneralStructure = function(){
      *
      * Alustaa uusia slotteja lisäävän jquery-ui-menun toiminnallisuuden
      *
-     **/
-    function InitializeNewslotMenu(){
-        $(".menu").menu({ 
-            position: { my: "bottom", at: "right-5 top+5" },
-            select: function(e, u){
-                var slot_type = u.item.find(">div:eq(0)").attr("id").replace(/([^_]+)_launcher/,"$1");
+     * @param selector minne menu liitetään
+     *
+     */
+    function InitializeNewslotMenu(selector){
+        $(selector).html("");
+         var $header = $("<h4 class='closed'>Syötä uusi messuelementti</h4>")
+            .click(Menus.InitializeFoldMenu);
+         var $menu = $(`
+          <div class="hidden">
+              <ul>
+                  <li id="songslide_launcher">Laulu</li>
+                  <li id="bibleslide_launcher">Raamatunkohta</li>
+                  <li id="infoslide_launcher">Muu</li>
+              </ul>
+          </div>`);
+        $header.appendTo(selector);
+        $menu.appendTo(selector);
+        $menu.find("li").click(function(){
+                var slot_type = $(this).attr("id").replace(/([^_]+)_launcher/,"$1");
                 if(slot_types.indexOf(slot_type)>-1){
-                    GeneralStructure.SlotFactory.SlotFactory.make(slot_type)
+                    GeneralStructure.SlotFactory.SlotFactory.make(slot_type, service_id)
                         .LoadParams(true)
                         .ShowWindow();
                 }
-                }
-            });
+        });
+
     }
 
     /**
@@ -137,9 +151,11 @@ var GeneralStructure = function(){
      *
      * Alusta kaikki messun rakenneosiin liittyvät tapahtumat
      *
+     * @param menuselector minne slottien lisäysmenu liitetään
+     *
      **/
-    function Initialize(){
-        InitializeNewslotMenu();
+    function Initialize(menuselector){
+        InitializeNewslotMenu(menuselector);
         InitializeSlotFunctionality();
     }
 

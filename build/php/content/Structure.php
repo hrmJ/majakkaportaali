@@ -240,7 +240,6 @@ class Structure{
                 $fixed_ids[$idpair["slot_id"]] = $this->con->get($this->table, "id", $where);
             }
         };
-        var_dump($fixed_ids);
         foreach($newids as $idpair){
             $id = ($fixed_ids ? $fixed_ids[$idpair["slot_id"]] : $idpair["slot_id"]);
             $this->con->update($this->table, 
@@ -273,9 +272,9 @@ class Structure{
      * 
      */
     public function InsertNewSlot($params){
-        $last_slot_no = $this->con->max("presentation_structure","slot_number");
+        $last_slot_no = $this->con->max($this->table, "slot_number");
         $params["slot_number"] = $last_slot_no + 1;
-        $this->con->insert("presentation_structure", $params);
+        $this->con->insert($this->table, $params);
         return $this;
     }
 

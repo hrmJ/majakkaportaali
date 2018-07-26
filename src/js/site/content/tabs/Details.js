@@ -104,6 +104,10 @@ Service.TabFactory.Details = function(){
             service_id: Service.GetServiceId(),
         }, function(data){
                 $.each(self.bible_segments, function(idx, seg){
+                    if(! data[seg.title]){
+                        //Jos ei tallennettua dataa
+                        return 0;
+                    }
                     for(i=1;i<data[seg.title].length;i++){
                         seg.AddPickerPair();
                     }

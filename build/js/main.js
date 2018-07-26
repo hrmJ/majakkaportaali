@@ -501,16 +501,24 @@ var Menus = function(){
         
     }
 
+    /**
+     *
+     * Luo uuden taittomenun
+     *
+     *
+     */
+    function InitializeFoldMenu(){
+        //Avaa tai sulje tarkemmat fonttien muokkaussäätimet ym
+        $(this).next().slideToggle(); 
+        $(this).toggleClass("opened");
+    }
+
+
     function InitializeMenus(){
     
         //Aseta taittovalikot toimintakuntoon
         $(".controller-subwindow").hide()
-        $(".subwindow-opener").click(function(){ 
-            //Avaa tai sulje tarkemmat fonttien muokkaussäätimet ym
-            $(this).next().slideToggle(); 
-            $(this).toggleClass("opened");
-        });
-
+        $(".subwindow-opener").click(InitializeFoldMenu);
         $(".covermenu").each(function(){
             var name = $(this).attr("id");
             menus[name] = new Covermenu(name);
@@ -521,10 +529,9 @@ var Menus = function(){
     }
 
 
-
-
     return {
         InitializeMenus,
+        InitializeFoldMenu,
         menus
     }
 
@@ -1952,6 +1959,10 @@ Service.TabFactory.Details = function(){
             service_id: Service.GetServiceId(),
         }, function(data){
                 $.each(self.bible_segments, function(idx, seg){
+                    if(! data[seg.title]){
+                        //Jos ei tallennettua dataa
+                        return 0;
+                    }
                     for(i=1;i<data[seg.title].length;i++){
                         seg.AddPickerPair();
                     }
@@ -2038,8 +2049,8 @@ Service.TabFactory.Structure = function(){
      **/
     this.SetStructure = function(html){
         $("#service_specific_structure").html(html);
-        GeneralStructure.Initialize();
         GeneralStructure.SetServiceid(Service.GetServiceId());
+        GeneralStructure.Initialize(".structural-element-add");
     };
 
 
@@ -2304,6 +2315,7 @@ var GeneralStructure = function(){
         service_id = id;
     }
 
+
     /**
      *
      * Lataa informaation messun rakenneosista
@@ -2362,19 +2374,32 @@ var GeneralStructure = function(){
      *
      * Alustaa uusia slotteja lisäävän jquery-ui-menun toiminnallisuuden
      *
-     **/
-    function InitializeNewslotMenu(){
-        $(".menu").menu({ 
-            position: { my: "bottom", at: "right-5 top+5" },
-            select: function(e, u){
-                var slot_type = u.item.find(">div:eq(0)").attr("id").replace(/([^_]+)_launcher/,"$1");
+     * @param selector minne menu liitetään
+     *
+     */
+    function InitializeNewslotMenu(selector){
+        $(selector).html("");
+         var $header = $("<h4 class='closed'>Syötä uusi messuelementti</h4>")
+            .click(Menus.InitializeFoldMenu);
+         var $menu = $(`
+          <div class="hidden">
+              <ul>
+                  <li id="songslide_launcher">Laulu</li>
+                  <li id="bibleslide_launcher">Raamatunkohta</li>
+                  <li id="infoslide_launcher">Muu</li>
+              </ul>
+          </div>`);
+        $header.appendTo(selector);
+        $menu.appendTo(selector);
+        $menu.find("li").click(function(){
+                var slot_type = $(this).attr("id").replace(/([^_]+)_launcher/,"$1");
                 if(slot_types.indexOf(slot_type)>-1){
-                    GeneralStructure.SlotFactory.SlotFactory.make(slot_type)
+                    GeneralStructure.SlotFactory.SlotFactory.make(slot_type, service_id)
                         .LoadParams(true)
                         .ShowWindow();
                 }
-                }
-            });
+        });
+
     }
 
     /**
@@ -2418,9 +2443,11 @@ var GeneralStructure = function(){
      *
      * Alusta kaikki messun rakenneosiin liittyvät tapahtumat
      *
+     * @param menuselector minne slottien lisäysmenu liitetään
+     *
      **/
-    function Initialize(){
-        InitializeNewslotMenu();
+    function Initialize(menuselector){
+        InitializeNewslotMenu(menuselector);
         InitializeSlotFunctionality();
     }
 
@@ -2682,9 +2709,11 @@ GeneralStructure.SlotFactory = function(){
      * Tuottaa yhden rakenneolion haluttua tyyppiä
      *
      * @param slot_type luotavan slotin tyyppi 
+     * @param service_id mahdollinen messun id, jos messukohtainen rakenne
+     * @param $container mihin liitetään
      *
      **/
-    SlotFactory.make = function(slot_type, $container){
+    SlotFactory.make = function(slot_type, service_id, $container){
         var constr = slot_type;
         var slot;
         SlotFactory[constr].prototype = new SlotFactory();
@@ -2699,6 +2728,7 @@ GeneralStructure.SlotFactory = function(){
         var $slot_id = slot.$container.find(".slot_id");
         var $header_id = slot.$container.find(".header_id");
         slot.slide_id = ($content_id ? $content_id.val() : 0);
+        slot.service_id = service_id;
         slot.id = ($slot_id ? $slot_id.val() : 0);
         slot.header_id = ($header_id ? $header_id.val() : 0);
         slot.previewparams = {segment_type: slot.segment_type};
@@ -3335,6 +3365,11 @@ GeneralStructure.DataLoading = function(){
                 action: "add_new_slot",
                 params: this.slot_params
             };
+            if(this.service_id){
+                //Tarkistetaan, onko kyseessä messukohtainen dia
+                params.params.service_id = this.service_id;
+                params.service_id = this.service_id;
+            }
             //Haetaan tietokannasta viimeisimmän tämän tyypin diasisällön id ja
             //vasta sitten jatketaan
             $.getJSON("php/ajax/Loader.php",
@@ -4229,7 +4264,7 @@ $(function(){
     }
     else if ($("body").hasClass("service_structure")){
         //Kaikkien messujen lista
-        GeneralStructure.Initialize();
+        GeneralStructure.Initialize(".structural-element-add");
         //Ehkä filtteröitynä?
     }
 

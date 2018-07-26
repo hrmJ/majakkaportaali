@@ -23,9 +23,11 @@ GeneralStructure.SlotFactory = function(){
      * Tuottaa yhden rakenneolion haluttua tyyppiä
      *
      * @param slot_type luotavan slotin tyyppi 
+     * @param service_id mahdollinen messun id, jos messukohtainen rakenne
+     * @param $container mihin liitetään
      *
      **/
-    SlotFactory.make = function(slot_type, $container){
+    SlotFactory.make = function(slot_type, service_id, $container){
         var constr = slot_type;
         var slot;
         SlotFactory[constr].prototype = new SlotFactory();
@@ -40,6 +42,7 @@ GeneralStructure.SlotFactory = function(){
         var $slot_id = slot.$container.find(".slot_id");
         var $header_id = slot.$container.find(".header_id");
         slot.slide_id = ($content_id ? $content_id.val() : 0);
+        slot.service_id = service_id;
         slot.id = ($slot_id ? $slot_id.val() : 0);
         slot.header_id = ($header_id ? $header_id.val() : 0);
         slot.previewparams = {segment_type: slot.segment_type};

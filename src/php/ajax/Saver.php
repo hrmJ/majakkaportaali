@@ -72,6 +72,10 @@ switch($params["action"]){
         break;
     case "add_new_slot":
         $struct = new Structure($database, $m);
+        if($params["service_id"] != 0){
+            //tarkoituksella != eikä !==
+            $struct->SetAsServiceSpecific($params["service_id"]);
+        }
         $struct->InsertNewSlot($params["params"]);
         break;
     case "update_slot_order":

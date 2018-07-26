@@ -120,6 +120,11 @@ GeneralStructure.DataLoading = function(){
                 action: "add_new_slot",
                 params: this.slot_params
             };
+            if(this.service_id){
+                //Tarkistetaan, onko kyseessä messukohtainen dia
+                params.params.service_id = this.service_id;
+                params.service_id = this.service_id;
+            }
             //Haetaan tietokannasta viimeisimmän tämän tyypin diasisällön id ja
             //vasta sitten jatketaan
             $.getJSON("php/ajax/Loader.php",

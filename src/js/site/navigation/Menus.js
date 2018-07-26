@@ -83,16 +83,24 @@ var Menus = function(){
         
     }
 
+    /**
+     *
+     * Luo uuden taittomenun
+     *
+     *
+     */
+    function InitializeFoldMenu(){
+        //Avaa tai sulje tarkemmat fonttien muokkaussäätimet ym
+        $(this).next().slideToggle(); 
+        $(this).toggleClass("opened");
+    }
+
+
     function InitializeMenus(){
     
         //Aseta taittovalikot toimintakuntoon
         $(".controller-subwindow").hide()
-        $(".subwindow-opener").click(function(){ 
-            //Avaa tai sulje tarkemmat fonttien muokkaussäätimet ym
-            $(this).next().slideToggle(); 
-            $(this).toggleClass("opened");
-        });
-
+        $(".subwindow-opener").click(InitializeFoldMenu);
         $(".covermenu").each(function(){
             var name = $(this).attr("id");
             menus[name] = new Covermenu(name);
@@ -103,10 +111,9 @@ var Menus = function(){
     }
 
 
-
-
     return {
         InitializeMenus,
+        InitializeFoldMenu,
         menus
     }
 
