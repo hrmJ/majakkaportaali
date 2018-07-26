@@ -26,13 +26,12 @@ GeneralStructure.DataLoading = function(){
             this.slot_number = this.$container.find(".slot-number").text() || $(".slot").length + 1 ;
             this.slot_name = this.$container.find(".slot_name_orig").val();
             this.$lightbox.find(".segment-name").val(this.slot_name);
-
-            var self = this;
             if(!new_slot){
                 $.getJSON("php/ajax/Loader.php",
                     {
                         "action": "get_" + this.segment_type.replace("segment","slide"),
                         "id" : this.slide_id,
+                        "service_id": this.service_id
                     },
                     //This method is child-specific, cf. infoslide.js, songslide.js etc
                     this.FillInData.bind(this));
@@ -103,6 +102,11 @@ GeneralStructure.DataLoading = function(){
                 id: this.id,
                 action: "save_slot"
             };
+            if(this.service_id){
+                //Tarkistetaan, onko kyseessä messukohtainen dia
+                params.params.service_id = this.service_id;
+                params.service_id = this.service_id;
+            }
             $.post("php/ajax/Saver.php", params, callback.bind(this));
         };
 

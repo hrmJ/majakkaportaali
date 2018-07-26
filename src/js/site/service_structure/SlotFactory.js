@@ -30,6 +30,7 @@ GeneralStructure.SlotFactory = function(){
     SlotFactory.make = function(slot_type, service_id, $container){
         var constr = slot_type;
         var slot;
+        console.log("making : " + service_id);
         SlotFactory[constr].prototype = new SlotFactory();
         slot = new SlotFactory[constr]();
         slot.slot_type = constr;

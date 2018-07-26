@@ -193,7 +193,7 @@ class Structure{
      */
     public function UpdateSlide($id, $table, $params){
         $this->con->update($table, $params, ["id"=>$id]);
-        if($table == "presentation_structure"){
+        if($table == $this->table){
             $this->RefreshSlotOrder();
         }
         return $this;

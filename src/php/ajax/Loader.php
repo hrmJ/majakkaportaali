@@ -113,14 +113,27 @@ switch($params["action"]){
         break;
     case "get_infoslide":
         $structure = new Structure($database, $m);
+        echo "MOOROO";
+        if($params["service_id"] != 0){
+            //tarkoituksella != eikä !==
+            $structure->SetAsServiceSpecific($params["service_id"], false);
+        }
         echo json_encode($structure->LoadSlide($params["id"], "infosegments"));
         break;
     case "get_songslide":
         $structure = new Structure($database, $m);
+        if($params["service_id"] != 0){
+            //tarkoituksella != eikä !==
+            $structure->SetAsServiceSpecific($params["service_id"], false);
+        }
         echo json_encode($structure->LoadSlide($params["id"], "songsegments"));
         break;
     case "get_bibleslide":
         $structure = new Structure($database, $m);
+        if($params["service_id"] != 0){
+            //tarkoituksella != eikä !==
+            $structure->SetAsServiceSpecific($params["service_id"], false);
+        }
         echo json_encode($structure->LoadSlide($params["id"],"biblesegments"));
         break;
     case "get_slideclass_names":

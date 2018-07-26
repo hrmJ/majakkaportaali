@@ -68,7 +68,13 @@ switch($params["action"]){
         break;
     case "save_slot":
         $struct = new Structure($database, $m);
-        $struct->UpdateSlide($params["id"], "presentation_structure", $params["params"]);
+        $table = "presentation_structure";
+        if($params["service_id"] != 0){
+            //tarkoituksella != eikä !==
+            $struct->SetAsServiceSpecific($params["service_id"]);
+            $table = "service_specific_presentation_structure";
+        }
+        $struct->UpdateSlide($params["id"], $table, $params["params"]);
         break;
     case "add_new_slot":
         $struct = new Structure($database, $m);

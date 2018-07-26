@@ -126,7 +126,7 @@ var GeneralStructure = function(){
                 slot_type = slot_type.replace("segment","slide");
             }
             GeneralStructure.SlotFactory.SlotFactory
-                .make(slot_type, $container)
+                .make(slot_type, service_id, $container)
                 .LoadParams()
                 .ShowWindow();
         });
