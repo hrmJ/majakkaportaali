@@ -1,0 +1,115 @@
+//Tämä mixin voidaan sisällyttää kaikkiin erikseen muokattavissa
+//oleviin segmenttityyppeihin (laulu, infodia yms.)
+
+@mixin segment_type{
+
+    font-family: $roboto;
+    color:blue;
+    overflow:hidden;
+    font-size:1em;
+    background:none;
+    //Jokaiselle segmenttityypille myös mahdollisuus päättää, mihin kohti ruutua sisältö sijoitetaan
+    align-items:center;
+    justify-content:flex-start;
+    border:0em solid black;
+
+    article{
+        margin-top:0.2em;
+        margin-left:0.2em;
+        background:none;
+        border:0em solid black;
+        border-radius:0em;
+        font-family: $roboto;
+        //Article-tägien erityisominaisuus: mahdollista määrittää pituus ja leveys.
+        //Tämä tarkoittaa käytännössä varsinaisen sisällön kokoa taustaan nähden.
+        width:auto;
+        height:auto;
+        display:flex;
+        flex-flow:column;
+        justify-content: flex-start;
+        align-items:center;
+    }
+    
+    h1{
+        font-size:2em;
+        font-family: $roboto;
+        color:blue;
+        margin-top:0.1em;
+        margin-left:0.1em;
+        padding:0.1em;
+        border:0em solid black;
+        background:none;
+        border-radius:0em;
+    }
+
+    h2{
+        font-size:1.5em;
+        font-family: $roboto;
+        color:blue;
+        padding:0.1em;
+        background:none;
+        margin-top:0.1em;
+        margin-left:0.1em;
+        border:0em solid black;
+        border-radius:0em;
+    }
+
+    h3{
+        font-size:1.17em;
+        font-family: $roboto;
+        color:blue;
+        padding:0.1em;
+        background:none;
+        margin-top:0.1em;
+        margin-left:0.1em;
+        border:0em solid black;
+        border-radius:0em;
+    }
+
+    p{
+        font-size:1em;
+        font-family: $roboto;
+        color:blue;
+        padding:0.1em;
+        background:none;
+        margin-top:0.1em;
+        margin-left:0.1em;
+        border:0em solid black;
+        border-radius:0em;
+    }
+
+    img{
+        font-size:1em;
+        font-family: $roboto;
+        padding:0.0em;
+        background:none;
+        margin-top:0.0em;
+        margin-left:0.0em;
+        border:0em solid black;
+        border-radius:0em;
+    }
+
+    header{
+        font-size:1em;
+        font-family: $roboto;
+        color:blue;
+        padding:0.1em;
+        background:white;
+        margin-top:0.1em;
+        margin-left:0.1em;
+        border:0em solid black;
+        border-radius:0em;
+    }
+
+    aside{
+        font-size:1em;
+        font-family: $roboto;
+        color:blue;
+        padding:0.1em;
+        background:white;
+        margin-top:0.1em;
+        margin-left:0.1em;
+        border:0em solid black;
+        border-radius:0em;
+    }
+}

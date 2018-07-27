@@ -1,0 +1,49 @@
+@charset "utf-8";
+// Koko esitystä koskevat oletusfontit ja asetukset - ne, joita ei muokattavilla tyyleillä voi säätää
+//HUOM: on tärkeää, että kaikki tekstitasot on määritelty oletuksiksi kaikissa
+//luokissa, koska se mahdollistaa tyylien luokkakohtaisen dynaamisen muokkaamisen
+
+body{
+    //Lähde esityksessä liikkeelle isosta (3 x 16px) fontista
+    @include segment_type;
+    font-size:3em;
+    background:black;
+
+    section{
+        //section-elementtien käsittely tarkoittaa koko esityksen kokoa ym.
+        position: relative;
+        margin-top:0;
+        margin-left:0;
+        background:none;
+        background-size:100%;
+        border:0em solid black;
+        border-radius:0px;
+        font-family: $roboto;
+
+        padding-left:0;
+        padding-right:0;
+        padding-bottom:0;
+        padding-top:0;
+
+        z-index:0;
+        width:100vw;
+        height:100vh;
+        overflow:hidden;
+
+        display:flex;
+        flex-flow: column;
+        align-items:center;
+        justify-content:flex-start;
+    }
+
+}
+
+.verse{
+    //Lisää laulusäkeistöihin marginaalia, niin etteivät ne näy aivan yläreunassa
+    //TODO: tilanteet, joissa pitää mahduttaa mahdollisimman paljon
+    margin-top:1em;
+}
+
+.byline p{
+    background:none;
+}

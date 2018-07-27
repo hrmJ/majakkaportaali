@@ -1,0 +1,40 @@
+@charset "utf-8";
+//Messusisältöjen latausikkuna
+.preloader{
+
+    flex:1 1 55%;
+    display:flex;
+    flex-flow: row nowrap;
+    justify-content:center;
+
+    .service-data-container{
+        width: 65%;
+    }
+
+}
+
+
+.service-data {
+    margin-top:1em;
+    display:flex;
+    flex-flow: row wrap;
+    justify-content:flex-start;
+    >div{
+        margin-right:2em;
+    }
+
+    .flexrow{
+        display:flex;
+        flex-flow: row wrap;
+        justify-content:space-between;
+        margin-bottom:0.4em;
+        max-width:240px;
+    }
+
+    iframe{
+        border:none;
+    }
+
+}
+
+

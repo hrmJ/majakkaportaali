@@ -1,0 +1,483 @@
+<!doctype html>
+
+<html lang="fi">
+<head>
+
+  <meta charset="utf-8">
+
+  <title></title>
+
+  <link rel="stylesheet" href="stylesheets/controls/main.css">
+  <link rel="stylesheet" href="js/vendor/jquery-ui-1.12.1.custom/jquery-ui.min.css">
+
+  <script src="js/vendor/jquery-ui-1.12.1.custom/external/jquery/jquery.js"></script>
+  <script src="js/vendor/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+  <script src="js/main.js"></script>
+
+</head>
+
+<body class='controller-view'>
+
+    <!-- valikot ja painikkeet, joilla ohjataan esitystä -->
+
+    <nav>
+        <ul class="leftmenu">
+            <li class='menulist content'><a  id="addcontentlink" class="addlink" href="javascript:void(0);">Lisää</a></li>
+            <li class=''><a  id="controllink" href="javascript:void(0);">Valitse sisältö</a></li>
+            <li class=''><a  id="launchlink" href="javascript:void(0);">Avaa esitys</a></li>
+            <!--<li class=''><a  id="slide_type_link" href="slide_types.html">Hallitse diatyyppejä</a></li> -->
+        </ul> 
+
+        <ul class="rightmenu">
+            <li class='menulist layout'><a  class="addlink" id="layoutlink" href="javascript:void(0);">Ulkoasu</a></li>
+        </ul> 
+    </nav>
+
+    <main>
+
+        <!-- Sisällön lisääminen eli vasemmalla näkyvä sivumenu --!>
+        <section class="side-menu-left">
+
+            <div class="contentadder textcontentadder">
+                <div class="contentadder-heading">Tekstiä</div>
+                <div class="contentadder-open"> 
+                    <div><textarea placeholder="Kirjoita tähän tekstiä, jonka haluat näyttää skriinillä."></textarea></div>
+                </div>
+            </div> <!--  Ehkä ikonit näiden vasemmalle? --!>
+
+            <div class="contentadder songcontentadder">
+                <div class="contentadder-heading">Laulu</div>
+                <div class="contentadder-open"> 
+                         <input type="text" id="songsearch"  placeholder="Hae laulun nimellä tai nimen osalla" value="">
+                </div>
+            </div>
+
+            <div class="contentadder biblecontentadder">
+                <div class="contentadder-heading">Raamatunkohta</div>
+                <div class="contentadder-open" style="display:block"> 
+                    <div>
+                        <input type="radio" name="testament" value="ot">Vanha testamentti</input>
+                        <input type="radio" name="testament" value="nt">Uusi testamentti</input>
+                    </div>
+                    <div class="verseselector startverse">
+                        <div class="selector-wrapper">
+                            <div>
+                                <select class="book">
+                                    <option>Valitse kirja</option>
+                                </select>
+                            </div>
+                            <div>
+                                <select class="chapter">
+                                    <option>Valitse luku</option>
+                                </select>
+                            </div>
+                            <div>
+                                <select class="verse">
+                                    <option>Valitse jae</option>
+                                </select>
+                                <div class="versepreview"></div>
+                            </div>
+                        </div>
+                        <div>
+                        <div class="arrow_box between-verse-selectors">Mihin asti?</div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="contentadder imgadder">
+                <div class="contentadder-heading">Kuva</div>
+                <div class="contentadder-open"> 
+                </div>
+            </div>
+            <div class="contentadder tubeadder">
+                <div class="contentadder-heading">Youtube-video</div>
+                <div class="contentadder-open"> 
+                </div>
+            </div>
+        </section>
+
+
+
+
+        <section class="contentlist" id="original-content"></section>
+        <section class="contentlist" id="verselist"></section>
+        <section class="contentlist" id="othercontent"></section>
+
+        <!-- Esityksen valintatyökalut, jotka oletuksena näkyvillä  -->
+        <section class="preloader">
+            <div class="service-data-container">
+                <h1>Lauludiat</h1>
+                <div>
+                    <select id="service-select">
+                        <option>Valitse näytettävä messu</option>
+                    </select>
+                </div>
+                <div class="service-data"> 
+                    <h2></h2>
+                    <iframe id="service-data-iframe" width="600" height="450"></iframe>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Ulkoasun säätämiseen käytettävät palikat eli oikealla näkyvä sivumenu --!>
+        <section class="side-menu-right">
+
+            <div class="select-flex">
+                <div>Muokattava kohde</div>
+                <div><select id="layout-target_select"></select></div>
+            </div>
+
+        <!--  Yleisestä fonttikoon säädöstä pikanäppäin yläpalkkiin? --!>
+
+            <div class="contentadder effectslayout">
+                <div class="contentadder-heading">Dian vaihtuminen ja tehosteet</div>
+                <div class="contentadder-open"> 
+                </div>
+            </div>
+
+        <!--  Fontteihin liittyvät säädöt (väri, koko, tausta yms.)--!>
+
+            <div class="contentadder fontchanger">
+
+                <div class="contentadder-heading">Fontit</div>
+                <div class="contentadder-open"> 
+
+                    <section class="fontcontroller changertype-numeric fontSize-changer-parent single-controller">
+                        <input type="hidden" value="0.1" class="slider-step"></input>
+                        <h2 class="subwindow-opener">Koko</h2>
+                    </section>
+
+                    <section class="fontcontroller changertype-select fontFamily-changer-parent single-controller">
+                        <!-- TODO: hae automaattisesti kaikki saatavilla olevat = sass-lista -->
+                        <input class='options' type="hidden" value="Roboto,Open Sans,Josefin Slab,Playfair Display,Raleway,Gloria Hallelujah"/>
+                        <h2 class="subwindow-opener">Kirjasinlaji</h3>
+                    </section>
+                    
+                    <h2 class="subwindow-opener">Värit</h2>
+                    <div>
+                        <section class="fontcontroller changertype-color color-changer-parent">
+                            <h3 class="subwindow-opener">Fontin väri</h3>
+                        </section>
+
+                        <section class="fontcontroller changertype-color background-changer-parent">
+                            <h3 class="subwindow-opener">Taustaväri</h3>
+                        </section>
+
+                        <section class="fontcontroller changertype-color textShadow-changer-parent">
+                            <h3 class="subwindow-opener">Varjostuksen väri</h3>
+                        </section>
+
+                    </div>
+
+
+                    <h2 class="subwindow-opener">Reunukset</h2>
+                    <div>
+                        <section class="fontcontroller changertype-numericcolor border-changer-parent">
+                            <input type="hidden" value="0.01" class="slider-step"></input>
+                            <input type="hidden" value="-0.01" class="slider-min"></input>
+                            <h3 class="subwindow-opener">Reunus</h3>
+                        </section>
+
+                        <section class="fontcontroller changertype-numeric borderRadius-changer-parent">
+                            <input type="hidden" value="0.1" class="slider-step"></input>
+                            <input type="hidden" value="0" class="slider-min"></input>
+                            <h3 class="subwindow-opener">Reunojen pyöristys</h3>
+                        </section>
+                    </div>
+
+
+                    <h2 class="subwindow-opener">Marginaalit ja sisällön etäisyys reunasta</h2>
+                    <div>
+                        <section class="fontcontroller changertype-numeric padding-changer-parent">
+                            <input type="hidden" value="0.1" class="slider-step"></input>
+                            <input type="hidden" value="0" class="slider-min"></input>
+                            <h3 class="subwindow-opener">Tekstin etäisyys ympäröivästä kehyksestä </h3>
+                        </section>
+
+                        <section class="fontcontroller changertype-numeric marginLeft-changer-parent">
+                            <input type="hidden" value="0.1" class="slider-step"></input>
+                            <input type="hidden" value="-20" class="slider-min"></input>
+                            <input type="hidden" value="20" class="slider-max"></input>
+                            <h3 class="subwindow-opener">Etäisyys vasemmasta reunasta</h3>
+                        </section>
+
+                        <section class="fontcontroller changertype-numeric marginTop-changer-parent">
+                            <input type="hidden" value="0.1" class="slider-step"></input>
+                            <input type="hidden" value="-20" class="slider-min"></input>
+                            <input type="hidden" value="20" class="slider-max"></input>
+                            <h3 class="subwindow-opener">Etäisyys yläreunasta</h3>
+                        </section>
+                    </div>
+
+                    <!-- Muut 
+                    
+                        tekstin varjostus (väri? + kyllä? ei)
+
+                        Kulmien pyöristys
+
+                        liukuvärimahdollisuus taustassa...
+                    -->
+
+                </div>
+            </div>
+        
+        <!--  Taustoihin liittyvät säädöt --!>
+
+            <div class="contentadder backgroundchanger">
+                <div class="contentadder-heading">Taustat</div>
+                <div class="contentadder-open"> 
+                    <h3 class="subwindow-opener">Koko ruudun tausta</h3>
+
+                    <div class="bg-switcher">
+                        <div class="radio-flex">
+                            <div><input type="radio" name="img_or_color" value="img">Kuva</input></div>
+                            <div>
+                                <input type="radio" name="img_or_color" value="color">Tavallinen väri</input> 
+                                <span class="colselect"> <input type='text' id="bgcolselect" class='bcolor_all spectrum'> </span> 
+                            </div>
+                        </div>
+                        <div class="imgselect with-preview">
+                            <div>
+                                <select id="general-bg-select"></select>
+                                <p></p>
+                            </div>
+                            <div class="preview">
+                            </div>
+                        </div>
+                        <div><button class='layout-save-changes'>Toteuta</button></div>
+                    </div>
+
+                    <h3 class="subwindow-opener">Sisällön rajaava tausta</h3>
+                    <div class="content-bg-switcher">
+                        <div> <input type='text' id="content_bgcolselect" class='bcolor_all spectrum'> </div> 
+                        <div><button class='layout-save-changes'>Toteuta</button></div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="contentadder positionchanger">
+                <div class="contentadder-heading">Sisällön sijainti ruudulla</div>
+
+                <div class="contentadder-open"> 
+
+
+
+                    <h2 class="subwindow-opener">Sisältöalueen sijainti ja koko</h2>
+
+                    <div>
+                        <section class="positioncontroller changertype-select alignItems-changer-parent eltype-section">
+                            <input class='options' type="hidden" value="Vasemmalla,Keskellä,Oikealla"/>
+                            <input class='values' type="hidden" value="flex-start,center,flex-end"/>
+                            <h3 class="subwindow-opener">Sijainti vaakatasossa</h3>
+                        </section>
+
+                        <section class="positioncontroller changertype-select justifyContent-changer-parent eltype-section">
+                            <input class='options' type="hidden" value="Ylhäällä,Keskellä,Alhaalla"/>
+                            <input class='values' type="hidden" value="flex-start,center,flex-end"/>
+                            <h3 class="subwindow-opener">Sijainti pystytasossa</h3>
+                        </section>
+
+                        
+                        <section class="single-controller">
+                            <h3 class="subwindow-opener">Sisällön leveys</h3>
+                            <div >
+                                <div class="changer-label"><input type="checkbox" class="control-toggler"/>Määrittele  itse</div> 
+                                <div>
+                                    <section class="positioncontroller changertype-numeric width-changer-parent eltype-article controller-not-in-use">
+                                        <!-- defaultvalue-kenttään tallennetaan arvo, jota käytetään, jos css-listassa oletuksena pelkkä *auto* -->
+                                        <input type="hidden" value="50" class="defaultvalue"></input>
+                                        <input type="hidden" value="1" class="slider-step"></input>
+                                        <input type="hidden" value="0" class="slider-min"></input>
+                                        <input type="hidden" value="100" class="slider-max"></input>
+                                        <input type="hidden" value="vw" class="slider-unit"></input>
+                                    </section>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="single-controller">
+                            <h3 class="subwindow-opener">Sisällön korkeus</h3>
+                            <div >
+                                <div class="changer-label"><input type="checkbox" class="control-toggler"/>Määrittele  itse</div> 
+                                <div>
+                                    <section class="positioncontroller changertype-numeric height-changer-parent eltype-article controller-not-in-use">
+                                        <input type="hidden" value="50" class="defaultvalue"></input>
+                                        <input type="hidden" value="1" class="slider-step"></input>
+                                        <input type="hidden" value="0" class="slider-min"></input>
+                                        <input type="hidden" value="100" class="slider-max"></input>
+                                        <input type="hidden" value="vh" class="slider-unit"></input>
+                                    </section>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="single-controller">
+                            <h3 class="subwindow-opener">Ylätunnisteen korkeus</h3>
+                                <div>
+                                    <section class="positioncontroller changertype-numeric height-changer-parent eltype-header">
+                                        <input type="hidden" value="50" class="defaultvalue"></input>
+                                        <input type="hidden" value="1" class="slider-step"></input>
+                                        <input type="hidden" value="0" class="slider-min"></input>
+                                        <input type="hidden" value="100" class="slider-max"></input>
+                                        <input type="hidden" value="vh" class="slider-unit"></input>
+                                    </section>
+                                </div>
+                        </section>
+
+                        <section class="single-controller">
+                            <h3 class="subwindow-opener">Sivutunnisteen leveys</h3>
+                                <div>
+                                    <section class="positioncontroller changertype-numeric width-changer-parent eltype-aside">
+                                        <input type="hidden" value="50" class="defaultvalue"></input>
+                                        <input type="hidden" value="1" class="slider-step"></input>
+                                        <input type="hidden" value="0" class="slider-min"></input>
+                                        <input type="hidden" value="100" class="slider-max"></input>
+                                        <input type="hidden" value="vw" class="slider-unit"></input>
+                                    </section>
+                                </div>
+                        </section>
+
+
+                    </div>
+
+
+                    <h2 class="subwindow-opener">Elementtien tasaus</h2>
+
+                    <div>
+                        <section class="positioncontroller changertype-select alignItems-changer-parent eltype-article">
+                            <input class='options' type="hidden" value="Vasemmalla,Keskellä,Oikealla"/>
+                            <input class='values' type="hidden" value="flex-start,center,flex-end"/>
+                            <h3 class="subwindow-opener">Vaakatasossa</h3>
+                        </section>
+
+                        <section class="positioncontroller changertype-select justifyContent-changer-parent eltype-article">
+                            <input class='options' type="hidden" value="Ylhäällä,Keskellä,Alhaalla"/>
+                            <input class='values' type="hidden" value="flex-start,center,flex-end"/>
+                            <h3 class="subwindow-opener">Pystytasossa</h3>
+                        </section>
+                        
+                        <section class="positioncontroller changertype-select alignItems-changer-parent eltype-header">
+                            <input class='options' type="hidden" value="Vasemmalla,Keskellä,Oikealla"/>
+                            <input class='values' type="hidden" value="flex-start,center,flex-end"/>
+                            <h3 class="subwindow-opener">Ylätunniste vaakatasossa</h3>
+                        </section>
+
+                        <section class="positioncontroller changertype-select justifyContent-changer-parent eltype-header">
+                            <input class='options' type="hidden" value="Ylhäällä,Keskellä,Alhaalla"/>
+                            <input class='values' type="hidden" value="flex-start,center,flex-end"/>
+                            <h3 class="subwindow-opener">Ylätunniste pystytasossa</h3>
+                        </section>
+                    </div>
+
+
+                    <h2 class="subwindow-opener">Marginaalit</h2>
+
+                    <div>
+
+                        <section class="positioncontroller changertype-numeric marginTop-changer-parent eltype-article">
+                            <input type="hidden" value="0.1" class="slider-step"></input>
+                            <input type="hidden" value="-20" class="slider-min"></input>
+                            <input type="hidden" value="20" class="slider-max"></input>
+                            <h3 class="subwindow-opener">Etäisyys yläreunasta</h3>
+                        </section>
+
+                        <section class="positioncontroller changertype-numeric marginLeft-changer-parent eltype-article">
+                            <input type="hidden" value="0.1" class="slider-step"></input>
+                            <input type="hidden" value="-20" class="slider-min"></input>
+                            <input type="hidden" value="20" class="slider-max"></input>
+                            <h3 class="subwindow-opener">Etäisyys vasemmalta</h3>
+                        </section>
+                    </div>
+
+
+                    <h2 class="subwindow-opener">Sisällön etäisyys reunoista</h2>
+
+                    <div>
+
+                        <section class="positioncontroller changertype-numeric paddingLeft-changer-parent eltype-article">
+                            <input type="hidden" value="0.1" class="slider-step"></input>
+                            <input type="hidden" value="0" class="slider-min"></input>
+                            <h3 class="subwindow-opener">Sisällön etäisyys vasemmasta reunasta</h3>
+                        </section>
+
+                        <section class="positioncontroller changertype-numeric paddingRight-changer-parent eltype-article">
+                            <input type="hidden" value="0.1" class="slider-step"></input>
+                            <input type="hidden" value="0" class="slider-min"></input>
+                            <h3 class="subwindow-opener">Sisällön etäisyys oikeasta reunasta</h3>
+                        </section>
+
+                        <section class="positioncontroller changertype-numeric paddingTop-changer-parent eltype-article">
+                            <input type="hidden" value="0.1" class="slider-step"></input>
+                            <input type="hidden" value="0" class="slider-min"></input>
+                            <h3 class="subwindow-opener">Sisällön etäisyys yläreunasta</h3>
+                        </section>
+
+                        <section class="positioncontroller changertype-numeric paddingBottom-changer-parent eltype-article">
+                            <input type="hidden" value="0.1" class="slider-step"></input>
+                            <input type="hidden" value="0" class="slider-min"></input>
+                            <h3 class="subwindow-opener">Sisällön etäisyys alareunasta</h3>
+                        </section>
+
+                    </div>
+
+
+                    <h2 class="subwindow-opener">Lisää</h2>
+
+                    <div>
+
+
+                        <section class="positioncontroller changertype-numeric height-changer-parent eltype-section">
+                            <input type="hidden" value="1" class="slider-step"></input>
+                            <input type="hidden" value="0" class="slider-min"></input>
+                            <input type="hidden" value="100" class="slider-max"></input>
+                            <input type="hidden" value="vh" class="slider-unit"></input>
+                            <h3 class="subwindow-opener">Rajaa esityksen korkeutta</h3>
+                        </section>
+
+
+                        <section class="positioncontroller changertype-numeric borderRadius-changer-parent eltype-article">
+                            <input type="hidden" value="0.1" class="slider-step"></input>
+                            <input type="hidden" value="0" class="slider-min"></input>
+                            <h3 class="subwindow-opener">Sisällön reunojen pyöristys</h3>
+                        </section>
+
+                    </div>
+                    
+                    <!--
+                        Logon sijainti? tms.?
+                    -->
+                </div>
+            </div>
+
+
+            <div class="contentadder layoutloader">
+                <!--Täällä käyttäjä voi tallentaa myöhempää käyttöä varten tekemänsä tyylimuutokset tai ladata jotain valmiiksi tehtyjä pohjia -->
+                <!--HUOM! TODO: pohjien lataus mahdolliseksi jo portaalin puolella -->
+                <div class="contentadder-heading">Lataa tai tallenna tyylipohjia</div>
+                <div class="contentadder-open"> 
+                    <div>
+                        <div>
+                            Tyylipohjan nimi
+                        </div>
+                        <div>
+                            <select name="addedclass" class="slide-class-saver">
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <button id="save_stylesheet">Tallenna</button>
+                        <button id="load_stylesheet">Lataa</button>
+                        <button id="remove_stylesheet">Poista</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+    </main>
+
+</body>
+</html>

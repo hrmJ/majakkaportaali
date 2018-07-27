@@ -1,0 +1,191 @@
+@import url("https://fonts.googleapis.com/css?family=Lustria|Noto+Serif|Gloria+Hallelujah|Amatic+SC|Poiret+One|Quicksand|Open+Sans|Raleway|Playfair+Display|Josefin+Slab");
+body, html {
+  margin: 0;
+  padding: 0;
+  border: 0; }
+
+nav {
+  color: blue; }
+
+header {
+  width: 100%;
+  background: white;
+  top: 0;
+  position: absolute;
+  padding-bottom: 0.1em;
+  overflow: hidden;
+  display: flex; }
+
+aside {
+  height: 100vh;
+  background: white;
+  left: 0;
+  position: absolute;
+  padding-left: 0.2em;
+  overflow: hidden;
+  display: flex; }
+
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: white;
+  color: black;
+  height: 5vh;
+  overflow: hidden; }
+
+article {
+  display: none; }
+
+.current {
+  display: block; }
+
+.img-wholescreen {
+  width: 100%;
+  height: 100%; }
+  .img-wholescreen img {
+    width: 100%;
+    height: 100%; }
+
+.img-left, .img-right {
+  display: flex;
+  flex-flow: row nowrap; }
+  .img-left img, .img-right img {
+    width: 100%;
+    height: 100%; }
+
+.img-left img {
+  margin-right: 1em;
+  max-width: 50%; }
+
+.img-right img {
+  margin-left: 1em; }
+
+.img-top, .img-bottom {
+  max-height: 50%;
+  display: flex;
+  flex-flow: column nowrap; }
+  .img-top img, .img-bottom img {
+    width: 100%;
+    height: 100%; }
+
+body {
+  font-family: "Roboto", sans-serif;
+  color: blue;
+  overflow: hidden;
+  font-size: 1em;
+  background: none;
+  align-items: center;
+  justify-content: flex-start;
+  border: 0em solid black;
+  font-size: 3em;
+  background: black; }
+  body article {
+    margin-top: 0.2em;
+    margin-left: 0.2em;
+    background: none;
+    border: 0em solid black;
+    border-radius: 0em;
+    font-family: "Roboto", sans-serif;
+    width: auto;
+    height: auto;
+    display: flex;
+    flex-flow: column;
+    justify-content: flex-start;
+    align-items: center; }
+  body h1 {
+    font-size: 2em;
+    font-family: "Roboto", sans-serif;
+    color: blue;
+    margin-top: 0.1em;
+    margin-left: 0.1em;
+    padding: 0.1em;
+    border: 0em solid black;
+    background: none;
+    border-radius: 0em; }
+  body h2 {
+    font-size: 1.5em;
+    font-family: "Roboto", sans-serif;
+    color: blue;
+    padding: 0.1em;
+    background: none;
+    margin-top: 0.1em;
+    margin-left: 0.1em;
+    border: 0em solid black;
+    border-radius: 0em; }
+  body h3 {
+    font-size: 1.17em;
+    font-family: "Roboto", sans-serif;
+    color: blue;
+    padding: 0.1em;
+    background: none;
+    margin-top: 0.1em;
+    margin-left: 0.1em;
+    border: 0em solid black;
+    border-radius: 0em; }
+  body p {
+    font-size: 1em;
+    font-family: "Roboto", sans-serif;
+    color: blue;
+    padding: 0.1em;
+    background: none;
+    margin-top: 0.1em;
+    margin-left: 0.1em;
+    border: 0em solid black;
+    border-radius: 0em; }
+  body img {
+    font-size: 1em;
+    font-family: "Roboto", sans-serif;
+    padding: 0.0em;
+    background: none;
+    margin-top: 0.0em;
+    margin-left: 0.0em;
+    border: 0em solid black;
+    border-radius: 0em; }
+  body header {
+    font-size: 1em;
+    font-family: "Roboto", sans-serif;
+    color: blue;
+    padding: 0.1em;
+    background: white;
+    margin-top: 0.1em;
+    margin-left: 0.1em;
+    border: 0em solid black;
+    border-radius: 0em; }
+  body aside {
+    font-size: 1em;
+    font-family: "Roboto", sans-serif;
+    color: blue;
+    padding: 0.1em;
+    background: white;
+    margin-top: 0.1em;
+    margin-left: 0.1em;
+    border: 0em solid black;
+    border-radius: 0em; }
+  body section {
+    position: relative;
+    margin-top: 0;
+    margin-left: 0;
+    background: none;
+    background-size: 100%;
+    border: 0em solid black;
+    border-radius: 0px;
+    font-family: "Roboto", sans-serif;
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-top: 0;
+    z-index: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: flex-start; }
+
+.verse {
+  margin-top: 1em; }
+
+.byline p {
+  background: none; }

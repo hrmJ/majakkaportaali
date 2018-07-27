@@ -1,0 +1,44 @@
+<!doctype html>
+
+<html lang="fi">
+<head>
+  <meta charset="utf-8">
+
+  <title></title>
+
+  <link id="stylelink" rel="stylesheet" href="stylesheets/presentation/main.css?id=234324">
+  <script src="js/vendor/jquery-3.2.1.min.js"></script>
+
+</head>
+
+<body class='presentation-view'>
+
+
+    <style type="text/css" id="updated_styles">
+    
+    </style>
+
+    <main>
+
+        <!-- Tänne tulee itse esityssisältö --!>
+
+        
+    </main>
+
+</body>
+
+<script>
+//Sisällön tuottavan html-tiedoston on 
+//sisällettävä jquery sekä seuraava esityksen lataamisesta
+//huolehtiva koodinpätkä
+//TODO: pärjää ilman jqueryä.
+$(document).ready(function(){
+    if($("body").hasClass("presentation-view")){
+        window.opener.pres.LoadPresViewDom();
+        document.onkeydown = window.opener.pres.KeyHandler;
+        window.opener.onkeydown = window.opener.pres.KeyHandler;
+    }
+});
+</script>
+
+</html>

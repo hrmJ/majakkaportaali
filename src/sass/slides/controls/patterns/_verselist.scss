@@ -1,0 +1,19 @@
+@charset "utf-8";
+//Säkeistöjen ja muiden esikatselutekstien näyttäminen
+#verselist{
+    div{
+        border-radius:10px;
+        padding:0.4em;
+        @include pointer;
+        font-size:0.9em;
+    }
+
+    div:hover{
+        border:1px dotted lighten($navbg,30);
+    }
+
+    div + div{
+        margin-top:0.4em;
+    }
+
+}

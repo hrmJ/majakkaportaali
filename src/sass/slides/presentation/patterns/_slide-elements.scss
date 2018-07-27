@@ -1,0 +1,54 @@
+@charset "utf-8";
+//Diaelementtien ulkoasu
+
+//Jokainen yksittäinen "näytöllinen" on esitetty article-elementein
+//Nämä on laajemman tason navigointia varten ryhmitelty section-elementteihin,
+article{
+    display:none;
+}
+
+//Merkitsee, mikä elementti on nyt aktiivisena ts. esitysikkunassa näkyvillä
+.current{
+    display:block;
+}
+
+
+@mixin img_restrictions{
+
+    img{
+        width:100%;
+        height:100%;
+    }
+}
+
+
+.img-wholescreen{
+    width:100%;
+    height:100%;
+    @include img_restrictions;
+}
+
+.img-left, .img-right{
+    display:flex;
+    flex-flow:row nowrap;
+    @include img_restrictions;
+}
+
+.img-left img{
+    //Lisää marginaalia kuvan ja tekstin väliin
+    margin-right: 1em;
+    max-width:50%;
+}
+
+.img-right img{
+    //Lisää marginaalia kuvan ja tekstin väliin
+    margin-left: 1em;
+}
+
+
+.img-top, .img-bottom{
+    max-height:50%;
+    display:flex;
+    flex-flow:column nowrap;
+    @include img_restrictions;
+}

@@ -1,0 +1,15 @@
+@charset "utf-8";
+//Värit
+
+//$navbg: #810000;
+$navbg: lighten(black,15%);
+$navlink: white;
+$antinavlink: black;
+$mainbg:white;
+$navhlbg:lighten($navbg,70%);
+$blurcolor:darken(rgba(128, 128, 128, 0.8),20%);
+$enhance:#ECFF20;
+$side-menu-text:lighten(black,10%);
+$layout_editor_font: #655c5c;
+
+$biblepreview:#f9ff9f;

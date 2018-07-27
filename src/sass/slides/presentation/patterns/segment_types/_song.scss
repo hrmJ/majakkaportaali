@@ -1,0 +1,39 @@
+@charset "utf-8";
+//Laulujen ja säkeistöjen tyylit
+//HUOM: on tärkeää, että kaikki tekstitasot on määritelty oletuksiksi kaikissa
+//luokissa, koska se mahdollistaa tyylien luokkakohtaisen dynaamisen muokkaamisen
+
+.song{
+
+
+    h1{
+        font-size:2em;
+        font-family: $roboto;
+        color:blue;
+    }
+
+    h2{
+        font-size:1.5em;
+        font-family: $roboto;
+        color:blue;
+    }
+
+    h3{
+        font-size:1.17em;
+        font-family: $roboto;
+        color:blue;
+    }
+
+    p{
+        font-size:1em;
+        font-family: $roboto;
+        color:blue;
+    }
+
+}
+
+.verse{
+    //Lisää laulusäkeistöihin marginaalia, niin etteivät ne näy aivan yläreunassa
+    //TODO: tilanteet, joissa pitää mahduttaa mahdollisimman paljon
+    margin-top:1em;
+}
