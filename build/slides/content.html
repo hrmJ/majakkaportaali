@@ -7,7 +7,7 @@
   <title></title>
 
   <link id="stylelink" rel="stylesheet" href="stylesheets/presentation/main.css?id=234324">
-  <script src="js/vendor/jquery-3.2.1.min.js"></script>
+  <script src="../js/vendor/jquery-3.2.1.min.js"></script>
 
 </head>
 
@@ -34,9 +34,9 @@
 //TODO: pärjää ilman jqueryä.
 $(document).ready(function(){
     if($("body").hasClass("presentation-view")){
-        window.opener.pres.LoadPresViewDom();
-        document.onkeydown = window.opener.pres.KeyHandler;
-        window.opener.onkeydown = window.opener.pres.KeyHandler;
+        window.opener.Slides.Presentation.GetCurrentPresentation().LoadPresViewDom();
+        document.onkeydown = window.opener.Slides.Presentation.KeyHandler;
+        window.opener.onkeydown = window.opener.Slides.Presentation.KeyHandler;
     }
 });
 </script>

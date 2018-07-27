@@ -27,23 +27,23 @@ Slides.ContentLoader = function(){
             );
     }
 
-    /**
-     * Lataa näkyville listan messun vastuuhenkilöistä
-     *
-     * @param int id sen messun id, jonka tietoja noudetaan.
-     *
-     */
-    function LoadResponsibles(id){
-        $.getJSON("php/loadservices.php",{"fetch":"people","id":id}, function(data){
-            var $people = $("<div></div>");
-            $.each(data,function(idx, resp){
-                var responsible = resp.responsible == null ? "" : resp.responsible;
-                var $input = $("<input type='text' name='" + resp.responsibility + "' value='"+ responsible + "'></input>");
-                $("<div class='flexrow'><div>" + resp.responsibility +  "</div></div>").append($("<div></div>").append($input)).appendTo($people);
-            });
-            $("#responsible-data").html("<h3>Tekijät</h3>").append($people);
-        });
-    }
+    ///**
+    // * Lataa näkyville listan messun vastuuhenkilöistä
+    // *
+    // * @param int id sen messun id, jonka tietoja noudetaan.
+    // *
+    // */
+    //function LoadResponsibles(id){
+    //    $.getJSON("php/loadservices.php",{"fetch":"people","id":id}, function(data){
+    //        var $people = $("<div></div>");
+    //        $.each(data,function(idx, resp){
+    //            var responsible = resp.responsible == null ? "" : resp.responsible;
+    //            var $input = $("<input type='text' name='" + resp.responsibility + "' value='"+ responsible + "'></input>");
+    //            $("<div class='flexrow'><div>" + resp.responsibility +  "</div></div>").append($("<div></div>").append($input)).appendTo($people);
+    //        });
+    //        $("#responsible-data").html("<h3>Tekijät</h3>").append($people);
+    //    });
+    //}
 
     /**
      * Lataa näkyville listan messun lauluista

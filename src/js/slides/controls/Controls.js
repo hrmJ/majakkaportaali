@@ -93,17 +93,12 @@ Slides.Controls = function(){
      */
     function Initialize(){
         console.log("Initializing controls");
+
         AddLeftControlsFunctionality();
         AddRightControlsFunctionality();
         $(".side-menu-left, .side-menu-right").hide();
         $(".addlink").click(OpenMenu);
-
-
-        //pres = new Presentation();
-        //$("#launchlink").click(function(){ pres.open(); });
-
-
-    
+        $("#launchlink").click(Slides.Presentation.Initialize);
     }
 
 

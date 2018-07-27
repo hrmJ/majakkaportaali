@@ -4342,23 +4342,23 @@ Slides.ContentLoader = function(){
             );
     }
 
-    /**
-     * Lataa näkyville listan messun vastuuhenkilöistä
-     *
-     * @param int id sen messun id, jonka tietoja noudetaan.
-     *
-     */
-    function LoadResponsibles(id){
-        $.getJSON("php/loadservices.php",{"fetch":"people","id":id}, function(data){
-            var $people = $("<div></div>");
-            $.each(data,function(idx, resp){
-                var responsible = resp.responsible == null ? "" : resp.responsible;
-                var $input = $("<input type='text' name='" + resp.responsibility + "' value='"+ responsible + "'></input>");
-                $("<div class='flexrow'><div>" + resp.responsibility +  "</div></div>").append($("<div></div>").append($input)).appendTo($people);
-            });
-            $("#responsible-data").html("<h3>Tekijät</h3>").append($people);
-        });
-    }
+    ///**
+    // * Lataa näkyville listan messun vastuuhenkilöistä
+    // *
+    // * @param int id sen messun id, jonka tietoja noudetaan.
+    // *
+    // */
+    //function LoadResponsibles(id){
+    //    $.getJSON("php/loadservices.php",{"fetch":"people","id":id}, function(data){
+    //        var $people = $("<div></div>");
+    //        $.each(data,function(idx, resp){
+    //            var responsible = resp.responsible == null ? "" : resp.responsible;
+    //            var $input = $("<input type='text' name='" + resp.responsibility + "' value='"+ responsible + "'></input>");
+    //            $("<div class='flexrow'><div>" + resp.responsibility +  "</div></div>").append($("<div></div>").append($input)).appendTo($people);
+    //        });
+    //        $("#responsible-data").html("<h3>Tekijät</h3>").append($people);
+    //    });
+    //}
 
     /**
      * Lataa näkyville listan messun lauluista
@@ -4391,7 +4391,14 @@ Slides.ContentLoader = function(){
 var Slides = Slides || {};
 
 
+/**
+ *
+ * Varsinaisen hallittavan diaesityksen käsittävä moduuli
+ *
+ */
 Slides.Presentation = function(){
+
+    var current_presentation = undefined;
 
     /**
      * Kontrolloi esitystä ja esitysikkunaa.
@@ -4404,7 +4411,7 @@ Slides.Presentation = function(){
      * @param Array text_levels Mitä eri tekstitasoja esitykessä on käytössä (otsikot, leipäteksti yms.)
      *
      */
-    Slides.Presentation = function(){
+    Presentation = function(){
         this.d = undefined;
         this.dom = undefined;
         this.service_id = NaN;
@@ -4419,13 +4426,12 @@ Slides.Presentation = function(){
             "aside":"sivutunniste",
         };
         self = this;
-    }
 
-    Slides.Presentation.prototype = {
+
         /**
          * Avaa esityksen erilliseen ikkunaan (=esitysikkuna). Jos esitys jo auki, sulkee ikkunan.
          */
-        open: function(){
+        this.ToggleOpen = function(){
             var abort = false;
             var wasclosed = false;
             if($("#launchlink").text()=="Sulje esitys"){
@@ -4459,13 +4465,14 @@ Slides.Presentation = function(){
                     $(".preloader").show();
                 }
             }
-        },
+        };
+
 
         /**
          * Lataa esityksen sisällön ulkoisesta lähteestä. Sen jälkeen lataa
          * esitysikkunan DOMin jqueryn käsiteltäväksi. Lopuksi lataa myös muokatut tyylit.
          */
-        LoadPresViewDom: function(){
+        this.LoadPresViewDom = function(){
             this.d = $(this.view.document).contents();
             this.dom = this.view.document;
             var self = this;
@@ -4483,7 +4490,7 @@ Slides.Presentation = function(){
                         }
                     );
                 } );
-        },
+        };
 
 
         /**
@@ -4492,7 +4499,7 @@ Slides.Presentation = function(){
          * on käytössä.
          *
          */
-        LoadSlideClasses: function(){
+        this.LoadSlideClasses = function(){
             var self = this;
             this.classes = [];
             this.d.find("section").each(function(){
@@ -4507,13 +4514,14 @@ Slides.Presentation = function(){
             //Jätetty vain yhteensopivuuden vuoksi (TODO)
             self.segment_types = self.classes;
         
-        },
+        };
+
 
         /**
          * Lataa hallintapainikkeet ja esityksen sisällön
          *
          */
-        LoadControlsAndContent: function(){
+        this.LoadControlsAndContent = function(){
             //Tähän styles-attribuuttiin on tallennettu esityksen alkuperäiset ja muokatut tyylit
             this.styles = new StyleController(this);
             //Tähän controls-attribuuttiin on listattu kaikki 
@@ -4535,12 +4543,14 @@ Slides.Presentation = function(){
             this.controls.fontchanger = new FontChanger(this);
             this.controls.positionchanger = new PositionChanger(this);
             this.controls.layoutloader = new LayoutLoader(this);
-        },
+        };
 
         /**
-         *Päivittää sisältölistauksen ulkoasupaneeliin, jotta ulkoasua voidaan säätää tarkemmin
+         *
+         * Päivittää sisältölistauksen ulkoasupaneeliin, jotta ulkoasua voidaan säätää tarkemmin
+         *
          */
-        UpdateSegmentListForLayoutEditing: function(){
+        this.UpdateSegmentListForLayoutEditing = function(){
             var self = this;
             self.segment_types = [];
             //Tyhjennä ensin mahdollisesti jo olemassaoleva sisältö
@@ -4561,7 +4571,7 @@ Slides.Presentation = function(){
                 .on("change",function(){self.styles.SetEditTarget($(this))});
             $("#layout-target_select").selectmenu();
             $("#layout-target_select").selectmenu("refresh");
-        },
+        };
 
         /**
          * Määrittele tällä hetkellä aktiivisena oleva sisältö.
@@ -4571,8 +4581,9 @@ Slides.Presentation = function(){
          * ovat lähtökohtaisesti piilotettuja *paitsi* jos niissä on css-luokka current.
          *
          * @param object $target se esityksen dia, joka on (tai josta tulee) aktiivinen
+         *
          */
-        Activate: function($target){
+        this.Activate = function($target){
             //Piilota lähtökohtaisesti kaikki segmentit (ja poista piilotus erikseen nyt aktiivisesta)
             this.d.find("section, article").hide();
             this.$slide.removeClass("current");
@@ -4584,7 +4595,7 @@ Slides.Presentation = function(){
             //jqueryn hide-metodin pitäisi säilyttää alkuperäiset arvot. Tämän vuoksi määritellään erikseen
             //display: flex;
             this.$slide.show().css({"display":"flex"});
-        },
+        };
 
 
         /**
@@ -4593,7 +4604,7 @@ Slides.Presentation = function(){
          * ylätunnisteen marginaali ja piilottamalla tyhjät elementit.
          *
          */
-        AdjustLayout: function(){
+        this.AdjustLayout = function(){
             //Varmista, että tyhjät elementit eivät vie tilaa esityksen kankaalta:
             this.d.find("div,h1,h2,h3,h4,p").each(function(){
                 if($(this).text().trim()=="") $(this).hide();
@@ -4610,24 +4621,35 @@ Slides.Presentation = function(){
                 this.$section.find("article").css({"margin-left":
                     $aside.css("width").replace("px","")*1 + 5 + "px"});
             }
-        },
+        };
 
         /**
+         *
          * Siirtyy seuraavaan diaan
+         *
          */
-        Next: function(){ this.Move("next"); },
+        this.Next = function(){ 
+            this.Move("next"); 
+        };
+
 
         /**
+         *
          * Siirtyy edelliseen diaan
+         *
          */
-        Prev: function(){ this.Move("prev"); },
+        this.Prev = function(){ 
+            this.Move("prev"); 
+        };
 
 
         /**
+         *
          * Suorittaa Next- tai Prev-metodeilla määritellyn siirtymisen
          * @param where string Suunta, johon liikutaan (prev/next)
+         *
          */
-        Move: function(where){
+        this.Move = function(where){
             this.Activate(this.d.find(".current"));
             //1. Liiku sisarelementtiin eli esimerkiksi saman laulun seuraavaan säkeistöön
             var $target = this.$slide[where]("article");
@@ -4639,29 +4661,46 @@ Slides.Presentation = function(){
                 this.Activate($target);
                 this.controls.contentlist.HighlightCurrentContents();
             } 
-        },
+        };
 
-        /**
-         * Hallitsee näppäinpainalluksia ohjainikkunassa ja esitysikkunassa
-         * esityksen liikuttamiseksi
-         */
-        KeyHandler: function (e) {
-            e = e || window.event;
-
-            switch(e.keyCode){
-                case 37:
-                case 38:
-                    self.Prev();
-                    break;
-                case 39:
-                case 40:
-                    self.Next();
-                    break;
-            } 
-        }
     };
 
 
+    /**
+     *
+     * Hallitsee näppäinpainalluksia ohjainikkunassa ja esitysikkunassa
+     * esityksen liikuttamiseksi
+     *
+     */
+    function KeyHandler(e) {
+
+        e = e || window.event;
+
+        switch(e.keyCode){
+            case 37:
+                //nuoli ylös
+            case 38:
+                //nuoli vasemmalle
+                self.Prev();
+                break;
+            case 39:
+                //nuoli alas
+            case 40:
+                //nuoli oikealle
+                self.Next();
+                break;
+        } 
+
+    };
+
+    /**
+     *
+     * Palauttaa esitysolion
+     *
+     */
+    function GetCurrentPresentation(){
+        return current_presentation;
+    }
 
     /**
      *
@@ -4669,6 +4708,8 @@ Slides.Presentation = function(){
      *
      */
     function Initialize(){
+        current_presentation = current_presentation || new Presentation();
+        current_presentation.ToggleOpen();
         console.log("Initializing presentation...");
     }
 
@@ -4676,6 +4717,7 @@ Slides.Presentation = function(){
     return {
     
         Initialize,
+        GetCurrentPresentation,
     
     }
 
@@ -4778,17 +4820,12 @@ Slides.Controls = function(){
      */
     function Initialize(){
         console.log("Initializing controls");
+
         AddLeftControlsFunctionality();
         AddRightControlsFunctionality();
         $(".side-menu-left, .side-menu-right").hide();
         $(".addlink").click(OpenMenu);
-
-
-        //pres = new Presentation();
-        //$("#launchlink").click(function(){ pres.open(); });
-
-
-    
+        $("#launchlink").click(Slides.Presentation.Initialize);
     }
 
 
