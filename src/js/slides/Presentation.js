@@ -320,7 +320,6 @@ Slides.Presentation = function(){
     function Initialize(){
         current_presentation = current_presentation || new Presentation();
         current_presentation.ToggleOpen();
-        console.log("Initializing presentation...");
     }
 
 

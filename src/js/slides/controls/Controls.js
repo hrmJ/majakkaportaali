@@ -15,8 +15,6 @@ Slides.Controls = function(){
      *
      */
     function AddRightControlsFunctionality(){
-        //Päivitä select-elementtien tyyli jquery-ui:n mukaiseksi
-        $("#service-select").selectmenu();
         //Sellaiset tyylisäätimet, joissa on vaihtoehtona joko säädeltävä arvo tai automaattinen arvo
         $(".control-toggler").parent().next("div").hide();
         $(".control-toggler").click(function(){
@@ -70,6 +68,34 @@ Slides.Controls = function(){
 
     }
 
+
+    /**
+     *
+     *
+     * Näyttää suoraan valitun messun portaalinäkymässä
+     *
+     */
+    function ShowServiceInPortal(){
+        $("#service-data-iframe").attr({"src":"../service.php?id=" + $(this).val()})
+    }
+
+
+    /**
+     *
+     * Alustaa yleiset esitykseen liittyvät toiminnot
+     *
+     */
+    function AddGeneralFunctionality(){
+    
+        $("#service-select").selectmenu();
+        $("#service-select").on("selectmenuchange", ShowServiceInPortal);
+        $(".side-menu-left, .side-menu-right").hide();
+        $(".addlink").click(OpenMenu);
+        $("#launchlink").click(Slides.Presentation.Initialize);
+
+
+    }
+
     /**
      *
      * Avaa vasemman taai oikean päämenun
@@ -92,13 +118,11 @@ Slides.Controls = function(){
      *
      */
     function Initialize(){
-        console.log("Initializing controls");
 
         AddLeftControlsFunctionality();
         AddRightControlsFunctionality();
-        $(".side-menu-left, .side-menu-right").hide();
-        $(".addlink").click(OpenMenu);
-        $("#launchlink").click(Slides.Presentation.Initialize);
+        AddGeneralFunctionality();
+
     }
 
 
