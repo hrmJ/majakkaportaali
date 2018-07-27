@@ -1,11 +1,11 @@
-
+var Portal = Portal || {};
 
 /**
  *
  * Moduuli erilaisille menuille
  *
  **/
-var Menus = function(){
+Portal.Menus = function(){
 
     menus = {};
 

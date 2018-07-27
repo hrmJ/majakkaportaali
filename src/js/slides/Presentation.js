@@ -278,20 +278,17 @@ Slides.Presentation = function(){
      * Käynnistää esityksen
      *
      */
-    function InitializePresentation(){
+    function Initialize(){
         console.log("Initializing presentation...");
     }
 
 
     return {
     
-        InitializePresentation,
+        Initialize,
     
     }
 
 }();
 
-
-console.log("moikkavaan");
     
-

@@ -95,8 +95,13 @@ gulp.task("js",function(){
                    "js/portal/plugins/BibleModule",
                    "js/portal/actions",
 
+                   "js/slides/ContentLoader",
                    "js/slides/Presentation",
+                   "js/slides/controls/Controls",
+
+                   "js/slides/actions",
                    ];
+
     var jsprefix = folder.src + "/";
 
     for (idx=0;idx<jsfiles.length;idx++){

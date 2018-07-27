@@ -4,7 +4,7 @@
 
 $(function(){
     //Navigation etc:
-    Menus.InitializeMenus();
+    Portal.Menus.InitializeMenus();
     //Other actions:
     if ($("body").hasClass("servicedetails")){
         //Messukohtainen näkymä
@@ -13,7 +13,7 @@ $(function(){
     }
     else if ($("body").hasClass("servicelist")){
         //Kaikkien messujen lista
-        Servicelist.Initialize();
+        Portal.Servicelist.Initialize();
         //Ehkä filtteröitynä?
     }
     else if ($("body").hasClass("service_structure")){

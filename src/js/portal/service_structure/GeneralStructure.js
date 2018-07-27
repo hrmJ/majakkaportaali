@@ -88,7 +88,7 @@ var GeneralStructure = function(){
     function InitializeNewslotMenu(selector){
         $(selector).html("");
          var $header = $("<h4 class='closed'>Syötä uusi messuelementti</h4>")
-            .click(Menus.InitializeFoldMenu);
+            .click(Portal.Menus.InitializeFoldMenu);
          var $menu = $(`
           <div class="hidden">
               <ul>

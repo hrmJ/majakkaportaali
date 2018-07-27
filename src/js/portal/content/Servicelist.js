@@ -4,10 +4,13 @@
  *
  **/
 
+var Portal = Portal || {};
 
-var Servicelist = function(){
+
+Portal.Servicelist = function(){
 
     season = "?";
+
 
     /**
      *
@@ -25,7 +28,8 @@ var Servicelist = function(){
          *
          **/
         this.LoadServices = function(callback){
-            $.getJSON("php/ajax/Loader.php",{
+            var path = Utilities.GetAjaxPath("Loader.php");
+            $.getJSON(path,{
                 action: "get_list_of_services"
                 }, callback);
         };
@@ -91,6 +95,7 @@ var Servicelist = function(){
 
     return {
         Initialize,
+        List
     };
 
 }()

@@ -2,6 +2,37 @@
 //
 var Utilities = function(){
 
+    var ajax_path = "php/ajax";
+
+    /**
+     *
+     * Asettaa oikean polun ajax-skriptien kansioon
+     *
+     * @param path uusi polku, huom, ei saa loppua /-merkkiin
+     *
+     */
+    function SetAjaxPath(path){
+        if (path.substr(-1) == "/"){
+            path = path.substr(0, path.length-1);
+        }
+
+        ajax_path = path;
+    
+    }
+
+    /**
+     *
+     * Hakee oikean polun ajax-skriptien kansioon
+     *
+     * @param fname mikä tiedosto kansiosta haetaan
+     *
+     */
+    function GetAjaxPath(fname){
+        fname = (fname ? "/" + fname : "");
+        return ajax_path + "/" + fname;
+    }
+
+
     /**
      *
      * Skrollaa jokin elementti keskelle ruutua
@@ -224,7 +255,9 @@ var Utilities = function(){
 
         Message,
         BlurContent,
-        ScrollToCenter
+        ScrollToCenter,
+        SetAjaxPath,
+        GetAjaxPath
     
     }
 

@@ -186,6 +186,37 @@
 //
 var Utilities = function(){
 
+    var ajax_path = "php/ajax";
+
+    /**
+     *
+     * Asettaa oikean polun ajax-skriptien kansioon
+     *
+     * @param path uusi polku, huom, ei saa loppua /-merkkiin
+     *
+     */
+    function SetAjaxPath(path){
+        if (path.substr(-1) == "/"){
+            path = path.substr(0, path.length-1);
+        }
+
+        ajax_path = path;
+    
+    }
+
+    /**
+     *
+     * Hakee oikean polun ajax-skriptien kansioon
+     *
+     * @param fname mikä tiedosto kansiosta haetaan
+     *
+     */
+    function GetAjaxPath(fname){
+        fname = (fname ? "/" + fname : "");
+        return ajax_path + "/" + fname;
+    }
+
+
     /**
      *
      * Skrollaa jokin elementti keskelle ruutua
@@ -408,7 +439,9 @@ var Utilities = function(){
 
         Message,
         BlurContent,
-        ScrollToCenter
+        ScrollToCenter,
+        SetAjaxPath,
+        GetAjaxPath
     
     }
 
@@ -416,14 +449,14 @@ var Utilities = function(){
 
 
 
-
+var Portal = Portal || {};
 
 /**
  *
  * Moduuli erilaisille menuille
  *
  **/
-var Menus = function(){
+Portal.Menus = function(){
 
     menus = {};
 
@@ -2199,10 +2232,13 @@ Service.TabFactory.Songs = function(){
  *
  **/
 
+var Portal = Portal || {};
 
-var Servicelist = function(){
+
+Portal.Servicelist = function(){
 
     season = "?";
+
 
     /**
      *
@@ -2220,7 +2256,8 @@ var Servicelist = function(){
          *
          **/
         this.LoadServices = function(callback){
-            $.getJSON("php/ajax/Loader.php",{
+            var path = Utilities.GetAjaxPath("Loader.php");
+            $.getJSON(path,{
                 action: "get_list_of_services"
                 }, callback);
         };
@@ -2286,6 +2323,7 @@ var Servicelist = function(){
 
     return {
         Initialize,
+        List
     };
 
 }()
@@ -2380,7 +2418,7 @@ var GeneralStructure = function(){
     function InitializeNewslotMenu(selector){
         $(selector).html("");
          var $header = $("<h4 class='closed'>Syötä uusi messuelementti</h4>")
-            .click(Menus.InitializeFoldMenu);
+            .click(Portal.Menus.InitializeFoldMenu);
          var $menu = $(`
           <div class="hidden">
               <ul>
@@ -4255,7 +4293,7 @@ var BibleModule = function(){
 
 $(function(){
     //Navigation etc:
-    Menus.InitializeMenus();
+    Portal.Menus.InitializeMenus();
     //Other actions:
     if ($("body").hasClass("servicedetails")){
         //Messukohtainen näkymä
@@ -4264,7 +4302,7 @@ $(function(){
     }
     else if ($("body").hasClass("servicelist")){
         //Kaikkien messujen lista
-        Servicelist.Initialize();
+        Portal.Servicelist.Initialize();
         //Ehkä filtteröitynä?
     }
     else if ($("body").hasClass("service_structure")){
@@ -4274,6 +4312,81 @@ $(function(){
     }
 
 });
+
+var Slides = Slides || {};
+
+/**
+ *
+ *
+ * Moduuli, joka vastaa sisällön lataamisesta.
+ *
+ *
+ */
+Slides.ContentLoader = function(){
+
+
+    /**
+     *
+     * Lisää kaikki kauden messut select-elementtiin, josta käyttäjä voi 
+     * valita haluamansa päivän messun.
+     *
+     * @param services ajax-vastauksena saatu messujen lista muodossa [{"servicedate":xxx,"teme":...}]
+     *
+     */
+    function AddServicesToSelect(services){
+        var $sel = $("#service-select");
+        $sel.find("option:gt(0)").remove();
+        $sel.append(
+            services.map((service) =>  
+            `<option value='${service.id}'>${service.servicedate} </option>`)
+            );
+    }
+
+    /**
+     * Lataa näkyville listan messun vastuuhenkilöistä
+     *
+     * @param int id sen messun id, jonka tietoja noudetaan.
+     *
+     */
+    function LoadResponsibles(id){
+        $.getJSON("php/loadservices.php",{"fetch":"people","id":id}, function(data){
+            var $people = $("<div></div>");
+            $.each(data,function(idx, resp){
+                var responsible = resp.responsible == null ? "" : resp.responsible;
+                var $input = $("<input type='text' name='" + resp.responsibility + "' value='"+ responsible + "'></input>");
+                $("<div class='flexrow'><div>" + resp.responsibility +  "</div></div>").append($("<div></div>").append($input)).appendTo($people);
+            });
+            $("#responsible-data").html("<h3>Tekijät</h3>").append($people);
+        });
+    }
+
+    /**
+     * Lataa näkyville listan messun lauluista
+     *
+     * @param int id sen messun id, jonka tietoja noudetaan.
+     *
+     */
+    function LoadSongs(id){
+        $.getJSON("php/loadservices.php",{"fetch":"songs","id":id}, function(data){
+            var $songs = $("<div></div>");
+            $.each(data,function(idx, songtitle){
+                $("<div class='flexrow'><div>" + songtitle +  "</div></div>").appendTo($songs);
+            });
+            $("#songdata").html("<h3>Laulut</h3>").append($songs);
+        });
+    }
+
+
+
+    return {
+
+        AddServicesToSelect,
+    
+    
+    }
+
+
+}();
 
 var Slides = Slides || {};
 
@@ -4555,20 +4668,155 @@ Slides.Presentation = function(){
      * Käynnistää esityksen
      *
      */
-    function InitializePresentation(){
+    function Initialize(){
         console.log("Initializing presentation...");
     }
 
 
     return {
     
-        InitializePresentation,
+        Initialize,
     
     }
 
 }();
 
-
-console.log("moikkavaan");
     
 
+var Slides = Slides || {};
+
+/**
+ *
+ * Diaesityksen hallinta, ohjaus ja elementit
+ *
+ */
+Slides.Controls = function(){
+
+
+
+    /**
+     *
+     * Lisää toiminnot oikean puolen (tyylien) hallintaelementteihin
+     *
+     */
+    function AddRightControlsFunctionality(){
+        //Päivitä select-elementtien tyyli jquery-ui:n mukaiseksi
+        $("#service-select").selectmenu();
+        //Sellaiset tyylisäätimet, joissa on vaihtoehtona joko säädeltävä arvo tai automaattinen arvo
+        $(".control-toggler").parent().next("div").hide();
+        $(".control-toggler").click(function(){
+            $(this).parent().next("div").slideToggle();
+            $(this).parent().next("div").find("section").toggleClass("controller-not-in-use");
+            if(!$(this).parent().next("div").find("section").hasClass("controller-not-in-usel")){
+                UpdateControllers(pres);
+            }
+        });
+
+        //Muuta fonttimuokkausten kohdetta, kun tätä säätelevää pudotusvalikkoa käytetään
+        $("#layout-target_select").on("selectmenuchange",function(){UpdateControllers(pres)});
+
+        //TODO: anna spectrum-funktion argumenttina palette-niminen taulukoiden taulukko, jossa on käytössä olevat värit
+        //align-items:center;
+    }
+
+
+    /**
+     *
+     * Lisää toiminnot vasemman puolen hallintaelementteihin
+     *
+     */
+    function AddLeftControlsFunctionality(){
+            $(".contentadder-heading").click(function(){ 
+                //Avaa haluttu sisällönlisäysikkuna 
+                pres.controls[$(this).parent().attr("class").split(" ")[1]].OpenWidget($(this)); 
+            });
+
+            //Lisää widgettien lisäyslinkit kaikkiin vasemman valikon widgetteihin kerralla
+            $(".side-menu-left .contentadder-open")
+                .append(`<div class='addtoprescontrols'>
+                    <a class='addtopreslink' href='javascript:void(0)'>Lisää esitykseen</a> 
+                    <a class='shownowlink' href='javascript:void(0)'> Näytä nyt</a> </div>`);
+            //Huolehdi siitä, että navigointipalkin linkkien klikkaus aktivoi oikeanpuolimmaisen menun
+            $(".addtopreslink").click(function(){
+                //avaa haluttu sisällönlisäysikkuna 
+                pres.controls[$(this).parents(".contentadder").attr("class").split(" ")[1]].AddToPres(); 
+            });
+            $(".contentadder-open").hide();
+            //Piilota menut ja linkit joita ei vielä käytetä
+            $("#controllink, #addcontentlink, #layoutlink").parent().hide();
+            //Jos esitys käynnissä, luo mahdollisuus vaihtaa esityksen hallinnan ja sisällön lisäyksen välillä
+            $("#controllink").click(function(){ 
+                $(".preloader, .contentlist").toggle(); 
+                if($(this).text()=="Valitse sisältö")
+                    $(this).text("Hallitse esitystä");
+                else
+                    $(this).text("Valitse sisältö");
+            });
+
+    }
+
+    /**
+     *
+     * Avaa vasemman taai oikean päämenun
+     *
+     */
+    function OpenMenu(){
+        if($(this).parents("ul").hasClass("leftmenu")){
+            $(".side-menu-left").toggle();
+        }
+        else {
+            $(".side-menu-right").toggle();
+        }
+        $(this).parent().toggleClass("active-menutab");
+    }
+
+    /**
+     *
+     * Alustaa hallintaelementit käyttöön
+     *
+     *
+     */
+    function Initialize(){
+        console.log("Initializing controls");
+        AddLeftControlsFunctionality();
+        AddRightControlsFunctionality();
+        $(".side-menu-left, .side-menu-right").hide();
+        $(".addlink").click(OpenMenu);
+
+
+        //pres = new Presentation();
+        //$("#launchlink").click(function(){ pres.open(); });
+
+
+    
+    }
+
+
+
+
+    return {
+    
+
+        Initialize,
+    
+    }
+
+
+
+}()
+
+$(document).ready(function(){
+
+    if($("body").hasClass("slides")){
+
+        var list = new Portal.Servicelist.List();
+        Utilities.SetAjaxPath("../php/ajax");
+    
+        Slides.Controls.Initialize();
+        list.LoadServices(Slides.ContentLoader.AddServicesToSelect);
+        Portal.Menus.InitializeMenus();
+    
+    }
+
+
+});
