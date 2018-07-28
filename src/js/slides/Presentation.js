@@ -87,12 +87,13 @@ Slides.Presentation = function(){
             this.d = $(this.view.document).contents();
             this.dom = this.view.document;
             //Lataa sisältö ulkoisesta lähteestä
-            $.when(this.LoadSlides).done( () => {
+            $.when(this.LoadSlides()).done( () => {
                     this.d = $(this.view.document).contents();
+                    console.log(this.d);
                     this.Activate(this.d.find(".current"));
-                    //Käy diat läpi ja poimi kaikki siellä esiintyvät luokat
+                    ////Käy diat läpi ja poimi kaikki siellä esiintyvät luokat
                     this.LoadSlideClasses();
-                    $.when(this.SetStyles).done(this.LoadControlsAndContent);
+                    $.when(this.SetStyles()).done(() => this.LoadControlsAndContent());
                 });
         };
 
@@ -104,10 +105,10 @@ Slides.Presentation = function(){
          */
         this.LoadSlides = function(){
             var path = Utilities.GetAjaxPath("Loader.php");
-            return this.d.find("main").load(path,{
+            return $.get(path, {
                 "service_id":self.service_id,
                 "action": "load_slides_to_presentation"
-                });
+                }, (html) => this.d.find("main").html(html));
         };
                     
         /**
@@ -157,14 +158,14 @@ Slides.Presentation = function(){
          */
         this.LoadControlsAndContent = function(){
             //Tähän styles-attribuuttiin on tallennettu esityksen alkuperäiset ja muokatut tyylit
-            this.styles = new StyleController(this);
+            this.styles = new Slides.Styles.Controller.StyleController(this);
             //Tähän controls-attribuuttiin on listattu kaikki 
             //sisältöä / ulkoasua tuottavat tai muokkaavat widgetit
             this.controls = {
-                contentlist: new ContentList(this),
-                textcontentadder: new TextContentAdder(this),
-                biblecontentadder: new BibleContentAdder(this),
-                songcontentadder: new SongContentAdder(this),
+                contentlist: new Slides.Widgets.ContentList(this),
+                textcontentadder: new Slides.Widgets.ContentAdders.TextContentAdder(this),
+                biblecontentadder: new Slides.Widgets.ContentAdders.BibleContentAdder(this),
+                songcontentadder: new Slides.Widgets.ContentAdders.SongContentAdder(this),
             }
             //Lataa sisältö ja päivitä tieto tällä hetkellä aktiivisena olevasta segmentistä
             this.controls.contentlist.GetContents().PrintContentList().HighlightCurrentContents();
@@ -172,11 +173,13 @@ Slides.Presentation = function(){
             $("#songsearch").autocomplete(this.controls.songcontentadder.autocomp);
             $("#songsearch").on("change paste keyup",function(){self.controls.songcontentadder.CreateContent()});
             this.UpdateSegmentListForLayoutEditing();
+
             //Lisää vielä tyylienmuokkauswidgetit (nämä on lisättävä vasta segmenttilistan päivityksen jälkeen)
-            this.controls.backgroundchanger = new BackgroundChanger(this);
-            this.controls.fontchanger = new FontChanger(this);
-            this.controls.positionchanger = new PositionChanger(this);
-            this.controls.layoutloader = new LayoutLoader(this);
+
+            //this.controls.backgroundchanger = new BackgroundChanger(this);
+            //this.controls.fontchanger = new FontChanger(this);
+            //this.controls.positionchanger = new PositionChanger(this);
+            //this.controls.layoutloader = new LayoutLoader(this);
         };
 
         /**
@@ -351,6 +354,7 @@ Slides.Presentation = function(){
     
         Initialize,
         GetCurrentPresentation,
+        KeyHandler
     
     }
 

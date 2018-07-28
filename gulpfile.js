@@ -95,9 +95,19 @@ gulp.task("js",function(){
                    "js/portal/plugins/BibleModule",
                    "js/portal/actions",
 
+                   "js/slides/plugins/jquery.waituntilexists",
+                   "js/slides/plugins/spectrum",
+
                    "js/slides/ContentLoader",
                    "js/slides/Presentation",
-                   "js/slides/controls/Controls",
+                   "js/slides/Controls",
+                   "js/slides/styles/Controller",
+                   "js/slides/widgets/Widget",
+                   "js/slides/widgets/Contentlist",
+                   "js/slides/widgets/contentadders/ContentAdder",
+                   "js/slides/widgets/contentadders/TextContentAdder",
+                   "js/slides/widgets/contentadders/BibleContentAdder",
+                   "js/slides/widgets/contentadders/SongContentAdder",
 
                    "js/slides/actions",
                    ];

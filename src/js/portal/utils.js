@@ -28,7 +28,8 @@ var Utilities = function(){
      *
      */
     function GetAjaxPath(fname){
-        fname = (fname ? "/" + fname : "");
+        //fname = (fname ? "/" + fname : "");
+        fname = fname || "";
         return ajax_path + "/" + fname;
     }
 
