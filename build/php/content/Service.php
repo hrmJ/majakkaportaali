@@ -177,6 +177,7 @@ class Service{
      *
      */
     public function SaveSongs($data){
+        //TODO: kasvattaaako id:iten määrää liikaa?
         $this->con->delete("servicesongs", ["service_id" => $this->id]);
         foreach($data as $entry){
             $this->con->insert("servicesongs",

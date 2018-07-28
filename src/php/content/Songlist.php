@@ -35,10 +35,12 @@ class Songlist{
      *
      *
      */
-    public function __construct(\Medoo\Medoo $con, $id, $m){
+    public function __construct(\Medoo\Medoo $con, $id, $m=null){
         $this->con = $con;
         $this->id = $id;
-        $this->template_engine = $m;
+        if($m){
+            $this->template_engine = $m;
+        }
     }
 
 
@@ -142,22 +144,24 @@ class Songlist{
      * niiden mukaiset slotit lauluille.
      *
      */
-    public function LoadSongSlots(){
-        //Hae ensin kaikki lauluslotit rakenteesta (TODO: messukohtaisesti)
-        $slots = $this->con->select("presentation_structure",
-            ["slot_name", "content_id", "slot_number"],
-            ["slot_type" => "songsegment"],
-            ['ORDER' => [ 'slot_number' => 'ASC' ]]
-            );
+    public function LoadSongSlots($service_id){
+        $cols = ["slot_name", "content_id", "slot_number"];
+        $order = ['ORDER' => [ 'slot_number' => 'ASC' ]];
+        $slots = $this->con->select("service_specific_presentation_structure",
+            $cols,
+            ["slot_type" => "songsegment", "service_id" => $service_id],
+            $order);
+        if(!$slots){
+            $slots = $this->con->select("presentation_structure",
+                $cols, ["slot_type" => "songsegment"], $order);
+        }
         $this->slots_as_string = "";
         foreach($slots as $slot){
-            $multi = $this->con->get("songsegments","multiname",["id"=>$slot["content_id"]]);
             $output = $this->template_engine->loadTemplate('singlesong'); 
             $this->slots_as_string  .= "\n" . $output->render([
                     "category" => $slot["slot_name"],
                     "name" => "",
                     "value" => "",
-                    "isparent" => ($multi ? "multisong" : "")
                 ]);
         }
         return $this;
@@ -187,14 +191,21 @@ class Songlist{
      * Hakee laulun sanat sen id:n perusteella
      *
      * @param $id laulun id
+     * @param $simplify palautetaanko yksinkertaistettu taulukko
      *
      */
-    public function FetchLyricsById($id){
+    public function FetchLyricsById($id,$simplify=false){
         $text = $this->con->select("versedata",
             "verse",
             ["song_id" => $id],
             ["ORDER" => "id"]);
-        //multisong_position?
+        if($simplify){
+            $newtext = [];
+            foreach($text as $verse){
+                $newtext[] = $verse["verse"];
+            }
+            $text = $newtext;
+        }
         return($text);
     }
 

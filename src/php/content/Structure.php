@@ -3,6 +3,8 @@
 
 namespace Portal\content;
 
+use Portal\slides\Slide;
+use Portal\slides\Song;
 use Medoo\Medoo;
 use PDO;
 
@@ -25,7 +27,7 @@ class Structure{
     protected $service_id = 0;
     protected $table = "presentation_structure";
     public $template_engine;
-    public $slotstring;
+    public $slotstring = "";
     private $service_specific_created = false;
     private $columns = ["slot_name", "slot_type", "slot_number",
         "content_id", "addedclass", "header_id"];
@@ -67,13 +69,10 @@ class Structure{
 
     /**
      *
-     * Lataa käyttäjän perusmessupohjaan  määrittelemät osiot.
-     * TODO muistiinpanot/apumerkinnät, joista ei tule omaa diaansa.
-     *
-     * $service_id jos haetaan messuspesifiä rakennetta, messun id (oletus nolla)
+     * Hakee messuun tai messupoihjaan määritellyt osiot
      *
      */
-    public function LoadSlots(){
+    public function GetSlots(){
         //Kokeillaan ensin messukohtaista rakennetta
         $slots = $this->con->select("service_specific_presentation_structure", 
             array_merge($this->columns, ["id"]),
@@ -91,6 +90,19 @@ class Structure{
                 array_merge($this->columns, ["id"]),
                 ['ORDER' => [ 'slot_number' => 'ASC' ]]);
         }
+
+        return $slots;
+    }
+
+
+    /**
+     *
+     * Lataa messun rakenteen html:ksi
+     * TODO muistiinpanot/apumerkinnät, joista ei tule omaa diaansa.
+     *
+     */
+    public function PrintStructure(){
+        $slots = $this->GetSlots();
         $this->slotstring = "";
         foreach($slots as $idx => $slot){
             $newslot = $this->template_engine->loadTemplate('slot'); 
@@ -293,6 +305,104 @@ class Structure{
 
         return $data;
 
+    }
+
+
+    /**
+     *
+     * Lataa kaikki segmentit käytettäväksi diaesityksessä
+     * 
+     */
+    public function LoadSlidesForPresentation(){
+        $slots = $this->GetSlots();
+        foreach($slots as $key => $slot){
+            //var_dump($slot["slot_type"]);
+            switch($slot["slot_type"]){
+                case "songsegment":
+                    $this->AddSongSegment($slot, $key);
+                    break;
+                case "infosegment":
+                    $this->AddInfoSegment($slot, $key);
+                    break;
+            }
+        } 
+
+        return $this;
+    }
+
+
+    /**
+     *
+     * Lisää esitykseen laulusegmentin: tämä voi olla yksittäinen laulu (esim. Alkulaulu)
+     * tai laulujen sarja (Ylistyslaulut, Rukouslaulut tms.)
+     *
+     * @param Array $slot segmentin yleistiedot
+     * @param Array $slide_idx segmentin järjestysnumero
+     *
+     */
+    public function AddSongSegment($slot, $slide_idx){
+        $songlist = new Songlist($this->con, $this->service_id);
+        $songs_of_this_type = $this->con->select("servicesongs",
+            ["song_title", "song_id", "songtype"],
+            [
+                "service_id" => $this->service_id,
+                "songtype" => $slot["slot_name"]
+            ],
+            ['ORDER' => [ 'id' => 'ASC' ]]);
+
+        foreach($songs_of_this_type as $song_idx => $song){
+            $songdata = $this->con->get("songdata",
+                ["title", "composer", "lyrics", "version_description"],
+                ["id" => $song["song_id"]]);
+            $songdata["verses"] = $songlist->FetchLyricsById($song["song_id"], true);;
+            $this->AddSlide(new Song($this->template_engine, $songdata), 
+                $slot["addedclass"], $slot["header_id"], $slide_idx + $song_idx);
+            ////Lisätään kukin laulu omana dia(sarja)naan
+            //$song_idx++;
+        }
+        return $this;
+    }
+
+
+    /**
+     *
+     * Lisää esitykseen infosegmentin: tämä voi olla yksittäinen otsikkodia,
+     * tekstiä ja kuvaa sisältävä dia tms.
+     *
+     * @param Array $slot segmentin yleistiedot
+     * @param Array $slide_idx segmentin järjestysnumero
+     *
+     */
+    public function AddInfoSegment($slot, $slide_idx){
+        $details = $this->con->get("infosegments",
+            ["id", "maintext", "header",
+            "genheader", "subgenheader", 
+            "imgname", "imgposition"],
+            ["id" => $slot["content_id"]]);
+        $this->AddSlide(
+            new Infoslide($this->template_engine, $details, $slot["slot_name"]),
+            $slot["addedclass"], $slot["header_id"], $slide_idx);
+        return $this;
+    }
+
+
+    /**
+     *
+     * Lisää diaesitykseen uuden dian
+     *
+     * @param Slide $slide Slide-olio, joka representoi lisättävä diaa (laulu, info, raamattu jne.)
+     * @param string $addedclass dialle määritelty tyyliluokka
+     * @param string $header_id dian ylätunnisteen id
+     * @param Array $slide_idx segmentin järjestysnumero
+     *
+     */
+    public function AddSlide($slide, $addedclass, $header_id, $slide_idx){
+        $slide->SetAddedClass($addedclass)
+              ->MarkIfFirst($slide_idx)
+              ->SetDetails()
+              ->SetPageHeader($header_id, $this->con);
+        $this->slotstring .= "{$slide->Output()}\n\n";
+        return $this;
     }
 
 

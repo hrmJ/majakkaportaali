@@ -44,7 +44,7 @@ class SongsTest extends TestCase
     public function testLoadSongTypes()
     {
         $songlist = new Songlist($this->con, 2, $this->m);
-        $songlist->LoadSongSlots();
+        $songlist->LoadSongSlots(2);
         $this->assertRegExp("/slotcontainer/",$songlist->slots_as_string);
     }
 

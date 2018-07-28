@@ -6,6 +6,8 @@ require 'vendor/autoload.php';
 use PHPUnit\Framework\TestCase;
 use Medoo\Medoo;
 use Portal\content\Structure;
+use Portal\slides\Slide;
+use Portal\slides\Song;
 
 
 /**
@@ -43,19 +45,10 @@ class StructureTest extends TestCase{
     public function testLoadSlots()
     {
         $struct = new Structure($this->con, $this->m);
-        $struct->LoadSlots();
+        $struct->PrintStructure();
         $this->assertRegExp("/<div/", $struct->slotstring);
     }
 
-    /**
-     * Testaa, että slottien lataaminen onnistuu messuspesifisti
-     */
-    public function testLoadSlotsForService()
-    {
-        $struct = new Structure($this->con, $this->m);
-        $struct->LoadSlots(2);
-        $this->assertRegExp("/<div/", $struct->slotstring);
-    }
 
     /**
      * Testaa, että infodian lataaminen onnistuu
@@ -84,15 +77,15 @@ class StructureTest extends TestCase{
         $this->assertTrue(sizeof($struct->LoadSlideClassNames())>0);
     }
 
-    /**
-     * Testaa, että tietokannassa olevien kuvien lataus onnistuu
-     */
-    public function testLoadSlideImageNamaes()
-    {
-        $struct = new Structure($this->con, $this->m);
-        $this->assertTrue(sizeof($struct->LoadSlideImageNames())>0);
-    }
-
+#    /**
+#     * Testaa, että tietokannassa olevien kuvien lataus onnistuu
+#     */
+#    public function testLoadSlideImageNamaes()
+#    {
+#        $struct = new Structure($this->con, $this->m);
+#        $this->assertTrue(sizeof($struct->LoadSlideImageNames())>0);
+#    }
+#
     /**
      * Testaa, että infodian tallentaminen onnistuu
      */
@@ -167,7 +160,7 @@ class StructureTest extends TestCase{
         $struct->UpdateSlide($this->con->max("songsegments","id"), "songsegments", $params);
         $newinfo = $struct->LoadSlide($this->con->max("songsegments","id"), "songsegments");
         $this->assertRegExp("/Tällanen laulu/",$newinfo["songdescription"]);
-        $this->con->delete("songsegments",["id"=>$this->con->max("songsegments","id")]);
+        //$this->con->delete("songsegments",["id"=>$this->con->max("songsegments","id")]);
     }
 
 
@@ -182,6 +175,38 @@ class StructureTest extends TestCase{
         $this->con->delete("presentation_structure",["slot_name" => "Testilaulu"]);
         $this->con->delete("presentation_structure",["slot_name" => "Tervetulosanat"]);
         $params = $this->con->select("presentation_structure",["slot_name","addedclass"],["id" => 1]);
+    }
+
+
+    /**
+     *
+     */
+    public function testslideobjet()
+    {
+        $slide = new Slide($this->m, []);
+        $this->assertinstanceof(Slide::class, $slide);
+    }
+
+
+    /**
+     *
+     */
+    public function testSongSlideObject()
+    {
+        $slide = new Song($this->m, []);
+        $this->assertinstanceof(Slide::class, $slide);
+    }
+
+
+    /**
+     * Testaa ladata diasegmentit
+     */
+    public function testLoadSlideSegments()
+    {
+        $struct = new Structure($this->con, $this->m);
+        $struct->SetAsServiceSpecific(2);
+        $struct->LoadSlidesForPresentation();
+        echo $struct->slotstring;
     }
 
 

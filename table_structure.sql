@@ -55,11 +55,12 @@ CREATE TABLE `responsibilities` (
 --
 
 CREATE TABLE servicesongs (
-  id int(10) unsigned NOT NULL AUTO_INCREMENT,
+  id bigint unsigned NOT NULL AUTO_INCREMENT,
   service_id int(10) unsigned NOT NULL,
   song_title varchar(200) DEFAULT '',
   song_id int(19),
   songtype varchar(100) NOT NULL,
+  position int(19), -- kuinka mones samantyyppinen
   PRIMARY KEY (id),
   KEY service_index (service_id),
   CONSTRAINT servicesongs_ibfk_1 FOREIGN KEY (service_id) REFERENCES services (id) ON DELETE CASCADE

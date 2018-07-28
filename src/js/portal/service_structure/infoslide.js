@@ -20,6 +20,8 @@ GeneralStructure.SlotFactory.infoslide = function(){
      *
      **/
     this.FillInData = function(data){
+        console.log("MOOKJLAKSJDLKSADLKSAjd");
+        console.log(data);
         var self = this;
         self.$lightbox.find(".slide-header").val(data.header);
         self.$lightbox.find(".infoslidetext").val(data.maintext);

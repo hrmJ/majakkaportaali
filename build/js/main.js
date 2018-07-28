@@ -2504,6 +2504,7 @@ var GeneralStructure = function(){
 
 
 
+
 GeneralStructure.SlotFactory = GeneralStructure.SlotFactory || {};
 
 /**
@@ -2682,6 +2683,8 @@ GeneralStructure.SlotFactory.infoslide = function(){
      *
      **/
     this.FillInData = function(data){
+        console.log("MOOKJLAKSJDLKSADLKSAjd");
+        console.log(data);
         var self = this;
         self.$lightbox.find(".slide-header").val(data.header);
         self.$lightbox.find(".infoslidetext").val(data.maintext);
@@ -3317,7 +3320,6 @@ GeneralStructure.DataLoading = function(){
                         "id" : this.slide_id,
                         "service_id": this.service_id
                     },
-                    //This method is child-specific, cf. infoslide.js, songslide.js etc
                     this.FillInData.bind(this));
             }
 
@@ -4469,27 +4471,51 @@ Slides.Presentation = function(){
 
 
         /**
-         * Lataa esityksen sisällön ulkoisesta lähteestä. Sen jälkeen lataa
-         * esitysikkunan DOMin jqueryn käsiteltäväksi. Lopuksi lataa myös muokatut tyylit.
+         *
+         * Hakee esityksen sisällön, tyylit ja muun tarvittavan.  
+         *
          */
-        this.LoadPresViewDom = function(){
+        this.SetContent = function(){
             this.d = $(this.view.document).contents();
             this.dom = this.view.document;
-            var self = this;
             //Lataa sisältö ulkoisesta lähteestä
-            this.d.find("main").load("php/load_slides_from_portal.php",{"service_id":self.service_id}, 
-                function(){
-                    self.d = $(self.view.document).contents();
-                    self.Activate(self.d.find(".current"));
+            $.when(this.LoadSlides).done( () => {
+                    this.d = $(this.view.document).contents();
+                    this.Activate(this.d.find(".current"));
                     //Käy diat läpi ja poimi kaikki siellä esiintyvät luokat
-                    self.LoadSlideClasses();
-                    self.d.find("#updated_styles").load("php/load_styles.php",{"classes":self.classes,"stylesheet":"default"},
-                        function(data){
-                            //Lataa tyylit ja sisällysluettelo vasta, kun muokattujen tyylien "injektio" on valmis
-                            self.LoadControlsAndContent();
-                        }
-                    );
-                } );
+                    this.LoadSlideClasses();
+                    $.when(this.SetStyles).done(this.LoadControlsAndContent);
+                });
+        };
+
+
+        /**
+         *
+         * Hakee  esityksen sisällön tietokannasta
+         *
+         */
+        this.LoadSlides = function(){
+            var path = Utilities.GetAjaxPath("Loader.php");
+            return this.d.find("main").load(path,{
+                "service_id":self.service_id,
+                "action": "load_slides_to_presentation"
+                });
+        };
+                    
+        /**
+         *
+         * Päivittää esityksen tyylit tietokannasta
+         *
+         * TODO: default --> ?
+         *
+         */
+        this.SetStyles = function(){
+            var path = Utilities.GetAjaxPath("Loader.php");
+            return this.d.find("#updated_styles").load(path, 
+                {
+                    "classes":this.classes,
+                    "stylesheet":"default"
+                });
         };
 
 

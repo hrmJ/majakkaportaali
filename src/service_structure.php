@@ -29,7 +29,7 @@ $struct = new Structure($database, $m);
 $layout = $m->loadTemplate('layout'); 
 
 $page_content = Array(
-    "content" => $struct->LoadSlots()->OutputPage(),
+    "content" => $struct->PrintStructure()->OutputPage(),
     "byline" => "<h2>Messupohjan asetukset</h2>",
     "bodyclass" => "service_structure"
     );

@@ -33,7 +33,6 @@ GeneralStructure.DataLoading = function(){
                         "id" : this.slide_id,
                         "service_id": this.service_id
                     },
-                    //This method is child-specific, cf. infoslide.js, songslide.js etc
                     this.FillInData.bind(this));
             }
 

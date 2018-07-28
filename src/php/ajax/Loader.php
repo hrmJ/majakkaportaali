@@ -97,7 +97,7 @@ switch($params["action"]){
         break;
     case "get_song_slots":
         $songlist = new Songlist($database, $params["service_id"], $m);
-        echo $songlist->LoadSongSlots()->slots_as_string;
+        echo $songlist->LoadSongSlots($params["service_id"])->slots_as_string;
         break;
     case "load_slots":
         $structure = new Structure($database, $m);
@@ -105,7 +105,7 @@ switch($params["action"]){
             //tarkoituksella != eikä !==
             $structure->SetAsServiceSpecific($params["service_id"], false);
         }
-        echo $structure->LoadSlots()->slotstring;
+        echo $structure->PrintStructure()->slotstring;
         break;
     case "load_slots_to_container":
         $songlist = new Songlist($database, $params["service_id"], $m);
@@ -113,7 +113,6 @@ switch($params["action"]){
         break;
     case "get_infoslide":
         $structure = new Structure($database, $m);
-        echo "MOOROO";
         if($params["service_id"] != 0){
             //tarkoituksella != eikä !==
             $structure->SetAsServiceSpecific($params["service_id"], false);
@@ -182,6 +181,11 @@ switch($params["action"]){
     case "get_bible_segments_content":
         $service = new Service($database, $params["service_id"]);
         echo json_encode($service->GetBibleSegmentsContent());
+        break;
+    case "load_slides_to_presentation":
+        $structure = new Structure($database, $m);
+        $structure->SetAsServiceSpecific($params["service_id"], false);
+        echo $structure->LoadSlidesForPresentation()->slotstring;
         break;
 }
 

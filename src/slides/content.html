@@ -34,7 +34,7 @@
 //TODO: pärjää ilman jqueryä.
 $(document).ready(function(){
     if($("body").hasClass("presentation-view")){
-        window.opener.Slides.Presentation.GetCurrentPresentation().LoadPresViewDom();
+        window.opener.Slides.Presentation.GetCurrentPresentation().SetContent();
         document.onkeydown = window.opener.Slides.Presentation.KeyHandler;
         window.opener.onkeydown = window.opener.Slides.Presentation.KeyHandler;
     }
