@@ -6,6 +6,15 @@ var Utilities = function(){
 
     /**
      *
+     * Piilottaa portaalin ylämenun. Hyödyllinen esim. käytettäessä iframesta käsin.
+     *
+     */
+    function HideUpperMenu(){
+        $("nav").hide();
+    }
+
+    /**
+     *
      * Asettaa oikean polun ajax-skriptien kansioon
      *
      * @param path uusi polku, huom, ei saa loppua /-merkkiin
@@ -258,7 +267,8 @@ var Utilities = function(){
         BlurContent,
         ScrollToCenter,
         SetAjaxPath,
-        GetAjaxPath
+        GetAjaxPath,
+        HideUpperMenu
     
     }
 

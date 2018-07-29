@@ -155,6 +155,12 @@ class Songlist{
             $slots = $this->con->select("presentation_structure",
                 $cols, ["slot_type" => "songsegment"], $order);
         }
+
+        //HACK! Miksei Medoo sorttaa??
+        usort($slots, function ($item1, $item2) {
+            return $item1['slot_number'] <=> $item2['slot_number'];
+        });
+
         $this->slots_as_string = "";
         foreach($slots as $slot){
             $output = $this->template_engine->loadTemplate('singlesong'); 

@@ -4,8 +4,9 @@
  *
  **/
 
+Portal = Portal || {};
 
-var Service = function(){
+Service = function(){
 
     //Kukin välilehti tallennetaan tähän
     TabObjects = {};
@@ -117,6 +118,17 @@ var Service = function(){
 
     /**
      *
+     * asettaa tämänhetkisen messun id:n
+     *
+     * @param id uusi id
+     *
+     **/
+    function SetServiceId(id){
+        service_id = id;
+    }
+
+    /**
+     *
      * Alusta messunäkymän sisältö, tapahtumat ym.
      *
      **/
@@ -166,6 +178,7 @@ var Service = function(){
         Initialize,
         GetServiceId,
         TabFactory,
+        SetServiceId
     };
 
 }();

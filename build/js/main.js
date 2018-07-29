@@ -190,6 +190,15 @@ var Utilities = function(){
 
     /**
      *
+     * Piilottaa portaalin ylämenun. Hyödyllinen esim. käytettäessä iframesta käsin.
+     *
+     */
+    function HideUpperMenu(){
+        $("nav").hide();
+    }
+
+    /**
+     *
      * Asettaa oikean polun ajax-skriptien kansioon
      *
      * @param path uusi polku, huom, ei saa loppua /-merkkiin
@@ -442,7 +451,8 @@ var Utilities = function(){
         BlurContent,
         ScrollToCenter,
         SetAjaxPath,
-        GetAjaxPath
+        GetAjaxPath,
+        HideUpperMenu
     
     }
 
@@ -1648,8 +1658,9 @@ var SongLists = function(){
  *
  **/
 
+Portal = Portal || {};
 
-var Service = function(){
+Service = function(){
 
     //Kukin välilehti tallennetaan tähän
     TabObjects = {};
@@ -1761,6 +1772,17 @@ var Service = function(){
 
     /**
      *
+     * asettaa tämänhetkisen messun id:n
+     *
+     * @param id uusi id
+     *
+     **/
+    function SetServiceId(id){
+        service_id = id;
+    }
+
+    /**
+     *
      * Alusta messunäkymän sisältö, tapahtumat ym.
      *
      **/
@@ -1810,6 +1832,7 @@ var Service = function(){
         Initialize,
         GetServiceId,
         TabFactory,
+        SetServiceId
     };
 
 }();
@@ -7182,12 +7205,14 @@ Slides.Controls = function(){
             $(this).parent().next("div").slideToggle();
             $(this).parent().next("div").find("section").toggleClass("controller-not-in-use");
             if(!$(this).parent().next("div").find("section").hasClass("controller-not-in-usel")){
-                UpdateControllers(pres);
+                UpdateControllers(Slides.Presentation.GetCurrentPresentation());
             }
         });
 
         //Muuta fonttimuokkausten kohdetta, kun tätä säätelevää pudotusvalikkoa käytetään
-        $("#layout-target_select").on("selectmenuchange",function(){UpdateControllers(pres)});
+        $("#layout-target_select").on("selectmenuchange", () => 
+            UpdateControllers(Slides.Presentation.GetCurrentPresentation())
+        );
 
         //TODO: anna spectrum-funktion argumenttina palette-niminen taulukoiden taulukko, jossa on käytössä olevat värit
         //align-items:center;
@@ -7202,7 +7227,9 @@ Slides.Controls = function(){
     function AddLeftControlsFunctionality(){
             $(".contentadder-heading").click(function(){ 
                 //Avaa haluttu sisällönlisäysikkuna 
-                pres.controls[$(this).parent().attr("class").split(" ")[1]].OpenWidget($(this)); 
+                Slides.Presentation.GetCurrentPresentation().controls[
+                    $(this).parent().attr("class").split(" ")[1]
+                ].OpenWidget($(this)); 
             });
 
             //Lisää widgettien lisäyslinkit kaikkiin vasemman valikon widgetteihin kerralla
@@ -7213,7 +7240,9 @@ Slides.Controls = function(){
             //Huolehdi siitä, että navigointipalkin linkkien klikkaus aktivoi oikeanpuolimmaisen menun
             $(".addtopreslink").click(function(){
                 //avaa haluttu sisällönlisäysikkuna 
-                pres.controls[$(this).parents(".contentadder").attr("class").split(" ")[1]].AddToPres(); 
+                Slides.Presentation.GetCurrentPresentation().controls[
+                    $(this).parents(".contentadder").attr("class").split(" ")[1]
+                ].AddToPres(); 
             });
             $(".contentadder-open").hide();
             //Piilota menut ja linkit joita ei vielä käytetä
@@ -7237,7 +7266,14 @@ Slides.Controls = function(){
      *
      */
     function ShowServiceInPortal(){
-        $("#service-data-iframe").attr({"src":"../service.php?id=" + $(this).val()})
+        //var iframe = document.getElementById("service-data-iframe");
+        var id = $(this).val();
+        $("#service-data-iframe").on("load", function() {
+            this.contentWindow.Service.SetServiceId(id);
+            this.contentWindow.Service.Initialize();
+            this.contentWindow.Utilities.HideUpperMenu();
+        });
+        $("#service-data-iframe").attr("src","../service.php");
     }
 
 
