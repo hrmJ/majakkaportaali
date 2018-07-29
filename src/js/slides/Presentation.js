@@ -159,10 +159,12 @@ Slides.Presentation = function(){
         this.LoadControlsAndContent = function(){
             //Tähän styles-attribuuttiin on tallennettu esityksen alkuperäiset ja muokatut tyylit
             this.styles = new Slides.Styles.Controller.StyleController(this);
+            this.styles.GetOriginalStyles();
+
             //Tähän controls-attribuuttiin on listattu kaikki 
             //sisältöä / ulkoasua tuottavat tai muokkaavat widgetit
             this.controls = {
-                contentlist: new Slides.Widgets.ContentList(this),
+                contentlist: new Slides.ContentList(this),
                 textcontentadder: new Slides.Widgets.ContentAdders.TextContentAdder(this),
                 biblecontentadder: new Slides.Widgets.ContentAdders.BibleContentAdder(this),
                 songcontentadder: new Slides.Widgets.ContentAdders.SongContentAdder(this),
@@ -176,10 +178,21 @@ Slides.Presentation = function(){
 
             //Lisää vielä tyylienmuokkauswidgetit (nämä on lisättävä vasta segmenttilistan päivityksen jälkeen)
 
-            //this.controls.backgroundchanger = new BackgroundChanger(this);
-            //this.controls.fontchanger = new FontChanger(this);
-            //this.controls.positionchanger = new PositionChanger(this);
-            //this.controls.layoutloader = new LayoutLoader(this);
+            this.controls.backgroundchanger = new Slides.Widgets.StyleWidgets.BackgroundChanger(this);
+            this.controls.backgroundchanger.LoadLocalBackgrounds();
+            this.controls.backgroundchanger.InitializeEvents();
+    
+            this.controls.fontchanger = new Slides.Widgets.StyleWidgets.FontChanger(this);
+            this.controls.fontchanger.CreateFontControllers();
+            Slides.Styles.Controller.UpdateControllers(this);
+
+            this.controls.positionchanger = new Slides.Widgets.StyleWidgets.PositionChanger(this);
+            this.controls.positionchanger.CreateControllers();
+
+            this.controls.layoutloader = new Slides.Widgets.StyleWidgets.LayoutLoader(this);
+            this.controls.layoutloader.UpdateStyleSheets();
+            this.controls.layoutloader.InitializeEvents();
+
         };
 
         /**

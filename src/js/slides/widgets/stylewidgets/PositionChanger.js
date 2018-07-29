@@ -1,3 +1,8 @@
+Slides = Slides || {};
+Slides.Widgets = Slides.Widgets || {};
+Slides.Widgets.StyleWidgets = Slides.Widgets.StyleWidgets || {};
+
+
 /**
  * Layoutwidget, jolla muutetaan ruudulla näkyvien elementtien
  * sijaintia ja niihin liittyviä marginaaleja.
@@ -5,21 +10,11 @@
  * @param Presentation parent_presentation Esitys, johon widgetit liitetään.
  *
  */
-var PositionChanger = function(parent_presentation){
-    LayoutWidget.call(this, parent_presentation);
-    this.CreateControllers();
-    UpdateControllers(this.pres);
-    return this;
-}
+Slides.Widgets.StyleWidgets.PositionChanger = function(parent_presentation){
 
-/**
- *
- * @param string adderclass sisällön lisävän widgetin css-luokka
- *
- */
-PositionChanger.prototype = {
-    adderclass: ".positionchanger",
-
+    Slides.Widgets.LayoutWidget.call(this, parent_presentation);
+    this.adderclass = ".positionchanger";
+    Slides.Styles.Controller.UpdateControllers(this.pres);
 
     /**
      *
@@ -28,11 +23,11 @@ PositionChanger.prototype = {
      * .positioncontroller-css-luokalla.
      * 
      */
-    CreateControllers: function(){
+    this.CreateControllers = function(){
         var self = this;
         $(".positioncontroller").each(function(){
             //Määritä widgetin tyyppi  ja luo sitä vastaava FontController-olion lapsiolio
-            var controller = CreateFontController($(this), self);
+            var controller = Slides.Styles.FontControllers.Create($(this), self);
             //MÄärittele, onko kyse article- vai section-tason elementistä
             //(jälkimmäinen lähinnä koko esitysnäytön kokoa muutettaessa)
             //SEKÄ lisäksi mahdollista, että muutetaan *ylätunnisteen* korkeutta
@@ -40,7 +35,7 @@ PositionChanger.prototype = {
             //Käy läpi kaikki esityksen eri tekstitasot
             controller.AddTextLevel(el_type, "");
         });
-    },
+    };
 
 
     /**
@@ -52,7 +47,7 @@ PositionChanger.prototype = {
      * @param object newval uusi arvo muokatulle tyylille 
      *
      */
-    Change: function($launcher, newval){
+    this.Change = function($launcher, newval){
         //Määrittele tyylimuokkausten kohde
         var target = $launcher.attr("class").match(/(\w+)-changer/i)[1];
         //MÄärittele, onko kyse article- vai section-tason elementistä (jälkimmäinen lähinnä koko esitysnäytön kokoa muutettaessa)
@@ -73,11 +68,10 @@ PositionChanger.prototype = {
     
         //Jos ei kyse numeerisista arvoista, päivitä kaikki säätimet
         if(!$launcher.hasClass("slider")) UpdateControllers(this.pres);
-    },
+    };
 
 
 
-} 
+};
 
-
-extend(LayoutWidget, PositionChanger);
+Slides.Widgets.StyleWidgets.PositionChanger.prototype = Object.create(Slides.Widgets.LayoutWidget.prototype);

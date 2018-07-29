@@ -12,7 +12,7 @@ Slides.Widgets.ContentAdders = Slides.Widgets.ContentAdders || {};
  */
 Slides.Widgets.ContentAdders.SongContentAdder = function(parent_presentation) {
 
-    Slides.Widgets.ContentAdders.ContentAdder.call(this, parent_presentation);
+    Slides.Widgets.ContentAdder.call(this, parent_presentation);
 
     this.adderclass = ".songcontentadder";
     this.addedclass = "song";
@@ -69,4 +69,4 @@ Slides.Widgets.ContentAdders.SongContentAdder = function(parent_presentation) {
 
 };
 
-Slides.Widgets.ContentAdders.SongContentAdder.prototype = Object.create(Slides.Widgets.ContentAdders.ContentAdder.prototype);
+Slides.Widgets.ContentAdders.SongContentAdder.prototype = Object.create(Slides.Widgets.ContentAdder.prototype);

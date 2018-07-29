@@ -1,5 +1,4 @@
 Slides = Slides || {};
-Slides.Widgets = Slides.Widgets || {};
 
 /**
  *
@@ -9,9 +8,9 @@ Slides.Widgets = Slides.Widgets || {};
  * @param Presentation parent_presentation Esitys, johon widgetit liitetään.
  *
  */
-Slides.Widgets.ContentList = function(parent_presentation){
+Slides.ContentList = function(parent_presentation){
 
-    Slides.Widgets.Widget.call(this, parent_presentation);
+    this.pres = parent_presentation;
 
     /**
      * Hakee listan sisällöstä (esitysikkunan sisällön 
@@ -229,8 +228,6 @@ Slides.Widgets.ContentList = function(parent_presentation){
     }
 
 
-}
-
-Slides.Widgets.ContentList.prototype = Object.create(Slides.Widgets.Widget.prototype);
+};
 
 

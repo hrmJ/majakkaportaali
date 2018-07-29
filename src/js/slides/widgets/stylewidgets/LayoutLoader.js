@@ -1,18 +1,18 @@
+Slides = Slides || {};
+Slides.Widgets = Slides.Widgets || {};
+Slides.Widgets.StyleWidgets = Slides.Widgets.StyleWidgets || {};
+
 /**
  * Widget, jonka avulla tietokannasta voi ladata valmiita tyylipohjia
  * tai näitä tyylipohjia voi päivittää tai lisätä kokonaan uusia.
  *
  */
-var LayoutLoader = function(parent_presentation){
-    LayoutWidget.call(this, parent_presentation);
-    this.$select = $(".layoutloader select");
-    this.UpdateStyleSheets();
-    this.InitializeEvents();
-    return this;
-}
+Slides.Widgets.StyleWidgets.LayoutLoader = function(parent_presentation){
 
-LayoutLoader.prototype = {
-    adderclass: ".layoutloader",
+    Slides.Widgets.LayoutWidget.call(this, parent_presentation);
+
+    this.adderclass = ".layoutloader";
+    this.$select = $(".layoutloader select");
 
     /**
      *
@@ -20,7 +20,7 @@ LayoutLoader.prototype = {
      * Tämän jälkeen tekee elementistä jquery ui:n muokatun selectmenu-widgetin.
      *
      */
-    UpdateStyleSheets: function(){
+    this.UpdateStyleSheets = function(){
         var self = this;
         //Tallenna ennestäään olemassa olleiden tyylien nimet
         self.oldsheets = [];
@@ -37,26 +37,26 @@ LayoutLoader.prototype = {
             self.$select.select_withtext();
         }
         );
-    },
+    };
 
     /**
      *
      * Liitä tyylintallennuspainikkeisiin niitä koskevat tapahtumat
      *
      */
-    InitializeEvents: function(){
+    this.InitializeEvents = function(){
         var self = this;
         $("#save_stylesheet").click(function(){self.Save()});
         $("#load_stylesheet").click(function(){self.Load()});
         $("#remove_stylesheet").click(function(){self.Remove()});
-    },
+    };
 
     /**
      *
      * Tallenna muokattu tyylipohja
      *
      */
-    Save: function(){
+    this.Save = function(){
         var self = this;
         var current_sheet = this.$select.val();
         console.log(current_sheet);
@@ -124,14 +124,14 @@ LayoutLoader.prototype = {
             }
 
             });
-    },
+    };
 
     /**
      *
      * Lataa select-elementillä valittu tyylipohja 
      *
      */
-    Load: function(){
+    this.Load = function(){
         var self = this;
         var sheetname = self.$select.val();
         console.log("loading " + sheetname);
@@ -144,19 +144,20 @@ LayoutLoader.prototype = {
                 msg = new Message(`${sheetname}-tyylipohja ladattu.`, $(".layoutloader"));
                 msg.Show();
             });
-    },
+    };
 
     /**
      *
      * Poista select-elementillä valittu tyylipohja 
      *
      */
-    Remove: function(){
+    this.Remove = function(){
         var self = this;
         console.log("remove");
-    },
+    };
 
-}
+};
 
 
-extend(LayoutWidget, LayoutLoader);
+Slides.Widgets.StyleWidgets.LayoutLoader.prototype = Object.create(Slides.Widgets.LayoutWidget.prototype);
+

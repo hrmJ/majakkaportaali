@@ -1,29 +1,24 @@
+Slides = Slides || {};
+Slides.Widgets = Slides.Widgets || {};
+Slides.Widgets.StyleWidgets = Slides.Widgets.StyleWidgets || {};
+
 /**
  *
  * Fonttien kokoa ja tyyppiä muuttava layoutwidget
  *
  * @param Presentation parent_presentation Esitys, johon widgetit liitetään.
- * @param adderclass string css-luokka, josta widgetin sijainnin sivulla tunnistaa
- *
- */
-var FontChanger = function(parent_presentation){
-    LayoutWidget.call(this, parent_presentation);
-    this.CreateFontControllers();
-    UpdateControllers(this.pres);
-    return this;
-}
-
-/**
  * @param string adderclass sisällön lisävän widgetin css-luokka
  * @param string addedclass itse sisällön css-luokka
  * @param string address mistä raamatun kohdasta alkaen ja mihin asti sisältö on otettu
  * @param Array numericProperties mitkä css-ominaisuudet ovat sellaisia, ettäniiden muuttaminen on kasvattamista tai pienentämistä
  *
+ *
  */
-FontChanger.prototype = {
+Slides.Widgets.StyleWidgets.FontChanger = function(parent_presentation){
+    Slides.Widgets.LayoutWidget.call(this, parent_presentation);
 
-    adderclass: ".fontchanger",
-    numericProperties: ["fontSize","padding","marginLeft","marginTop","border"],
+    this.adderclass = ".fontchanger";
+    this.numericProperties = ["fontSize","padding","marginLeft","marginTop","border"];
 
     /**
      *
@@ -32,11 +27,11 @@ FontChanger.prototype = {
      * .fontcontroller-css-luokalla.
      * 
      */
-    CreateFontControllers: function(){
+    this.CreateFontControllers = function(){
         var self = this;
         $(".fontcontroller").each(function(){
             //Määritä widgetin tyyppi  ja luo sitä vastaava FontController-olion lapsiolio
-            var controller = CreateFontController($(this), self);
+            var controller = Slides.Styles.FontControllers.Create($(this), self);
             var include_img = false || $(this).attr("class").match("(border)");
             //Käy läpi kaikki  esityksen eri tekstitasot
             $.each(self.pres.text_levels,function(level,label){
@@ -46,7 +41,7 @@ FontChanger.prototype = {
                 }
             });
         });
-    },
+    };
 
 
     /**
@@ -58,7 +53,7 @@ FontChanger.prototype = {
      * @param object newval uusi arvo muokatulle tyylille 
      *
      */
-    Change: function($launcher, newval){
+    this.Change = function($launcher, newval){
         //Määrittele tyylimuokkausten kohde
         var level = $launcher.parents(".changer-parent").attr("class").match(/level-(\w+)/i)[1];
         var target = $launcher.attr("class").match(/(\w+)-changer/i)[1];
@@ -80,10 +75,13 @@ FontChanger.prototype = {
         });
 
         //Jos ei kyse numeerisista arvoista, päivitä kaikki säätimet
-        if(!$launcher.hasClass("slider")) UpdateControllers(this.pres);
+        if(!$launcher.hasClass("slider")){
+            Slides.Styles.Controller.UpdateControllers(this.pres);
+        } 
     
-    },
+    };
 
-} 
+};
 
-extend(LayoutWidget, FontChanger);
+Slides.Widgets.StyleWidgets.FontChanger.prototype = Object.create(Slides.Widgets.LayoutWidget.prototype);
+

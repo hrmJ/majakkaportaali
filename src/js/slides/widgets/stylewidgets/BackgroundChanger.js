@@ -1,31 +1,25 @@
+Slides = Slides || {};
+Slides.Widgets = Slides.Widgets || {};
+Slides.Widgets.StyleWidgets = Slides.Widgets.StyleWidgets || {};
+
 /**
  * Layoutwidget, jolla muutetaan esityksen taustakuvaa tai taustaväriä. Mahdollistaa
  * myös segmenttikohtaisten taustakuvien määrittämisen
  *
  * @param Presentation parent_presentation Esitys, johon widgetit liitetään.
- *
- */
-var BackgroundChanger = function(parent_presentation){
-    LayoutWidget.call(this, parent_presentation);
-    this.LoadLocalBackgrounds();
-    this.InitializeEvents();
-    return this;
-}
-
-/**
- *
  * @param string adderclass sisällön lisävän widgetin css-luokka
  *
  */
-BackgroundChanger.prototype = {
-    adderclass: ".backgroundchanger",
+Slides.Widgets.StyleWidgets.BackgroundChanger = function(parent_presentation){
+    Slides.Widgets.LayoutWidget.call(this, parent_presentation);
+    this.adderclass = ".backgroundchanger";
 
     /**
      *
      * Lataa kaikki tähän widgettiin liittyvät tapahtumat
      *
      */
-    InitializeEvents: function(){
+    this.InitializeEvents = function(){
         var self = this;
         $(".imgselect, .colselect").hide();
         $("[name='img_or_color']").click(function(){
@@ -44,7 +38,7 @@ BackgroundChanger.prototype = {
         $(".content-bg-switcher .layout-save-changes").click(function(){self.ChangeContentBackground()});
         $(".backgroundchanger").find(".spectrum").spectrum({ showAlpha:true });
 
-    },
+    };
 
 
 
@@ -54,7 +48,8 @@ BackgroundChanger.prototype = {
      * Lataa saatavilla olevat taustakuvat tietokannasta
      *
      */
-    LoadLocalBackgrounds: function(){
+    this.LoadLocalBackgrounds = function(){
+        var path = Utilities.GetAjaxPath("Loader.php");
         //Tyhjennä vanha select-elementin sisältö kaiken varalta
         $("#general-bg-select").html("").on("change",function(){
             //Lisää esikatselumahdollisuus 
@@ -66,15 +61,15 @@ BackgroundChanger.prototype = {
                     });
         });
         //Lataa data select-elementtiin
-        $.getJSON("php/loadassets.php",{"asset_type":"backgrounds"},
+        $.getJSON(path, {
+                "action":"get_slide_image_names"
+                },
                 function(data){
-                    $.each(data, function(idx,bgname){
-                        $("<option>").text(bgname).appendTo("#general-bg-select") ;
-                        } 
-                    );
+                    $(data.map((bgname) => `<option>${bgname}</option>`))
+                        .appendTo("#general-bg-select");
                 });
 
-        },
+        };
 
             
     /**
@@ -83,7 +78,7 @@ BackgroundChanger.prototype = {
      * joko kuvan tai värin.
      *
      */
-    ChangeBackground: function(){
+    this.ChangeBackground = function(){
         var rules_to_edit = this.pres.styles.SetEditTarget("nolevel");
         if($("[name='img_or_color']:checked").val() == "img") {
             var bg = "url(../../assets/backgrounds/" + $("#general-bg-select").val() +")";
@@ -96,7 +91,7 @@ BackgroundChanger.prototype = {
             //This might be kind of a hack:
             rule.style.backgroundSize = "100%";
         });
-    },
+    };
 
     /**
      *
@@ -104,15 +99,16 @@ BackgroundChanger.prototype = {
      * ja asettaa taustaksi joko kuvan tai värin.
      *
      */
-    ChangeContentBackground: function(){
+    this.ChangeContentBackground = function(){
         var rules_to_edit = this.pres.styles.SetEditTarget("nolevel",false," article");
         var bg = $("#content_bgcolselect").spectrum("get").toRgbString();
         $.each(rules_to_edit,function(idx,rule){
             rule.style.background = bg;
         });
-    },
+    };
 
 
-} 
+};
 
-extend(LayoutWidget, BackgroundChanger);
+Slides.Widgets.StyleWidgets.BackgroundChanger.prototype = Object.create(Slides.Widgets.LayoutWidget.prototype);
+

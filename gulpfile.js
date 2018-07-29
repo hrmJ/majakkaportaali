@@ -101,13 +101,21 @@ gulp.task("js",function(){
                    "js/slides/ContentLoader",
                    "js/slides/Presentation",
                    "js/slides/Controls",
-                   "js/slides/styles/Controller",
-                   "js/slides/widgets/Widget",
-                   "js/slides/widgets/Contentlist",
-                   "js/slides/widgets/contentadders/ContentAdder",
+                   "js/slides/Contentlist",
+
+                   "js/slides/widgets/Widgets",
                    "js/slides/widgets/contentadders/TextContentAdder",
                    "js/slides/widgets/contentadders/BibleContentAdder",
                    "js/slides/widgets/contentadders/SongContentAdder",
+
+                   "js/slides/styles/Controller",
+                   "js/slides/styles/FontControllers",
+
+                   "js/slides/widgets/stylewidgets/BackgroundChanger",
+                   "js/slides/widgets/stylewidgets/FontChanger",
+                   "js/slides/widgets/stylewidgets/LayoutLoader",
+                   "js/slides/widgets/stylewidgets/PositionChanger",
+
 
                    "js/slides/actions",
                    ];
