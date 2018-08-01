@@ -22,9 +22,10 @@ class Infoslide extends Slide{
      * @param Array $details Dian tiedot: teksti, laulun nimi, kuvien läsnäolo tms.
      *
      */
-    public function __construct($path, $details, $slot_name){
+    public function __construct($m, $details, $slot_name){
         parent::__construct($m, $details);
         $this->template_engine;
+        $this->segment_name = $slot_name;
         $this->template = $this->template_engine->loadTemplate('infoslide'); 
     }
 
@@ -33,7 +34,7 @@ class Infoslide extends Slide{
      * Lisää html-esitykseen varsinaiset dian yksityiskohdat: tekstit, otsikot, kuvat...
      */
     public function SetDetails(){
-        if($this->details["imgname"]){
+        if($this->details["imgname"] and $this->details["imgname"] != "Ei kuvaa"){
             //Jos tähän diaan kuuluu kuva, syötetään teksti kuvan yhteydessä
             $this->SetImg($this->details["imgname"],$this->details["imgposition"],
                 "content", $this->details["maintext"]);

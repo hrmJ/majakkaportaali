@@ -101,6 +101,18 @@ class SlideTest extends TestCase
         $data = $style->LoadAllStylesAsArrayOfStrings();
         $this->assertTrue(!empty($data));
     }
+
+
+    /**
+     *
+     */
+    public function testInfoSlideObject()
+    {
+        $slide = new Song($this->m, []);
+        $this->assertinstanceof(Slide::class, $slide);
+    }
+
+
 }
 
 

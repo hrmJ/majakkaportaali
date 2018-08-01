@@ -5,6 +5,7 @@ namespace Portal\content;
 
 use Portal\slides\Slide;
 use Portal\slides\Song;
+use Portal\slides\Infoslide;
 use Medoo\Medoo;
 use PDO;
 

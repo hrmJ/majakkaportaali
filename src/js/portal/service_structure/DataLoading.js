@@ -136,8 +136,7 @@ GeneralStructure.DataLoading = function(){
                     segment_type: this.segment_type
                 }, 
                 function(max_id){
-                    params.params.content_id = max_id;
-                    params.params.slot_number = max_id;
+                    params.params.content_id = max_id * 1;
                     $.post("php/ajax/Saver.php", params, callback.bind(this));
                 });
         };

@@ -68,14 +68,6 @@ class StructureTest extends TestCase{
         $this->assertTrue(sizeof($struct->LoadSlide($this->con->max("songsegments","id"),"songsegments"))>0);
     }
 
-    /**
-     * Testaa, että dialuokkien nimien lataaminen onnistuu
-     */
-    public function testLoadSlideClassNames()
-    {
-        $struct = new Structure($this->con, $this->m);
-        $this->assertTrue(sizeof($struct->LoadSlideClassNames())>0);
-    }
 
 #    /**
 #     * Testaa, että tietokannassa olevien kuvien lataus onnistuu
