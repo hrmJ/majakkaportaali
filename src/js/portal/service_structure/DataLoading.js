@@ -75,15 +75,18 @@ GeneralStructure.DataLoading = function(){
          *
          */
         source.prototype.SetSlotParams = function(){
+            var addedclass = this.$lightbox.find("select[name='addedclass']").val();
+            addedclass = (addedclass.substr(0,1) == "." ? addedclass : "." + addedclass);
             this.slot_params = {
                 "slot_name" : this.$lightbox.find(".segment-name").val(),
                 "slot_number" : this.slot_number,
                 "slot_type" : this.segment_type,
                 "id_in_type_table" : null,
-                "addedclass" : this.$lightbox.find("select[name='addedclass']").val(),
+                "addedclass" : addedclass,
                 "header_id" : this.header_id,
                 "content_id" : this.slide_params.id,
             };
+
 
             return this;
         };

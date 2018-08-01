@@ -178,6 +178,30 @@ class SlideStyle{
     }
 
 
+    /**
+     *
+     * Syöttää uuden tyyliluokan, jos tyylitiedot puuttuvat
+     *
+     * @param $classname luokan nimi
+     * 
+     */
+    public function CheckSlideClassStatus($classname){
+        $existing = $this->con->select("styles","*",["classname" => $classname]);
+        if(!$existing){
+            $stylesheets = $this->LoadAllStyleSheets();
+            $sample = $this->con->select("styles",
+                ["tagname", "attr", "value"],
+                ["classname" => "sample"]);
+            foreach($stylesheets as $sheet){
+                foreach($sample as $row){
+                    $row["stylesheet"] = $sheet;
+                    $row["classname"] = $classname;
+                    $this->con->insert("styles",$row);
+                }
+            }
+        }
+    }
+
 
 }
 

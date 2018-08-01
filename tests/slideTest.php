@@ -106,10 +106,12 @@ class SlideTest extends TestCase
     /**
      *
      */
-    public function testInfoSlideObject()
+    public function testTemporary()
     {
-        $slide = new Song($this->m, []);
-        $this->assertinstanceof(Slide::class, $slide);
+        $existing = $this->con->select("styles","*",["classname" => ".Teksti"]);
+        if(!$existing){
+            echo "NOOOO\n";
+        }
     }
 
 
