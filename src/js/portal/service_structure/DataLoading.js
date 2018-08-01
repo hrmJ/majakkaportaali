@@ -218,7 +218,6 @@ GeneralStructure.DataLoading = function(){
         source.prototype.SetSlideClasses = function(data){
             var self = this;
             $.each(data,function(idx, thisclass){
-                thisclass = thisclass.classname;
                 if([".Laulu",".Raamatunteksti"].indexOf(thisclass)==-1){
                     if(self.selectedclass){
                         var selectme = (self.selectedclass.replace(".","") == thisclass.replace(".","") 

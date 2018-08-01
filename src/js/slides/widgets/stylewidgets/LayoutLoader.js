@@ -62,6 +62,7 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function(parent_presentation){
         var self = this,
             current_sheet = this.$select.val(),
             path = Utilities.GetAjaxPath("Loader.php");
+            real_classes = this.pres.classes.map((cl) => (cl.substr(0,1) == "." ? cl : "." + cl));
 
         $.getJSON(path,
             {
@@ -91,19 +92,21 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function(parent_presentation){
                                 var tagname = selector_units[2];
                                 var classname = selector_units[1];
                             }
-                            // Tyylitaulun yksi rivi:
-                            $.each(attributes,function(idx, attr){
-                                if(attr.indexOf(":")>-1){
-                                    //Jaa attribuuttiksi ja arvoksi
-                                    var av_pair = attr.split(":");
-                                    // Lisää kok tyylitietokantaan syötettävä rivi...
-                                    if(old_styles.indexOf([classname,tagname,av_pair[0].trim(),av_pair[1].trim()].join(";"))==-1){
-                                        //..jos rivi on sellainen, ettei sellaista ole vanhastaan ollu tietokannassa, 
-                                        // eli toisin sanoen jotain tietokannan rivin arvoa on muutettu
-                                        all_rows.push({"classname":classname,"tagname":tagname,"attr":av_pair[0].trim(),"value":av_pair[1].trim(),"stylesheet":current_sheet});
+                            if (real_classes.indexOf(classname) > -1){
+                                // Tyylitaulun yksi rivi:
+                                $.each(attributes,function(idx, attr){
+                                    if(attr.indexOf(":")>-1){
+                                        //Jaa attribuuttiksi ja arvoksi
+                                        var av_pair = attr.split(":");
+                                        // Lisää kok tyylitietokantaan syötettävä rivi...
+                                        if(old_styles.indexOf([classname,tagname,av_pair[0].trim(),av_pair[1].trim()].join(";"))==-1){
+                                            //..jos rivi on sellainen, ettei sellaista ole vanhastaan ollu tietokannassa, 
+                                            // eli toisin sanoen jotain tietokannan rivin arvoa on muutettu
+                                            all_rows.push({"classname":classname,"tagname":tagname,"attr":av_pair[0].trim(),"value":av_pair[1].trim(),"stylesheet":current_sheet});
+                                        }
                                     }
-                                }
-                            })
+                                })
+                            }
                         }
                     }
             }
