@@ -2,7 +2,8 @@
 //
 var Utilities = function(){
 
-    var ajax_path = "php/ajax";
+    var ajax_path = "php/ajax",
+        img_path = "assets/images";
 
     /**
      *
@@ -29,6 +30,24 @@ var Utilities = function(){
     
     }
 
+
+
+    /**
+     *
+     * Asettaa oikean polun kuvakansioon
+     *
+     * @param path uusi polku, huom, ei saa loppua /-merkkiin
+     *
+     */
+    function SetImgPath(path){
+        if (path.substr(-1) == "/"){
+            path = path.substr(0, path.length-1);
+        }
+
+        img_path = path;
+    
+    }
+
     /**
      *
      * Hakee oikean polun ajax-skriptien kansioon
@@ -41,6 +60,20 @@ var Utilities = function(){
         fname = fname || "";
         return ajax_path + "/" + fname;
     }
+
+    /**
+     *
+     * Hakee oikean polun kuvakansioon
+     *
+     * @param fname mikä tiedosto kansiosta haetaan
+     *
+     */
+    function GetImgPath(fname){
+        //fname = (fname ? "/" + fname : "");
+        fname = fname || "";
+        return img_path + "/" + fname;
+    }
+
 
 
     /**
@@ -109,11 +142,12 @@ var Utilities = function(){
      *
      */
     function Preview($div, filename){
+        console.log("PGview");
         if( filename.indexOf("Ei kuvaa") > -1 ){ 
             $div.find(".preview img").remove();
         }
         else{
-            $("<img>").attr({"src":"assets/" + filename,
+            $("<img>").attr({"src":img_path + "/" + filename,
                 "height":"100%",
                 "width":"100%",
                 "object-fit":"contain",
@@ -268,7 +302,10 @@ var Utilities = function(){
         ScrollToCenter,
         SetAjaxPath,
         GetAjaxPath,
-        HideUpperMenu
+        SetImgPath,
+        GetImgPath,
+        HideUpperMenu,
+        Preview
     
     }
 

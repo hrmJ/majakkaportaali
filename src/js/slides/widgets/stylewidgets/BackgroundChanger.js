@@ -53,9 +53,13 @@ Slides.Widgets.StyleWidgets.BackgroundChanger = function(parent_presentation){
         //Tyhjennä vanha select-elementin sisältö kaiken varalta
         $("#general-bg-select").html("").on("change",function(){
             //Lisää esikatselumahdollisuus 
-            Preview($(this).parents(".with-preview"),"backgrounds/" + $(this).val())
+            Utilities.Preview($(this).parents(".with-preview"), $(this).val())
             //Lataa kuvaus ko. kuvasta
-            $.getJSON("php/loadassets.php",{"asset_type":"backgrounds","filename":$(this).val()},
+            $.getJSON(path,{
+                //"asset_type":"backgrounds",
+                "action": "get_slide_image_description",
+                "filename":$(this).val()
+                },
                     function(data){ 
                         $("#general-bg-select").parent().find("p").text(data[0]);
                     });
@@ -65,8 +69,8 @@ Slides.Widgets.StyleWidgets.BackgroundChanger = function(parent_presentation){
                 "action":"get_slide_image_names"
                 },
                 function(data){
-                    $(data.map((bgname) => `<option>${bgname}</option>`))
-                        .appendTo("#general-bg-select");
+                    var options = data.map((bgname) => `<option>${bgname.filename}</option>`);
+                    $("#general-bg-select").append(options);
                 });
 
         };
@@ -81,7 +85,7 @@ Slides.Widgets.StyleWidgets.BackgroundChanger = function(parent_presentation){
     this.ChangeBackground = function(){
         var rules_to_edit = this.pres.styles.SetEditTarget("nolevel");
         if($("[name='img_or_color']:checked").val() == "img") {
-            var bg = "url(../../assets/backgrounds/" + $("#general-bg-select").val() +")";
+            var bg = "url(../../assets/images/" + $("#general-bg-select").val() +")";
         }
         else{
             var bg = $("#bgcolselect").spectrum("get").toRgbString();

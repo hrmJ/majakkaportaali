@@ -186,7 +186,8 @@
 //
 var Utilities = function(){
 
-    var ajax_path = "php/ajax";
+    var ajax_path = "php/ajax",
+        img_path = "assets/images";
 
     /**
      *
@@ -213,6 +214,24 @@ var Utilities = function(){
     
     }
 
+
+
+    /**
+     *
+     * Asettaa oikean polun kuvakansioon
+     *
+     * @param path uusi polku, huom, ei saa loppua /-merkkiin
+     *
+     */
+    function SetImgPath(path){
+        if (path.substr(-1) == "/"){
+            path = path.substr(0, path.length-1);
+        }
+
+        img_path = path;
+    
+    }
+
     /**
      *
      * Hakee oikean polun ajax-skriptien kansioon
@@ -225,6 +244,20 @@ var Utilities = function(){
         fname = fname || "";
         return ajax_path + "/" + fname;
     }
+
+    /**
+     *
+     * Hakee oikean polun kuvakansioon
+     *
+     * @param fname mikä tiedosto kansiosta haetaan
+     *
+     */
+    function GetImgPath(fname){
+        //fname = (fname ? "/" + fname : "");
+        fname = fname || "";
+        return img_path + "/" + fname;
+    }
+
 
 
     /**
@@ -293,11 +326,12 @@ var Utilities = function(){
      *
      */
     function Preview($div, filename){
+        console.log("PGview");
         if( filename.indexOf("Ei kuvaa") > -1 ){ 
             $div.find(".preview img").remove();
         }
         else{
-            $("<img>").attr({"src":"assets/" + filename,
+            $("<img>").attr({"src":img_path + "/" + filename,
                 "height":"100%",
                 "width":"100%",
                 "object-fit":"contain",
@@ -452,7 +486,10 @@ var Utilities = function(){
         ScrollToCenter,
         SetAjaxPath,
         GetAjaxPath,
-        HideUpperMenu
+        SetImgPath,
+        GetImgPath,
+        HideUpperMenu,
+        Preview
     
     }
 
@@ -8579,9 +8616,13 @@ Slides.Widgets.StyleWidgets.BackgroundChanger = function(parent_presentation){
         //Tyhjennä vanha select-elementin sisältö kaiken varalta
         $("#general-bg-select").html("").on("change",function(){
             //Lisää esikatselumahdollisuus 
-            Preview($(this).parents(".with-preview"),"backgrounds/" + $(this).val())
+            Utilities.Preview($(this).parents(".with-preview"), $(this).val())
             //Lataa kuvaus ko. kuvasta
-            $.getJSON("php/loadassets.php",{"asset_type":"backgrounds","filename":$(this).val()},
+            $.getJSON(path,{
+                //"asset_type":"backgrounds",
+                "action": "get_slide_image_description",
+                "filename":$(this).val()
+                },
                     function(data){ 
                         $("#general-bg-select").parent().find("p").text(data[0]);
                     });
@@ -8591,8 +8632,8 @@ Slides.Widgets.StyleWidgets.BackgroundChanger = function(parent_presentation){
                 "action":"get_slide_image_names"
                 },
                 function(data){
-                    $(data.map((bgname) => `<option>${bgname}</option>`))
-                        .appendTo("#general-bg-select");
+                    var options = data.map((bgname) => `<option>${bgname.filename}</option>`);
+                    $("#general-bg-select").append(options);
                 });
 
         };
@@ -8607,7 +8648,7 @@ Slides.Widgets.StyleWidgets.BackgroundChanger = function(parent_presentation){
     this.ChangeBackground = function(){
         var rules_to_edit = this.pres.styles.SetEditTarget("nolevel");
         if($("[name='img_or_color']:checked").val() == "img") {
-            var bg = "url(../../assets/backgrounds/" + $("#general-bg-select").val() +")";
+            var bg = "url(../../assets/images/" + $("#general-bg-select").val() +")";
         }
         else{
             var bg = $("#bgcolselect").spectrum("get").toRgbString();
@@ -8839,9 +8880,7 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function(parent_presentation){
             //Ongelma: post-arvot liian suuria, jos kokonaan uusi tyyli
             if(self.oldsheets.indexOf(current_sheet)<0){
                 //Jos käytetty kokonaan uutta tyylinimeä, pilkotaan 
-                console.log("Saving new styles...");
                 for(var i = 0; i<all_rows.length;i += 50){
-                    console.log("Lkjp");
                     $.post(path,
                         {
                             "action": "update_style_rows",
@@ -8850,8 +8889,8 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function(parent_presentation){
                             "isnew": "yes"
                         },
                         function(data){
-                            console.log("HURAAA");
-                            $("body").prepend(data);
+                            //$("body").prepend(data);
+                            console.log("NEW styles updated.")
                             if(i+50>= all_rows.legth){
                                 msg = new Utilities.Message(`${current_sheet}-tyylipohja tallennettu.`, $(".layoutloader"));
                                 msg.Show(3000);
@@ -8868,7 +8907,8 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function(parent_presentation){
                         "current_sheet":current_sheet,
                         "isnew": "no"
                     },
-                    function(data){$("body").prepend(data);
+                    function(data){
+                            //$("body").prepend(data);
                             console.log("Old styles updated.")
                             msg = new Utilities.Message(`${current_sheet}-tyylipohja päivitetty.`, $(".layoutloader"));
                             msg.Show(3000);
@@ -9005,6 +9045,7 @@ $(document).ready(function(){
 
         var list = new Portal.Servicelist.List();
         Utilities.SetAjaxPath("../php/ajax");
+        Utilities.SetImgPath("../assets/images");
     
         Slides.Controls.Initialize();
         list.LoadServices(Slides.ContentLoader.AddServicesToSelect);

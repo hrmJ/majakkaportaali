@@ -110,9 +110,7 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function(parent_presentation){
             //Ongelma: post-arvot liian suuria, jos kokonaan uusi tyyli
             if(self.oldsheets.indexOf(current_sheet)<0){
                 //Jos käytetty kokonaan uutta tyylinimeä, pilkotaan 
-                console.log("Saving new styles...");
                 for(var i = 0; i<all_rows.length;i += 50){
-                    console.log("Lkjp");
                     $.post(path,
                         {
                             "action": "update_style_rows",
@@ -121,8 +119,8 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function(parent_presentation){
                             "isnew": "yes"
                         },
                         function(data){
-                            console.log("HURAAA");
-                            $("body").prepend(data);
+                            //$("body").prepend(data);
+                            console.log("NEW styles updated.")
                             if(i+50>= all_rows.legth){
                                 msg = new Utilities.Message(`${current_sheet}-tyylipohja tallennettu.`, $(".layoutloader"));
                                 msg.Show(3000);
@@ -139,7 +137,8 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function(parent_presentation){
                         "current_sheet":current_sheet,
                         "isnew": "no"
                     },
-                    function(data){$("body").prepend(data);
+                    function(data){
+                            //$("body").prepend(data);
                             console.log("Old styles updated.")
                             msg = new Utilities.Message(`${current_sheet}-tyylipohja päivitetty.`, $(".layoutloader"));
                             msg.Show(3000);

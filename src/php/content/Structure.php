@@ -294,6 +294,24 @@ class Structure{
     }
 
 
+
+    /**
+     *
+     * Lataa dioihin syötettävissä olevien kuvien kuvaukset
+     *
+     *
+     * @param $filename kuvan tiedostonimi
+     * 
+     */
+    public function LoadSlideImageDescription($filename){
+
+        $data = $this->con->get("backgrounds", "description", [ "filename" => $filename ]);
+
+        return $data;
+
+    }
+
+
     /**
      *
      * Lataa kaikki segmentit käytettäväksi diaesityksessä
