@@ -67,7 +67,9 @@ Slides.Widgets.StyleWidgets.PositionChanger = function(parent_presentation){
         });
     
         //Jos ei kyse numeerisista arvoista, päivitä kaikki säätimet
-        if(!$launcher.hasClass("slider")) UpdateControllers(this.pres);
+        if(!$launcher.hasClass("slider")){
+           Slides.Styles.Controller.UpdateControllers(this.pres);
+        } 
     };
 
 

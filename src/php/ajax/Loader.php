@@ -17,6 +17,7 @@ use Portal\content\Structure;
 use Portal\content\Servicelist;
 use Portal\content\Songlist;
 use Portal\content\BibleLoader;
+use Portal\slides\SlideStyle;
 
 
 $config = parse_ini_file("../../../config.ini");
@@ -136,8 +137,23 @@ switch($params["action"]){
         echo json_encode($structure->LoadSlide($params["id"],"biblesegments"));
         break;
     case "get_slideclass_names":
-        $structure = new Structure($database, $m);
-        echo json_encode($structure->LoadSlideClassNames());
+        $style = new SlideStyle($database);
+        echo json_encode($style->LoadSlideClassNames());
+        break;
+    case "load_styles":
+        $style = new SlideStyle($database);
+        $style->LoadAllStyles($params["stylesheet"]);
+        echo $style->html;
+        break;
+    case "load_stylesheets":
+        $style = new SlideStyle($database);
+        $data = $style->LoadAllStyleSheets();
+        echo json_encode($data);
+        break;
+    case "update_style_rows":
+        $style = new SlideStyle($database);
+        $data = $style->UpdateStyles($params["rows_to_update"],$params["current_sheet"],$params["isnew"]);
+        echo json_encode($data);
         break;
     case "get_slide_image_names":
         $structure = new Structure($database, $m);

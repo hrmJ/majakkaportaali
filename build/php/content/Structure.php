@@ -145,20 +145,6 @@ class Structure{
         }
     }
 
-
-    /**
-     * Hakee kaikki eri luokat ( ~ esim. messun osiot), jotka tässä portaalissa
-     * ovat käytössä
-     */
-    public function LoadSlideClassNames(){
-        $data = $this->con->select("styles",[
-            "classname" =>  Medoo::raw('DISTINCT(classname)')
-            ],
-            ["classname[!]" => "sample"]
-        );
-        return $data;
-    }
-
     /**
      *
      * Lataa yhden dian sisällön

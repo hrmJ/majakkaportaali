@@ -22,20 +22,22 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function(parent_presentation){
      */
     this.UpdateStyleSheets = function(){
         var self = this;
+            path = Utilities.GetAjaxPath("Loader.php");
         //Tallenna ennestäään olemassa olleiden tyylien nimet
         self.oldsheets = [];
         //Tyhjennä olemassaoleva sisältö
         this.$select.find("*").remove();
-        $.getJSON("php/load_styles.php",{sheets:"all"},function(data){
-            $.each(data,function(idx, sheet){
-                self.$select.append("<option>" + sheet + "</option>");
-                self.oldsheets.push(sheet);
-            });
-            //Lisää tekstikentäksi muutettava option-elementti uudelle luokalle
-            self.$select.append("<option>Uusi luokka</option>");
-            //Luo widget
-            self.$select.select_withtext();
-        }
+        $.getJSON(path,{ "action": "load_stylesheets"},
+            function(data){
+                $.each(data,function(idx, sheet){
+                    self.$select.append("<option>" + sheet + "</option>");
+                    self.oldsheets.push(sheet);
+                })
+                //Lisää tekstikentäksi muutettava option-elementti uudelle luokalle
+                self.$select.append("<option>Uusi luokka</option>");
+                //Luo widget
+                self.$select.select_withtext();
+            }
         );
     };
 
@@ -57,10 +59,11 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function(parent_presentation){
      *
      */
     this.Save = function(){
-        var self = this;
-        var current_sheet = this.$select.val();
-        console.log(current_sheet);
-        $.getJSON("php/load_styles.php",{"current_sheet":current_sheet,"array_of_strings":"yes"},function(old_styles){
+        var self = this,
+            current_sheet = this.$select.val(),
+            path = Utilities.GetAjaxPath("Loader.php");
+
+        $.getJSON("php/.php",{"current_sheet":current_sheet,"array_of_strings":"yes"},function(old_styles){
             //Hae ensin tietokannasta tiedot siitä, mitä arvoja tyyleillä on ollut ennen edellistä muokkausta
 
             //Hae sitten kaikki esityksessä käytössä olevat tyylit.
@@ -104,22 +107,34 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function(parent_presentation){
                 //Jos käytetty kokonaan uutta tyylinimeä, pilkotaan 
                 console.log("Saving new styles...");
                 for(var i = 0; i<all_rows.length;i += 50){
-                    $.post("php/load_styles.php",{"rows_to_update":all_rows.slice(i, i+50),"current_sheet":current_sheet, "isnew": "yes"},
+                    $.post(path,
+                        {
+                            "action": "update_style_rows",
+                            "rows_to_update":all_rows.slice(i, i+50),
+                            "current_sheet":current_sheet, 
+                            "isnew": "yes"
+                        },
                         function(data){$("body").prepend(data);
                             if(i+50>= all_rows.legth){
-                                msg = new Message(`${current_sheet}-tyylipohja tallennettu.`, $(".layoutloader"));
-                                msg.Show();
+                                msg = new Utilities.Message(`${current_sheet}-tyylipohja tallennettu.`, $(".layoutloader"));
+                                msg.Show(3000);
                             }
                         });
                     }
             }
             else{
                 //Jos ei kokonaan uusi, post-ongelma ratkaistaan sillä, että päivitetään vain muuttuneet tyylit
-                $.post("php/load_styles.php",{"rows_to_update":all_rows,"current_sheet":current_sheet,"isnew": "no"},
+                $.post(path,
+                    {
+                        "action": "update_style_rows",
+                        "rows_to_update":all_rows,
+                        "current_sheet":current_sheet,
+                        "isnew": "no"
+                    },
                     function(data){$("body").prepend(data);
                             console.log("Old styles updated.")
-                            msg = new Message(`${current_sheet}-tyylipohja päivitetty.`, $(".layoutloader"));
-                            msg.Show();
+                            msg = new Utilities.Message(`${current_sheet}-tyylipohja päivitetty.`, $(".layoutloader"));
+                            msg.Show(3000);
                     });
             }
 
@@ -132,17 +147,22 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function(parent_presentation){
      *
      */
     this.Load = function(){
-        var self = this;
-        var sheetname = self.$select.val();
+        var self = this,
+            sheetname = self.$select.val(),
+            path = Utilities.GetAjaxPath("Loader.php");
         console.log("loading " + sheetname);
         self.pres.d.find("#updated_styles").html("").load(
-            "php/load_styles.php",
-            {"classes":self.pres.classes,"stylesheet":sheetname},
+            path,
+            {
+                "action": "load_styles",
+                //"classes":self.pres.classes,
+                "stylesheet":sheetname
+            },
             function(){
                 self.pres.styles.GetOriginalStyles();
-                UpdateControllers(self.pres);
-                msg = new Message(`${sheetname}-tyylipohja ladattu.`, $(".layoutloader"));
-                msg.Show();
+                Slides.Styles.Controller.UpdateControllers(self.pres);
+                msg = new Utilities.Message(`${sheetname}-tyylipohja ladattu.`, $(".layoutloader"));
+                msg.Show(3000);
             });
     };
 

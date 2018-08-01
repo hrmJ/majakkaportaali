@@ -5,7 +5,7 @@ require 'vendor/autoload.php';
  
 use PHPUnit\Framework\TestCase;
 use Medoo\Medoo;
-use Portal\slides\Loader;
+use Portal\slides\SlideStyle;
 
 
 /**
@@ -32,22 +32,75 @@ class SlideTest extends TestCase
     /**
      * Testaa perittävän olion luonti
      */
-    public function testCreateLoaderObject()
+    public function testCreateStyleObject()
     {
-        $loader= new Loader($this->con);
-        $this-> assertInstanceOf(Loader::class,$loader);
+        $style = new SlideStyle($this->con);
+        $this->assertInstanceOf(SlideStyle::class,$style);
     }
 
 
     /**
-     * Testaa perittävän olion luonti
+     *
+     * Testaa ladata css-luokat
+     *
      */
-    public function testCreateLoaderObject()
+    public function testLoadClassNames()
     {
-        $loader= new Loader();
-        $this-> assertInstanceOf(ServiceLoader::class,$loader);
+        $style = new SlideStyle($this->con);
+        $data = $style->LoadSlideClassNames();
+        $this->assertTrue(!empty($data));
     }
 
+
+    /**
+     * Testaa ladata tyylit merkkijonona
+     */
+    public function testLoadStylesAsString()
+    {
+        $style = new SlideStyle($this->con);
+        $attrs = $style->GetStylesAsString(".Teksti");
+        $this->assertTrue(!empty($attrs));
+    }
+
+
+    /**
+     *
+     * Testaa ladata kaikki tyylit 
+     *
+     */
+    public function testLoadAllStyles()
+    {
+        $style = new SlideStyle($this->con);
+        $style->LoadAllStyles();
+        $this->assertTrue(!empty($style->html));
+    }
+
+
+    /**
+     *
+     * Testaa ladata kaikki stylsheetit
+     *
+     */
+    public function testLoadAllStyleSheets()
+    {
+        $style = new SlideStyle($this->con);
+        $data = $style->LoadAllStyleSheets();
+        $this->assertTrue(!empty($data));
+    }
+
+
+
+    /**
+     *
+     * Testaa ladata kaikki tyylit 
+     *
+     */
+    public function testLoadStylesAsArrayOfStrings()
+    {
+        $style = new SlideStyle($this->con);
+        $data = $style->LoadAllStylesAsArrayOfStrings();
+        $this->assertTrue(!empty($data));
+    }
 }
 
 

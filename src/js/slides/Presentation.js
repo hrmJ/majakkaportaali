@@ -120,11 +120,12 @@ Slides.Presentation = function(){
          */
         this.SetStyles = function(){
             var path = Utilities.GetAjaxPath("Loader.php");
-            return this.d.find("#updated_styles").load(path, 
+            return $.get(path, 
                 {
-                    "classes":this.classes,
+                    "action": "load_styles",
+                    //"classes":this.classes,
                     "stylesheet":"default"
-                });
+                }, (stylestring) => this.d.find("#updated_styles").html(stylestring));
         };
 
 
