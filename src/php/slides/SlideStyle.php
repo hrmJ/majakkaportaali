@@ -170,6 +170,7 @@ class SlideStyle{
                     #$debug = var_export($isnew, true);
                     #$this->con->q("INSERT INTO logger (msg) VALUES (:cn)",
                     #    Array("cn"=>$debug),"none");
+                    $coldata["value"] = $row["value"];
                     $this->con->insert("styles", $coldata);
                 }
             }

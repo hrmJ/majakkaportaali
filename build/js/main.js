@@ -8880,11 +8880,13 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function(parent_presentation){
             //Ongelma: post-arvot liian suuria, jos kokonaan uusi tyyli
             if(self.oldsheets.indexOf(current_sheet)<0){
                 //Jos käytetty kokonaan uutta tyylinimeä, pilkotaan 
+                //TODO: korjaa asynkronisuus
                 for(var i = 0; i<all_rows.length;i += 50){
+                    var updatables = all_rows.slice(i, i+50);
                     $.post(path,
                         {
                             "action": "update_style_rows",
-                            "rows_to_update":all_rows.slice(i, i+50),
+                            "rows_to_update":updatables,
                             "current_sheet":current_sheet, 
                             "isnew": "yes"
                         },
