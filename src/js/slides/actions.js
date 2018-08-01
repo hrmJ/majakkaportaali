@@ -7,7 +7,9 @@ $(document).ready(function(){
     
         Slides.Controls.Initialize();
         list.LoadServices(Slides.ContentLoader.AddServicesToSelect);
-        Portal.Menus.InitializeMenus();
+        if (!Portal.Menus.GetInitialized()){
+            Portal.Menus.InitializeMenus();
+        }
     
     }
 

@@ -8,6 +8,7 @@ var Portal = Portal || {};
 Portal.Menus = function(){
 
     menus = {};
+    initialized = false;
 
     var Hamburgermenu = function(){
 
@@ -98,6 +99,7 @@ Portal.Menus = function(){
 
     function InitializeMenus(){
     
+        console.log("initializing menus");
         //Aseta taittovalikot toimintakuntoon
         $(".controller-subwindow").hide()
         $(".subwindow-opener").click(InitializeFoldMenu);
@@ -107,13 +109,19 @@ Portal.Menus = function(){
             menus[name].Initialize();
         });
 
+        initialized = true;
     
+    }
+
+    function GetInitialized(){
+        return initialized;
     }
 
 
     return {
         InitializeMenus,
         InitializeFoldMenu,
+        GetInitialized,
         menus
     }
 

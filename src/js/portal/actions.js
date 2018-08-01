@@ -4,7 +4,9 @@
 
 $(function(){
     //Navigation etc:
-    Portal.Menus.InitializeMenus();
+    if (!Portal.Menus.GetInitialized()){
+        Portal.Menus.InitializeMenus();
+    }
     //Other actions:
     if ($("body").hasClass("servicedetails")){
         //Messukohtainen näkymä

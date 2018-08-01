@@ -470,6 +470,7 @@ var Portal = Portal || {};
 Portal.Menus = function(){
 
     menus = {};
+    initialized = false;
 
     var Hamburgermenu = function(){
 
@@ -560,6 +561,7 @@ Portal.Menus = function(){
 
     function InitializeMenus(){
     
+        console.log("initializing menus");
         //Aseta taittovalikot toimintakuntoon
         $(".controller-subwindow").hide()
         $(".subwindow-opener").click(InitializeFoldMenu);
@@ -569,13 +571,19 @@ Portal.Menus = function(){
             menus[name].Initialize();
         });
 
+        initialized = true;
     
+    }
+
+    function GetInitialized(){
+        return initialized;
     }
 
 
     return {
         InitializeMenus,
         InitializeFoldMenu,
+        GetInitialized,
         menus
     }
 
@@ -4319,7 +4327,9 @@ var BibleModule = function(){
 
 $(function(){
     //Navigation etc:
-    Portal.Menus.InitializeMenus();
+    if (!Portal.Menus.GetInitialized()){
+        Portal.Menus.InitializeMenus();
+    }
     //Other actions:
     if ($("body").hasClass("servicedetails")){
         //Messukohtainen näkymä
@@ -7219,13 +7229,13 @@ Slides.Controls = function(){
             $(this).parent().next("div").slideToggle();
             $(this).parent().next("div").find("section").toggleClass("controller-not-in-use");
             if(!$(this).parent().next("div").find("section").hasClass("controller-not-in-usel")){
-                UpdateControllers(Slides.Presentation.GetCurrentPresentation());
+                Slides.Styles.Controller.UpdateControllers(Slides.Presentation.GetCurrentPresentation());
             }
         });
 
         //Muuta fonttimuokkausten kohdetta, kun tätä säätelevää pudotusvalikkoa käytetään
         $("#layout-target_select").on("selectmenuchange", () => 
-            UpdateControllers(Slides.Presentation.GetCurrentPresentation())
+            Slides.Styles.Controller.UpdateControllers(Slides.Presentation.GetCurrentPresentation())
         );
 
         //TODO: anna spectrum-funktion argumenttina palette-niminen taulukoiden taulukko, jossa on käytössä olevat värit
@@ -8782,7 +8792,12 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function(parent_presentation){
             current_sheet = this.$select.val(),
             path = Utilities.GetAjaxPath("Loader.php");
 
-        $.getJSON("php/.php",{"current_sheet":current_sheet,"array_of_strings":"yes"},function(old_styles){
+        $.getJSON(path,
+            {
+                "action": "styles_as_array",
+                "current_sheet":current_sheet,
+            },
+            function(old_styles){
             //Hae ensin tietokannasta tiedot siitä, mitä arvoja tyyleillä on ollut ennen edellistä muokkausta
 
             //Hae sitten kaikki esityksessä käytössä olevat tyylit.
@@ -8826,6 +8841,7 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function(parent_presentation){
                 //Jos käytetty kokonaan uutta tyylinimeä, pilkotaan 
                 console.log("Saving new styles...");
                 for(var i = 0; i<all_rows.length;i += 50){
+                    console.log("Lkjp");
                     $.post(path,
                         {
                             "action": "update_style_rows",
@@ -8833,7 +8849,9 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function(parent_presentation){
                             "current_sheet":current_sheet, 
                             "isnew": "yes"
                         },
-                        function(data){$("body").prepend(data);
+                        function(data){
+                            console.log("HURAAA");
+                            $("body").prepend(data);
                             if(i+50>= all_rows.legth){
                                 msg = new Utilities.Message(`${current_sheet}-tyylipohja tallennettu.`, $(".layoutloader"));
                                 msg.Show(3000);
@@ -8990,7 +9008,9 @@ $(document).ready(function(){
     
         Slides.Controls.Initialize();
         list.LoadServices(Slides.ContentLoader.AddServicesToSelect);
-        Portal.Menus.InitializeMenus();
+        if (!Portal.Menus.GetInitialized()){
+            Portal.Menus.InitializeMenus();
+        }
     
     }
 

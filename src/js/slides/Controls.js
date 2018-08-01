@@ -21,13 +21,13 @@ Slides.Controls = function(){
             $(this).parent().next("div").slideToggle();
             $(this).parent().next("div").find("section").toggleClass("controller-not-in-use");
             if(!$(this).parent().next("div").find("section").hasClass("controller-not-in-usel")){
-                UpdateControllers(Slides.Presentation.GetCurrentPresentation());
+                Slides.Styles.Controller.UpdateControllers(Slides.Presentation.GetCurrentPresentation());
             }
         });
 
         //Muuta fonttimuokkausten kohdetta, kun tätä säätelevää pudotusvalikkoa käytetään
         $("#layout-target_select").on("selectmenuchange", () => 
-            UpdateControllers(Slides.Presentation.GetCurrentPresentation())
+            Slides.Styles.Controller.UpdateControllers(Slides.Presentation.GetCurrentPresentation())
         );
 
         //TODO: anna spectrum-funktion argumenttina palette-niminen taulukoiden taulukko, jossa on käytössä olevat värit

@@ -63,7 +63,12 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function(parent_presentation){
             current_sheet = this.$select.val(),
             path = Utilities.GetAjaxPath("Loader.php");
 
-        $.getJSON("php/.php",{"current_sheet":current_sheet,"array_of_strings":"yes"},function(old_styles){
+        $.getJSON(path,
+            {
+                "action": "styles_as_array",
+                "current_sheet":current_sheet,
+            },
+            function(old_styles){
             //Hae ensin tietokannasta tiedot siitä, mitä arvoja tyyleillä on ollut ennen edellistä muokkausta
 
             //Hae sitten kaikki esityksessä käytössä olevat tyylit.
@@ -107,6 +112,7 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function(parent_presentation){
                 //Jos käytetty kokonaan uutta tyylinimeä, pilkotaan 
                 console.log("Saving new styles...");
                 for(var i = 0; i<all_rows.length;i += 50){
+                    console.log("Lkjp");
                     $.post(path,
                         {
                             "action": "update_style_rows",
@@ -114,7 +120,9 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function(parent_presentation){
                             "current_sheet":current_sheet, 
                             "isnew": "yes"
                         },
-                        function(data){$("body").prepend(data);
+                        function(data){
+                            console.log("HURAAA");
+                            $("body").prepend(data);
                             if(i+50>= all_rows.legth){
                                 msg = new Utilities.Message(`${current_sheet}-tyylipohja tallennettu.`, $(".layoutloader"));
                                 msg.Show(3000);

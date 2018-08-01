@@ -155,6 +155,11 @@ switch($params["action"]){
         $data = $style->UpdateStyles($params["rows_to_update"],$params["current_sheet"],$params["isnew"]);
         echo json_encode($data);
         break;
+    case "styles_as_array":
+        $style = new SlideStyle($database);
+        $data = $style->LoadAllStylesAsArrayOfStrings($params["current_sheet"]);
+        echo json_encode($data);
+        break;
     case "get_slide_image_names":
         $structure = new Structure($database, $m);
         echo json_encode($structure->LoadSlideImageNames());
