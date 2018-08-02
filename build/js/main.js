@@ -7109,6 +7109,7 @@ Slides.Presentation = function(){
             this.$section = this.$slide.parent();
             this.$section.show();
             this.AdjustLayout();
+            console.log("MORO");
             //Hieman häkkäilyn makua, mutta display-attribuutti jäi jostain syystä block-arvoon, vaikka
             //jqueryn hide-metodin pitäisi säilyttää alkuperäiset arvot. Tämän vuoksi määritellään erikseen
             //display: flex;
@@ -7125,7 +7126,9 @@ Slides.Presentation = function(){
         this.AdjustLayout = function(){
             //Varmista, että tyhjät elementit eivät vie tilaa esityksen kankaalta:
             this.d.find("div,h1,h2,h3,h4,p").each(function(){
-                if($(this).text().trim()=="") $(this).hide();
+                if($(this).text().trim()=="" && !$(this).find("img").length){
+                    $(this).hide();
+                } 
             })
             var $header = this.$section.find("header");
             if($header.length){ 

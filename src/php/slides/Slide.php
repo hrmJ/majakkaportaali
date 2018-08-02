@@ -127,7 +127,7 @@ class Slide{
             "imgclass"=>"img-$imgpos"];
 
         //TODO oikea polku
-        $img = "<img src='../assets/backgrounds/$imgpath'>";
+        $img = "<img src='../assets/images/$imgpath'>";
 
             switch ($imgpos){
                 case "left":
