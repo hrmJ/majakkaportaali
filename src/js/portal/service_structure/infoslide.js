@@ -20,8 +20,6 @@ GeneralStructure.SlotFactory.infoslide = function(){
      *
      **/
     this.FillInData = function(data){
-        console.log("MOOKJLAKSJDLKSADLKSAjd");
-        console.log(data);
         var self = this;
         self.$lightbox.find(".slide-header").val(data.header);
         self.$lightbox.find(".infoslidetext").val(data.maintext);
@@ -36,7 +34,7 @@ GeneralStructure.SlotFactory.infoslide = function(){
         var used_img = self.$lightbox.find(".slide_img .img-select").val();
         if(used_img!="Ei kuvaa"){
             //Lataa valmiiksi kuvan esikatselu, jos kuva määritelty
-            Preview(self.$lightbox.find(".slide_img .img-select").parents(".with-preview"),"images/" + used_img);
+            Utilities.Preview(self.$lightbox.find(".slide_img .img-select").parents(".with-preview"), used_img);
         }
     };
 

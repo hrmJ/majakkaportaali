@@ -6,6 +6,7 @@ namespace Portal\content;
 use Portal\slides\Slide;
 use Portal\slides\Song;
 use Portal\slides\Infoslide;
+use Portal\slides\SlideStyle;
 use Medoo\Medoo;
 use PDO;
 
@@ -192,6 +193,10 @@ class Structure{
      */
     public function UpdateSlide($id, $table, $params){
         $this->con->update($table, $params, ["id"=>$id]);
+        if(isset($params["addedclass"])){
+            $style = new SlideStyle($this->con);
+            $style->CheckSlideClassStatus($params["addedclass"]);
+        }
         if($table == $this->table){
             $this->RefreshSlotOrder();
         }
@@ -273,9 +278,12 @@ class Structure{
         $last_slot_no = $this->con->max($this->table, "slot_number");
         $params["slot_number"] = $last_slot_no + 1;
         $this->con->insert($this->table, $params);
+        if(isset($params["addedclass"])){
+            $style = new SlideStyle($this->con);
+            $style->CheckSlideClassStatus($params["addedclass"]);
+        }
         return $this;
     }
-
 
 
     /**

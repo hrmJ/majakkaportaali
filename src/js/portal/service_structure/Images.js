@@ -39,7 +39,7 @@ GeneralStructure.Images = function(){
                         <option>Ei kuvaa</option>
                       </select>`);
             $sel.on("change",function(){ 
-                Preview($(this).parents(".with-preview"),"images/" + $(this).val())}
+                Utilities.Preview($(this).parents(".with-preview"), $(this).val())}
             );
             $.each(data, function(idx,imgname){
                 imgname = imgname.filename;
