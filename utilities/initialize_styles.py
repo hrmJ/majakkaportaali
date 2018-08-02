@@ -93,6 +93,8 @@ for classname in default_classes:
     session.add(Style(classname,"h2","font-size","1.5em","default"))
     session.add(Style(classname,"h3","font-size","1.17em","default"))
     session.add(Style(classname,"p","font-size","1em","default"))
+    session.add(Style(classname,"aside","font-size","0.8em","default"))
+    session.add(Style(classname,"header","font-size","0.8em","default"))
     for attr, val in common_vals.items():
         #Syötä kakista tägeistä  ne arvot, jotka oletuksena ovat samoja
         for tagname in layout_tags + text_tags:

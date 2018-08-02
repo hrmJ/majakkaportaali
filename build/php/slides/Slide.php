@@ -125,7 +125,9 @@ class Slide{
         $img_template = $this->template_engine->loadTemplate("slide_img");
         $params = ["img_before" => "", 
             "img_after" => "",
-            "imgclass"=>"img-$imgpos"];
+            "imgclass"=> "img-$imgpos",
+            "text" => $txt
+        ];
 
         //TODO oikea polku
         $img = "<img src='../assets/images/$imgpath'>";
@@ -146,7 +148,7 @@ class Slide{
             }
 
         $this->Set($target_in_template, $img_template->render($params));
-        $this->Set("text",$txt);
+
         return $this;
     }
 
