@@ -211,6 +211,10 @@ class Structure{
      */
     public function RefreshSlotOrder(){
         $data = $this->con->select($this->table, "*");
+        //HACK! Miksei Medoo sorttaa??
+        usort($data, function ($item1, $item2) {
+            return $item1['slot_number'] <=> $item2['slot_number'];
+        });
         $i = 1;
         foreach($data as $row){
             #Varmistetaan, että slottien numerointi alkaa 1:stä

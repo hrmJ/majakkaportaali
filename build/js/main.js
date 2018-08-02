@@ -3409,6 +3409,7 @@ GeneralStructure.DataLoading = function(){
                 id: this.slide_id,
                 params: this.slide_params
             };
+            console.log(this.slide_params);
             $.post("php/ajax/Saver.php", params,function(){
                 self.SetSlotParams();
                 if(!self.id){
