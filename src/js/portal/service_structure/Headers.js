@@ -20,19 +20,36 @@ GeneralStructure.Headers = function(){
          *
          */
         source.prototype.UpdatePickedHeader = function(){
-            var self = this;
-            var $header = this.$lightbox.find(".headertemplates");
-            var is_aside = this.$lightbox.find("input[name='header_type']").get(0).checked ? 1 : 0;
-            var params = {segment_type:"update_headertemplate",is_aside: is_aside};
-            params.header_id = $header.find("select[name='header_select']").val();
-            params.imgpos = $header.find(".img-pos-select").val();
-            params.imgname = $header.find(".img-select").val();
-            params.maintext = $header.find("textarea").val();
+            var self = this,
+                $header = this.$lightbox.find(".headertemplates"),
+                is_aside = this.$lightbox.find("input[name='header_type']").get(0).checked ? 1 : 0,
+                header_id = $header.find("select[name='header_select']").val(),
+                params = {
+                    is_aside: is_aside,
+                    imgposition: $header.find(".img-pos-select").val(),
+                    imgname: $header.find(".img-select").val(),
+                    maintext: $header.find("textarea").val(),
+                },
+                temp_params = {
+                    is_aside: is_aside,
+                    imgpos: $header.find(".img-pos-select").val(),
+                    imgname: $header.find(".img-select").val(),
+                    maintext: $header.find("textarea").val(),
+                    header_id: header_id
+                },
+                path = Utilities.GetAjaxPath("Saver.php");
+            //temp_params.header_id = header_id;
             //Päivitetään muuttuneet arvot myös nykyiseen headers-attribuuttiin
-            self.headerdata[params.header_id] = params;
-            $.post("php/loaders/save_structure_slide.php",params,function(data){
-                $("body").prepend(data);
-            });
+            self.headerdata[header_id] = temp_params;
+            $.post(path,
+                {
+                    params: params,
+                    header_id: header_id,
+                    action: "update_headertemplate"
+                },
+                function(data){
+                    $("body").prepend(data);
+                });
         };
 
 
@@ -95,9 +112,10 @@ GeneralStructure.Headers = function(){
          *
          */
         source.prototype.PickHeader = function(selected_item){
-            var self = this;
-            var $sel = this.$lightbox.find("select[name='header_select']");
-            var header = undefined;
+            var self = this,
+                $sel = this.$lightbox.find("select[name='header_select']"),
+                header = undefined,
+                path = Utilities.GetAjaxPath("Saver.php");
             if (selected_item){
                 //Jos funktio ajettu todellisen valinnan seurauksena
                 //eikä vain muokkausikkunan avaamisen yhteydessä
@@ -105,13 +123,18 @@ GeneralStructure.Headers = function(){
                 if (isNaN(selected_item.value)*1){
                     //Jos syötetty kokonaan uusi ylätunniste
                     //(arvo ei-numeerinen)
-                    $.post("php/loaders/save_structure_slide.php",{"segment_type":"insert_headertemplate",
-                        "template_name":selected_item.value},function(data){
+                    console.log(path);
+                    $.post(path, 
+                        { 
+                            "action": "insert_headertemplate",
+                            "template_name" : selected_item.value
+                        },function(data){
                             self.SetHeaderTemplates(false);
                             self.$lightbox.find(".headertemplates .img-select").val("Ei kuvaa");
                             self.$lightbox.find(".headertemplates .img-pos-select").val("left");
                             self.$lightbox.find(".headertemplates textarea").val("");
-                            Preview(self.$lightbox.find(".headertemplates .img-select").parents(".with-preview"),"Ei kuvaa");
+                            Utilities.Preview(self.$lightbox.find(".headertemplates .img-select").parents(".with-preview"),
+                                "Ei kuvaa");
                         });
                     return 0;
                 }
@@ -140,7 +163,6 @@ GeneralStructure.Headers = function(){
                 this.$lightbox.find(".headertemplates textarea").val(header.maintext);
                 this.$lightbox.find(".headertemplates .img-select").val(header.imgname);
                 this.$lightbox.find(".headertemplates .img-pos-select").val(header.imgposition);
-                console.log(header.is_aside);
                 if(header.is_aside == 1){
                     this.$lightbox.find(".headertemplates input[name='header_type']")[0].checked = true;
                 }
@@ -148,7 +170,8 @@ GeneralStructure.Headers = function(){
                     this.$lightbox.find(".headertemplates input[name='header_type']")[0].checked = false;
                 }
                 if(header.imgname !== "Ei kuvaa"){ 
-                    Preview(this.$lightbox.find(".headertemplates .img-select").parents(".with-preview"),"images/" + header.imgname);
+                    Utilities.Preview(this.$lightbox.find(".headertemplates .img-select").parents(".with-preview"), 
+                        header.imgname);
                 }
             }
 

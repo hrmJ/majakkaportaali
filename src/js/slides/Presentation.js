@@ -242,7 +242,6 @@ Slides.Presentation = function(){
             this.$section = this.$slide.parent();
             this.$section.show();
             this.AdjustLayout();
-            console.log("MORO");
             //Hieman häkkäilyn makua, mutta display-attribuutti jäi jostain syystä block-arvoon, vaikka
             //jqueryn hide-metodin pitäisi säilyttää alkuperäiset arvot. Tämän vuoksi määritellään erikseen
             //display: flex;

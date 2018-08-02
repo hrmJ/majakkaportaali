@@ -66,6 +66,14 @@ switch($params["action"]){
             $struct->UpdateSlide($params["id"], $params["table"], $params["params"]);
         }
         break;
+    case "insert_headertemplate":
+        $struct = new Structure($database, $m);
+        $struct->InsertHeaderTemplate($params["template_name"]);
+        break;
+    case "update_headertemplate":
+        $struct = new Structure($database, $m);
+        $struct->UpdateHeaderTemplate($params["header_id"], $params["params"]);
+        break;
     case "save_slot":
         $struct = new Structure($database, $m);
         $table = "presentation_structure";

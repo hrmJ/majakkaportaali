@@ -201,6 +201,16 @@ class StructureTest extends TestCase{
         echo $struct->slotstring;
     }
 
+    /**
+     * Testaa päivittää tyylipohja
+     */
+    public function testUpdateHeaderTemplate()
+    {
+        $struct = new Structure($this->con, $this->m);
+        $struct->UpdateHeaderTemplate(1,["maintext"=>"TÖTTÖRÖÖ"]);
+        $id = $this->con->get("headers","maintext", ["id" => 1]);
+        $this->assertTrue($id == "TÖTTÖRÖÖ");
+    }
 
     ///**
     // * Testaa, että slottien uuden järjestyksen tallentaminen sujuu

@@ -422,6 +422,35 @@ class Structure{
         return $this;
     }
 
+    /**
+     * 
+     * Lisää uuden ylä- tai sivutunnistepohjan
+     *
+     * @param $tpl_name uuden tunnistepohjan nimi
+     *
+     */
+    public function InsertHeaderTemplate($tpl_name){
+        $this->con->insert("headers",
+            ["template_name" => $tpl_name, 
+            "imgname" => "Ei kuvaa",
+            "imgposition" => "left",
+            "maintext" => ""]);
+        return $this;
+    }
+
+    /**
+     * 
+     * Päivittää ylä- tai sivutunnistepohjan
+     *
+     * @param $header_id päivitettävän pohjan id
+     * @param $params päivitettävät sarakkeet uusine arvoineen
+     *
+     */
+    public function UpdateHeaderTemplate($header_id, $params){
+        $this->con->update("headers", $params, ["id" => $header_id]);
+        return $this;
+    }
+
 
 }
 

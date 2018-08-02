@@ -108,10 +108,10 @@ class SlideTest extends TestCase
      */
     public function testTemporary()
     {
-        $existing = $this->con->select("styles","*",["classname" => ".Teksti"]);
-        if(!$existing){
-            echo "NOOOO\n";
-        }
+        $headerdata = $this->con->get("headers", 
+            ["maintext", "imgname", "imgposition", "is_aside"],
+            ["id" => 1]);
+        var_dump($headerdata);
     }
 
 

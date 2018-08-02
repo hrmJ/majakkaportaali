@@ -89,12 +89,13 @@ class Slide{
     public function SetPageHeader($header_id, $con){
         $headercontent = "";
         if($header_id){
-            $headerdata = $con->q("SELECT maintext, imgname, imgposition, is_aside FROM headers 
-                WHERE id = :id",
-                Array("id" => $header_id),"row");
+            $headerdata = $con->get("headers", 
+                ["maintext", "imgname", "imgposition", "is_aside"],
+                ["id" => $header_id]);
             $header_type = ($headerdata["is_aside"] == 1 ? "aside" : "header");
-            $header_tpl = new Template("{$this->path}/$header_type.tpl");
-            $header_tpl->path  = $this->path;
+            #LEGACY HACK:
+            $header_tpl = new Slide($this->template_engine, []);
+            $header_tpl->template = $this->template_engine->loadTemplate($header_type);
             $text = "<div>{$headerdata["maintext"]}</div>";
             if ($headerdata["imgname"] and $headerdata["imgname"] !== "Ei kuvaa"){
                 //Jos tähän ylätunnisteeseen liittyy kuva
