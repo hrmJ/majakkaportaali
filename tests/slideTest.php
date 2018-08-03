@@ -108,9 +108,7 @@ class SlideTest extends TestCase
      */
     public function testTemporary()
     {
-        $headerdata = $this->con->get("headers", 
-            ["maintext", "imgname", "imgposition", "is_aside"],
-            ["id" => 1]);
+        $headerdata = $this->con->query("SELECT imgname FROM headers LIMIT 1")->fetchColumn();
         var_dump($headerdata);
     }
 

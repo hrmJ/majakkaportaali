@@ -739,7 +739,7 @@ var Comments = function(){
      **/
     function CreateThemeSelect(){
         $.getJSON("php/ajax/Loader.php", {
-            action: "get_responsibilities_list",
+            action: "get_list_of_responsibilities",
             },
             function(data){
                 var $sel = $(".commentdetails select");
@@ -3323,7 +3323,8 @@ GeneralStructure.InjectableData = function(){
          *
          */
         source.prototype.InitializeInjectableData = function(){ 
-            var self = this;
+            var self = this,
+                path = Utilities.GetAjaxPath("Loader.php");
             $.each(this.injectables,function(identifier, name){ 
                 var $select = $(`<select class='${identifier}_select'><option>Upota ${name}</option></select>`);
                 $select.on("change",function(){
@@ -3337,7 +3338,8 @@ GeneralStructure.InjectableData = function(){
                         }
                     }
                 });
-                $.getJSON("php/loaders/load_data_for_injection.php",{"fetch": identifier},
+                console.log(identifier);
+                $.getJSON(path, { "action": "get_list_of_" + identifier },
                     function(data){
                         $.each(data,function(idx,el){ 
                             $select.append("<option>" + el + "</option>")

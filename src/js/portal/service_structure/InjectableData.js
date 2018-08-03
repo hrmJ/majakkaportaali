@@ -19,7 +19,8 @@ GeneralStructure.InjectableData = function(){
          *
          */
         source.prototype.InitializeInjectableData = function(){ 
-            var self = this;
+            var self = this,
+                path = Utilities.GetAjaxPath("Loader.php");
             $.each(this.injectables,function(identifier, name){ 
                 var $select = $(`<select class='${identifier}_select'><option>Upota ${name}</option></select>`);
                 $select.on("change",function(){
@@ -33,7 +34,8 @@ GeneralStructure.InjectableData = function(){
                         }
                     }
                 });
-                $.getJSON("php/loaders/load_data_for_injection.php",{"fetch": identifier},
+                console.log(identifier);
+                $.getJSON(path, { "action": "get_list_of_" + identifier },
                     function(data){
                         $.each(data,function(idx,el){ 
                             $select.append("<option>" + el + "</option>")

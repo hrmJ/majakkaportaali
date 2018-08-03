@@ -23,11 +23,13 @@ class Structure{
      * @param Medoo $con tietokantayhteys
      * @param Mustache $template_engine Mustache-template engine
      * @param string $slotstring Kaikki messun rakenne-elementit merkkijonona (html)
+     * @param Array $injectables Messuun syötettävät yksittäiset tiedot assosiatiivisena taulukkona (esim. "juontaja" => "Maikki")
      *
      */
     protected $con;
     protected $service_id = 0;
     protected $table = "presentation_structure";
+    protected $injectables = Array();
     public $template_engine;
     public $slotstring = "";
     private $service_specific_created = false;
@@ -449,6 +451,48 @@ class Structure{
     public function UpdateHeaderTemplate($header_id, $params){
         $this->con->update("headers", $params, ["id" => $header_id]);
         return $this;
+    }
+
+
+    /**
+     *
+     * Syöttää messuun käyttäjän määrittelemän upotettavan datan, kuten juontajien nimet yms.
+     * cf. https://stackoverflow.com/questions/963145/variable-scope-for-php-callback-functions#963163
+     *
+     **/
+    function InjectData(){
+        $this->slotstring = preg_replace_callback("/{{([^}]+)}}/",
+            [$this, 'InjectThisPieceOfData'],
+            $this->slotstring);
+        return $this;
+    }
+
+    /**
+     *
+     * Suorittaa yksittäisen datansyöttämisen. Käytetään callback-funktiona replace-funktiolle
+     * @param $matches preg_replace-funktion osumien lista. $m[0] = koko mätsi, 1 = eka backreference jne.
+     *
+     **/
+    function InjectThisPieceOfData($matches){
+        if (!array_key_exists($matches[1], $this->injectables)){
+            //Jos ei vielä haettu tietokannasta tätä informaatiota
+            switch($matches[1]){
+                case "Messun aihe":
+                    $value = $this->con->get("services", "theme", ["id" => $this->service_id]);
+                    break;
+                case "Messun päivämäärä":
+                    $value = $this->con->get("services", "servicedate", ["id" => $this->service_id]);
+                    break;
+                default:
+                    //JOs ei määritelty mitään spesifimpää, etsi vastuut-taulusta
+                    $value = $this->con->query("SELECT responsible FROM responsibilities 
+                        WHERE LOWER(responsibility) = :resp and service_id = :id",
+                        ["resp"=>strtolower($matches[1]),"id"=>$this->service_id])->fetchColumn();
+                    break;
+            }
+            $this->injectables[$matches[1]] = $value;
+        }
+        return $this->injectables[$matches[1]];
     }
 
 

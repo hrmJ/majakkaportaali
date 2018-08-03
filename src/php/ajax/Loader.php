@@ -84,9 +84,13 @@ switch($params["action"]){
         $comment= new Comment($database, $params["service_id"], $m);
         echo $comment->LoadAll();
         break;
-    case "get_responsibilities_list":
+    case "get_list_of_responsibilities":
         $com= new Community($database);
         echo json_encode($com->GetListOfResponsibilities());
+        break;
+    case "get_list_of_service_meta":
+        $com= new Community($database);
+        echo json_encode($com->GetListOfServiceMeta());
         break;
     case "get_responsibles":
         $service = new Service($database, $params["service_id"]);
@@ -210,7 +214,7 @@ switch($params["action"]){
     case "load_slides_to_presentation":
         $structure = new Structure($database, $m);
         $structure->SetAsServiceSpecific($params["service_id"], false);
-        echo $structure->LoadSlidesForPresentation()->slotstring;
+        echo $structure->LoadSlidesForPresentation()->InjectData()->slotstring;
         break;
 }
 

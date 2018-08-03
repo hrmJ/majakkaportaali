@@ -109,7 +109,7 @@ var Comments = function(){
      **/
     function CreateThemeSelect(){
         $.getJSON("php/ajax/Loader.php", {
-            action: "get_responsibilities_list",
+            action: "get_list_of_responsibilities",
             },
             function(data){
                 var $sel = $(".commentdetails select");

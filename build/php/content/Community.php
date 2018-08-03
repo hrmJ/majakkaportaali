@@ -48,6 +48,15 @@ class Community{
         return $available_responsibilities;
     }
 
+    /**
+     *
+     * Hakee muita metatietoja
+     *
+     */
+    public function GetListOfServiceMeta(){
+        return ["Messun aihe","Messun päivämäärä"];
+    }
+
 }
 
 

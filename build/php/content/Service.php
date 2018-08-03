@@ -101,7 +101,8 @@ class Service{
      *
      */
     public function GetResponsibles(){
-        return $this->con->select("responsibilities",["responsibility","responsible"],["service_id" => $this->id]);
+        return $this->con->select("responsibilities", 
+            ["responsibility","responsible"],["service_id" => $this->id]);
     }
 
     /**
