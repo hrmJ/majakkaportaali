@@ -86,6 +86,24 @@ Portal.Menus = function(){
 
     /**
      *
+     * Avaa pudotusmenun
+     *
+     *
+     **/
+    function OpenDropDown(){
+        var $child = $(this).find(".menu-child");
+        $child.css({"top": $(this).height() + "px"});
+        if($(this).hasClass("active-menu")){
+            $child.slideUp(() => $(this).removeClass("active-menu"));
+        }
+        else{
+            $(this).addClass("active-menu");
+            $child.slideDown();
+        }
+    }
+
+    /**
+     *
      * Luo uuden taittomenun
      *
      *
@@ -108,6 +126,11 @@ Portal.Menus = function(){
             menus[name] = new Covermenu(name);
             menus[name].Initialize();
         });
+
+        $(".menu-child").hide();
+        $(".menu-parent").click(OpenDropDown);
+            //.each((idx, el) => $(el).css({"width":$(el).find(".menu-child").width() + "px"}));
+        $("#season-select").selectmenu();
 
         initialized = true;
     

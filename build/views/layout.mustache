@@ -24,15 +24,21 @@
     <nav>
         <span class='hamburger hamburger-icon'></span>
         <div class='dropdown'>
-            <ul>
-                <li><a href="servicelist.php">Messulista</a></li>
-                <li><a href="service_structure.php">Messupohjan asetukset</a></li>
-                <li><a href="#">Messujen syöttö</a></li>
-                <li><a href="#">Vastuiden syöttö</a></li>
-                <li><a href="#">Kirjaudu ulos</a></li>
+            <ul class='menu-container'>
+                <li class='no-menu'><select id="season-select"><option>Kesä 2018</option></select></li>
+                <li class='menu-parent'>Muokkaa
+                    <ul class='menu-child '>
+                        <li>Messuja</li>
+                        <li>Tapahtumia</li>
+                        <li>Vastuita</li>
+                        <li>Messupohjaa</li>
+                        <li>Messukausia</li>
+                    </ul>
+                </li>
+                <li>Käynnistä diaesitys</li>
+                <li>Kirjaudu ulos</li>
             </ul> 
         </div>
-        xx.xx.2018 | Näytä kaikki messut
     </nav>
     <div class="byline">{{{byline}}}</div>
     <main>

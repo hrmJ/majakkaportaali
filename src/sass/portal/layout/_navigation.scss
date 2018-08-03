@@ -12,6 +12,7 @@ nav{
         display: none;
     }
 
+
     li{
         list-style-type:none;
         a{
@@ -54,6 +55,11 @@ a i {
     color:darken($datarowbg,40);
 }
 
+.active-menu{
+    background: darken($navfg,10%);
+    color: $navbg;
+}
+
 
 @include hamburger-icon($navfg, $navheight - 5px);
 
@@ -68,18 +74,66 @@ a i {
             display:none;
         }
 
-        li {
-            //Näytä menu avattuna vaakasuunnassa, jos näyttö tarpeeksi iso
-            display: inline;
-        }
 
-        li + li {
-            margin-left: 10px;
-        }
 
         .dropdown{
+            height:100%;
             margin-top:0px;
             display: block;
+            & > ul{
+            }
+        }
+
+        .menu-parent{
+            position:relative;
+        }
+
+        .menu-child{
+            @include bottomshadow;
+            position: absolute;
+            margin-left:0;
+            left:0;
+            min-width:7em;
+            padding-left:2px;
+            padding-right:2px;
+            background: darken($navfg,10%);
+            color: $navbg;
+            li{
+                height:2em;
+                padding-left:3px;
+                display:flex;
+                align-items:center;
+                &:hover{
+                    background:$navbg;
+                    color:$navfg;
+                }
+            }
+            li:first-child{
+                //border-top:1px dashed $navbg;
+            }
+        }
+
+    }
+
+    .menu-container{
+        height:100%;
+        margin:0;
+
+        & > li {
+            height:100%;
+            display:inline-flex;
+            align-items:center;
+            margin-left: 10px;
+            min-width:7em;
+            padding-left:2px;
+            padding-right:2px;
+
+            &:not(.no-menu):hover{
+                @include pointer;
+                background: darken($navfg,10%);
+                color: $navbg;
+            }
         }
     }
+
 }
