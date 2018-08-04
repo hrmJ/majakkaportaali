@@ -14,6 +14,29 @@ Portal.Servicelist = function(){
 
     /**
      *
+     * Lataa listan vastuista ja muista suodatettavista yksityiskohdista
+     *
+     * @param callback funktio, joka ajetaan kun lataus on valmis
+     *
+     **/
+    function LoadShowList(){
+        var path = Utilities.GetAjaxPath("Loader.php"),
+            $list = $("#show-options").html(""),
+            cl = 'class="launch-action"',
+            promise = $.getJSON(
+                    path,
+                    {action: "get_list_of_responsibilities"}, 
+                    (resps) =>  $list.append(resps.map((resp) => `<li ${cl}>${resp}</li>`))
+                    );
+        $.when(promise).done(() => {
+            //TODO: tämäkin data tietokannasta
+            $list.append("<li ${cl}>teema</li>");
+        });
+    };
+
+
+    /**
+     *
      * Lista kaikista yhden tietyn kauden messuista
      *
      **/
@@ -22,7 +45,7 @@ Portal.Servicelist = function(){
 
         /**
          *
-         * Lataa messulista
+         * Lataa messulistan
          *
          * @param callback funktio, joka ajetaan kun lataus on valmis
          *
@@ -33,6 +56,7 @@ Portal.Servicelist = function(){
                 action: "get_list_of_services"
                 }, callback);
         };
+
 
         /**
          *
@@ -74,6 +98,7 @@ Portal.Servicelist = function(){
     function Initialize(){
         console.log("Initializing the list of services...");
         List_of_services.LoadServices(List_of_services.Output);
+        LoadShowList();
     }
 
     /**
