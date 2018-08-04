@@ -75,12 +75,36 @@ class Servicelist{
      */
     public function ListServicesFilteredBy($filteredby){
 
-        $data = $this->con->query("SELECT res_tab.responsible, ser_tab.servicedate FROM 
-                responsibilities res_tab  LEFT JOIN 
+        $data = $this->con->query("SELECT res_tab.responsible, 
+                        ser_tab.servicedate, ser_tab.id  as service_id
+                FROM responsibilities res_tab  LEFT JOIN 
                 services ser_tab ON res_tab.service_id = ser_tab.id 
                 WHERE res_tab.responsibility = :filteredby",
                 ["filteredby" => $filteredby])->fetchAll();
+
         return $this->FormatDates($data);
+
+    }
+
+
+    /**
+     *
+     * Tallenna kaikki messulistan tietyn vastuun vastuulliset kerralla
+     *
+     * @param $data päivitettävät tietokannan rivit taulukkona
+     *
+     */
+    public function BulkSaveResponsibilities($data){
+
+        foreach($data as $row){
+            $this->con->update("responsibilities",
+                ["responsible" => $row["responsible"]],
+                [
+                    "service_id" => $row["service_id"],
+                    "responsibility" => $row["responsibility"]
+                ]
+            );
+        }
 
     }
 

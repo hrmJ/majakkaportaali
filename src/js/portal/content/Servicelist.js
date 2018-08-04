@@ -83,12 +83,13 @@ Portal.Servicelist = function(){
          **/
         this.FilterServices = function(){
             this.is_editable = true;
-            console.log("EDITABLE!");
             var path = Utilities.GetAjaxPath("Loader.php");
-            $.getJSON(path,{
+            $.when($.getJSON(path,{
                 action: "get_filtered_list_of_services",
                 filteredby: this.filteredby
-                }, this.Output.bind(this));
+                }, this.Output.bind(this))).done(()=>{
+                    $(".byline h2").text(this.filteredby);
+                } );
         };
 
 
@@ -119,7 +120,8 @@ Portal.Servicelist = function(){
                 else{
                     //Muokattava vastuukohtainen lista
                     $li.append(`<span>
-                        <input type='text' value='${service.responsible || ''}'></input>
+                        <input type='text' class='responsible' value='${service.responsible || ''}'></input>
+                        <input type='hidden' class='service_id' value='${service.service_id}'></input>
                         </span>`);
                 }
                 ;
@@ -127,13 +129,45 @@ Portal.Servicelist = function(){
             });
 
             if(!self.is_editable){
-                console.log("THIS IS NOT Editable, huh?");
                 //Lisää siirtyminen messukohtaiseen näkymään:
                 $(".service_link_li").click(function(){
                     var id = $(this).attr("id").replace(/.*id_(\d+)/,"$1");
                     window.location = window.location.href = "service.php?service_id=" + id;
                 });
+                $("#savebutton").hide();
             }
+            else{
+                $("#savebutton").show();
+            }
+        };
+
+        /**
+         *
+         * Tallentaa vastuisiin tehdyt muutokset
+         *
+         */
+        this.Save = function(){
+            var self = this,
+                data = [],
+                path = Utilities.GetAjaxPath("Saver.php");
+
+            $("#servicelist").find(".service_link_li").each(
+                function(){
+                    data.push({
+                        "service_id": $(this).find(".service_id").val(),
+                        "responsibility": self.filteredby,
+                        "responsible": $(this).find(".responsible").val()
+                    });
+                }
+                );
+            $.post(path,{
+                "action":"bulksave_responsibilities",
+                "params": data
+            }, (debugdata) => {
+                var msg = new Utilities.Message("Tiedot tallennettu", $("#savebutton_container"));
+                msg.Show(2800);
+                console.log(debugdata);
+            });
         };
     }
 
@@ -148,6 +182,7 @@ Portal.Servicelist = function(){
         console.log("Initializing the list of services...");
         list_of_services.LoadServices();
         LoadShowList();
+        $("#savebutton").click(list_of_services.Save.bind(list_of_services));
     }
 
     /**

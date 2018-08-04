@@ -113,6 +113,10 @@ switch($params["action"]){
             echo $database->max("songdata","id");
         }
         break;
+    case "bulksave_responsibilities":
+        $servicelist = new Servicelist($database);
+        $servicelist->BulkSaveResponsibilities($params["params"]);
+        break;
 }
 
 
