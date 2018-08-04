@@ -73,7 +73,7 @@ Portal.Servicelist = function(){
             var path = Utilities.GetAjaxPath("Loader.php");
             $.getJSON(path,{
                 action: "get_list_of_services"
-                }, this.Output);
+                }, this.Output.bind(this));
         };
 
         /**
@@ -83,11 +83,12 @@ Portal.Servicelist = function(){
          **/
         this.FilterServices = function(){
             this.is_editable = true;
+            console.log("EDITABLE!");
             var path = Utilities.GetAjaxPath("Loader.php");
             $.getJSON(path,{
                 action: "get_filtered_list_of_services",
                 filteredby: this.filteredby
-                }, this.Output);
+                }, this.Output.bind(this));
         };
 
 
@@ -99,8 +100,9 @@ Portal.Servicelist = function(){
          *
          **/
         this.Output = function(data){
+            var prevmonth = 0,
+                self = this;
             $("#servicelist").html("");
-            var prevmonth = 0;
             $.each(data,function(idx, service){
                 thismonth = service.servicedate.replace(/\d+\.(\d+)\.\d+/g,"$1") * 1 ;
                 if (thismonth != prevmonth){
@@ -110,18 +112,22 @@ Portal.Servicelist = function(){
                 var $li = $(`<li class='service_link_li' id="service_id_${service.id}">
                     <span>${service.servicedate}</span>
                     </li>`);
-                if(!this.is_editable && service.theme){
+                if(!self.is_editable && service.theme){
+                    //Ei muokattava, vaan messulinkit sisältävä lista
                     $li.append(`<span>${service.theme}</span>`)
                 }
                 else{
-                    console.log(service);
-                    $li.append(`<span>${service.responsible || ''}</span>`)
+                    //Muokattava vastuukohtainen lista
+                    $li.append(`<span>
+                        <input type='text' value='${service.responsible || ''}'></input>
+                        </span>`);
                 }
                 ;
                 $("#servicelist").append($li);
             });
 
-            if(!this.is_editable){
+            if(!self.is_editable){
+                console.log("THIS IS NOT Editable, huh?");
                 //Lisää siirtyminen messukohtaiseen näkymään:
                 $(".service_link_li").click(function(){
                     var id = $(this).attr("id").replace(/.*id_(\d+)/,"$1");
