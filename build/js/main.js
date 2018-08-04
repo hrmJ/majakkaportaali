@@ -2352,9 +2352,11 @@ Portal.Servicelist = function(){
         $.when(promise).done(() => {
             //TODO: tämäkin data tietokannasta
             //$list.append("<li ${cl}>teema</li>");
-            $list.find(".launch-action").click( function() {
-                list_of_services.FilterServices($(this).text(), 
-                    list_of_services.Output.bind(list_of_services))});
+            $list.find(".launch-action").click(function(){
+                 list_of_services.SetFilteredBy($(this).text());
+                 list_of_services.FilterServices.bind(list_of_services)();
+                }
+            );
         });
     };
 
@@ -2366,36 +2368,46 @@ Portal.Servicelist = function(){
      **/
     var List = function(){
     
+        this.is_editable = false;
+        this.filterby = "";
+
+
+        /**
+         *
+         * Merkitsee, että lista on suodatettu jonkin vastuun tms. mukaan
+         *
+         * @param filterby minkä mukaan on suodatettu
+         *
+         */
+        this.SetFilteredBy = function(filterby){
+            this.filteredby = filterby;
+            return this;
+        }
 
         /**
          *
          * Lataa messulistan
          *
-         * @param callback funktio, joka ajetaan kun lataus on valmis
-         *
          **/
-        this.LoadServices = function(callback){
+        this.LoadServices = function(){
             var path = Utilities.GetAjaxPath("Loader.php");
             $.getJSON(path,{
                 action: "get_list_of_services"
-                }, callback);
+                }, this.Output);
         };
 
         /**
          *
          * Lataa messulistan vain jonkin vastuun osalta
          *
-         * @param filterby minkä perusteella suodatetaan
-         * @param callback funktio, joka ajetaan kun lataus on valmis
-         *
          **/
-        this.FilterServices = function(filterby, callback){
+        this.FilterServices = function(){
+            this.is_editable = true;
             var path = Utilities.GetAjaxPath("Loader.php");
-            console.log("Filtering by " + filterby);
             $.getJSON(path,{
                 action: "get_filtered_list_of_services",
-                filteredby: filterby
-                }, callback);
+                filteredby: this.filteredby
+                }, this.Output);
         };
 
 
@@ -2415,18 +2427,27 @@ Portal.Servicelist = function(){
                     prevmonth = thismonth;
                     $("#servicelist").append(`<li>${MonthName(thismonth)}</li>`);
                 }
-                $("#servicelist").append(`
-                    <li class='service_link_li' id="service_id_${service.id}">
+                var $li = $(`<li class='service_link_li' id="service_id_${service.id}">
                     <span>${service.servicedate}</span>
-                    </li>
-                    `);
+                    </li>`);
+                if(!this.is_editable && service.theme){
+                    $li.append(`<span>${service.theme}</span>`)
+                }
+                else{
+                    console.log(service);
+                    $li.append(`<span>${service.responsible || ''}</span>`)
+                }
+                ;
+                $("#servicelist").append($li);
             });
-            //
-            ////Lisää siirtyminen messukohtaiseen näkymään:
-            //$(".service_link_li").click(function(){
-            //    var id = $(this).attr("id").replace(/.*id_(\d+)/,"$1");
-            //    window.location = window.location.href = "service.php?service_id=" + id;
-            //});
+
+            if(!this.is_editable){
+                //Lisää siirtyminen messukohtaiseen näkymään:
+                $(".service_link_li").click(function(){
+                    var id = $(this).attr("id").replace(/.*id_(\d+)/,"$1");
+                    window.location = window.location.href = "service.php?service_id=" + id;
+                });
+            }
         };
     }
 
@@ -2439,7 +2460,7 @@ Portal.Servicelist = function(){
      **/
     function Initialize(){
         console.log("Initializing the list of services...");
-        list_of_services.LoadServices(list_of_services.Output);
+        list_of_services.LoadServices();
         LoadShowList();
     }
 
