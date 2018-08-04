@@ -177,6 +177,11 @@ switch($params["action"]){
         $servicelist->SetSeason();
         echo json_encode($servicelist->ListServices());
         break;
+    case "get_filtered_list_of_services":
+        $servicelist = new Servicelist($database);
+        $servicelist->SetSeason();
+        echo json_encode($servicelist->ListServicesFilteredBy($params["filteredby"]));
+        break;
     case "get_songlist_alpha":
         $songlist = new Songlist($database, $params["service_id"], $m);
         echo json_encode($songlist->GetAlphabets());

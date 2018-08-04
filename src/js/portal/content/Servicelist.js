@@ -9,7 +9,8 @@ var Portal = Portal || {};
 
 Portal.Servicelist = function(){
 
-    season = "?";
+    var season = "?",
+        list_of_services = undefined;
 
 
     /**
@@ -21,7 +22,7 @@ Portal.Servicelist = function(){
      **/
     function LoadShowList(){
         var path = Utilities.GetAjaxPath("Loader.php"),
-            $list = $("#show-options").html(""),
+            $list = $("#show-options").html("<li>yleisnäkymä</li>"),
             cl = 'class="launch-action"',
             promise = $.getJSON(
                     path,
@@ -30,7 +31,10 @@ Portal.Servicelist = function(){
                     );
         $.when(promise).done(() => {
             //TODO: tämäkin data tietokannasta
-            $list.append("<li ${cl}>teema</li>");
+            //$list.append("<li ${cl}>teema</li>");
+            $list.find(".launch-action").click( function() {
+                list_of_services.FilterServices($(this).text(), 
+                    list_of_services.Output.bind(list_of_services))});
         });
     };
 
@@ -57,6 +61,23 @@ Portal.Servicelist = function(){
                 }, callback);
         };
 
+        /**
+         *
+         * Lataa messulistan vain jonkin vastuun osalta
+         *
+         * @param filterby minkä perusteella suodatetaan
+         * @param callback funktio, joka ajetaan kun lataus on valmis
+         *
+         **/
+        this.FilterServices = function(filterby, callback){
+            var path = Utilities.GetAjaxPath("Loader.php");
+            console.log("Filtering by " + filterby);
+            $.getJSON(path,{
+                action: "get_filtered_list_of_services",
+                filteredby: filterby
+                }, callback);
+        };
+
 
         /**
          *
@@ -77,18 +98,19 @@ Portal.Servicelist = function(){
                 $("#servicelist").append(`
                     <li class='service_link_li' id="service_id_${service.id}">
                     <span>${service.servicedate}</span>
-                    <span>${service.theme}</span>
                     </li>
                     `);
             });
-            
-            //Lisää siirtyminen messukohtaiseen näkymään:
-            $(".service_link_li").click(function(){
-                var id = $(this).attr("id").replace(/.*id_(\d+)/,"$1");
-                window.location = window.location.href = "service.php?service_id=" + id;
-            });
+            //
+            ////Lisää siirtyminen messukohtaiseen näkymään:
+            //$(".service_link_li").click(function(){
+            //    var id = $(this).attr("id").replace(/.*id_(\d+)/,"$1");
+            //    window.location = window.location.href = "service.php?service_id=" + id;
+            //});
         };
     }
+
+
 
     /**
      *
@@ -97,7 +119,7 @@ Portal.Servicelist = function(){
      **/
     function Initialize(){
         console.log("Initializing the list of services...");
-        List_of_services.LoadServices(List_of_services.Output);
+        list_of_services.LoadServices(list_of_services.Output);
         LoadShowList();
     }
 
@@ -116,7 +138,7 @@ Portal.Servicelist = function(){
     }
 
     //Alustetaan eri osiot
-    var List_of_services = new List();
+    list_of_services = new List();
 
     return {
         Initialize,

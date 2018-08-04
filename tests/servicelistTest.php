@@ -65,6 +65,16 @@ class ServicelistTest extends TestCase
         $this->assertTrue(sizeof($servicelist->ListServices())>0);
     }
 
+    /**
+     * Testaa hakea tämän kauden kaikki messut filtteröitynä
+     */
+    public function testListServicesFilteredBy()
+    {
+        $servicelist = new Servicelist($this->con);
+        $servicelist->SetSeason();
+        $result = $servicelist->ListServicesFilteredBy("diat");
+    }
+
 
 
 }

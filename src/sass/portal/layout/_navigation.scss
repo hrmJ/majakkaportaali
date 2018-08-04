@@ -94,10 +94,11 @@ a i {
             margin-left:0;
             left:0;
             min-width:7em;
-            padding-left:2px;
-            padding-right:2px;
+            padding-left:0px;
+            padding-right:0px;
             background: darken($navfg,10%);
             color: $navbg;
+            z-index:200;
             li{
                 height:2em;
                 padding-left:3px;

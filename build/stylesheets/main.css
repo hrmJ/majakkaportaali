@@ -194,10 +194,11 @@ a i {
     margin-left: 0;
     left: 0;
     min-width: 7em;
-    padding-left: 2px;
-    padding-right: 2px;
+    padding-left: 0px;
+    padding-right: 0px;
     background: #e6e6e6;
-    color: #262626; }
+    color: #262626;
+    z-index: 200; }
     nav .menu-child li {
       height: 2em;
       padding-left: 3px;

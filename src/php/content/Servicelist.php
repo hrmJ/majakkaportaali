@@ -37,7 +37,6 @@ class Servicelist{
      *
      */
     public function ListServices(){
-        $df = new utilities\DateFormatter();
         $dates_and_themes = $this->con->select("services",
             ["servicedate", "theme", "id"],
             ["AND" => [
@@ -46,12 +45,43 @@ class Servicelist{
             ["ORDER" => [
                 ["servicedate" => "ASC"]
             ]]);
-        foreach($dates_and_themes as $idx => $entry){
-            $dates_and_themes[$idx]["servicedate"] = $df
+        return $this->FormatDates($dates_and_themes);
+    }
+
+    /**
+     *
+     * Muotoile päivämäärät
+     *
+     *
+     * @param $data muokattava taulukko, jonka joka solussa yksi 'servicedate'-key
+     *
+     */
+    public function FormatDates($data){
+        $df = new utilities\DateFormatter();
+        foreach($data as $idx => $entry){
+            $data[$idx]["servicedate"] = $df
                 ->SetDate($entry["servicedate"])
                 ->FormatDate();
         }
-        return $dates_and_themes;
+        return $data;
+    }
+
+    /**
+     *
+     * Listaa tietyt vastuut kaikista nykyisen kauden messuista
+     *
+     * @param $filteredby minkä mukaan suodatetaan
+     *
+     */
+    public function ListServicesFilteredBy($filteredby){
+
+        $data = $this->con->query("SELECT res_tab.responsible, ser_tab.servicedate FROM 
+                responsibilities res_tab  LEFT JOIN 
+                services ser_tab ON res_tab.service_id = ser_tab.id 
+                WHERE res_tab.responsibility = :filteredby",
+                ["filteredby" => $filteredby])->fetchAll();
+        return $this->FormatDates($data);
+
     }
 
     /**
