@@ -10,7 +10,8 @@ var Portal = Portal || {};
 Portal.Servicelist = function(){
 
     var season = "?",
-        list_of_services = undefined;
+        list_of_services = undefined,
+        manageable_lists = {};
 
 
     /**
@@ -45,7 +46,7 @@ Portal.Servicelist = function(){
      *
      * Lista kaikista yhden tietyn kauden messuista
      *
-     **/
+     */
     var List = function(){
     
         this.is_editable = false;
@@ -179,10 +180,15 @@ Portal.Servicelist = function(){
      *
      **/
     function Initialize(){
+        var list_type = '';
         console.log("Initializing the list of services...");
         list_of_services.LoadServices();
         LoadShowList();
         $("#savebutton").click(list_of_services.Save.bind(list_of_services));
+        $(".covermenu-target_managelist").each(function(){
+            var list = Portal.ManageableLists.ListFactory.make($(this));
+            $(this).click(list.LoadList.bind(list));
+        });
     }
 
     /**

@@ -79,6 +79,7 @@ gulp.task("js",function(){
                    "js/portal/content/tabs/Structure",
                    "js/portal/content/tabs/Infoslides",
                    "js/portal/content/tabs/Songs",
+                   "js/portal/content/ManageableLists",
                    "js/portal/content/Servicelist",
                    "js/portal/service_structure/GeneralStructure",
                    "js/portal/service_structure/songslide",

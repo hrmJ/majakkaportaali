@@ -84,6 +84,7 @@ switch($params["action"]){
         $comment= new Comment($database, $params["service_id"], $m);
         echo $comment->LoadAll();
         break;
+    case "mlist_Responsibilities":
     case "get_list_of_responsibilities":
         $com= new Community($database);
         echo json_encode($com->GetListOfResponsibilities());
@@ -172,6 +173,7 @@ switch($params["action"]){
         $structure = new Structure($database, $m);
         echo json_encode($structure->LoadSlideImageDescription($params["filename"]));
         break;
+    case "mlist_Services":
     case "get_list_of_services":
         $servicelist = new Servicelist($database);
         $servicelist->SetSeason();
