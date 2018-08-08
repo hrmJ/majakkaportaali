@@ -52,7 +52,6 @@ Portal.Menus = function(){
             if(this.$launcher.length){
                 this.$launcher.click(this.OpenMenu.bind(this));
             }
-        
         }
 
     
@@ -68,7 +67,7 @@ Portal.Menus = function(){
             //koska näitä voi olla kerrallaan näkyvissä vain yksi.
             $(".covermenu").hide();
             this.$menu.show();
-            Utilities.BlurContent();
+            //Utilities.BlurContent();
         }
 
         /**
@@ -79,7 +78,7 @@ Portal.Menus = function(){
          **/
         this.CloseMenu = function(){
             this.$menu.hide();
-            $(".blurcover").remove();
+            //$(".blurcover").remove();
         }
         
     }
@@ -133,6 +132,7 @@ Portal.Menus = function(){
         $("#season-select").selectmenu();
 
         initialized = true;
+        $(".covermenu").appendTo("main");
     
     }
 

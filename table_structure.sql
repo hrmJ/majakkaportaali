@@ -31,6 +31,24 @@ CREATE TABLE `services` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+
+--
+--
+
+DROP TABLE IF EXISTS `responsibilities_meta`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `responsibilities_meta` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `responsibility` varchar(100) DEFAULT NULL,
+  `description` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+
+
 --
 -- Table structure for table `vastuut`
 --

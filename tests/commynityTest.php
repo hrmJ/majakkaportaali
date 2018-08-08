@@ -44,6 +44,16 @@ class CommunityTest extends TestCase
         $this->assertTrue(sizeof($community->GetListOfResponsibilities())>0);
     }
 
+    /**
+     * Testaa, että vastuiden listan voi tulostaa
+     */
+    public function testGetResponsibilitymeta()
+    {
+        $community= new Community($this->con);
+        $meta = $community->GetResponsibilityMeta("diat");
+        var_dump($meta);
+    }
+
 }
 
 

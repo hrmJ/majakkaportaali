@@ -39,13 +39,24 @@ class Community{
 
     /**
      *
-     * Hae kaikki käytössä olevat vastuutyypit ja palauta lista niistä
+     * Hakee kaikki käytössä olevat vastuutyypit ja palauttaa listan niistä
      *
      */
     public function GetListOfResponsibilities(){
         $available_responsibilities = $this->con->query("SELECT DISTINCT responsibility FROM responsibilities")
             ->fetchAll(PDO::FETCH_COLUMN);
         return $available_responsibilities;
+    }
+
+
+    /**
+     *
+     * Hakee yhtä tiettyä vastuuta koskevan metadatan
+     *
+     */
+    public function GetResponsibilityMeta($responsibility){
+        return $this->con->get("responsibilities_meta", ["description"], 
+            ["responsibility" => $responsibility]);
     }
 
     /**

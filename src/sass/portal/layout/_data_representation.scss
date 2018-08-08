@@ -1,9 +1,6 @@
-
-
 .editable_data_list{
     // li-elementit, joiden toisena osana muokattavat tiedot
     padding:0;
-
 
     input{
         outline: none;
@@ -40,6 +37,25 @@
     
     }
 
+
+}
+
+.label_parent{
+    display:flex;
+    flex-flow: row wrap;
+    align-items:center;
+
+
+    > div:first-child{
+        width:6em;
+        margin-right:1em;
+    }
+
+    & + & {
+
+        margin-top:1em;
+    
+    }
 
 }
 

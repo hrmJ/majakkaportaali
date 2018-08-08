@@ -117,6 +117,10 @@ switch($params["action"]){
         $servicelist = new Servicelist($database);
         $servicelist->BulkSaveResponsibilities($params["params"]);
         break;
+    case "save_edited_Responsibilities":
+        $servicelist = new Servicelist($database);
+        $servicelist->SaveEditedResponsibility($params["params"]);
+        break;
 }
 
 

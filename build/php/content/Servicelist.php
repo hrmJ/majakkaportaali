@@ -108,6 +108,31 @@ class Servicelist{
 
     }
 
+
+    /**
+     *
+     * Tallenna kaikki messulistan tietyn vastuun vastuulliset kerralla
+     *
+     * @param $data päivitettävät tietokannan rivit taulukkona
+     *
+     */
+    public function SaveEditedResponsibility($data){
+        $this->con->update("responsibilities",
+            [
+                "responsibility" => $data["new_responsibility"]
+            ],
+            ["responsibility" => $data["old_responsibility"]]
+        );
+        $this->con->delete("responsibilities_meta",
+            ["responsibility" => $data["old_responsibility"]]);
+        $this->con->insert("responsibilities_meta",
+            [
+                "responsibility" => $data["new_responsibility"],
+                "description" => $data["description"]
+            ] );
+    }
+
+
     /**
      *
      * Valitsee sen messukauden, joka on lähinnä nykyistä päivämäärää.

@@ -27,11 +27,14 @@ nav{
     top:0;
     left:0;
     background:white;
-    transition: 4s;
-    width:100vw;
-    height:200vh;
-    padding:1em 0em 0em 2em;
+    //transition: 4s;
+    width:100%;
+    height:100%;
+    //padding:1em 0em 0em 2em;
     z-index:10;
+    > div {
+        padding:1em 0em 0em 2em;
+    }
 }
 
 .hanging_menu{
