@@ -1,5 +1,12 @@
 //Navigointipalkin ulkoasu
 
+.covermenu a {
+    color: $navbg;
+    &:visited{
+        color: lighten($navbg, 10%);
+    }
+}
+
 nav{
     position:relative;
     height: $navheight;
@@ -17,7 +24,17 @@ nav{
         list-style-type:none;
         a{
             color: $navfg;
+
+            i {
+            
+            color: $navfg;
+            
+            }
         }
+    }
+
+    .fa-arrow-left{
+    
     }
 }
 
@@ -138,6 +155,15 @@ a i {
                 color: $navbg;
             }
         }
+    }
+
+}
+
+
+a{
+
+    .fa-arrow-left{
+        margin-right:0.7em;
     }
 
 }

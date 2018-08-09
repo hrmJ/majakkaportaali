@@ -89,6 +89,10 @@ switch($params["action"]){
         $com= new Community($database);
         echo json_encode($com->GetListOfResponsibilities());
         break;
+    case "mlist_Seasons":
+        $com = new Community($database);
+        echo json_encode($com->GetListOfSeasons());
+        break;
     case "get_responsibility_meta":
         $com= new Community($database);
         echo json_encode($com->GetResponsibilityMeta($params["responsibility"]));

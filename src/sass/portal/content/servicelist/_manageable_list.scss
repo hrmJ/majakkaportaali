@@ -1,0 +1,51 @@
+
+.manageable_list{
+
+    ul{
+        padding-left:0;
+    }
+
+    li {
+        //max-width:20em;
+        list-style-type:none;
+        margin-top:0.5em;
+
+
+        *{
+            margin-right:0.4em;
+        }
+
+    }
+}
+
+.list_editor_box{
+    position: absolute;
+    @include shadow;
+    top:5px;
+    left:5px;
+    background:darken(white, 3%);
+    min-height: 5em;
+    min-width: 10em;
+    padding:0.5em;
+}
+
+.edit_container > div{
+    display:flex;
+    flex-flow: row wrap;
+}
+
+.editable_data_list{
+
+    textarea{
+        min-height:7em;
+        min-width:10em;
+    }
+
+}
+
+.adder_li{
+    margin-top:1em;
+    list-style-type:none;
+    //display:flex;
+    //justify-content: flex-end;
+}

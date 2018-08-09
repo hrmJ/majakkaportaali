@@ -51,8 +51,21 @@ class CommunityTest extends TestCase
     {
         $community= new Community($this->con);
         $meta = $community->GetResponsibilityMeta("diat");
-        var_dump($meta);
+        $this->assertTrue(sizeof($meta)>0);
     }
+
+    /**
+     *
+     * Testaa, että vastuiden listan voi tulostaa
+     *
+     */
+    public function testGetSeasonlist()
+    {
+        $community= new Community($this->con);
+        $meta = $community->GetListOfSeasons();
+        $this->assertTrue(sizeof($meta)>0);
+    }
+
 
 }
 

@@ -40,6 +40,7 @@ Portal.ManageableLists = function(){
      *
      */
     ListFactory.prototype.PrintList = function(data){
+        console.log("MOROOO");
        $("#managelist .manageable_list").html("");
        $("#managelist .list_header").text(this.list_header);
        $("#managelist .description").hide();
@@ -48,12 +49,15 @@ Portal.ManageableLists = function(){
            self = this,
            $li = $(`<li>
                    <span></span><i class='fa fa-pencil'></i><i class='fa fa-trash'></i>
-                   </li>`);
+                   </li>`),
+           $plus = $("<li class='adder_li'> <i class='fa fa-plus'></i></li>")
+            .click(this.AddEntry.bind(this));
        $li.find(".fa-pencil").click(this.StartEdit.bind(this));
        $li.find(".fa-trash").click(this.RemoveEntry.bind(this));
        $.each(data, function(idx, row){
            $ul.append(self.AddListRow(row, $li.clone(true)));
        });
+       $ul.append($plus);
     };
 
 
@@ -215,7 +219,6 @@ Portal.ManageableLists = function(){
          *
          * Lisää uuden alkion listaan.
          *
-         * TODO kaikille tyypeille yhteinen lähtötilanne?
          *
          */
         this.AddEntry = function(){
@@ -290,6 +293,30 @@ Portal.ManageableLists = function(){
      */
     ListFactory.Seasons = function(){
     
+
+        /**
+         *
+         * @param raw_data tarvittavat tiedot tietokannasta
+         * @param $li muokattava ja palautettava listaelementti
+         *
+         */
+        this.AddListRow = function(raw_data, $li){
+            var text = `${raw_data.name} ${raw_data.startdate} - ${raw_data.enddate}`;
+            $li.find("span").text(text);
+            return $li;
+        }
+
+
+        /**
+         *
+         * Lisää uuden alkion listaan.
+         *
+         *
+         */
+        this.AddEntry = function(){
+        
+        
+        };
     
     };
 

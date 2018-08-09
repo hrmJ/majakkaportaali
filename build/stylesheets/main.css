@@ -111,6 +111,11 @@ main {
 
   .inner-title {
     display: none; } }
+.covermenu a {
+  color: #262626; }
+  .covermenu a:visited {
+    color: #404040; }
+
 nav {
   position: relative;
   height: 40px;
@@ -124,6 +129,8 @@ nav {
     list-style-type: none; }
     nav li a {
       color: #ffffff; }
+      nav li a i {
+        color: #ffffff; }
 
 .covermenu {
   position: absolute;
@@ -222,6 +229,9 @@ a i {
         cursor: pointer;
         background: #e6e6e6;
         color: #262626; } }
+a .fa-arrow-left {
+  margin-right: 0.7em; }
+
 .form-input-container select {
   width: 100%; }
 
@@ -443,6 +453,14 @@ h3 {
     font-size: 1.2em;
     margin-right: 1em; }
 
+.manageable_list ul {
+  padding-left: 0; }
+.manageable_list li {
+  list-style-type: none;
+  margin-top: 0.5em; }
+  .manageable_list li * {
+    margin-right: 0.4em; }
+
 .list_editor_box {
   position: absolute;
   -moz-box-shadow: 2px 2px 8px 4px #5f5f5f;
@@ -462,6 +480,10 @@ h3 {
 .editable_data_list textarea {
   min-height: 7em;
   min-width: 10em; }
+
+.adder_li {
+  margin-top: 1em;
+  list-style-type: none; }
 
 .slidemodel {
   position: relative;

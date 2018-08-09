@@ -45,7 +45,7 @@ Portal.Menus = function(){
          */
         this.Initialize = function(){
             var $close = $(`<div class='closer_div' id='close_covermenu'>
-                   <a href='javascript:void(0);'>Sulje valikko</a>
+                   <a href='javascript:void(0);'><i class='fa fa-arrow-left'></i> Takaisin</a>
                 </div>`)
                 .click(this.CloseMenu.bind(this))
                 .prependTo(this.$menu);

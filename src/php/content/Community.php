@@ -9,6 +9,7 @@
 namespace Portal\content;
 
 use Medoo\Medoo;
+use Portal\utilities;
 use PDO;
 
 
@@ -61,12 +62,35 @@ class Community{
 
     /**
      *
-     * Hakee muita metatietoja
+     * Hakee kaikki tietokantaan listatut kaudet
      *
+     */
+    public function GetListOfSeasons(){
+        $data = [];
+        $seasons = $this->con->select("seasons",
+            ["name", "startdate", "enddate","theme","comments"]);
+        $df = new utilities\DateFormatter();
+        foreach($seasons as $idx => $entry){
+            $formatted = $entry;
+            $formatted["startdate"] = $df
+                ->SetDate($entry["startdate"])
+                ->FormatDate();
+            $formatted["enddate"] = $df
+                ->SetDate($entry["enddate"])
+                ->FormatDate();
+            $data[] = $formatted;
+        }
+        return $data;
+    }
+
+
+    /**
+     * Hakee muita metatietoja
      */
     public function GetListOfServiceMeta(){
         return ["Messun aihe","Messun päivämäärä"];
     }
+
 
 }
 

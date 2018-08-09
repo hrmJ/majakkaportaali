@@ -21,7 +21,15 @@
     <header>
         <h1>Majakkaportaali</h1>
     </header>
-    <nav>
+    <nav  id="service_structure_menu">
+        <span class='hamburger hamburger-icon'></span>
+        <div class='dropdown'>
+            <ul class='menu-container'>
+                <li class='no-menu'><a href='index.php'><i class='fa fa-arrow-left'></i>&nbsp;Palaa messulistanäkymään</a></li>
+            </ul> 
+        </div>
+    </nav>
+    <nav  id="servicelist_menu">
         <span class='hamburger hamburger-icon'></span>
         <div class='dropdown'>
             <ul class='menu-container'>
@@ -46,9 +54,9 @@
                         </li>
                         <li class='covermenu-launcher covermenu-target_managelist'>Messukausia
                             <input type='hidden' class='list_type' value='Seasons'></input>
-                            <input type='hidden' class='list_header'value='Messukausien hallinta'></input>
+                            <input type='hidden' class='list_header' value='Messukausien hallinta'></input>
                         </li>
-                        <li >Messupohjaa</li>
+                        <li class="link_li" id="structure_launcher">Messupohjaa</li>
                     </ul>
                 </li>
                 <li>Käynnistä diaesitys</li>

@@ -185,10 +185,13 @@ Portal.Servicelist = function(){
         list_of_services.LoadServices();
         LoadShowList();
         $("#savebutton").click(list_of_services.Save.bind(list_of_services));
+        $("#structure_launcher").click(() => window.location="service_structure.php");
         $(".covermenu-target_managelist").each(function(){
             var list = Portal.ManageableLists.ListFactory.make($(this));
             $(this).click(list.LoadList.bind(list));
         });
+        $("nav").hide();
+        $("#servicelist_menu").show();
     }
 
     /**

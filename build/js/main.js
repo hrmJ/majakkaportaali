@@ -544,7 +544,7 @@ Portal.Menus = function(){
          */
         this.Initialize = function(){
             var $close = $(`<div class='closer_div' id='close_covermenu'>
-                   <a href='javascript:void(0);'>Sulje valikko</a>
+                   <a href='javascript:void(0);'><i class='fa fa-arrow-left'></i> Takaisin</a>
                 </div>`)
                 .click(this.CloseMenu.bind(this))
                 .prependTo(this.$menu);
@@ -2360,6 +2360,7 @@ Portal.ManageableLists = function(){
      *
      */
     ListFactory.prototype.PrintList = function(data){
+        console.log("MOROOO");
        $("#managelist .manageable_list").html("");
        $("#managelist .list_header").text(this.list_header);
        $("#managelist .description").hide();
@@ -2368,12 +2369,15 @@ Portal.ManageableLists = function(){
            self = this,
            $li = $(`<li>
                    <span></span><i class='fa fa-pencil'></i><i class='fa fa-trash'></i>
-                   </li>`);
+                   </li>`),
+           $plus = $("<li class='adder_li'> <i class='fa fa-plus'></i></li>")
+            .click(this.AddEntry.bind(this));
        $li.find(".fa-pencil").click(this.StartEdit.bind(this));
        $li.find(".fa-trash").click(this.RemoveEntry.bind(this));
        $.each(data, function(idx, row){
            $ul.append(self.AddListRow(row, $li.clone(true)));
        });
+       $ul.append($plus);
     };
 
 
@@ -2535,7 +2539,6 @@ Portal.ManageableLists = function(){
          *
          * Lisää uuden alkion listaan.
          *
-         * TODO kaikille tyypeille yhteinen lähtötilanne?
          *
          */
         this.AddEntry = function(){
@@ -2610,6 +2613,30 @@ Portal.ManageableLists = function(){
      */
     ListFactory.Seasons = function(){
     
+
+        /**
+         *
+         * @param raw_data tarvittavat tiedot tietokannasta
+         * @param $li muokattava ja palautettava listaelementti
+         *
+         */
+        this.AddListRow = function(raw_data, $li){
+            var text = `${raw_data.name} ${raw_data.startdate} - ${raw_data.enddate}`;
+            $li.find("span").text(text);
+            return $li;
+        }
+
+
+        /**
+         *
+         * Lisää uuden alkion listaan.
+         *
+         *
+         */
+        this.AddEntry = function(){
+        
+        
+        };
     
     };
 
@@ -2811,10 +2838,13 @@ Portal.Servicelist = function(){
         list_of_services.LoadServices();
         LoadShowList();
         $("#savebutton").click(list_of_services.Save.bind(list_of_services));
+        $("#structure_launcher").click(() => window.location="service_structure.php");
         $(".covermenu-target_managelist").each(function(){
             var list = Portal.ManageableLists.ListFactory.make($(this));
             $(this).click(list.LoadList.bind(list));
         });
+        $("nav").hide();
+        $("#servicelist_menu").show();
     }
 
     /**
@@ -3000,6 +3030,8 @@ var GeneralStructure = function(){
     function Initialize(menuselector){
         InitializeNewslotMenu(menuselector);
         InitializeSlotFunctionality();
+        $("nav").hide();
+        $("#service_structure_menu").show();
     }
 
 
