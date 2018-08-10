@@ -2360,7 +2360,6 @@ Portal.ManageableLists = function(){
      *
      */
     ListFactory.prototype.PrintList = function(data){
-        console.log("MOROOO");
        $("#managelist .manageable_list").html("");
        $("#managelist .list_header").text(this.list_header);
        $("#managelist .description").hide();
@@ -2381,14 +2380,6 @@ Portal.ManageableLists = function(){
     };
 
 
-    /**
-     *
-     * Poistaa yhden listan alkion
-     *
-     */
-    ListFactory.prototype.RemoveEntry = function(){
-        console.log("REmoving");
-    };
 
     /**
      *
@@ -2429,6 +2420,20 @@ Portal.ManageableLists = function(){
         this.EditEntry();
     };
 
+    /**
+     *
+     * Poistaa yhden listan alkion
+     *
+     * @param e tapahtuma
+     *
+     */
+    ListFactory.prototype.RemoveEntry = function(e){
+        var path = Utilities.GetAjaxPath("Saver.php");
+            $li = $(e.target).parent();
+        $.post(path,
+            this.GetRemoveParams($li),
+            this.LoadList.bind(this));
+    };
 
 
     /**
@@ -2465,6 +2470,7 @@ Portal.ManageableLists = function(){
          *
          */
         this.AddListRow = function(raw_data, $li){
+            console.log(raw_data);
             $li.find("span").text(raw_data);
             return $li;
         }
@@ -2535,6 +2541,21 @@ Portal.ManageableLists = function(){
             );
         };
 
+
+        /**
+         *
+         * Hakee alkion poistoa varten tarvittavat listatyyppikohtaiset parametrit
+         *
+         * @param $li se listan alkio, jota ollaan poistamassa.
+         *
+         */
+        this.GetRemoveParams = function($li){
+            return {
+                "responsibility" : $li.find("span").text(),
+                "action" : "remove_responsibility"
+            };
+        }
+
         /**
          *
          * Lisää uuden alkion listaan.
@@ -2545,6 +2566,7 @@ Portal.ManageableLists = function(){
         
         
         };
+
     
     };
 
@@ -2590,6 +2612,15 @@ Portal.ManageableLists = function(){
         
         };
 
+
+        /**
+         *
+         * Poistaa yhden listan alkion
+         *
+         */
+        this.RemoveEntry = function(){
+            console.log("REmoving");
+        };
     
     };
 
@@ -2636,6 +2667,15 @@ Portal.ManageableLists = function(){
         this.AddEntry = function(){
         
         
+        };
+
+        /**
+         *
+         * Poistaa yhden listan alkion
+         *
+         */
+        this.RemoveEntry = function(){
+            console.log("REmoving");
         };
     
     };

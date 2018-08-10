@@ -36,6 +36,10 @@ $m = new Mustache_Engine(array(
 $params = (isset($_GET["action"]) ? $_GET : $_POST);
 
 switch($params["action"]){
+    case "remove_responsibility":
+        $com= new Community($database);
+        $com->RemoveResponsibility($params["responsibility"]);
+        break;
     case "save_responsibles":
         $service = new Service($database, $params["service_id"]);
         $service->SaveResponsibles($params["data"]);

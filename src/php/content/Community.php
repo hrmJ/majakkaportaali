@@ -50,6 +50,19 @@ class Community{
     }
 
 
+
+    /**
+     *
+     * Hakee yhtä tiettyä vastuuta koskevan metadatan
+     *
+     */
+    public function RemoveResponsibility($responsibility){
+        $this->con->delete("responsibilities_meta", ["responsibility" => $responsibility]);
+        $this->con->delete("responsibilities", ["responsibility" => $responsibility]);
+    }
+
+
+
     /**
      *
      * Hakee yhtä tiettyä vastuuta koskevan metadatan
@@ -59,6 +72,9 @@ class Community{
         return $this->con->get("responsibilities_meta", ["description"], 
             ["responsibility" => $responsibility]);
     }
+
+
+
 
     /**
      *
