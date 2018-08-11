@@ -53,6 +53,19 @@ class Community{
 
     /**
      *
+     * Poistaa messun id:n perusteella
+     *
+     * @param service_id poistettavan messun id
+     *
+     */
+    public function RemoveService($service_id){
+        $this->con->delete("services", ["id" => $service_id]);
+    }
+
+
+
+    /**
+     *
      * Hakee yhtä tiettyä vastuuta koskevan metadatan
      *
      */
@@ -105,6 +118,21 @@ class Community{
      */
     public function GetListOfServiceMeta(){
         return ["Messun aihe","Messun päivämäärä"];
+    }
+
+    /**
+     *
+     * Tallentaa uudet messut
+     *
+     * @param $dates taulukko uusista päivämääristä
+     *
+     */
+    public function SaveNewServices($dates){
+        foreach($dates as $date){
+            $this->con->insert("services",
+                ["servicedate" => $date, "theme" => "Aihe puuttuu"]
+            );
+        }
     }
 
 

@@ -80,7 +80,13 @@ gulp.task("js",function(){
                    "js/portal/content/tabs/Infoslides",
                    "js/portal/content/tabs/Songs",
                    "js/portal/content/ManageableLists",
+
                    "js/portal/content/Servicelist",
+                   "js/portal/content/listfactory/Responsibilities",
+                   "js/portal/content/listfactory/Seasons",
+                   "js/portal/content/listfactory/Events",
+                   "js/portal/content/listfactory/Services",
+
                    "js/portal/service_structure/GeneralStructure",
                    "js/portal/service_structure/songslide",
                    "js/portal/service_structure/bibleslide",

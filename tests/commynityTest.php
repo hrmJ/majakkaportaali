@@ -64,6 +64,7 @@ class CommunityTest extends TestCase
         $community= new Community($this->con);
         $meta = $community->GetListOfSeasons();
         $this->assertTrue(sizeof($meta)>0);
+        #$community->RemoveService(3);
     }
 
 

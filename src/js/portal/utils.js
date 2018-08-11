@@ -295,6 +295,38 @@ var Utilities = function(){
         }
     }
 
+    /**
+     *
+     * https://stackoverflow.com/questions/41194368/how-to-get-all-sundays-mondays-tuesdays-between-two-dates#41194523
+     * Given a start date, end date and day name, return
+     * an array of dates between the two dates for the
+     * given day inclusive
+     * @param {Date} start - date to start from
+     * @param {Date} end - date to end on
+     * @param {int} day - number of the day
+     * @returns {Array} array of Dates 
+     *
+     */
+    function getDaysBetweenDates(start, end, day) {
+      // Copy start date
+      var current = new Date(start),
+          //result = [$.datepicker.formatDate('yy-mm-dd', start)];
+          result = [];
+      day = day + 1;
+      // Shift to next of required days
+      current.setDate(current.getDate() + (day - current.getDay() + 7) % 7);
+      // While less than end date, add dates to result array
+      while (current < end) {
+        result.push(
+            $.datepicker.formatDate('yy-mm-dd', new Date(+current))
+            );
+        current.setDate(current.getDate() + 7);
+      }
+      result.push($.datepicker.formatDate('yy-mm-dd', end));
+      return result;  
+    }
+
+
     return {
 
         Message,
@@ -305,7 +337,8 @@ var Utilities = function(){
         SetImgPath,
         GetImgPath,
         HideUpperMenu,
-        Preview
+        Preview,
+        getDaysBetweenDates
     
     }
 

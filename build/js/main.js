@@ -479,6 +479,38 @@ var Utilities = function(){
         }
     }
 
+    /**
+     *
+     * https://stackoverflow.com/questions/41194368/how-to-get-all-sundays-mondays-tuesdays-between-two-dates#41194523
+     * Given a start date, end date and day name, return
+     * an array of dates between the two dates for the
+     * given day inclusive
+     * @param {Date} start - date to start from
+     * @param {Date} end - date to end on
+     * @param {int} day - number of the day
+     * @returns {Array} array of Dates 
+     *
+     */
+    function getDaysBetweenDates(start, end, day) {
+      // Copy start date
+      var current = new Date(start),
+          //result = [$.datepicker.formatDate('yy-mm-dd', start)];
+          result = [];
+      day = day + 1;
+      // Shift to next of required days
+      current.setDate(current.getDate() + (day - current.getDay() + 7) % 7);
+      // While less than end date, add dates to result array
+      while (current < end) {
+        result.push(
+            $.datepicker.formatDate('yy-mm-dd', new Date(+current))
+            );
+        current.setDate(current.getDate() + 7);
+      }
+      result.push($.datepicker.formatDate('yy-mm-dd', end));
+      return result;  
+    }
+
+
     return {
 
         Message,
@@ -489,7 +521,8 @@ var Utilities = function(){
         SetImgPath,
         GetImgPath,
         HideUpperMenu,
-        Preview
+        Preview,
+        getDaysBetweenDates
     
     }
 
@@ -2345,6 +2378,7 @@ Portal.ManageableLists = function(){
      *
      */
     ListFactory.prototype.LoadList = function(list_header, list_type){
+        $("#list_editor").hide();
         var path = Utilities.GetAjaxPath("Loader.php");
         var promise = $.getJSON(path, {
             "action" : "mlist_" + this.list_type,
@@ -2387,20 +2421,43 @@ Portal.ManageableLists = function(){
      *
      */
     ListFactory.prototype.SaveEdit = function(){
-        var path = Utilities.GetAjaxPath("Saver.php"),
-            msg = new Utilities.Message("Tiedot tallennettu.", $("#managelist"));
-        console.log(this.GetEditParams());
+        var path = Utilities.GetAjaxPath("Saver.php");
         $.post(path,{
             "action": "save_edited_" + this.list_type,
             "params": this.GetEditParams()
         }, () =>{
-            console.log("wooopppiiippp");
             this.SetEditParams();
             $("#list_editor").hide();
-            //msg.Show(3000);
         });
     };
 
+    /**
+     *
+     * Tallentaa uudet lista-alkiot
+     *
+     */
+    ListFactory.prototype.SaveAdded = function(){
+        var path = Utilities.GetAjaxPath("Saver.php");
+        console.log(this.GetAddedParams());
+        $.post(path,{
+            "action": "save_added_" + this.list_type,
+            "params": this.GetAddedParams()
+        }, this.LoadList.bind(this));
+    };
+
+
+    /**
+     *
+     * Päivittää muokkausikkunan muokkaamista tai uuden lisäämistä varten
+     *
+     * @param e tapahtuma, joka käynnisti
+     *
+     */
+    ListFactory.prototype.OpenBox = function(){
+        $("#list_editor .edit_container").html("");
+        $("#list_editor button").remove();
+        $("#list_editor").fadeIn();
+    };
 
     /**
      *
@@ -2411,12 +2468,10 @@ Portal.ManageableLists = function(){
      */
     ListFactory.prototype.StartEdit = function(e){
         this.$current_li = $(e.target).parent();
-        $("#list_editor .edit_container").html("");
-        $("#list_editor button").remove();
+        this.OpenBox();
         $("<button>Tallenna</button>")
             .click(this.SaveEdit.bind(this))
             .appendTo("#list_editor");
-        $("#list_editor").fadeIn();
         this.EditEntry();
     };
 
@@ -2454,231 +2509,8 @@ Portal.ManageableLists = function(){
         return list;
     };
 
-    /**
-     *
-     * Lista vastuiden hallitsemiseen 
-     *
-     */
-    ListFactory.Responsibilities = function(){
-    
-        /**
-         *
-         * Lisää yhden datarivin tietokannasta
-         *
-         * @param raw_data tarvittavat tiedot tietokannasta
-         * @param $li muokattava ja palautettava listaelementti
-         *
-         */
-        this.AddListRow = function(raw_data, $li){
-            console.log(raw_data);
-            $li.find("span").text(raw_data);
-            return $li;
-        }
 
 
-        /**
-         *
-         * Hakee tarvittavat tallennettavat parametrit
-         *
-         */
-        this.GetEditParams = function(){
-            var data = {
-                old_responsibility: this.old_responsibility,
-                new_responsibility: $("#list_editor .new_responsibility").val(),
-                description: $("#list_editor .description").val()
-            };
-            this.new_responsibility = data.new_responsibility;
-
-            return data;
-        }
-
-        /**
-         *
-         * Päivittää parametrit muokkauksen jälkeen
-         *
-         */
-        this.SetEditParams = function(){
-            this.$current_li.find("span").text(this.new_responsibility);
-        }
-
-
-        /**
-         *
-         * Nåyttää ikkunan, jossa voi muokata yhtä listan alkiota.
-         * TODO kaikille tyypeille yhteinen lähtötilanne?
-         *
-         */
-        this.EditEntry = function(){
-            var path = Utilities.GetAjaxPath("Loader.php"),
-                responsibility = this.$current_li.find("span").text();
-            //Tallenna vastuun entinen nimi ennen muokkausta
-            this.old_responsibility = responsibility;
-
-            $.getJSON(path, {
-                "action": "get_responsibility_meta",
-                "responsibility": responsibility
-                },
-                (data) => {
-                    console.log(data);
-                    $(`
-                        <div class='label_parent'>
-                            <div>Vastuun nimi</div>
-                            <div>
-                                <input class='new_responsibility' type='text' value='${responsibility}'></input>
-                            </div>
-                        </div>
-                        <div class='label_parent'>
-                            <div>Vastuun kuvaus</div>
-                            <div>
-                            <textarea placeholder='Lyhyt selitys siitä, mitä tähän vastuuseen kuuluu'
-                                class='description'>${data.description || ''}</textarea>
-                            </div>
-                        </div>
-
-                    `).appendTo("#list_editor .edit_container");
-                
-                }
-            );
-        };
-
-
-        /**
-         *
-         * Hakee alkion poistoa varten tarvittavat listatyyppikohtaiset parametrit
-         *
-         * @param $li se listan alkio, jota ollaan poistamassa.
-         *
-         */
-        this.GetRemoveParams = function($li){
-            return {
-                "responsibility" : $li.find("span").text(),
-                "action" : "remove_responsibility"
-            };
-        }
-
-        /**
-         *
-         * Lisää uuden alkion listaan.
-         *
-         *
-         */
-        this.AddEntry = function(){
-        
-        
-        };
-
-    
-    };
-
-
-    /**
-     *
-     * Lista  messujen hallitsemiseen 
-     *
-     */
-    ListFactory.Services = function(){
-
-        /**
-         *
-         * @param raw_data tarvittavat tiedot tietokannasta
-         * @param $li muokattava ja palautettava listaelementti
-         *
-         */
-        this.AddListRow = function(raw_data, $li){
-            $li.find("span").text(raw_data.theme);
-            return $li;
-        }
-
-        /**
-         *
-         * Nåyttää ikkunan, jossa voi muokata yhtä listan alkiota.
-         * TODO kaikille tyypeille yhteinen lähtötilanne?
-         *
-         */
-        this.EditEntry = function(){
-        
-        
-        };
-
-        /**
-         *
-         * Lisää uuden alkion listaan.
-         *
-         * TODO kaikille tyypeille yhteinen lähtötilanne?
-         *
-         */
-        this.AddEntry = function(){
-        
-        
-        };
-
-
-        /**
-         *
-         * Poistaa yhden listan alkion
-         *
-         */
-        this.RemoveEntry = function(){
-            console.log("REmoving");
-        };
-    
-    };
-
-
-
-    /**
-     *
-     * Lista tapahtumien hallitsemiseen 
-     *
-     */
-    ListFactory.Events = function(){
-    
-    
-    };
-
-
-    /**
-     *
-     * Lista  messukausien hallitsemiseen 
-     *
-     */
-    ListFactory.Seasons = function(){
-    
-
-        /**
-         *
-         * @param raw_data tarvittavat tiedot tietokannasta
-         * @param $li muokattava ja palautettava listaelementti
-         *
-         */
-        this.AddListRow = function(raw_data, $li){
-            var text = `${raw_data.name} ${raw_data.startdate} - ${raw_data.enddate}`;
-            $li.find("span").text(text);
-            return $li;
-        }
-
-
-        /**
-         *
-         * Lisää uuden alkion listaan.
-         *
-         *
-         */
-        this.AddEntry = function(){
-        
-        
-        };
-
-        /**
-         *
-         * Poistaa yhden listan alkion
-         *
-         */
-        this.RemoveEntry = function(){
-            console.log("REmoving");
-        };
-    
-    };
 
 
 
@@ -2910,6 +2742,373 @@ Portal.Servicelist = function(){
     };
 
 }()
+
+Portal = Portal || {};
+Portal.ManageableLists.ListFactory = Portal.ManageableLists.ListFactory || {};
+
+/**
+ *
+ * Lista vastuiden hallitsemiseen 
+ *
+ */
+Portal.ManageableLists.ListFactory.Responsibilities = function(){
+
+    /**
+     *
+     * Lisää yhden datarivin tietokannasta
+     *
+     * @param raw_data tarvittavat tiedot tietokannasta
+     * @param $li muokattava ja palautettava listaelementti
+     *
+     */
+    this.AddListRow = function(raw_data, $li){
+        console.log(raw_data);
+        $li.find("span").text(raw_data);
+        return $li;
+    }
+
+
+    /**
+     *
+     * Hakee tarvittavat tallennettavat parametrit
+     *
+     */
+    this.GetEditParams = function(){
+        var data = {
+            old_responsibility: this.old_responsibility,
+            new_responsibility: $("#list_editor .new_responsibility").val(),
+            description: $("#list_editor .description").val()
+        };
+        this.new_responsibility = data.new_responsibility;
+
+        return data;
+    }
+
+    /**
+     *
+     * Päivittää parametrit muokkauksen jälkeen
+     *
+     */
+    this.SetEditParams = function(){
+        this.$current_li.find("span").text(this.new_responsibility);
+    }
+
+
+    /**
+     *
+     * Nåyttää ikkunan, jossa voi muokata yhtä listan alkiota.
+     * TODO kaikille tyypeille yhteinen lähtötilanne?
+     *
+     */
+    this.EditEntry = function(){
+        var path = Utilities.GetAjaxPath("Loader.php"),
+            responsibility = this.$current_li.find("span").text();
+        //Tallenna vastuun entinen nimi ennen muokkausta
+        this.old_responsibility = responsibility;
+
+        $.getJSON(path, {
+            "action": "get_responsibility_meta",
+            "responsibility": responsibility
+            },
+            (data) => {
+                console.log(data);
+                $(`
+                    <div class='label_parent'>
+                        <div>Vastuun nimi</div>
+                        <div>
+                            <input class='new_responsibility' type='text' value='${responsibility}'></input>
+                        </div>
+                    </div>
+                    <div class='label_parent'>
+                        <div>Vastuun kuvaus</div>
+                        <div>
+                        <textarea placeholder='Lyhyt selitys siitä, mitä tähän vastuuseen kuuluu'
+                            class='description'>${data.description || ''}</textarea>
+                        </div>
+                    </div>
+
+                `).appendTo("#list_editor .edit_container");
+            
+            }
+        );
+    };
+
+
+    /**
+     *
+     * Hakee alkion poistoa varten tarvittavat listatyyppikohtaiset parametrit
+     *
+     * @param $li se listan alkio, jota ollaan poistamassa.
+     *
+     */
+    this.GetRemoveParams = function($li){
+        return {
+            "responsibility" : $li.find("span").text(),
+            "action" : "remove_responsibility"
+        };
+    }
+
+    /**
+     *
+     * Lisää uuden alkion listaan.
+     *
+     *
+     */
+    this.AddEntry = function(){
+    
+    
+    };
+
+
+};
+
+
+
+Portal = Portal || {};
+Portal.ManageableLists.ListFactory = Portal.ManageableLists.ListFactory || {};
+
+/**
+ *
+ * Lista messukausien hallitsemiseen 
+ *
+ */
+Portal.ManageableLists.ListFactory.Seasons = function(){
+
+
+        /**
+         *
+         * @param raw_data tarvittavat tiedot tietokannasta
+         * @param $li muokattava ja palautettava listaelementti
+         *
+         */
+        this.AddListRow = function(raw_data, $li){
+            var text = `${raw_data.name} ${raw_data.startdate} - ${raw_data.enddate}`;
+            $li.find("span").text(text);
+            return $li;
+        }
+
+
+        /**
+         *
+         * Lisää uuden alkion listaan.
+         *
+         *
+         */
+        this.AddEntry = function(){
+        
+        
+        };
+
+        /**
+         *
+         * Poistaa yhden listan alkion
+         *
+         */
+        this.RemoveEntry = function(){
+            console.log("REmoving");
+        };
+    
+};
+
+
+Portal = Portal || {};
+Portal.ManageableLists.ListFactory = Portal.ManageableLists.ListFactory || {};
+
+/**
+ *
+ * Lista messukausien hallitsemiseen 
+ *
+ */
+Portal.ManageableLists.ListFactory.Events = function(){
+
+
+        /**
+         *
+         * @param raw_data tarvittavat tiedot tietokannasta
+         * @param $li muokattava ja palautettava listaelementti
+         *
+         */
+        this.AddListRow = function(raw_data, $li){
+            var text = `${raw_data.name} ${raw_data.startdate} - ${raw_data.enddate}`;
+            $li.find("span").text(text);
+            return $li;
+        }
+
+
+        /**
+         *
+         * Lisää uuden alkion listaan.
+         *
+         *
+         */
+        this.AddEntry = function(){
+        
+        
+        };
+
+        /**
+         *
+         * Poistaa yhden listan alkion
+         *
+         */
+        this.RemoveEntry = function(){
+            console.log("REmoving");
+        };
+    
+};
+
+
+Portal = Portal || {};
+Portal.ManageableLists.ListFactory = Portal.ManageableLists.ListFactory || {};
+
+/**
+ *
+ * Lista messujen hallitsemiseen 
+ *
+ */
+Portal.ManageableLists.ListFactory.Services = function(){
+
+        this.addhtml = (`
+                    <section>
+                        <h4 class='closed'>Lisää yksittäinen messu</h4>
+                        <div class='hidden '>
+                            <div class='label-parent'>
+                                <div>Messun pvm</div>
+                                <input name='single_date' class='datepicker_input'></input>
+                            </div>
+                        </div>
+                        <h4 class='closed'>Lisää useita messuja</h4>
+                        <div class='hidden basic-flex'>
+                            <div class='label-parent'>
+                                <div>Ensimmäinen messu</div>
+                                <input name='start_date' class='datepicker_input'></input>
+                            </div>
+                            <div class='label-parent'>
+                                <div>Viimeinen messu</div>
+                                <input name='end_date' class='datepicker_input'></input>
+                            </div>
+                        </div>
+                    </section>
+                `);
+
+        this.edithtml = (`
+                    <section>
+                        <h4 class='closed'>Lisää yksittäinen messu</h4>
+                        <div class='hidden '>
+                            Moro vaan 
+                        </div>
+                        <h4 class='closed'>Lisää useita messuja</h4>
+                        <div class='hidden basic-flex'>
+                            <div class='label-parent'>
+                                <div>Ensimmäinen messu</div>
+                                <input name='start_date' class='datepicker_input'></input>
+                            </div>
+                            <div class='label-parent'>
+                                <div>Viimeinen messu</div>
+                                <input name='end_date' class='datepicker_input'></input>
+                            </div>
+                        </div>
+                    </section>
+                `);
+
+        /**
+         *
+         * @param raw_data tarvittavat tiedot tietokannasta
+         * @param $li muokattava ja palautettava listaelementti
+         *
+         */
+        this.AddListRow = function(raw_data, $li){
+            $li.find("span").text(raw_data.theme);
+            $li.append(
+                (`<input type='hidden' class='id_container' value='${raw_data.id}'></input>`)
+            );
+            return $li;
+        }
+
+        /**
+         *
+         * Nåyttää ikkunan, jossa voi muokata yhtä listan alkiota.
+         * TODO kaikille tyypeille yhteinen lähtötilanne?
+         *
+         */
+        this.EditEntry = function(){
+            this.PrintEditOrAdderBox(this.edithtml);
+        };
+
+
+        /**
+         *
+         * Tulostaa muokkauslaatikon tai uuden lisäämislaatikon
+         *
+         * @param htmlstring mikä sisältö laatikolle annetaan
+         *
+         */
+        this.PrintEditOrAdderBox = function(htmlstring){
+            var $html = $(htmlstring);
+            this.OpenBox();
+            $html.appendTo("#list_editor .edit_container");
+            $html.find("h4").click(Portal.Menus.InitializeFoldMenu);
+            $html.find(".hidden").hide();
+            $(".datepicker_input").datepicker();
+        }
+
+
+        /**
+         *
+         * Tallentaa listätyn messun
+         *
+         */
+        this.GetAddedParams = function(){
+            var start_date = $("[name='start_date']").datepicker("getDate"),
+                end_date = $("[name='end_date']").datepicker("getDate"),
+                single_date = $("[name='single_date']").datepicker("getDate"),
+                newdates = [];
+            if(start_date && end_date){
+                newdates = Utilities.getDaysBetweenDates(start_date, end_date, start_date.getUTCDay());
+            }
+            else if (single_date){
+                newdates = [$.datepicker.formatDate('yy-mm-dd', single_date)];
+            }
+            return {
+                dates: newdates,
+            };
+        };
+
+
+        /**
+         *
+         * Lisää uuden alkion listaan.
+         *
+         * TODO kaikille tyypeille yhteinen lähtötilanne?
+         *
+         */
+        this.AddEntry = function(){
+            this.PrintEditOrAdderBox(this.addhtml);
+            $("<div class='below_box'><button>Tallenna</button></div>")
+                .click(this.SaveAdded.bind(this))
+                .appendTo($("#list_editor"));
+        };
+
+
+        /**
+         *
+         * Hakee alkion poistoa varten tarvittavat listatyyppikohtaiset parametrit
+         *
+         * @param $li se listan alkio, jota ollaan poistamassa.
+         *
+         */
+        this.GetRemoveParams = function($li){
+            var params =  {
+                "action" : "remove_service",
+                "service_id" : $li.find(".id_container").val()
+            };
+            console.log(params);
+
+            return params;
+        }
+
+};
+
 
 /**
  *
