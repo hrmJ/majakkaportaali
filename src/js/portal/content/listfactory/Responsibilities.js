@@ -41,16 +41,6 @@ Portal.ManageableLists.ListFactory.Responsibilities = function(){
 
     /**
      *
-     * Päivittää parametrit muokkauksen jälkeen
-     *
-     */
-    this.SetEditParams = function(){
-        this.$current_li.find("span").text(this.new_responsibility);
-    }
-
-
-    /**
-     *
      * Nåyttää ikkunan, jossa voi muokata yhtä listan alkiota.
      * TODO kaikille tyypeille yhteinen lähtötilanne?
      *

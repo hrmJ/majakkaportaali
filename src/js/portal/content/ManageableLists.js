@@ -24,7 +24,7 @@ Portal.ManageableLists = function(){
      * Lataa listan datan tietokannasta
      *
      */
-    ListFactory.prototype.LoadList = function(list_header, list_type){
+    ListFactory.prototype.LoadList = function(){
         $("#list_editor").hide();
         var path = Utilities.GetAjaxPath("Loader.php");
         var promise = $.getJSON(path, {
@@ -72,10 +72,7 @@ Portal.ManageableLists = function(){
         $.post(path,{
             "action": "save_edited_" + this.list_type,
             "params": this.GetEditParams()
-        }, () =>{
-            this.SetEditParams();
-            $("#list_editor").hide();
-        });
+        }, this.LoadList.bind(this));
     };
 
     /**

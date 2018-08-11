@@ -133,6 +133,20 @@ class ServiceTest extends TestCase
     }
 
 
+    /**
+     *
+     * Testaa yhden tietyn messun aiheen ja päivän muuttamista
+     *
+     */
+    public function testChangeDateTheme()
+    {
+        $service = new Service($this->con, 1);
+        $service->SaveThemeAndDate(["servicedate" => "2018/02/10", "theme" => "Kaihdettu teema"]);
+        $theme = $service->GetTheme();
+        $this->assertEquals($theme,"Kaihdettu teema");
+    }
+
+
 }
 
 

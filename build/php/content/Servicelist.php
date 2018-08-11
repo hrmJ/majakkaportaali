@@ -43,7 +43,7 @@ class Servicelist{
                 "servicedate[>=]" => $this->season["startdate"],
                 "servicedate[<=]" => $this->season["enddate"]]],
             ["ORDER" => [
-                ["servicedate" => "ASC"]
+                ["servicedate" => "DESC"]
             ]]);
         return $this->FormatDates($dates_and_themes);
     }

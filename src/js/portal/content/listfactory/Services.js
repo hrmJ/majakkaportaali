@@ -33,21 +33,14 @@ Portal.ManageableLists.ListFactory.Services = function(){
 
         this.edithtml = (`
                     <section>
-                        <h4 class='closed'>Lisää yksittäinen messu</h4>
-                        <div class='hidden '>
-                            Moro vaan 
-                        </div>
-                        <h4 class='closed'>Lisää useita messuja</h4>
-                        <div class='hidden basic-flex'>
                             <div class='label-parent'>
-                                <div>Ensimmäinen messu</div>
-                                <input name='start_date' class='datepicker_input'></input>
+                                <div>Messun päivämäärä</div>
+                                <input name='service_date' class='datepicker_input'></input>
                             </div>
                             <div class='label-parent'>
-                                <div>Viimeinen messu</div>
-                                <input name='end_date' class='datepicker_input'></input>
+                                <div>Messun aihe</div>
+                                <input name='service_theme' class=''></input>
                             </div>
-                        </div>
                     </section>
                 `);
 
@@ -58,9 +51,11 @@ Portal.ManageableLists.ListFactory.Services = function(){
          *
          */
         this.AddListRow = function(raw_data, $li){
-            $li.find("span").text(raw_data.theme);
+            $li.find("span").html(`<strong>${raw_data.servicedate}</strong>:  ${raw_data.theme}`);
             $li.append(
-                (`<input type='hidden' class='id_container' value='${raw_data.id}'></input>`)
+                (`<input type='hidden' class='id_container' value='${raw_data.id}'></input>
+                   <input type='hidden' class='theme_container' value='${raw_data.theme}'></input>
+                    `)
             );
             return $li;
         }
@@ -72,7 +67,12 @@ Portal.ManageableLists.ListFactory.Services = function(){
          *
          */
         this.EditEntry = function(){
-            this.PrintEditOrAdderBox(this.edithtml);
+            var $html = $(this.edithtml),
+                sdate = $.datepicker.parseDate("dd.mm.yy",
+                        this.$current_li.find("strong").text());
+            this.PrintEditOrAdderBox($html);
+            $html.find("[name='service_date']").datepicker("setDate", sdate);
+            $html.find("[name='service_theme']").val(this.$current_li.find(".theme_container").val());
         };
 
 
@@ -83,9 +83,7 @@ Portal.ManageableLists.ListFactory.Services = function(){
          * @param htmlstring mikä sisältö laatikolle annetaan
          *
          */
-        this.PrintEditOrAdderBox = function(htmlstring){
-            var $html = $(htmlstring);
-            this.OpenBox();
+        this.PrintEditOrAdderBox = function($html){
             $html.appendTo("#list_editor .edit_container");
             $html.find("h4").click(Portal.Menus.InitializeFoldMenu);
             $html.find(".hidden").hide();
@@ -123,7 +121,8 @@ Portal.ManageableLists.ListFactory.Services = function(){
          *
          */
         this.AddEntry = function(){
-            this.PrintEditOrAdderBox(this.addhtml);
+            this.OpenBox();
+            this.PrintEditOrAdderBox($(this.addhtml));
             $("<div class='below_box'><button>Tallenna</button></div>")
                 .click(this.SaveAdded.bind(this))
                 .appendTo($("#list_editor"));
@@ -146,6 +145,29 @@ Portal.ManageableLists.ListFactory.Services = function(){
 
             return params;
         }
+
+
+        /**
+         *
+         * Hakee alkion muokkauksessa muuttuneet  parametrit
+         *
+         *
+         */
+        this.GetEditParams = function(){
+            var newdate = $("[name='service_date']").datepicker("getDate");
+            newdate = $.datepicker.formatDate('yy-mm-dd', newdate);
+            var params =  {
+                "newvals" : {
+                    "theme" : $("#list_editor").find("[name='service_theme']").val(),
+                    "servicedate" : newdate
+                },
+                "service_id" : this.$current_li.find(".id_container").val(),
+            };
+            console.log(params)
+
+            return params;
+        }
+
 
 };
 

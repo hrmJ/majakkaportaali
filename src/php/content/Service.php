@@ -193,6 +193,21 @@ class Service{
         return $this;
     }
 
+    /**
+     *
+     * Tallentaa teeman ja päivämäärän
+     *
+     * @param Array $newvals taulukko muotoa [["servicedate" => x, "theme" => "x"], ...]
+     *
+     */
+    public function SaveThemeAndDate($newvals){
+        var_dump($this->id);
+        var_dump($newvals);
+        $this->con->update("services", $newvals, ["id" => $this->id]);
+        return $this;
+    }
+
+
 }
 
 

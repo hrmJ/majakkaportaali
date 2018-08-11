@@ -56,6 +56,10 @@ switch($params["action"]){
         $service = new Service($database, $params["service_id"]);
         $service->SaveDetails($params["data"]);
         break;
+    case "save_service_theme_and_date":
+        $service = new Service($database, $params["service_id"]);
+        $service->SaveThemeAndDate($params["newvals"]);
+        break;
     case "save_songs":
         $service = new Service($database, $params["service_id"]);
         $service->SaveSongs($params["data"]);
@@ -133,6 +137,11 @@ switch($params["action"]){
         $servicelist = new Servicelist($database);
         $servicelist->SaveEditedResponsibility($params["params"]);
         break;
+    case "save_edited_Services":
+        $service = new Service($database, $params["params"]["service_id"]);
+        $service->SaveThemeAndDate($params["params"]["newvals"]);
+        break;
+
 }
 
 
