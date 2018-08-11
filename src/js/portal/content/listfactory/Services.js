@@ -84,6 +84,7 @@ Portal.ManageableLists.ListFactory.Services = function(){
          *
          */
         this.PrintEditOrAdderBox = function($html){
+            $("#list_editor .edit_container").html("");
             $html.appendTo("#list_editor .edit_container");
             $html.find("h4").click(Portal.Menus.InitializeFoldMenu);
             $html.find(".hidden").hide();
