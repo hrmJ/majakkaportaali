@@ -9,7 +9,7 @@ var Portal = Portal || {};
 
 Portal.Servicelist = function(){
 
-    var season = "?",
+    var current_season = {},
         list_of_services = undefined,
         manageable_lists = {};
 
@@ -72,8 +72,10 @@ Portal.Servicelist = function(){
          **/
         this.LoadServices = function(){
             var path = Utilities.GetAjaxPath("Loader.php");
-            $.getJSON(path,{
-                action: "get_list_of_services"
+            return $.getJSON(path,{
+                action: "get_list_of_services",
+                startdate: current_season.startdate,
+                enddate: current_season.enddate,
                 }, this.Output.bind(this));
         };
 
@@ -87,6 +89,8 @@ Portal.Servicelist = function(){
             var path = Utilities.GetAjaxPath("Loader.php");
             $.when($.getJSON(path,{
                 action: "get_filtered_list_of_services",
+                "startdate" : current_season.startdate,
+                "enddate" : current_season.enddate,
                 filteredby: this.filteredby
                 }, this.Output.bind(this))).done(()=>{
                     $(".byline h2").text(this.filteredby);
@@ -173,6 +177,40 @@ Portal.Servicelist = function(){
     }
 
 
+    /**
+     *
+     * Hakee nykyhetkeä lähimmän messukauden
+     *
+     *
+     */
+    function SetSeasonByCurrentDate(){
+        var path = Utilities.GetAjaxPath("Loader.php");
+        return $.getJSON(path, {
+            "action": "get_current_season",
+            "date": $.datepicker.formatDate('yy-mm-dd', new Date())
+        }, (season) => current_season = season);
+    }
+
+
+    /**
+     *
+     * Lataa valikkopalkin select-elementtiin kaudet ja valitsee nykyistä
+     * päivää lähinnä olevan.
+     *
+     * @param current_id aktiivisen messun id
+     *
+     */
+    function LoadSeasonSelect(){
+        var path = Utilities.GetAjaxPath("Loader.php");
+        return $.getJSON(path, {action: "mlist_Seasons" }, function(data){
+            $("#season-select")
+                .append(data.map((season) => 
+                    `<option val=${season.id}>${season.name}</option>`).join("\n"))
+                .val(current_id)
+                .selectmenu("refresh");
+        });
+    }
+
 
     /**
      *
@@ -182,8 +220,15 @@ Portal.Servicelist = function(){
     function Initialize(){
         var list_type = '';
         console.log("Initializing the list of services...");
-        list_of_services.LoadServices();
-        LoadShowList();
+        $.when(SetSeasonByCurrentDate()).done(() => {
+            $.when(list_of_services.LoadServices()).done(() => {
+                LoadShowList();
+                }
+            );
+        });
+        //$.when(LoadSeasonSelect();
+        //list_of_services.LoadServices();
+        //LoadShowList();
         $("#savebutton").click(list_of_services.Save.bind(list_of_services));
         $("#structure_launcher").click(() => window.location="service_structure.php");
         $(".covermenu-target_managelist").each(function(){
@@ -206,12 +251,23 @@ Portal.Servicelist = function(){
         return months[month_no - 1];
     }
 
+    /**
+     *
+     * Palauttaa nykyisen messukauden
+     *
+     **/
+    function GetCurrentSeason(){
+        return current_season;
+    }
+
+
     //Alustetaan eri osiot
     list_of_services = new List();
 
     return {
         Initialize,
-        List
+        List,
+        GetCurrentSeason
     };
 
 }()

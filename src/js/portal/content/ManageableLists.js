@@ -25,11 +25,13 @@ Portal.ManageableLists = function(){
      *
      */
     ListFactory.prototype.LoadList = function(data){
-        console.log(data)
+        console.log(data);
         $("#list_editor").hide();
         var path = Utilities.GetAjaxPath("Loader.php");
         var promise = $.getJSON(path, {
             "action" : "mlist_" + this.list_type,
+            "startdate" : Portal.Servicelist.GetCurrentSeason().startdate,
+            "enddate" : Portal.Servicelist.GetCurrentSeason().enddate,
         }, this.PrintList.bind(this));
     }
 

@@ -154,6 +154,44 @@ class Community{
         }
     }
 
+    /**
+     *
+     * Hakee nykyistä päivämäärää lähimmän messukauden
+     *
+     * @param $current_date päivämäärä muodosso yyyy-mm-dd
+     *
+     */
+    public function GetCurrentSeason($current_date){
+        $seasons = $this->con->select("seasons", 
+            ["name","startdate","enddate","id"],
+            [ "AND" => [
+                "startdate[<=]" =>  $current_date,
+                "enddate[>=]" =>  $current_date,
+                ]
+            ]
+        );
+        if(!$seasons){
+            //Jos ei osu mihinkään kauteen, yritä ekaa tulevaisuudesta
+            $seasons = $this->con->select("seasons", 
+                ["name","startdate","enddate","id"],
+                [ 
+                    "startdate[>=]" =>  $current_date,
+                    'ORDER' => [ 'startdate' => 'ASC' ]
+                ]
+            );
+        }
+        if(!$seasons){
+            //Jos ei osu mihinkään kauteen, yritä vikaa menneisyydestä
+            $seasons = $this->con->select("seasons", 
+                ["name","startdate","enddate","id"],
+                [ 
+                    "enddate[<=]" =>  $current_date,
+                    'ORDER' => [ 'enddate' => 'DESC' ]
+                ]
+            );
+        }
+        return $seasons[0];
+    }
 
 }
 

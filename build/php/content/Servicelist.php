@@ -39,12 +39,15 @@ class Servicelist{
     public function ListServices(){
         $dates_and_themes = $this->con->select("services",
             ["servicedate", "theme", "id"],
-            ["AND" => [
-                "servicedate[>=]" => $this->season["startdate"],
-                "servicedate[<=]" => $this->season["enddate"]]],
-            ["ORDER" => [
-                ["servicedate" => "DESC"]
-            ]]);
+            [
+                "AND" => [
+                    "servicedate[>=]" => $this->season["startdate"],
+                    "servicedate[<=]" => $this->season["enddate"],
+                ],
+
+                "ORDER" =>  ["servicedate" => "ASC"] 
+            ]
+            );
         return $this->FormatDates($dates_and_themes);
     }
 
@@ -79,8 +82,13 @@ class Servicelist{
                         ser_tab.servicedate, ser_tab.id  as service_id
                 FROM responsibilities res_tab  LEFT JOIN 
                 services ser_tab ON res_tab.service_id = ser_tab.id 
-                WHERE res_tab.responsibility = :filteredby",
-                ["filteredby" => $filteredby])->fetchAll();
+                WHERE res_tab.responsibility = :filteredby AND
+                (ser_tab.servicedate >= :sd AND ser_tab.servicedate <= :ed) 
+                ",
+                 ["filteredby" => $filteredby ,
+                 "sd" => $this->season["startdate"],
+                 "ed" => $this->season["enddate"]
+                 ])->fetchAll();
 
         return $this->FormatDates($data);
 
@@ -135,35 +143,14 @@ class Servicelist{
 
     /**
      *
-     * Valitsee sen messukauden, joka on lähinnä nykyistä päivämäärää.
-     * Yrittää ensin löytää kauden, jonka sisälle nykyinen päivä osuu.
-     * Tämän jälkeen yrittää hakea ensimmäisen kauden tulevaisuudesta.
-     * Jos tämäkin epäonnistuu, hakee lähimmän kauden menneisyydestä.
+     * Märittää nykyisen messukauden rajat
      *
-     * @param string $switch vaihdetaanko edelliseen (prev) tai seuraavaan (next)
+     * @param string $startdate aikaisin päivämäärä muotoa yyyy-mm-dd
+     * @param string $enddate myöhäisin päivämäärä muotoa yyyy-mm-dd
      *
      */
-    public function SetSeason($switch="no"){
-        $columns = ["id", "name", "startdate", "enddate"];
-        $date = date('Y-m-d');
-        $this->season = $this->con->get("seasons", $columns,
-            ["AND" => [
-                "startdate[<=]" => $date,
-                "enddate[>=]" => $date]],
-            [ "ORDER" =>[ "startdate" => "ASC"]]);
-        #Jos nykyinen pvm ei osu mihinkään kauteen
-        if(!$this->season) {
-            #1: ota seuraava kausi tulevaisuudesta
-            $this->season = $this->con->get("seasons", $columns,
-                ["startdate[>=]" => $date],
-                [ "ORDER" =>["startdate" => "ASC"]]);
-        }
-        if(!$this->season) {
-            #2: ota edellinen kausi menneisyydestä
-            $this->season = $this->con->get("seasons", $columns,
-                ["enddate[<=]" => $date],
-                [ "ORDER" =>["enddate" => "DESC"]]);
-        }
+    public function SetSeason($startdate, $enddate){
+        $this->season = ["startdate" => $startdate, "enddate" => $enddate];
         return  $this;
     }
 

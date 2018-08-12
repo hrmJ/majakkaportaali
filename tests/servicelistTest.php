@@ -36,16 +36,6 @@ class ServicelistTest extends TestCase
     }
 
 
-    /**
-     * Testaa määrittää nykyinen kausi
-     */
-    public function testSetCurrentSeason()
-    {
-        $servicelist = new Servicelist($this->con);
-        $servicelist->SetSeason();
-        $this->assertArrayHasKey("startdate",$servicelist->season);
-    }
-
 
     /**
      * Testaa vaihtaa kautta
@@ -61,8 +51,9 @@ class ServicelistTest extends TestCase
     public function testListServices()
     {
         $servicelist = new Servicelist($this->con);
-        $servicelist->SetSeason();
-        $this->assertTrue(sizeof($servicelist->ListServices())>0);
+        $servicelist->SetSeason("2018-01-01","2019-01-01");
+        $services = $servicelist->ListServices();
+        $this->assertTrue(sizeof($services)>0);
     }
 
     /**
@@ -71,7 +62,7 @@ class ServicelistTest extends TestCase
     public function testListServicesFilteredBy()
     {
         $servicelist = new Servicelist($this->con);
-        $servicelist->SetSeason();
+        $servicelist->SetSeason("2018-01-01","2018-05-01");
         $result = $servicelist->ListServicesFilteredBy("diat");
     }
 

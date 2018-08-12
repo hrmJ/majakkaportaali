@@ -67,6 +67,17 @@ class CommunityTest extends TestCase
         #$community->RemoveService(3);
     }
 
+    /**
+     *
+     * Testaa, että nykyisen kauden hakeminen onnistuu
+     *
+     */
+    public function testGetCurrentSeason()
+    {
+        $community= new Community($this->con);
+        $season = $community->GetCurrentSeason("2018-03-02");
+        $this->assertRegexp("/testsea/", $season["name"]);
+    }
 
 }
 

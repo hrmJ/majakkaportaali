@@ -184,12 +184,12 @@ switch($params["action"]){
     case "mlist_Services":
     case "get_list_of_services":
         $servicelist = new Servicelist($database);
-        $servicelist->SetSeason();
+        $servicelist->SetSeason($params["startdate"],$params["enddate"]);
         echo json_encode($servicelist->ListServices());
         break;
     case "get_filtered_list_of_services":
         $servicelist = new Servicelist($database);
-        $servicelist->SetSeason();
+        $servicelist->SetSeason($params["startdate"],$params["enddate"]);
         echo json_encode($servicelist->ListServicesFilteredBy($params["filteredby"]));
         break;
     case "get_songlist_alpha":
@@ -221,6 +221,10 @@ switch($params["action"]){
     case "get_service_verses":
         $service = new Service($database, $params["service_id"]);
         echo json_encode($service->GetBibleSegments());
+        break;
+    case "get_current_season":
+        $community = new Community($database);
+        echo json_encode($community->GetCurrentSeason($params["date"]));
         break;
     case "get_bible_segments_content":
         $service = new Service($database, $params["service_id"]);
