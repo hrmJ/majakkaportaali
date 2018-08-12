@@ -141,6 +141,10 @@ switch($params["action"]){
         $service = new Service($database, $params["params"]["service_id"]);
         $service->SaveThemeAndDate($params["params"]["newvals"]);
         break;
+    case "save_edited_Seasons":
+        $com = new Community($database);
+        $com->SaveSeason($params["params"]["newvals"],$params["params"]["season_id"]);
+        break;
 
 }
 

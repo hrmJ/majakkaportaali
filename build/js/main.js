@@ -2377,7 +2377,8 @@ Portal.ManageableLists = function(){
      * Lataa listan datan tietokannasta
      *
      */
-    ListFactory.prototype.LoadList = function(){
+    ListFactory.prototype.LoadList = function(data){
+        console.log(data);
         $("#list_editor").hide();
         var path = Utilities.GetAjaxPath("Loader.php");
         var promise = $.getJSON(path, {
@@ -2861,15 +2862,37 @@ Portal.ManageableLists.ListFactory = Portal.ManageableLists.ListFactory || {};
  */
 Portal.ManageableLists.ListFactory.Seasons = function(){
 
+        var comment_placeholder =  `Tähän voi kirjoittaa ajatuksia siitä,
+        mitä messukauden teemalla tarkoitetaan tai esimerkiksi  lyhyen toimintakertomuksen
+        messukaudesta`.replace(/\s+/g,' ');
+
         this.edithtml = (`
                     <section>
-                        <div class='label-parent'>
+                        <div class='label_parent'>
                             <div>Alkupäivämäärä</div>
                             <input name='start_date' class='datepicker_input'></input>
                         </div>
-                        <div class='label-parent'>
+                        <div class='label_parent'>
                             <div>Loppupäivämäärä</div>
                             <input name='end_date' class='datepicker_input'></input>
+                        </div>
+                        <div class='label_parent'>
+                            <div>Messukauden nimi</div>
+                            <div>
+                                <input name='season_name' type='text' value=''></input>
+                            </div>
+                        </div>
+                        <div class='label_parent'>
+                            <div>Messukauden teema</div>
+                            <div>
+                                <input name='season_theme' type='text' value=''></input>
+                            </div>
+                        </div>
+                        <div class='label_parent'>
+                            <div>Kommentteja kaudesta / kauden teemasta</div>
+                            <div>
+                            <textarea placeholder='${comment_placeholder}' class='description'></textarea>
+                            </div>
                         </div>
                     </section>
                 `);
@@ -2883,8 +2906,12 @@ Portal.ManageableLists.ListFactory.Seasons = function(){
         this.AddListRow = function(raw_data, $li){
             $li.find("span").html(`
                 ${raw_data.name} ${raw_data.startdate} - ${raw_data.enddate}
+                <input type='hidden' class='season_name' value='${raw_data.name}'></input>
                 <input type='hidden' class='start_date' value='${raw_data.startdate}'></input>
                 <input type='hidden' class='end_date' value='${raw_data.enddate}'></input>
+                <input type='hidden' class='season_theme' value='${raw_data.theme}'></input>
+                <input type='hidden' class='season_id' value='${raw_data.id}'></input>
+                <input type='hidden' class='season_description' value='${raw_data.description}'></input>
                 `);
             return $li;
         }
@@ -2914,10 +2941,17 @@ Portal.ManageableLists.ListFactory.Seasons = function(){
                 start_date = $.datepicker.parseDate("dd.mm.yy",
                         this.$current_li.find(".start_date").val()),
                 end_date = $.datepicker.parseDate("dd.mm.yy",
-                        this.$current_li.find(".end_date").val());
+                        this.$current_li.find(".end_date").val()),
+                vals = {
+                    description: this.$current_li.find(".season_description").val(),
+                    theme: this.$current_li.find(".season_theme").val(),
+                    name: this.$current_li.find(".season_name").val()
+                }
             this.PrintEditOrAdderBox($html);
-            console.log(start_date);
-            console.log(end_date);
+            $.each(vals, function(name, val){
+                val = (!val || val == 'null' ? '' : val);
+                $html.find("[name='season_" + name + "']").val(val);
+            });
             $html.find("[name='start_date']").datepicker("setDate", start_date);
             $html.find("[name='end_date']").datepicker("setDate", end_date);
         };
@@ -2929,6 +2963,22 @@ Portal.ManageableLists.ListFactory.Seasons = function(){
          *
          */
         this.GetEditParams = function(){
+
+            var dates = {
+                startdate: $("[name='start_date']").datepicker("getDate"),
+                enddate : $("[name='end_date']").datepicker("getDate")
+                },
+                params = {
+                    newvals : {
+                        "theme" : $("#list_editor").find("[name='season_theme']").val(),
+                        "description" : $("#list_editor").find("[name='season_description']").val(),
+                        "name" : $("#list_editor").find("[name='season_name']").val()
+                    },
+                    "season_id":  this.$current_li.find(".season_id").val()
+                };
+            $.each(dates, function(name, val){
+                params.newvals[name] = $.datepicker.formatDate('yy-mm-dd', val);
+            });
 
             return params;
         }

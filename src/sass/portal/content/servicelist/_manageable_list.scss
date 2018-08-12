@@ -23,7 +23,8 @@
     @include shadow;
     top:5px;
     left:5px;
-    background:darken(white, 3%);
+    //background:darken(white, 3%);
+    background:white;
     min-height: 5em;
     min-width: 10em;
     padding:0.5em;

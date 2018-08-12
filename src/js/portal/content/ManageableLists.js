@@ -24,7 +24,8 @@ Portal.ManageableLists = function(){
      * Lataa listan datan tietokannasta
      *
      */
-    ListFactory.prototype.LoadList = function(){
+    ListFactory.prototype.LoadList = function(data){
+        console.log(data);
         $("#list_editor").hide();
         var path = Utilities.GetAjaxPath("Loader.php");
         var promise = $.getJSON(path, {

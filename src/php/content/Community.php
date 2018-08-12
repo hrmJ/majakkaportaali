@@ -97,7 +97,7 @@ class Community{
     public function GetListOfSeasons(){
         $data = [];
         $seasons = $this->con->select("seasons",
-            ["name", "startdate", "enddate","theme","comments"]);
+            ["id","name", "startdate", "enddate","theme","comments"]);
         $df = new utilities\DateFormatter();
         foreach($seasons as $idx => $entry){
             $formatted = $entry;
@@ -133,6 +133,17 @@ class Community{
                 ["servicedate" => $date, "theme" => "Aihe puuttuu"]
             );
         }
+    }
+
+    /**
+     *
+     * Tallentaa muokatut kaudet
+     *
+     * @param $dates taulukko uusista päivämääristä
+     *
+     */
+    public function SaveSeason($newvals, $season_id){
+        $this->con->update("seasons", $newvals, ["id" => $season_id]);  
     }
 
 

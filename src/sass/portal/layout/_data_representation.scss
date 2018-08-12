@@ -44,7 +44,7 @@
     display:flex;
     flex-flow: row wrap;
     align-items:center;
-
+    justify-content: space-between;
 
     > div:first-child{
         width:6em;
