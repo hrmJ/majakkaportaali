@@ -37,7 +37,7 @@ Portal.ManageableLists.ListFactory.Seasons = function(){
                         <div class='label_parent'>
                             <div>Kommentteja kaudesta / kauden teemasta</div>
                             <div>
-                            <textarea placeholder='${comment_placeholder}' class='description'></textarea>
+                            <textarea placeholder='${comment_placeholder}' name='season_comments'></textarea>
                             </div>
                         </div>
                     </section>
@@ -57,7 +57,7 @@ Portal.ManageableLists.ListFactory.Seasons = function(){
                 <input type='hidden' class='end_date' value='${raw_data.enddate}'></input>
                 <input type='hidden' class='season_theme' value='${raw_data.theme}'></input>
                 <input type='hidden' class='season_id' value='${raw_data.id}'></input>
-                <input type='hidden' class='season_description' value='${raw_data.description}'></input>
+                <input type='hidden' class='season_comments' value='${raw_data.comments}'></input>
                 `);
             return $li;
         }
@@ -89,7 +89,7 @@ Portal.ManageableLists.ListFactory.Seasons = function(){
                 end_date = $.datepicker.parseDate("dd.mm.yy",
                         this.$current_li.find(".end_date").val()),
                 vals = {
-                    description: this.$current_li.find(".season_description").val(),
+                    comments: this.$current_li.find(".season_comments").val(),
                     theme: this.$current_li.find(".season_theme").val(),
                     name: this.$current_li.find(".season_name").val()
                 }
@@ -106,9 +106,10 @@ Portal.ManageableLists.ListFactory.Seasons = function(){
          *
          * Hakee alkion muokkauksessa muuttuneet  parametrit
          *
+         * @param noid tosi, jos ei määritetä id:tä --> uusien syöttö
          *
          */
-        this.GetEditParams = function(){
+        this.GetEditParams = function(noid){
 
             var dates = {
                 startdate: $("[name='start_date']").datepicker("getDate"),
@@ -117,10 +118,10 @@ Portal.ManageableLists.ListFactory.Seasons = function(){
                 params = {
                     newvals : {
                         "theme" : $("#list_editor").find("[name='season_theme']").val(),
-                        "description" : $("#list_editor").find("[name='season_description']").val(),
+                        "comments" : $("#list_editor").find("[name='season_comments']").val(),
                         "name" : $("#list_editor").find("[name='season_name']").val()
                     },
-                    "season_id":  this.$current_li.find(".season_id").val()
+                    "season_id":  (!noid ? this.$current_li.find(".season_id").val() : null)
                 };
             $.each(dates, function(name, val){
                 params.newvals[name] = $.datepicker.formatDate('yy-mm-dd', val);
@@ -128,6 +129,15 @@ Portal.ManageableLists.ListFactory.Seasons = function(){
 
             return params;
         }
+
+        /**
+         *
+         * Tallentaa listätyn messun
+         *
+         */
+        this.GetAddedParams = function(){
+            return this.GetEditParams(true);
+        };
 
 
         /**
@@ -138,8 +148,11 @@ Portal.ManageableLists.ListFactory.Seasons = function(){
          */
         this.AddEntry = function(){
             var $html = $(this.edithtml);
+            this.OpenBox();
             this.PrintEditOrAdderBox($html);
-            $("#list_editor").show();
+            $("<div class='below_box'><button>Tallenna</button></div>")
+                .click(this.SaveAdded.bind(this))
+                .appendTo($("#list_editor"));
         };
 
         /**

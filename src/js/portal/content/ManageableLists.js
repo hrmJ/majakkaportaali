@@ -25,7 +25,7 @@ Portal.ManageableLists = function(){
      *
      */
     ListFactory.prototype.LoadList = function(data){
-        console.log(data);
+        console.log(data)
         $("#list_editor").hide();
         var path = Utilities.GetAjaxPath("Loader.php");
         var promise = $.getJSON(path, {

@@ -97,7 +97,8 @@ class Community{
     public function GetListOfSeasons(){
         $data = [];
         $seasons = $this->con->select("seasons",
-            ["id","name", "startdate", "enddate","theme","comments"]);
+            ["id","name", "startdate", "enddate","theme","comments"],
+                ['ORDER' => [ 'enddate' => 'ASC' ]]);
         $df = new utilities\DateFormatter();
         foreach($seasons as $idx => $entry){
             $formatted = $entry;
@@ -137,13 +138,20 @@ class Community{
 
     /**
      *
-     * Tallentaa muokatut kaudet
+     * Tallentaa muokatut kaudet tai lisää uuden
      *
      * @param $dates taulukko uusista päivämääristä
      *
      */
     public function SaveSeason($newvals, $season_id){
-        $this->con->update("seasons", $newvals, ["id" => $season_id]);  
+        var_dump($season_id);
+        var_dump($newvals);
+        if($season_id){
+            $this->con->update("seasons", $newvals, ["id" => $season_id]);  
+        }
+        else{
+            $this->con->insert("seasons", $newvals);  
+        }
     }
 
 
