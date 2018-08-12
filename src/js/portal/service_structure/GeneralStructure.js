@@ -157,8 +157,6 @@ var GeneralStructure = function(){
     function Initialize(menuselector){
         InitializeNewslotMenu(menuselector);
         InitializeSlotFunctionality();
-        $("nav").hide();
-        $("#service_structure_menu").show();
     }
 
 

@@ -190,8 +190,6 @@ Portal.Servicelist = function(){
             var list = Portal.ManageableLists.ListFactory.make($(this));
             $(this).click(list.LoadList.bind(list));
         });
-        $("nav").hide();
-        $("#servicelist_menu").show();
     }
 
     /**

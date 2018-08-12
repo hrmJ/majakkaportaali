@@ -24,13 +24,15 @@ $m = new Mustache_Engine(array(
     ));
 
 $layout = $m->loadTemplate('layout'); 
+$nav = $m->loadTemplate('servicelist_nav'); 
 $servicelist = $m->loadTemplate('servicelist'); 
 
-$page_content = Array(
+$page_content = [
     "content" => $servicelist->render(),
     "byline" => "<h2>Messut / kausi</h2>",
-    "bodyclass" => "servicelist"
-    );
+    "bodyclass" => "servicelist",
+    "nav" => $nav->render()
+    ];
 
 echo $layout->render($page_content);
 

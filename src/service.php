@@ -26,6 +26,7 @@ $m = new Mustache_Engine(array(
 $layout = $m->loadTemplate('layout'); 
 $service = $m->loadTemplate('service'); 
 $songlist = $m->loadTemplate('songlist'); 
+$nav = $m->loadTemplate('service_nav'); 
 
 $page_content = Array(
     "content" => $service->render(
@@ -34,7 +35,8 @@ $page_content = Array(
         ]
     ),
     "byline" => "<h2>Majakkamessu 10.10.2010</h2>",
-    "bodyclass" => "servicedetails"
+    "bodyclass" => "servicedetails",
+    "nav" => $nav->render()
     );
 
 echo $layout->render($page_content);

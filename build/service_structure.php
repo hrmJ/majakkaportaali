@@ -27,12 +27,14 @@ $m = new Mustache_Engine(array(
 $struct = new Structure($database, $m);
 
 $layout = $m->loadTemplate('layout'); 
+$nav = $m->loadTemplate('service_structure_nav'); 
 
-$page_content = Array(
+$page_content = [
     "content" => $struct->PrintStructure()->OutputPage(),
     "byline" => "<h2>Messupohjan asetukset</h2>",
-    "bodyclass" => "service_structure"
-    );
+    "bodyclass" => "service_structure",
+    "nav" => $nav->render()
+    ];
 
 echo $layout->render($page_content);
 
