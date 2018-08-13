@@ -62,6 +62,16 @@ class Community{
         $this->con->delete("services", ["id" => $service_id]);
     }
 
+    /**
+     *
+     * Poistaa messukauden id:n perusteella
+     *
+     * @param season_id poistettavan kauden id
+     *
+     */
+    public function RemoveSeason($season_id){
+        $this->con->delete("seasons", ["id" => $season_id]);
+    }
 
 
     /**

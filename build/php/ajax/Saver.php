@@ -44,6 +44,10 @@ switch($params["action"]){
         $com= new Community($database);
         $com->RemoveResponsibility($params["responsibility"]);
         break;
+    case "remove_season":
+        $com= new Community($database);
+        $com->RemoveSeason($params["season_id"]);
+        break;
     case "remove_service":
         $com= new Community($database);
         $com->RemoveService($params["service_id"]);

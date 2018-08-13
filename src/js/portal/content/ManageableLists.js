@@ -10,6 +10,19 @@ Portal = Portal || {};
  */
 Portal.ManageableLists = function(){
 
+    var current_list = undefined;
+
+
+    /**
+     *
+     * Palauttaa aktiivisen listan
+     *
+     **/
+    function GetCurrentList(){
+        return current_list;
+    }
+
+
     /**
      *
      * Factory-pattern eri muokattavia listoja edustavien olioiden luomiseksi
@@ -19,6 +32,8 @@ Portal.ManageableLists = function(){
 
     }
 
+
+
     /**
      *
      * Lataa listan datan tietokannasta
@@ -26,6 +41,7 @@ Portal.ManageableLists = function(){
      */
     ListFactory.prototype.LoadList = function(data){
         console.log(data);
+        current_list = this;
         $("#list_editor").hide();
         var path = Utilities.GetAjaxPath("Loader.php");
         var promise = $.getJSON(path, {
@@ -72,10 +88,10 @@ Portal.ManageableLists = function(){
      */
     ListFactory.prototype.SaveEdit = function(){
         var path = Utilities.GetAjaxPath("Saver.php");
-        $.post(path,{
+        $.when($.post(path,{
             "action": "save_edited_" + this.list_type,
             "params": this.GetEditParams()
-        }, this.LoadList.bind(this));
+        }, this.LoadList.bind(this))).done(() => Portal.Servicelist.Initialize(true));
     };
 
     /**
@@ -86,10 +102,10 @@ Portal.ManageableLists = function(){
     ListFactory.prototype.SaveAdded = function(){
         var path = Utilities.GetAjaxPath("Saver.php");
         console.log(this.GetAddedParams());
-        $.post(path,{
+        $.when($.post(path,{
             "action": "save_added_" + this.list_type,
             "params": this.GetAddedParams()
-        }, this.LoadList.bind(this));
+        }, this.LoadList.bind(this))).done(() => Portal.Servicelist.Initialize(true));
     };
 
 
@@ -132,9 +148,9 @@ Portal.ManageableLists = function(){
     ListFactory.prototype.RemoveEntry = function(e){
         var path = Utilities.GetAjaxPath("Saver.php");
             $li = $(e.target).parent();
-        $.post(path,
+        $.when($.post(path,
             this.GetRemoveParams($li),
-            this.LoadList.bind(this));
+            this.LoadList.bind(this))).done(() => Portal.Servicelist.Initialize(true));
     };
 
 
@@ -164,6 +180,7 @@ Portal.ManageableLists = function(){
     return {
 
         ListFactory,
+        GetCurrentList
 
     }
 

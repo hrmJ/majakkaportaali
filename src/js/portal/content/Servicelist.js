@@ -109,6 +109,7 @@ Portal.Servicelist = function(){
         this.Output = function(data){
             var prevmonth = 0,
                 self = this;
+            console.log(data);
             $("#servicelist").html("");
             $.each(data,function(idx, service){
                 thismonth = service.servicedate.replace(/\d+\.(\d+)\.\d+/g,"$1") * 1 ;
@@ -182,9 +183,13 @@ Portal.Servicelist = function(){
      *
      * Hakee nykyhetkeä lähimmän messukauden
      *
+     * @param no_current_date jätetäänkö nykyinen kausi määrittämättä päivämäärän mukaan
      *
      */
-    function SetSeasonByCurrentDate(){
+    function SetSeasonByCurrentDate(no_current_date){
+        if (no_current_date){
+            return 0;
+        }
         var path = Utilities.GetAjaxPath("Loader.php");
         return $.getJSON(path, {
             "action": "get_current_season",
@@ -209,8 +214,10 @@ Portal.Servicelist = function(){
             $.each(data, function(idx, row){
                 all_seasons[row.id] = row;
             });
-            console.log(all_seasons);
+            //Varmistetaan päivittyminen muutosten jälkeen:
+            current_season = all_seasons[current_season.id];
             $("#season-select")
+                .html("")
                 .append(data.map((season) => 
                     `<option value=${season.id}>${season.name}</option>`).join("\n"))
                 .val(current_season.id)
@@ -218,6 +225,11 @@ Portal.Servicelist = function(){
                 .on("selectmenuchange", function() {
                     current_season = all_seasons[$(this).val()];
                     list_of_services.LoadServices();
+                    if($("#managelist").is(":visible")){
+                        //Päivitä myös mahdollisesti auki oleva hallintavalikko
+                        //co
+                        Portal.ManageableLists.GetCurrentList().LoadList();
+                    }
                 });
         });
     }
@@ -227,16 +239,18 @@ Portal.Servicelist = function(){
      *
      * Alusta messunäkymän sisältö, tapahtumat ym.
      *
+     * @param no_current_date jätetäänkö nykyinen kausi määrittämättä päivämäärän mukaan
+     *
      **/
-    function Initialize(){
+    function Initialize(no_current_date){
         var list_type = '';
         console.log("Initializing the list of services...");
-        $.when(SetSeasonByCurrentDate()).done(() => {
-            $.when(list_of_services.LoadServices()).done(() => {
-                LoadShowList();
-                LoadSeasonSelect();
-                }
-            );
+        $.when(SetSeasonByCurrentDate(no_current_date)).done(() => {
+            $.when(LoadSeasonSelect().done( () => {
+                    $.when(list_of_services.LoadServices()).done(() =>  {
+                        LoadShowList()
+                    });
+                }));
         });
         $("#savebutton").click(list_of_services.Save.bind(list_of_services));
         $("#structure_launcher").click(() => window.location="service_structure.php");

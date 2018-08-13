@@ -157,12 +157,17 @@ Portal.ManageableLists.ListFactory.Seasons = function(){
 
         /**
          *
-         * Poistaa yhden listan alkion
+         * Hakee alkion poistoa varten tarvittavat listatyyppikohtaiset parametrit
+         *
+         * @param $li se listan alkio, jota ollaan poistamassa.
          *
          */
-        this.RemoveEntry = function(){
-            console.log("REmoving");
-        };
+        this.GetRemoveParams = function($li){
+            return {
+                "season_id" : $li.find(".season_id").val(),
+                "action" : "remove_season"
+            };
+        }
     
 };
 
