@@ -93,8 +93,10 @@ class Community{
      *
      * Hakee kaikki tietokantaan listatut kaudet
      *
+     * @param $format muotoillaanko suomalaiseen muotoon
+     *
      */
-    public function GetListOfSeasons(){
+    public function GetListOfSeasons($format=true){
         $data = [];
         $seasons = $this->con->select("seasons",
             ["id","name", "startdate", "enddate","theme","comments"],
@@ -102,12 +104,14 @@ class Community{
         $df = new utilities\DateFormatter();
         foreach($seasons as $idx => $entry){
             $formatted = $entry;
-            $formatted["startdate"] = $df
-                ->SetDate($entry["startdate"])
-                ->FormatDate();
-            $formatted["enddate"] = $df
-                ->SetDate($entry["enddate"])
-                ->FormatDate();
+            if($format){
+                $formatted["startdate"] = $df
+                    ->SetDate($entry["startdate"])
+                    ->FormatDate();
+                $formatted["enddate"] = $df
+                    ->SetDate($entry["enddate"])
+                    ->FormatDate();
+            }
             $data[] = $formatted;
         }
         return $data;

@@ -10,6 +10,7 @@ var Portal = Portal || {};
 Portal.Servicelist = function(){
 
     var current_season = {},
+        all_seasons = {},
         list_of_services = undefined,
         manageable_lists = {};
 
@@ -197,17 +198,27 @@ Portal.Servicelist = function(){
      * Lataa valikkopalkin select-elementtiin kaudet ja valitsee nykyistä
      * päivää lähinnä olevan.
      *
-     * @param current_id aktiivisen messun id
      *
      */
     function LoadSeasonSelect(){
         var path = Utilities.GetAjaxPath("Loader.php");
-        return $.getJSON(path, {action: "mlist_Seasons" }, function(data){
+        all_seasons = {};
+        return $.getJSON(path, {action: "list_seasons_unformatted" }, function(data){
+            //Indeksöidään kaikki kaudet all_seasons-muuttujaan, jottei
+            //tarvitse tehdä erillistä ajax-kutsua kautta vaihdettaessa
+            $.each(data, function(idx, row){
+                all_seasons[row.id] = row;
+            });
+            console.log(all_seasons);
             $("#season-select")
                 .append(data.map((season) => 
-                    `<option val=${season.id}>${season.name}</option>`).join("\n"))
-                .val(current_id)
-                .selectmenu("refresh");
+                    `<option value=${season.id}>${season.name}</option>`).join("\n"))
+                .val(current_season.id)
+                .selectmenu("refresh")
+                .on("selectmenuchange", function() {
+                    current_season = all_seasons[$(this).val()];
+                    list_of_services.LoadServices();
+                });
         });
     }
 
@@ -223,12 +234,10 @@ Portal.Servicelist = function(){
         $.when(SetSeasonByCurrentDate()).done(() => {
             $.when(list_of_services.LoadServices()).done(() => {
                 LoadShowList();
+                LoadSeasonSelect();
                 }
             );
         });
-        //$.when(LoadSeasonSelect();
-        //list_of_services.LoadServices();
-        //LoadShowList();
         $("#savebutton").click(list_of_services.Save.bind(list_of_services));
         $("#structure_launcher").click(() => window.location="service_structure.php");
         $(".covermenu-target_managelist").each(function(){
