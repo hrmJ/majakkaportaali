@@ -134,12 +134,14 @@ nav {
     padding-left: 0.5em;
     padding-right: 0.5em; }
   nav .dropdown {
+    z-index: 5;
     position: absolute;
     display: none;
     height: 200vh;
     width: 80vw;
-    background: lightgrey;
-    top: 40px; }
+    background: #e6e6e6;
+    top: 40px;
+    color: #262626; }
   nav li {
     list-style-type: none; }
     nav li a {
@@ -169,10 +171,19 @@ nav {
       nav .menu-child-upper li:hover {
         background: #262626;
         color: #ffffff; }
-  nav .fa-bars {
+  nav .menu-child {
+    font-size: 0.9em; }
+    nav .menu-child li {
+      margin-top: 0.8em; }
+  nav .sidemenu-launcher {
     padding-left: 0.4em;
     font-size: 2em;
     margin-right: 0.2em; }
+  nav .on-right::after {
+    content: "Kirjaudu ulos"; }
+
+.menu-container > li + li {
+  margin-top: 1em; }
 
 .covermenu {
   position: absolute;
@@ -182,7 +193,7 @@ nav {
   background: white;
   width: 100%;
   height: 100%;
-  z-index: 10; }
+  z-index: 3; }
   .covermenu > div {
     padding: 1em 0em 0em 2em; }
 
@@ -209,6 +220,9 @@ a i {
   background: #e6e6e6;
   color: #262626; }
 
+.lowermenuitem {
+  display: none; }
+
 .hamburger-icon {
   cursor: pointer;
   border: 0px;
@@ -232,7 +246,10 @@ a i {
   nav .dropdown {
     height: 100%;
     margin-top: 0px;
-    display: block; }
+    top: 0px;
+    display: block;
+    position: relative;
+    background: none; }
   nav .menu-parent {
     position: relative; }
   nav .menu-child, nav .menu-child-upper {
@@ -270,7 +287,14 @@ a i {
       .menu-container > li:not(.no-menu):hover {
         cursor: pointer;
         background: #e6e6e6;
-        color: #262626; } }
+        color: #262626; }
+
+  .lowermenuitem {
+    display: block; }
+
+  .on-right {
+    position: absolute;
+    right: 1em; } }
 a .fa-arrow-left {
   margin-right: 0.7em; }
 
@@ -369,6 +393,11 @@ h3 {
 
 .injected-data select + select {
   margin-top: 1em; }
+
+.info-p {
+  padding: 0.3em;
+  padding-left: 1em;
+  margin-top: 0.6em; }
 
 .songslot_wating {
   background: yellow; }

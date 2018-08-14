@@ -7,6 +7,7 @@
     }
 }
 
+
 nav{
     position:relative;
     height: $navheight;
@@ -31,12 +32,14 @@ nav{
     }
 
     .dropdown{
+        z-index:5;
         position:absolute;
         display:none;
         height:200vh;
         width:80vw;
-        background:lightgrey;
+        background: darken($navfg,10%);
         top:$navheight;
+        color:$navbg;
     }
 
 
@@ -80,12 +83,36 @@ nav{
                 }
             }
 
-    .fa-bars{
+    .menu-child{
+        font-size:0.9em;
+        li{
+            margin-top:0.8em;
+        }
+    }
+
+    .sidemenu-launcher{
         padding-left:0.4em;
         font-size:2em;
         margin-right:0.2em;
     }
+
+    .on-right{
+        &::after{
+            content: "Kirjaudu ulos";
+        }
+    }
+
 }
+
+
+
+.menu-container{
+
+    & > li + li {
+        margin-top:1em;
+    }
+}
+
 
 
 .covermenu{
@@ -98,7 +125,7 @@ nav{
     width:100%;
     height:100%;
     //padding:1em 0em 0em 2em;
-    z-index:10;
+    z-index:3;
     > div {
         padding:1em 0em 0em 2em;
     }
@@ -131,6 +158,10 @@ a i {
 }
 
 
+.lowermenuitem{
+    display:none;
+}
+
 @include hamburger-icon($navfg, $navheight - 5px);
 
 
@@ -149,7 +180,10 @@ a i {
         .dropdown{
             height:100%;
             margin-top:0px;
+            top:0px;
             display: block;
+            position:relative;
+            background: none;
             & > ul{
             }
         }
@@ -205,6 +239,15 @@ a i {
                 color: $navbg;
             }
         }
+    }
+
+    .lowermenuitem{
+        display:block;
+    }
+
+    .on-right{
+        position:absolute;
+        right:1em;
     }
 
 }

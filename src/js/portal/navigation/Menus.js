@@ -7,17 +7,65 @@ var Portal = Portal || {};
  **/
 Portal.Menus = function(){
 
-    menus = {};
-    initialized = false;
+    var menus = {}
+        sidemenu = undefined,
+        initialized = false;
 
-    var Hamburgermenu = function(){
-
-        this.Initialize = function(){
-        
-            $(".hamburger").click(function(){$(this).next(".dropdown").slideToggle();});
-
-        }
+    /**
+     *
+     * Yksinkertainen sivumenu mobiiliin
+     *
+     * @param $launcher menun avaaja
+     *
+     */
+    var SideMenu = function($launcher){
     
+        this.$launcher = $launcher;
+
+        /**
+         *
+         * Alustaa toiminnallisuuden
+         *
+         */
+        this.Initialize = function(){
+            this.$launcher.click(this.Toggle.bind(this));
+        }
+
+        /**
+         *
+         * Avaa tai sulkee menun riippuen siitä, oliko se äsken auki
+         *
+         */
+        this.Toggle = function(){
+                this.$launcher.find("i")
+                    .toggleClass("fa-bars")
+                    .toggleClass("fa-times");
+                $(".dropdown").slideToggle()
+        }
+
+        /**
+         *
+         * Avaa menun (vaikka väkisin)
+         *
+         */
+        this.Open = function(){
+                this.$launcher.find("i")
+                    .removeClass("fa-bars")
+                    .addClass("fa-times");
+                $(".dropdown").slideDown()
+        }
+
+        /**
+         *
+         * sulkee menun
+         *
+         */
+        this.Close = function(){
+                this.$launcher.find("i")
+                    .removeClass("fa-times")
+                    .addClass("fa-bars");
+                $(".dropdown").slideUp()
+        }
     
     }
 
@@ -68,6 +116,8 @@ Portal.Menus = function(){
             $(".covermenu").hide();
             this.$menu.show();
             //Utilities.BlurContent();
+            if(sidemenu)
+                sidemenu.Close();
         }
 
         /**
@@ -132,12 +182,22 @@ Portal.Menus = function(){
         $("#season-select").selectmenu();
 
         initialized = true;
+
         $(".covermenu").appendTo("main");
-    
+
+
+        //Sivumenu: näitä voi olla vain yksi
+        sidemenu = new SideMenu($(".sidemenu-launcher"));
+        sidemenu.Initialize();
+        console.log(sidemenu)
     }
 
     function GetInitialized(){
         return initialized;
+    }
+
+    function GetSideMenu(){
+        return sidemenu;
     }
 
 
@@ -145,7 +205,8 @@ Portal.Menus = function(){
         InitializeMenus,
         InitializeFoldMenu,
         GetInitialized,
-        menus
+        menus,
+        GetSideMenu,
     }
 
 

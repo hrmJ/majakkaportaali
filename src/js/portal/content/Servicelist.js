@@ -24,7 +24,7 @@ Portal.Servicelist = function(){
      **/
     function LoadShowList(){
         var path = Utilities.GetAjaxPath("Loader.php"),
-            $list = $("#show-options").html("<li>yleisnäkymä</li>"),
+            $list = $(".menu-parent:visible .show-options").html("<li>yleisnäkymä</li>"),
             cl = 'class="launch-action"',
             promise = $.getJSON(
                     path,
@@ -111,6 +111,15 @@ Portal.Servicelist = function(){
                 self = this;
             console.log(data);
             $("#servicelist").html("");
+            if(!data.length){
+                $("#servicelist").append(`
+                    <p class='info-p'>
+                    Ei messuja tällä messukaudella. Lisää messuja tai valitse
+                    toinen kausi Hallitse-valikosta.
+                    </p>
+                    `
+                    );
+            }
             $.each(data,function(idx, service){
                 thismonth = service.servicedate.replace(/\d+\.(\d+)\.\d+/g,"$1") * 1 ;
                 if (thismonth != prevmonth){
@@ -230,6 +239,7 @@ Portal.Servicelist = function(){
                         //co
                         Portal.ManageableLists.GetCurrentList().LoadList();
                     }
+                    Portal.Menus.GetSideMenu().Close();
                 });
         });
     }

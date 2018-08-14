@@ -1,11 +1,15 @@
-        <i class='fa fa-bars'></i>
+        <div class='sidemenu-launcher'><i class='fa fa-bars'></i></div>
         <div class='menu-parent uppermenuitem'>Valitse rooli
-            <ul class='menu-child-upper' id='show-options'>
+            <ul class='menu-child-upper show-options'>
             </ul>
         </div>
         <div class='dropdown'>
             <ul class='menu-container'>
-                <li><select id="season-select"></select></li>
+                <li class='no-menu'><select id="season-select"></select></li>
+                <li class='menu-parent lowermenuitem'>Valitse rooli
+                    <ul class='menu-child show-options'>
+                    </ul>
+                </li>
                 <li class='menu-parent'>Hallitse
                     <ul class='menu-child '>
                         <li class='covermenu-launcher covermenu-target_managelist'>Messuja
@@ -28,6 +32,6 @@
                     </ul>
                 </li>
                 <li>Käynnistä diaesitys</li>
-                <li>Kirjaudu ulos</li>
+                <li class='on-right'><i class='fa fa-sign-out'> </i></li>
             </ul> 
         </div>
