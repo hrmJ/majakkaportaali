@@ -622,7 +622,7 @@ Portal.Menus = function(){
      *
      **/
     function OpenDropDown(){
-        var $child = $(this).find(".menu-child");
+        var $child = $(this).find(".menu-child, .menu-child-upper");
         $child.css({"top": $(this).height() + "px"});
         if($(this).hasClass("active-menu")){
             $child.slideUp(() => $(this).removeClass("active-menu"));
@@ -3986,6 +3986,7 @@ GeneralStructure.Headers = function(){
          *
          */
         source.prototype.SetHeaderTemplates = function(set_select_val){
+            var path = Utilities.GetAjaxPath("Loader.php");
             if(set_select_val === undefined){ 
                 var set_select_val = true;
             }
@@ -3994,7 +3995,8 @@ GeneralStructure.Headers = function(){
             self.$lightbox.find(".headertemplates textarea").on("change paste keyup",function(){self.UpdatePickedHeader()});
             self.$lightbox.find(".headertemplates [name='header_type']").on("click",function(){self.UpdatePickedHeader()});
             self.headerdata = {};
-            $.getJSON("php/loaders/fetch_slide_content.php",{"slideclass":"headernames","id":""}, function(headers){
+            $.getJSON(path, {"action":"get_slide_headers"},
+                function(headers){
                 //Jos alustetaan käyttöä varten ensimmäistä kertaa
                 var $sel = self.$lightbox.find("select[name='header_select']");
                 try{

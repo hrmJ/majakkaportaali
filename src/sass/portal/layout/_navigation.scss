@@ -13,10 +13,30 @@ nav{
     width:100%;
     background:$navbg;
     color: $navfg;
+    display:flex;
+    flex-flow:row nowrap;
+    align-items: center;
+
+
+    .menu-parent{
+        position:relative;
+    }
+
+    .uppermenuitem{
+        display:flex;
+        align-items:center;
+        height:100%;
+        padding-left:0.5em;
+        padding-right:0.5em;
+    }
 
     .dropdown{
-        margin-top: $navheight;
-        display: none;
+        position:absolute;
+        display:none;
+        height:200vh;
+        width:80vw;
+        background:lightgrey;
+        top:$navheight;
     }
 
 
@@ -32,11 +52,41 @@ nav{
             }
         }
     }
+    .menu-child-upper{
+                @include bottomshadow;
+                display:none;
+                position: absolute;
+                margin-left:0;
+                left:0;
+                min-width:7em;
+                padding-left:0px;
+                padding-right:0px;
+                background: darken($navfg,10%);
+                color: $navbg;
+                margin-top: 0px;
+                z-index:200;
+                li{
+                    height:2em;
+                    padding-left:3px;
+                    display:flex;
+                    align-items:center;
+                    &:hover{
+                        background:$navbg;
+                        color:$navfg;
+                    }
+                }
+                li:first-child{
+                    //border-top:1px dashed $navbg;
+                }
+            }
 
-    .fa-arrow-left{
-    
+    .fa-bars{
+        padding-left:0.4em;
+        font-size:2em;
+        margin-right:0.2em;
     }
 }
+
 
 .covermenu{
     position:absolute;
@@ -90,7 +140,7 @@ a i {
     nav{
 
 
-        .hamburger{
+        .fa-bars, .uppermenuitem{
             display:none;
         }
 
@@ -108,7 +158,7 @@ a i {
             position:relative;
         }
 
-        .menu-child{
+        .menu-child, .menu-child-upper{
             @include bottomshadow;
             position: absolute;
             margin-left:0;

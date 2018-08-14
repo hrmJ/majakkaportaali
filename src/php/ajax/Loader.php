@@ -157,6 +157,10 @@ switch($params["action"]){
         $style = new SlideStyle($database);
         echo json_encode($style->LoadSlideClassNames());
         break;
+    case "get_slide_headers":
+        $structure = new Structure($database, $m);
+        echo json_encode($structure->ListSlideHeaders());
+        break;
     case "load_styles":
         $style = new SlideStyle($database);
         $style->LoadAllStyles($params["stylesheet"]);

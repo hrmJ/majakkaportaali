@@ -90,7 +90,7 @@ Portal.Menus = function(){
      *
      **/
     function OpenDropDown(){
-        var $child = $(this).find(".menu-child");
+        var $child = $(this).find(".menu-child, .menu-child-upper");
         $child.css({"top": $(this).height() + "px"});
         if($(this).hasClass("active-menu")){
             $child.slideUp(() => $(this).removeClass("active-menu"));

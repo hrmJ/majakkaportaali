@@ -424,6 +424,20 @@ class Structure{
         return $this;
     }
 
+
+    /**
+     * 
+     * Listaa kaikki tietokannassa olevat ylätunnisteet
+     *
+     */
+    public function ListSlideHeaders(){
+        $headers = $this->con->select("headers",
+            ["id", "template_name", "imgname", "imgposition", 
+            "maintext", "is_aside"]);
+        return $headers;
+    }
+
+
     /**
      * 
      * Lisää uuden ylä- tai sivutunnistepohjan
