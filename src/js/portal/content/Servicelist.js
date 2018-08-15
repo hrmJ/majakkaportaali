@@ -22,23 +22,34 @@ Portal.Servicelist = function(){
      * @param callback funktio, joka ajetaan kun lataus on valmis
      *
      **/
-    function LoadShowList(){
+    function LoadListOfRoles(){
         var path = Utilities.GetAjaxPath("Loader.php"),
-            $list = $(".menu-parent:visible .show-options").html("<li>yleisnäkymä</li>"),
+            $list = $(".menu-parent:visible .show-options").html(""),
+            $header_li = $("<li>yleisnäkymä</li>")
+                .click(list_of_services.LoadServicesClean.bind(list_of_services))
+                .appendTo($list),
             cl = 'class="launch-action"',
-            promise = $.getJSON(
-                    path,
-                    {action: "get_list_of_responsibilities"}, 
-                    (resps) =>  $list.append(resps.map((resp) => `<li ${cl}>${resp}</li>`))
-                    );
+            promise = $.getJSON(path, 
+                {
+                    action: "get_list_of_responsibilities"
+                }, 
+                (resps) =>  $list.append(resps.map((resp) => `<li ${cl}>${resp}</li>`))
+            );
+
         $.when(promise).done(() => {
-            //TODO: tämäkin data tietokannasta
-            //$list.append("<li ${cl}>teema</li>");
             $list.find(".launch-action").click(function(){
-                 list_of_services.SetFilteredBy($(this).text());
-                 list_of_services.FilterServices.bind(list_of_services)();
+                list_of_services.SetFilteredBy($(this).text());
+                list_of_services.FilterServices.bind(list_of_services)();
                 }
             );
+            // Korvaa mobiilissa listan otsikko
+            $list.find("li").click(function(){
+                if($(".fa-bars").is(":visible")){
+                    $(this).parents(".menu-parent")
+                        .find(".menu-header")
+                        .text($(this).text());
+                }
+            });
         });
     };
 
@@ -65,6 +76,16 @@ Portal.Servicelist = function(){
             this.filteredby = filterby;
             return this;
         }
+
+        /**
+         *
+         * Lataa messulistan ja varmistaa, että ladataan alkuperäinen, vain messut sisältävä lista
+         *
+         **/
+        this.LoadServicesClean = function(){
+            this.is_editable = false;
+            this.LoadServices();
+        };
 
         /**
          *
@@ -111,6 +132,7 @@ Portal.Servicelist = function(){
                 self = this;
             console.log(data);
             $("#servicelist").html("");
+            $(".covermenu").hide();
             if(!data.length){
                 $("#servicelist").append(`
                     <p class='info-p'>
@@ -151,6 +173,7 @@ Portal.Servicelist = function(){
                     window.location = window.location.href = "service.php?service_id=" + id;
                 });
                 $("#savebutton").hide();
+                $(".byline h2").text("Messut / " + current_season.name);
             }
             else{
                 $("#savebutton").show();
@@ -258,12 +281,13 @@ Portal.Servicelist = function(){
         $.when(SetSeasonByCurrentDate(no_current_date)).done(() => {
             $.when(LoadSeasonSelect().done( () => {
                     $.when(list_of_services.LoadServices()).done(() =>  {
-                        LoadShowList()
+                        LoadListOfRoles()
                     });
                 }));
         });
         $("#savebutton").click(list_of_services.Save.bind(list_of_services));
         $("#structure_launcher").click(() => window.location="service_structure.php");
+        //Vastuukohtainen suodattaminen
         $(".covermenu-target_managelist").each(function(){
             var list = Portal.ManageableLists.ListFactory.make($(this));
             $(this).click(list.LoadList.bind(list));

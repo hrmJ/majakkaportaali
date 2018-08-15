@@ -79,6 +79,16 @@ class CommunityTest extends TestCase
         $this->assertRegexp("/testsea/", $season["name"]);
     }
 
+    /**
+     *
+     * Testaa, että messujen lisäminen onnistuu
+     *
+     */
+    public function testSaveNewServices() {
+        $community= new Community($this->con);
+        $community->SaveNewServices(["2018-12-30"]);
+    }
+
 }
 
 

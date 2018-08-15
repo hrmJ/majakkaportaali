@@ -143,10 +143,22 @@ class Community{
      *
      */
     public function SaveNewServices($dates){
+        $responsibilities = $this->GetListOfResponsibilities();
         foreach($dates as $date){
             $this->con->insert("services",
                 ["servicedate" => $date, "theme" => "Aihe puuttuu"]
             );
+            $id = $this->con->max("services","id");
+            var_dump($id);
+            //Syötetään myös vastuut
+            foreach($responsibilities as $responsibility){
+                $this->con->insert("responsibilities",
+                    ["responsibility" => $responsibility, 
+                    "responsible" => "", 
+                    "service_id" => $id
+                    ]
+                );
+            }
         }
     }
 

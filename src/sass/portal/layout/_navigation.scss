@@ -90,6 +90,10 @@ nav{
         }
     }
 
+
+}
+
+@media only screen and (max-width: 920px){
     .sidemenu-launcher{
         padding-left:0.4em;
         font-size:2em;
@@ -102,16 +106,16 @@ nav{
         }
     }
 
-}
+    .menu-container{
 
-
-
-.menu-container{
-
-    & > li + li {
-        margin-top:1em;
+        & > li + li {
+            margin-top:1em;
+        }
     }
 }
+
+
+
 
 
 
@@ -184,6 +188,7 @@ a i {
             display: block;
             position:relative;
             background: none;
+            color:white;
             & > ul{
             }
         }
@@ -249,6 +254,12 @@ a i {
         position:absolute;
         right:1em;
     }
+
+
+    .sidemenu-launcher{
+        display:none;
+    }
+
 
 }
 

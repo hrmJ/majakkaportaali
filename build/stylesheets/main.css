@@ -175,16 +175,18 @@ nav {
     font-size: 0.9em; }
     nav .menu-child li {
       margin-top: 0.8em; }
-  nav .sidemenu-launcher {
+
+@media only screen and (max-width: 920px) {
+  .sidemenu-launcher {
     padding-left: 0.4em;
     font-size: 2em;
     margin-right: 0.2em; }
-  nav .on-right::after {
+
+  .on-right::after {
     content: "Kirjaudu ulos"; }
 
-.menu-container > li + li {
-  margin-top: 1em; }
-
+  .menu-container > li + li {
+    margin-top: 1em; } }
 .covermenu {
   position: absolute;
   display: none;
@@ -249,7 +251,8 @@ a i {
     top: 0px;
     display: block;
     position: relative;
-    background: none; }
+    background: none;
+    color: white; }
   nav .menu-parent {
     position: relative; }
   nav .menu-child, nav .menu-child-upper {
@@ -294,7 +297,10 @@ a i {
 
   .on-right {
     position: absolute;
-    right: 1em; } }
+    right: 1em; }
+
+  .sidemenu-launcher {
+    display: none; } }
 a .fa-arrow-left {
   margin-right: 0.7em; }
 

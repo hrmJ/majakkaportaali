@@ -132,6 +132,7 @@ Portal.ManageableLists = function(){
     ListFactory.prototype.StartEdit = function(e){
         this.$current_li = $(e.target).parent();
         this.OpenBox();
+        console.log("LKJLKLj");
         $("<button>Tallenna</button>")
             .click(this.SaveEdit.bind(this))
             .appendTo("#list_editor");

@@ -49,10 +49,12 @@ Portal.Menus = function(){
          *
          */
         this.Open = function(){
+            if(this.$launcher.is(":visible")){
                 this.$launcher.find("i")
                     .removeClass("fa-bars")
                     .addClass("fa-times");
                 $(".dropdown").slideDown()
+            }
         }
 
         /**
@@ -61,10 +63,12 @@ Portal.Menus = function(){
          *
          */
         this.Close = function(){
+            if(this.$launcher.is(":visible")){
                 this.$launcher.find("i")
                     .removeClass("fa-times")
                     .addClass("fa-bars");
                 $(".dropdown").slideUp()
+            }
         }
     
     }
