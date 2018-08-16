@@ -18,10 +18,9 @@ GeneralStructure.SlotFactory.songslide = function(){
      **/
     this.FillInData = function(data){
         var self = this;
-        if(data.multiname){
+        this.$lightbox.find("[value='multisong']").get(0).checked=false;
+        if(data.is_multi){
             this.$lightbox.find("[value='multisong']").get(0).checked=true;
-            this.$lightbox.find(".multisongheader").show();
-            this.$lightbox.find(".multisongheader input[type='text']").val(data.multiname);
         }
         if(data.restrictedto){
             this.$lightbox.find("[value='restrictedsong']").get(0).checked=true;
@@ -46,11 +45,10 @@ GeneralStructure.SlotFactory.songslide = function(){
      *
      **/
     this.SetSlideParams = function(){
-        var $multiheader = this.$lightbox.find(".multisongheader");
         this.slide_params = {
             songdescription: this.$lightbox.find(".songdescription").val(),
             singlename: this.$lightbox.find(".segment-name").val(),
-            multiname: $multiheader.find("input[type='text']").val(),
+            is_multi: (this.$lightbox.find("[value='multisong']").get(0).checked ? 1 : 0),
             restrictedto: this.$lightbox.find("[name='restrictions_input']").val()
         }
         if(!this.$lightbox.find("[value='restrictedsong']").get(0).checked){

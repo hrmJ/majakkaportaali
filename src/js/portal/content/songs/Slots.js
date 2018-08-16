@@ -62,12 +62,18 @@ var SongSlots = function(){
      *
      **/
     function InitializeContainers(slot_data){
-        //TODO: multisongs!
         $("#songslots").html(slot_data);
+        console.log(slot_data);
         $(".slotcontainer").each(function(){
             var Cont = new SlotContainer($(this));
             Cont.SetName( $(this).find(".cont_name").text());
-            Cont.SetMultisongButtons().FetchSlots();
+            if(Cont.$div.find(".is_multi_val").val()*1){
+                //Lisää useamman laulun lisäyspainikkeet vain, jos 
+                //laulu määritelty usean laulun lauluksi
+                Cont.SetMultisongButtons();
+            }
+            Cont.FetchSlots();
+            Cont.SetToolTip();
         });
     }
 
@@ -82,6 +88,7 @@ var SongSlots = function(){
     var SlotContainer = function($div){
 
         this.$ul = $("<ul></ul>").appendTo($div.find(".songslots"));
+        this.$div = $div;
         this.sortable_slot_list = undefined;
 
         /**
@@ -156,6 +163,19 @@ var SongSlots = function(){
             this.sortable_slot_list.Initialize();
         };
 
+        /**
+         *
+         * Lisää opasteen näyttävän tapahtuman
+         *
+         */
+        this.SetToolTip = function(){
+            this.$div.find(".fa-question-circle").click(
+                () => {
+                    var msg = new Utilities.Message(this.$div.find(".songdescription_val").val(), this.$div);
+                    msg.AddCloseButton().Show(8000);
+                }
+            );
+        }
 
         /**
          *

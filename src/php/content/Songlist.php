@@ -146,28 +146,35 @@ class Songlist{
      */
     public function LoadSongSlots($service_id){
         $cols = ["slot_name", "content_id", "slot_number"];
-        $order = ['ORDER' => [ 'slot_number' => 'ASC' ]];
         $slots = $this->con->select("service_specific_presentation_structure",
             $cols,
-            ["slot_type" => "songsegment", "service_id" => $service_id],
+            [
+                "slot_type" => "songsegment", 
+                "service_id" => $service_id,
+                'ORDER' => [ 'slot_number' => 'ASC' ]
+            ],
             $order);
         if(!$slots){
             $slots = $this->con->select("presentation_structure",
-                $cols, ["slot_type" => "songsegment"], $order);
+                $cols, [
+                    "slot_type" => "songsegment",
+                    'ORDER' => [ 'slot_number' => 'ASC' ]
+                ]);
         }
-
-        //HACK! Miksei Medoo sorttaa??
-        usort($slots, function ($item1, $item2) {
-            return $item1['slot_number'] <=> $item2['slot_number'];
-        });
 
         $this->slots_as_string = "";
         foreach($slots as $slot){
+            $slot_specification = $this->con->get("songsegments",
+                ["songdescription", "is_multi"],
+                ["id" => $slot["content_id"]]
+            );
             $output = $this->template_engine->loadTemplate('singlesong'); 
             $this->slots_as_string  .= "\n" . $output->render([
                     "category" => $slot["slot_name"],
                     "name" => "",
                     "value" => "",
+                    "is_multi" => $slot_specification["is_multi"],
+                    "songdescription" => $slot_specification["songdescription"],
                 ]);
         }
         return $this;

@@ -946,12 +946,18 @@ var SongSlots = function(){
      *
      **/
     function InitializeContainers(slot_data){
-        //TODO: multisongs!
         $("#songslots").html(slot_data);
+        console.log(slot_data);
         $(".slotcontainer").each(function(){
             var Cont = new SlotContainer($(this));
             Cont.SetName( $(this).find(".cont_name").text());
-            Cont.SetMultisongButtons().FetchSlots();
+            if(Cont.$div.find(".is_multi_val").val()*1){
+                //Lisää useamman laulun lisäyspainikkeet vain, jos 
+                //laulu määritelty usean laulun lauluksi
+                Cont.SetMultisongButtons();
+            }
+            Cont.FetchSlots();
+            Cont.SetToolTip();
         });
     }
 
@@ -966,6 +972,7 @@ var SongSlots = function(){
     var SlotContainer = function($div){
 
         this.$ul = $("<ul></ul>").appendTo($div.find(".songslots"));
+        this.$div = $div;
         this.sortable_slot_list = undefined;
 
         /**
@@ -1040,6 +1047,19 @@ var SongSlots = function(){
             this.sortable_slot_list.Initialize();
         };
 
+        /**
+         *
+         * Lisää opasteen näyttävän tapahtuman
+         *
+         */
+        this.SetToolTip = function(){
+            this.$div.find(".fa-question-circle").click(
+                () => {
+                    var msg = new Utilities.Message(this.$div.find(".songdescription_val").val(), this.$div);
+                    msg.AddCloseButton().Show(8000);
+                }
+            );
+        }
 
         /**
          *
@@ -3670,10 +3690,9 @@ GeneralStructure.SlotFactory.songslide = function(){
      **/
     this.FillInData = function(data){
         var self = this;
-        if(data.multiname){
+        this.$lightbox.find("[value='multisong']").get(0).checked=false;
+        if(data.is_multi){
             this.$lightbox.find("[value='multisong']").get(0).checked=true;
-            this.$lightbox.find(".multisongheader").show();
-            this.$lightbox.find(".multisongheader input[type='text']").val(data.multiname);
         }
         if(data.restrictedto){
             this.$lightbox.find("[value='restrictedsong']").get(0).checked=true;
@@ -3698,11 +3717,10 @@ GeneralStructure.SlotFactory.songslide = function(){
      *
      **/
     this.SetSlideParams = function(){
-        var $multiheader = this.$lightbox.find(".multisongheader");
         this.slide_params = {
             songdescription: this.$lightbox.find(".songdescription").val(),
             singlename: this.$lightbox.find(".segment-name").val(),
-            multiname: $multiheader.find("input[type='text']").val(),
+            is_multi: (this.$lightbox.find("[value='multisong']").get(0).checked ? 1 : 0),
             restrictedto: this.$lightbox.find("[name='restrictions_input']").val()
         }
         if(!this.$lightbox.find("[value='restrictedsong']").get(0).checked){

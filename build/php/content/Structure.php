@@ -174,7 +174,7 @@ class Structure{
                     "songdescription",
                     "restrictedto",
                     "singlename", 
-                    "multiname"
+                    "is_multi"
                 ];
                 break;
         }
