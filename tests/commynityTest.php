@@ -89,6 +89,20 @@ class CommunityTest extends TestCase
         $community->SaveNewServices(["2018-12-30"]);
     }
 
+
+    /**
+     *
+     * Testaa, että vastuiden lis'äminen onnistuu
+     *
+     */
+    public function testSaveNewResponsibilities() {
+        $community= new Community($this->con);
+        $community->SaveNewResponsibility("TESTIvastuu", "MOROvaan selitys");
+        $tv = $this->con->get("responsibilities_meta","description",
+            ["responsibility" => "TESTIvastuu"]);
+        $this->assertEquals($tv, "MOROvaan selitys");
+            
+    }
 }
 
 

@@ -725,7 +725,6 @@ Portal.Menus = function(){
         //Sivumenu: näitä voi olla vain yksi
         sidemenu = new SideMenu($(".sidemenu-launcher"));
         sidemenu.Initialize();
-        console.log(sidemenu)
     }
 
     function GetInitialized(){
@@ -2519,13 +2518,25 @@ Portal.ManageableLists = function(){
      */
     ListFactory.prototype.SaveAdded = function(){
         var path = Utilities.GetAjaxPath("Saver.php");
-        console.log(this.GetAddedParams());
         $.when($.post(path,{
             "action": "save_added_" + this.list_type,
             "params": this.GetAddedParams()
         }, this.LoadList.bind(this))).done(() => Portal.Servicelist.Initialize(true));
     };
 
+
+    /**
+     *
+     * Lisää muokkausikkunan tallennuspainikkeen
+     *
+     * @param callback mikä tallennusfunktio suoritetaan
+     *
+     */
+    ListFactory.prototype.AddSaveButton = function(callback){
+        $("<div class='below_box'><button>Tallenna</button></div>")
+            .click(callback.bind(this))
+            .appendTo($("#list_editor"));
+    }
 
     /**
      *
@@ -2550,7 +2561,6 @@ Portal.ManageableLists = function(){
     ListFactory.prototype.StartEdit = function(e){
         this.$current_li = $(e.target).parent();
         this.OpenBox();
-        console.log("LKJLKLj");
         $("<button>Tallenna</button>")
             .click(this.SaveEdit.bind(this))
             .appendTo("#list_editor");
@@ -2692,6 +2702,7 @@ Portal.Servicelist = function(){
          **/
         this.LoadServicesClean = function(){
             this.is_editable = false;
+            $(".covermenu").hide();
             this.LoadServices();
         };
 
@@ -2717,6 +2728,7 @@ Portal.Servicelist = function(){
         this.FilterServices = function(){
             this.is_editable = true;
             var path = Utilities.GetAjaxPath("Loader.php");
+            $(".covermenu").hide();
             $.when($.getJSON(path,{
                 action: "get_filtered_list_of_services",
                 "startdate" : current_season.startdate,
@@ -2738,9 +2750,8 @@ Portal.Servicelist = function(){
         this.Output = function(data){
             var prevmonth = 0,
                 self = this;
-            console.log(data);
             $("#servicelist").html("");
-            $(".covermenu").hide();
+            $(".covermenu:not(#managelist)").hide();
             if(!data.length){
                 $("#servicelist").append(`
                     <p class='info-p'>
@@ -2947,6 +2958,21 @@ Portal.ManageableLists.ListFactory = Portal.ManageableLists.ListFactory || {};
  */
 Portal.ManageableLists.ListFactory.Responsibilities = function(){
 
+    this.edithtml = `
+                    <div class='label_parent'>
+                        <div>Vastuun nimi</div>
+                        <div>
+                            <input class='new_responsibility' type='text' value=''></input>
+                        </div>
+                    </div>
+                    <div class='label_parent'>
+                        <div>Vastuun kuvaus</div>
+                        <div>
+                        <textarea placeholder='Lyhyt selitys siitä, mitä tähän vastuuseen kuuluu'
+                            class='description'></textarea>
+                        </div>
+                    </div>`;
+
     /**
      *
      * Lisää yhden datarivin tietokannasta
@@ -2956,11 +2982,9 @@ Portal.ManageableLists.ListFactory.Responsibilities = function(){
      *
      */
     this.AddListRow = function(raw_data, $li){
-        console.log(raw_data);
         $li.find("span").text(raw_data);
         return $li;
     }
-
 
     /**
      *
@@ -2980,6 +3004,19 @@ Portal.ManageableLists.ListFactory.Responsibilities = function(){
 
     /**
      *
+     * Hakee tarvittavat lisättävän vastuun parametrit
+     *
+     */
+    this.GetAddedParams = function(){
+        return  {
+            responsibility: $("#list_editor .new_responsibility").val(),
+            description: $("#list_editor .description").val()
+        };
+    }
+
+
+    /**
+     *
      * Nåyttää ikkunan, jossa voi muokata yhtä listan alkiota.
      * TODO kaikille tyypeille yhteinen lähtötilanne?
      *
@@ -2995,24 +3032,10 @@ Portal.ManageableLists.ListFactory.Responsibilities = function(){
             "responsibility": responsibility
             },
             (data) => {
-                console.log(data);
-                $(`
-                    <div class='label_parent'>
-                        <div>Vastuun nimi</div>
-                        <div>
-                            <input class='new_responsibility' type='text' value='${responsibility}'></input>
-                        </div>
-                    </div>
-                    <div class='label_parent'>
-                        <div>Vastuun kuvaus</div>
-                        <div>
-                        <textarea placeholder='Lyhyt selitys siitä, mitä tähän vastuuseen kuuluu'
-                            class='description'>${data.description || ''}</textarea>
-                        </div>
-                    </div>
-
-                `).appendTo("#list_editor .edit_container");
-            
+                var $html = $(this.edithtml);
+                $html.find(".new_responsibility").val(responsibility);
+                $html.find(".description").val(data.description);
+                $html.appendTo("#list_editor .edit_container");
             }
         );
     };
@@ -3036,13 +3059,12 @@ Portal.ManageableLists.ListFactory.Responsibilities = function(){
      *
      * Lisää uuden alkion listaan.
      *
-     *
      */
     this.AddEntry = function(){
-    
-    
+        this.OpenBox();
+        $(this.edithtml).appendTo("#list_editor .edit_container");
+        this.AddSaveButton(this.SaveAdded);
     };
-
 
 };
 
@@ -3101,7 +3123,9 @@ Portal.ManageableLists.ListFactory.Seasons = function(){
          */
         this.AddListRow = function(raw_data, $li){
             $li.find("span").html(`
-                ${raw_data.name} ${raw_data.startdate} - ${raw_data.enddate}
+                <strong>${raw_data.name}</strong>
+                ${raw_data.startdate.replace(/20(\d{2})/,"-$1")} - 
+                ${raw_data.enddate.replace(/20(\d{2})/,"-$1")}
                 <input type='hidden' class='season_name' value='${raw_data.name}'></input>
                 <input type='hidden' class='start_date' value='${raw_data.startdate}'></input>
                 <input type='hidden' class='end_date' value='${raw_data.enddate}'></input>
@@ -3395,9 +3419,7 @@ Portal.ManageableLists.ListFactory.Services = function(){
         this.AddEntry = function(){
             this.OpenBox();
             this.PrintEditOrAdderBox($(this.addhtml));
-            $("<div class='below_box'><button>Tallenna</button></div>")
-                .click(this.SaveAdded.bind(this))
-                .appendTo($("#list_editor"));
+            this.AddSaveButton(this.SaveAdded);
         };
 
 

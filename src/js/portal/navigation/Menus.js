@@ -193,7 +193,6 @@ Portal.Menus = function(){
         //Sivumenu: näitä voi olla vain yksi
         sidemenu = new SideMenu($(".sidemenu-launcher"));
         sidemenu.Initialize();
-        console.log(sidemenu)
     }
 
     function GetInitialized(){

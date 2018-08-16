@@ -40,6 +40,13 @@ switch($params["action"]){
         $com= new Community($database);
         $com->SaveNewServices($params["params"]["dates"]);
         break;
+    case "save_added_Responsibilities":
+        $com= new Community($database);
+        $com->SaveNewResponsibility(
+            $params["params"]["responsibility"], 
+            $params["params"]["description"]
+        );
+        break;
     case "remove_responsibility":
         $com= new Community($database);
         $com->RemoveResponsibility($params["responsibility"]);

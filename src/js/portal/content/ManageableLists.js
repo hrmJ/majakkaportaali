@@ -101,13 +101,25 @@ Portal.ManageableLists = function(){
      */
     ListFactory.prototype.SaveAdded = function(){
         var path = Utilities.GetAjaxPath("Saver.php");
-        console.log(this.GetAddedParams());
         $.when($.post(path,{
             "action": "save_added_" + this.list_type,
             "params": this.GetAddedParams()
         }, this.LoadList.bind(this))).done(() => Portal.Servicelist.Initialize(true));
     };
 
+
+    /**
+     *
+     * Lisää muokkausikkunan tallennuspainikkeen
+     *
+     * @param callback mikä tallennusfunktio suoritetaan
+     *
+     */
+    ListFactory.prototype.AddSaveButton = function(callback){
+        $("<div class='below_box'><button>Tallenna</button></div>")
+            .click(callback.bind(this))
+            .appendTo($("#list_editor"));
+    }
 
     /**
      *
@@ -132,7 +144,6 @@ Portal.ManageableLists = function(){
     ListFactory.prototype.StartEdit = function(e){
         this.$current_li = $(e.target).parent();
         this.OpenBox();
-        console.log("LKJLKLj");
         $("<button>Tallenna</button>")
             .click(this.SaveEdit.bind(this))
             .appendTo("#list_editor");

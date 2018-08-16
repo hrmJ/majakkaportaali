@@ -51,7 +51,9 @@ Portal.ManageableLists.ListFactory.Seasons = function(){
          */
         this.AddListRow = function(raw_data, $li){
             $li.find("span").html(`
-                ${raw_data.name} ${raw_data.startdate} - ${raw_data.enddate}
+                <strong>${raw_data.name}</strong>
+                ${raw_data.startdate.replace(/20(\d{2})/,"-$1")} - 
+                ${raw_data.enddate.replace(/20(\d{2})/,"-$1")}
                 <input type='hidden' class='season_name' value='${raw_data.name}'></input>
                 <input type='hidden' class='start_date' value='${raw_data.startdate}'></input>
                 <input type='hidden' class='end_date' value='${raw_data.enddate}'></input>

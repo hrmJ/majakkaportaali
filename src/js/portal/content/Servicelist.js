@@ -84,6 +84,7 @@ Portal.Servicelist = function(){
          **/
         this.LoadServicesClean = function(){
             this.is_editable = false;
+            $(".covermenu").hide();
             this.LoadServices();
         };
 
@@ -109,6 +110,7 @@ Portal.Servicelist = function(){
         this.FilterServices = function(){
             this.is_editable = true;
             var path = Utilities.GetAjaxPath("Loader.php");
+            $(".covermenu").hide();
             $.when($.getJSON(path,{
                 action: "get_filtered_list_of_services",
                 "startdate" : current_season.startdate,
@@ -130,9 +132,8 @@ Portal.Servicelist = function(){
         this.Output = function(data){
             var prevmonth = 0,
                 self = this;
-            console.log(data);
             $("#servicelist").html("");
-            $(".covermenu").hide();
+            $(".covermenu:not(#managelist)").hide();
             if(!data.length){
                 $("#servicelist").append(`
                     <p class='info-p'>

@@ -8,6 +8,21 @@ Portal.ManageableLists.ListFactory = Portal.ManageableLists.ListFactory || {};
  */
 Portal.ManageableLists.ListFactory.Responsibilities = function(){
 
+    this.edithtml = `
+                    <div class='label_parent'>
+                        <div>Vastuun nimi</div>
+                        <div>
+                            <input class='new_responsibility' type='text' value=''></input>
+                        </div>
+                    </div>
+                    <div class='label_parent'>
+                        <div>Vastuun kuvaus</div>
+                        <div>
+                        <textarea placeholder='Lyhyt selitys siitä, mitä tähän vastuuseen kuuluu'
+                            class='description'></textarea>
+                        </div>
+                    </div>`;
+
     /**
      *
      * Lisää yhden datarivin tietokannasta
@@ -17,11 +32,9 @@ Portal.ManageableLists.ListFactory.Responsibilities = function(){
      *
      */
     this.AddListRow = function(raw_data, $li){
-        console.log(raw_data);
         $li.find("span").text(raw_data);
         return $li;
     }
-
 
     /**
      *
@@ -41,6 +54,19 @@ Portal.ManageableLists.ListFactory.Responsibilities = function(){
 
     /**
      *
+     * Hakee tarvittavat lisättävän vastuun parametrit
+     *
+     */
+    this.GetAddedParams = function(){
+        return  {
+            responsibility: $("#list_editor .new_responsibility").val(),
+            description: $("#list_editor .description").val()
+        };
+    }
+
+
+    /**
+     *
      * Nåyttää ikkunan, jossa voi muokata yhtä listan alkiota.
      * TODO kaikille tyypeille yhteinen lähtötilanne?
      *
@@ -56,24 +82,10 @@ Portal.ManageableLists.ListFactory.Responsibilities = function(){
             "responsibility": responsibility
             },
             (data) => {
-                console.log(data);
-                $(`
-                    <div class='label_parent'>
-                        <div>Vastuun nimi</div>
-                        <div>
-                            <input class='new_responsibility' type='text' value='${responsibility}'></input>
-                        </div>
-                    </div>
-                    <div class='label_parent'>
-                        <div>Vastuun kuvaus</div>
-                        <div>
-                        <textarea placeholder='Lyhyt selitys siitä, mitä tähän vastuuseen kuuluu'
-                            class='description'>${data.description || ''}</textarea>
-                        </div>
-                    </div>
-
-                `).appendTo("#list_editor .edit_container");
-            
+                var $html = $(this.edithtml);
+                $html.find(".new_responsibility").val(responsibility);
+                $html.find(".description").val(data.description);
+                $html.appendTo("#list_editor .edit_container");
             }
         );
     };
@@ -97,13 +109,12 @@ Portal.ManageableLists.ListFactory.Responsibilities = function(){
      *
      * Lisää uuden alkion listaan.
      *
-     *
      */
     this.AddEntry = function(){
-    
-    
+        this.OpenBox();
+        $(this.edithtml).appendTo("#list_editor .edit_container");
+        this.AddSaveButton(this.SaveAdded);
     };
-
 
 };
 

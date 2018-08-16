@@ -135,6 +135,31 @@ class Community{
         return ["Messun aihe","Messun päivämäärä"];
     }
 
+
+    /**
+     *
+     * Tallentaa uuden vastuun
+     *
+     * @param $responsibility vastuun nimi
+     *
+     */
+    public function SaveNewResponsibility($responsibility, $description){
+        $service_ids = $this->con->query("SELECT DISTINCT id FROM services")
+            ->fetchAll(PDO::FETCH_COLUMN);
+        $this->con->insert("responsibilities_meta", ["responsibility" => $responsibility, 
+            "description" => $description]);
+        foreach($service_ids as $id){
+            $this->con->insert("responsibilities",
+                [
+                    "service_id" => $id,
+                    "responsibility" => $responsibility,
+                    "responsible" => "",
+                ]
+            );
+        }
+    }
+
+
     /**
      *
      * Tallentaa uudet messut

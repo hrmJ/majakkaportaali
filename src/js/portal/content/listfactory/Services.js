@@ -124,9 +124,7 @@ Portal.ManageableLists.ListFactory.Services = function(){
         this.AddEntry = function(){
             this.OpenBox();
             this.PrintEditOrAdderBox($(this.addhtml));
-            $("<div class='below_box'><button>Tallenna</button></div>")
-                .click(this.SaveAdded.bind(this))
-                .appendTo($("#list_editor"));
+            this.AddSaveButton(this.SaveAdded);
         };
 
 
