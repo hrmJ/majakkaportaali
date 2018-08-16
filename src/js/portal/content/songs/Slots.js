@@ -486,9 +486,16 @@ var SongSlots = function(){
         this.IndicateLyrics = function(song_ids){
             this.song_ids = song_ids;
             this.$div.removeClass("no_indicator");
-            //Valitse oletuksena versioista ensimmäinen
-            this.$div.find(".song_id").val(song_ids[0]);
-            this.picked_id = song_ids[0];
+            if(!this.picked_id){
+                //Valitse oletuksena versioista ensimmäinen
+                this.$div.find(".song_id").val(song_ids[0]);
+                this.picked_id = song_ids[0];
+            }
+            else{
+                //Muutoin käytä määriteltyä
+                this.$div.find(".song_id").val(this.picked_id);
+            }
+
             if(!song_ids.length){
                 this.$div.removeClass("has_lyrics").addClass("no_lyrics");
             }
