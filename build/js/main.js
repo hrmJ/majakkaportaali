@@ -1206,7 +1206,24 @@ var SongSlots = function(){
          */
         this.Remove = function(){
             //..vain jos ei viimeinen
-            console.log("Removing...");
+            var has = {
+                    next: this.$div.next().next().hasClass("songslot"),
+                    prev: this.$div.prev().prev().hasClass("songslot")
+            };
+
+            if(this.$div.parents("ul").find(".songslot").length > 1){
+                if(has.next && has.prev || has.next){
+                    this.$div.next().remove();
+                }
+                else if (has.prev){
+                    this.$div.prev().remove();
+                }
+                this.$div.remove();
+                songs_tab.MonitorChanges();
+            }
+            else{
+                window.alert("Et voi poistaa viimeistä laulua. Jos tätä laulua ei lauleta, jätä kenttä vain tyhjäksi.");
+            }
         };
 
 
