@@ -73,6 +73,17 @@ class Structure{
 
     /**
      *
+     * Poistaa slotin
+     * 
+     * @param $id poistettavan slotin id
+     *
+     */
+    public function RemoveSlot($id){
+        $this->con->delete($this->table, ["id" => $id]);
+    }
+
+    /**
+     *
      * Hakee messuun tai messupoihjaan määritellyt osiot
      *
      */

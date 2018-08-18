@@ -4,7 +4,10 @@
 - [x] Lauluslotin määritteleminen sellaiseksi, ettei voi lisätä
 - [x] EI_multisong-sloteista poisto- ja siirtokuvakkeet pois
 - [x] Lauluslotin poistaminen
+- [ ] Messukohtaisen slotin poistaminen
 - [ ] Messukohtaisen näkymän mobiilimenu(n poistaminen)
 - [ ] Messukohtaisen näkymän messulistan lisääminen
 - [ ] TÄGIT ja valittavien laulujen rajoitaminen sillä perusteella
 - [ ] Tulostettava biisilista
+- [ ] Raamattudian näyttäminen
+- [ ] Raamattudian lisääminen

@@ -101,6 +101,14 @@ switch($params["action"]){
         $struct = new Structure($database, $m);
         $struct->UpdateHeaderTemplate($params["header_id"], $params["params"]);
         break;
+    case "remove_slot":
+        $struct = new Structure($database, $m);
+        if($params["service_id"] != 0){
+            //tarkoituksella != eikä !==
+            $struct->SetAsServiceSpecific($params["service_id"]);
+        }
+        $struct->RemoveSlot($params["id"]);
+        break;
     case "save_slot":
         $struct = new Structure($database, $m);
         $table = "presentation_structure";

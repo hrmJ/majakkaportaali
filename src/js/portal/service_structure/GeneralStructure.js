@@ -46,9 +46,11 @@ var GeneralStructure = function(){
      *
      **/
     function RemoveSlot(){
-        $.post("php/ajax/Structure.php", {
-            "action":"remove_slide",
-            "id":$(this).parents(".slot").find(".slot_id").val()
+        var path = Utilities.GetAjaxPath("Saver.php");
+        $.post(path, {
+            "action":"remove_slot",
+            "id":$(this).parents(".slot").find(".slot_id").val(),
+            "service_id": service_id
             }, 
             ReloadSlots
         );
