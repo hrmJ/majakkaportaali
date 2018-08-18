@@ -52,11 +52,33 @@ class Service{
      *
      */
     public function GetBibleSegments(){
-        $slots = $this->con->select("presentation_structure",
-            ["slot_name", "content_id", "slot_number"],
-            ["slot_type" => "biblesegment"],
-            ['ORDER' => [ 'slot_number' => 'ASC' ]]
-            );
+        $cols = ["id", "slot_name", "content_id", "slot_number"];
+        $service_specific = $this->con->select("service_specific_presentation_structure",
+            $cols,
+            ["service_id" => $this->id]
+        );
+        if($service_specific){
+            //JOS on asetettu ylipäätään joitakin messuspesifejä slotteja, etsi
+            //myös raamatunkohtia messuspesifien slottien joukosta
+            $slots = $this->con->select("service_specific_presentation_structure",
+                $cols, 
+                [ "AND" => [
+                    "slot_type" => "biblesegment",
+                    "service_id" => $this->id
+                    ],
+                    "ORDER" => [ 'slot_number' => 'ASC' ]
+                ]);
+        }
+        else{
+            //Jos ei mitään messuspesifejä slotteja, etsi raamattuslotteja yleisestä
+            $slots = $this->con->select("presentation_structure",
+                $cols, 
+                [ 
+                    "slot_type" => "biblesegment",
+                    "ORDER" => [ 'slot_number' => 'ASC' ]
+                ]);
+        }
+
         return $slots;
     }
 

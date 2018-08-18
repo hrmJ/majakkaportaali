@@ -92,14 +92,17 @@ Portal.Servicelist = function(){
          *
          * Lataa messulistan
          *
+         * @param callback Mahdollisesti suoritettava callback-funktio
+         *
          **/
-        this.LoadServices = function(){
+        this.LoadServices = function(callback){
             var path = Utilities.GetAjaxPath("Loader.php");
+                callback = callback || this.Output.bind(this);
             return $.getJSON(path,{
                 action: "get_list_of_services",
                 startdate: current_season.startdate,
                 enddate: current_season.enddate,
-                }, this.Output.bind(this));
+                }, callback);
         };
 
         /**
@@ -325,7 +328,8 @@ Portal.Servicelist = function(){
     return {
         Initialize,
         List,
-        GetCurrentSeason
+        GetCurrentSeason,
+        SetSeasonByCurrentDate
     };
 
 }()

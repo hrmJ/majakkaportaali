@@ -35,7 +35,8 @@ var SongSlots = function(){
      **/
     function LoadSongsToSlots(songtab){
         songs_tab = songtab;
-        $.get("php/ajax/Loader.php", {
+        var path = Utilities.GetAjaxPath("Loader.php");
+        $.get(path, {
             action: "get_song_slots",
             service_id: Service.GetServiceId()
             }, 

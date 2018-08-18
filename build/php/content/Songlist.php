@@ -152,8 +152,7 @@ class Songlist{
                 "slot_type" => "songsegment", 
                 "service_id" => $service_id,
                 'ORDER' => [ 'slot_number' => 'ASC' ]
-            ],
-            $order);
+            ]);
         if(!$slots){
             $slots = $this->con->select("presentation_structure",
                 $cols, [

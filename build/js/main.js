@@ -919,7 +919,8 @@ var SongSlots = function(){
      **/
     function LoadSongsToSlots(songtab){
         songs_tab = songtab;
-        $.get("php/ajax/Loader.php", {
+        var path = Utilities.GetAjaxPath("Loader.php");
+        $.get(path, {
             action: "get_song_slots",
             service_id: Service.GetServiceId()
             }, 
@@ -2763,14 +2764,17 @@ Portal.Servicelist = function(){
          *
          * Lataa messulistan
          *
+         * @param callback Mahdollisesti suoritettava callback-funktio
+         *
          **/
-        this.LoadServices = function(){
+        this.LoadServices = function(callback){
             var path = Utilities.GetAjaxPath("Loader.php");
+                callback = callback || this.Output.bind(this);
             return $.getJSON(path,{
                 action: "get_list_of_services",
                 startdate: current_season.startdate,
                 enddate: current_season.enddate,
-                }, this.Output.bind(this));
+                }, callback);
         };
 
         /**
@@ -2996,7 +3000,8 @@ Portal.Servicelist = function(){
     return {
         Initialize,
         List,
-        GetCurrentSeason
+        GetCurrentSeason,
+        SetSeasonByCurrentDate
     };
 
 }()
@@ -7968,24 +7973,6 @@ Slides.ContentLoader = function(){
             );
     }
 
-    ///**
-    // * Lataa näkyville listan messun vastuuhenkilöistä
-    // *
-    // * @param int id sen messun id, jonka tietoja noudetaan.
-    // *
-    // */
-    //function LoadResponsibles(id){
-    //    $.getJSON("php/loadservices.php",{"fetch":"people","id":id}, function(data){
-    //        var $people = $("<div></div>");
-    //        $.each(data,function(idx, resp){
-    //            var responsible = resp.responsible == null ? "" : resp.responsible;
-    //            var $input = $("<input type='text' name='" + resp.responsibility + "' value='"+ responsible + "'></input>");
-    //            $("<div class='flexrow'><div>" + resp.responsibility +  "</div></div>").append($("<div></div>").append($input)).appendTo($people);
-    //        });
-    //        $("#responsible-data").html("<h3>Tekijät</h3>").append($people);
-    //    });
-    //}
-
     /**
      * Lataa näkyville listan messun lauluista
      *
@@ -10204,7 +10191,16 @@ $(document).ready(function(){
         Utilities.SetImgPath("../assets/images");
     
         Slides.Controls.Initialize();
-        list.LoadServices(Slides.ContentLoader.AddServicesToSelect);
+
+        //Ladataan messujen lista
+        $.when(
+            Portal.Servicelist.SetSeasonByCurrentDate()
+        ).done(() => {
+            list.LoadServices(
+                Slides.ContentLoader.AddServicesToSelect.bind(Slides.ContentLoader)
+            );
+        });
+        
         if (!Portal.Menus.GetInitialized()){
             Portal.Menus.InitializeMenus();
         }

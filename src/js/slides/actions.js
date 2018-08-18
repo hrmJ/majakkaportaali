@@ -7,7 +7,16 @@ $(document).ready(function(){
         Utilities.SetImgPath("../assets/images");
     
         Slides.Controls.Initialize();
-        list.LoadServices(Slides.ContentLoader.AddServicesToSelect);
+
+        //Ladataan messujen lista
+        $.when(
+            Portal.Servicelist.SetSeasonByCurrentDate()
+        ).done(() => {
+            list.LoadServices(
+                Slides.ContentLoader.AddServicesToSelect.bind(Slides.ContentLoader)
+            );
+        });
+        
         if (!Portal.Menus.GetInitialized()){
             Portal.Menus.InitializeMenus();
         }

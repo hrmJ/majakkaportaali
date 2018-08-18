@@ -1,13 +1,16 @@
-- [x] Vastuiden lisääminen
-- [x] Vastuita poistettaessa ei pitäisi palata takaisin yleisnäkymään
-- [x] Laulun valittu versio ei tallennu: kun päivittää sivun, se on kadonnut
-- [x] Lauluslotin määritteleminen sellaiseksi, ettei voi lisätä
-- [x] EI_multisong-sloteista poisto- ja siirtokuvakkeet pois
-- [x] Lauluslotin poistaminen
-- [ ] Messukohtaisen slotin poistaminen
 - [ ] Messukohtaisen näkymän mobiilimenu(n poistaminen)
 - [ ] Messukohtaisen näkymän messulistan lisääminen
 - [ ] TÄGIT ja valittavien laulujen rajoitaminen sillä perusteella
 - [ ] Tulostettava biisilista
 - [ ] Raamattudian näyttäminen
 - [ ] Raamattudian lisääminen
+- [ ] Ylimääräinen Tallenna-nappi lauluissa, kun service.php iframessa
+- [ ] Laulun rooli näkyvillä dioissa
+- [x] Messukohtaiset raamatunkohdat
+- [x] Vastuiden lisääminen
+- [x] Vastuita poistettaessa ei pitäisi palata takaisin yleisnäkymään
+- [x] Laulun valittu versio ei tallennu: kun päivittää sivun, se on kadonnut
+- [x] Lauluslotin määritteleminen sellaiseksi, ettei voi lisätä
+- [x] EI_multisong-sloteista poisto- ja siirtokuvakkeet pois
+- [x] Lauluslotin poistaminen
+- [x] Messukohtaisen slotin poistaminen
