@@ -1,0 +1,9 @@
+- [x] Vastuiden lisääminen
+- [x] Vastuita poistettaessa ei pitäisi palata takaisin yleisnäkymään
+- [x] Laulun valittu versio ei tallennu: kun päivittää sivun, se on kadonnut
+- [x] Lauluslotin määritteleminen sellaiseksi, ettei voi lisätä
+- [x] EI_multisong-sloteista poisto- ja siirtokuvakkeet pois
+- [ ] Messukohtaisen näkymän mobiilimenu(n poistaminen)
+- [ ] Messukohtaisen näkymän messulistan lisääminen
+- [ ] Lauluslotin poistaminen
+- [ ] TÄGIT ja valittavien laulujen rajoitaminen sillä perusteella

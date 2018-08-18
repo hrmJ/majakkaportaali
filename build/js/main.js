@@ -947,16 +947,15 @@ var SongSlots = function(){
      **/
     function InitializeContainers(slot_data){
         $("#songslots").html(slot_data);
-        console.log(slot_data);
         $(".slotcontainer").each(function(){
             var Cont = new SlotContainer($(this));
             Cont.SetName( $(this).find(".cont_name").text());
             if(Cont.$div.find(".is_multi_val").val()*1){
                 //Lisää useamman laulun lisäyspainikkeet vain, jos 
                 //laulu määritelty usean laulun lauluksi
-                Cont.SetMultisongButtons();
+                Cont.is_multi = true;
             }
-            Cont.FetchSlots();
+            Cont.SetMultisongButtons().FetchSlots();
             Cont.SetToolTip();
         });
     }
@@ -1016,7 +1015,7 @@ var SongSlots = function(){
             $.each(slots, function(idx, slot_data){
                 var slot = new SongSlot(slot_data.song_title,
                     slot_data.multisong_position, 
-                    self.$ul,
+                    self,
                     slot_data.song_id);
                 slot.Create().AttachEvents().CheckLyrics();
             });
@@ -1073,11 +1072,13 @@ var SongSlots = function(){
             //tahansa EIKÄ niinkään, että koko kontin lopussa miinuspainike
             //Plussapainike kylläkin
             //USE fontawesome icons?
-            var $add = $(`<i class="fa fa-plus" aria-hidden="false"></i>`)
-                            .click(this.AddNewSlot.bind(this));
-            this.$ul.parents(".slotcontainer").append(
-                $("<div class='buttons_cont'></div>").append($add)
-            );
+            if (this.is_multi){
+                var $add = $(`<i class="fa fa-plus" aria-hidden="false"></i>`)
+                                .click(this.AddNewSlot.bind(this));
+                this.$ul.parents(".slotcontainer").append(
+                    $("<div class='buttons_cont'></div>").append($add)
+                );
+            }
 
             return this;
         };
@@ -1090,7 +1091,7 @@ var SongSlots = function(){
          **/
         this.AddNewSlot = function(){
             var slot_no = this.$ul.find(".songinput").length;
-            var slot = new SongSlot("", slot_no, this.$ul);
+            var slot = new SongSlot("", slot_no, this);
             slot.Create().AttachEvents();
             this.AddSortability();
             //Varmista, että uuden slotin lisääminen lasketaan muutokseksi
@@ -1121,17 +1122,17 @@ var SongSlots = function(){
      *
      * @param title valitun laulun nimi (jos joku laulu jo valittu)
      * @param position valitun laulun järjestysnumero tässä "kontissa"
-     * @param $cont slotin sisältävä "kontti" DOMissa
+     * @param cont slotin sisältävä "kontti" SlotContainer-oliona
      * @param picked_id valitun laulun id (jos joku laulu jo valittu)
      *
      **/
-    var SongSlot = function(title, position, $cont, picked_id){
+    var SongSlot = function(title, position, cont, picked_id){
 
         var self = this;
         this.title = title;
         this.position = position;
         this.picked_id = picked_id || '';
-        this.$cont = $cont;
+        this.cont = cont;
         this.song_ids = [];
         this.$lyrics = undefined;
         this.newsongtext = "";
@@ -1149,8 +1150,20 @@ var SongSlots = function(){
                     <input type="text" class="songinput" value="${this.title}"> 
                     <input type="hidden" class="song_id" value="${this.picked_id}"> 
                 </div>
-                <div class='slot_handle'><i class='fa fa-arrows'></i></div>
-                </li>`);
+                </li>`),
+                $edit_icon = $("<div class='slot_edit'><i class='fa fa-pencil'></i></div>"),
+                $remove_icon = $("<div class='slot_remove'><i class='fa fa-trash'></i></div>");
+
+            if (this.cont.is_multi){
+                this.$div.append("<div class='slot_handle'><i class='fa fa-arrows'></i></div>");
+            }
+
+            $edit_icon.click(this.CheckDetails.bind(this)).appendTo(this.$div);
+
+            if (this.cont.is_multi){
+                $remove_icon.click(this.Remove.bind(this)).appendTo(this.$div);
+            }
+
             this.$div.find(".songinput").droppable({
                 accept: "#prepared_for_insertion",
                 drop: this.AcceptDroppedSong.bind(this),
@@ -1159,11 +1172,7 @@ var SongSlots = function(){
                     "ui-droppable-hover": "slot_recieve",
                 }
             });
-            var $edit_icon = $("<div class='slot_edit'><i class='fa fa-pencil'></i></div>");
-            var $remove_icon = $("<div class='slot_remove'><i class='fa fa-trash'></i></div>");
-            $edit_icon.click(this.CheckDetails.bind(this)).appendTo(this.$div);
-            $remove_icon.click(this.Remove.bind(this)).appendTo(this.$div);
-            this.$cont.append(this.$div);
+            this.cont.$ul.append(this.$div);
             //Lisää välilehtiolioon muutosten tarkkailutoiminto
             this.$div.find("input[type='text']").on("change paste keyup",
                 songs_tab.MonitorChanges.bind(songs_tab));
