@@ -25,12 +25,19 @@ class BibleSegment extends Slide{
      *
      * @param Object $m Mustache template-moottori
      * @param Array $details Dian tiedot: teksti, laulun nimi, kuvien läsnäolo tms.
+     * @param boolean $noheader jos tosi, ei tulosteta otsikkoa kuten "Evankeliumiteksti: xxxx"
      *
      */
-    public function __construct($m, $details){
+    public function __construct($m, $details, $noheader){
         parent::__construct($m, $details);
         $this->template_engine;
-        $this->template = $this->template_engine->loadTemplate('biblesegment'); 
+        $this->noheader = $noheader;
+        if($this->noheader){
+            $this->template = $this->template_engine->loadTemplate('biblesegment_middle'); 
+        }
+        else{
+            $this->template = $this->template_engine->loadTemplate('biblesegment_first'); 
+        }
     }
 
     /**
@@ -77,11 +84,14 @@ class BibleSegment extends Slide{
             $tplname = "bibleverse";
             if($idx == 0){
                 $tplname .= "_with_header";
-                $params = 
-                [
-                    "name" => $this->details["segment_name"],
+                $params = [
                     "address" => $this->details["address"],
                 ];
+                if(!$this->noheader){
+                    //Jos sama raamattuslotti sisältää useampia pätkiä, tulosta
+                    //slotin otsikko vain ensimmäiseen
+                    $params["name"] = $this->details["segment_name"] . ": ";
+                }
             }
             $tpl = $this->template_engine->loadTemplate($tplname);
             $params["text"] = $verse;
@@ -89,6 +99,9 @@ class BibleSegment extends Slide{
         }
 
         $this->Set("verses",trim($output));
+        #if(strstr($this->details["address"], "Kol")){
+        #    var_dump($verses);
+        #}
 
         return $this;
     }

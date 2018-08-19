@@ -2,13 +2,14 @@
 - [ ] Messukohtaisen näkymän messulistan lisääminen
 - [ ] TÄGIT ja valittavien laulujen rajoitaminen sillä perusteella
 - [ ] Tulostettava biisilista
-- [ ] Raamattudian näyttäminen
+- [x] Raamattudian näyttäminen
 - [ ] Raamattudian lisääminen
 - [ ] Ylimääräinen Tallenna-nappi lauluissa, kun service.php iframessa
 - [ ] Laulun rooli näkyvillä dioissa
 - [ ] Rivinvaihdot laulujen säkeistöjen esikatselussa
-- [ ] Raamatun kirjojen nimien suomennokset
+- [/] Raamatun kirjojen nimien suomennokset
 - [ ] Raamatunkohdan (osakohdan) poistaminen
+- [ ] Muka tallentamattomia muutoksia yleistiedoissa raamatunkohdan takia
 - [x] Messukohtaiset raamatunkohdat
 - [x] Vastuiden lisääminen
 - [x] Vastuita poistettaessa ei pitäisi palata takaisin yleisnäkymään

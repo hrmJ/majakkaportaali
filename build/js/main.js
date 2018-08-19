@@ -5137,15 +5137,25 @@ var BibleModule = function(){
          *
          */
         this.Confirm = function(){
-            var addr = this.GetHumanReadableAddress();
+            var addr = this.GetHumanReadableAddress(),
+                $par_el = this.startpicker.$picker.parents(".address_pickers");
+
             this.startpicker.$picker.hide();
             this.endpicker.$picker.hide();
             this.$status.find(".status_text").text(addr);
             this.$cont.removeClass("pickerpair");
 
-            this.startpicker.$picker.parents(".address_pickers")
-                .prev()
-                .find(".address_information").text(addr);
+            var $all_addresses = $par_el.find(".status_text"),
+                address_string = "";
+
+            $all_addresses.each(function(){
+                if(address_string){
+                    address_string += "; ";
+                }
+                address_string += $(this).text();
+            });
+
+            $par_el.prev().find(".address_information").text(address_string);
             this.startpicker.$picker.parents(".bible_address_container:eq(0)")
                 .find(".add_picker_pair").show();
 

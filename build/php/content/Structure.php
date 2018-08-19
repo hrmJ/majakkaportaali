@@ -423,18 +423,30 @@ class Structure{
                 'ORDER' => [ 'id' => 'ASC' ]
             ]);
 
+        $noheader = false;
         foreach($segments as $segment_idx => $segment){
             $loader = new BibleLoader($segment["testament"], $this->biblecon);
             //TODO: mahdollisuus ryhmitellä muutenkin kuin 2:n ryhmiin
             $details = ["segment_name" => $segment["segment_name"]];
-            $details["verses"] = $loader->LoadVerseContent(
-                [$segment["startbook"], $segment["startchapter"], $segment["startverse"]],
-                [$segment["endbook"], $segment["endchapter"], $segment["endverse"]]
-            )->GroupVerses(2)->GetData();
-            $details["address"] = "XX.y:xx-yy";
-            $this->AddSlide(new BibleSegment($this->template_engine, $details), 
+            $start = [$segment["startbook"], $segment["startchapter"], $segment["startverse"]];
+            $end = [$segment["endbook"], $segment["endchapter"], $segment["endverse"]];
+            $details["verses"] = $loader
+                ->LoadVerseContent( $start, $end)
+                ->GroupVerses(2)
+                ->GetData();
+            $details["address"] = $loader->GetHumanReadableAddress($start, $end);
+            if(sizeof($segments)>1){
+                $details["address"] .= " ...";
+            }
+            if($segment_idx > 0){
+                $noheader = true;
+            }
+            $this->AddSlide(new BibleSegment($this->template_engine, $details, $noheader), 
                 $slot["addedclass"], $slot["header_id"], $slide_idx + $segment_idx);
         }
+
+        $this->slotstring .= "\n</section>\n\n";
+
         return $this;
     }
 
