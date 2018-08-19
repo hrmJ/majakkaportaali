@@ -24,7 +24,16 @@ class StructureTest extends TestCase{
         'password' => $config["pw"],
         'charset' => 'utf8'
         ]);
+        $database_bible = new Medoo([
+            'database_type' => 'mysql',
+            'database_name' => 'bibles',
+            'server' => 'localhost',
+            'username' => $config["un"],
+            'password' => $config["pw"],
+            'charset' => 'utf8'
+        ]);
         $this->con = $database;
+        $this->biblecon = $database_bible;
         $this->m = new Mustache_Engine(array(
             'loader' => new Mustache_Loader_FilesystemLoader(__DIR__ . '/../src/views')
             ));
@@ -195,7 +204,7 @@ class StructureTest extends TestCase{
      */
     public function testLoadSlideSegments()
     {
-        $struct = new Structure($this->con, $this->m);
+        $struct = new Structure($this->con, $this->m, $this->biblecon);
         $struct->SetAsServiceSpecific(2);
         $struct->LoadSlidesForPresentation();
         echo $struct->slotstring;

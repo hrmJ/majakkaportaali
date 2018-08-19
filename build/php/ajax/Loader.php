@@ -239,7 +239,7 @@ switch($params["action"]){
         echo json_encode($service->GetBibleSegmentsContent());
         break;
     case "load_slides_to_presentation":
-        $structure = new Structure($database, $m);
+        $structure = new Structure($database, $m, $database_bible);
         $structure->SetAsServiceSpecific($params["service_id"], false);
         echo $structure->LoadSlidesForPresentation()->InjectData()->slotstring;
         break;

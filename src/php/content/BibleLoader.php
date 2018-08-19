@@ -98,6 +98,8 @@ class BibleLoader{
     public function LoadVerseContent($start, $end=null){
         $end = ($end ? $end : $start);
         $this->data = [];
+        $cond = ["startbook"=>$start[0],"startchapter"=>$start[1],"startverse"=>$start[2],
+                      "endbook"=>$end[0],"endchapter"=>$end[1],"endverse"=>$end[2]];
         $data = $this->con->query("SELECT content FROM {$this->testament} 
                 WHERE id BETWEEN 
                     (SELECT id FROM {$this->testament} 
@@ -109,13 +111,34 @@ class BibleLoader{
                          WHERE book = :endbook AND 
                                 chapterno = :endchapter AND 
                                 verseno = :endverse)",
-                ["startbook"=>$start[0],"startchapter"=>$start[1],"startverse"=>$start[2],
-                      "endbook"=>$end[0],"endchapter"=>$end[1],"endverse"=>$end[2]])->fetchAll();
+                $cond)->fetchAll();
 
         foreach($data as $row){
             $this->data[] = $row["content"];
         }
 
+        return $this;
+    }
+
+
+    /**
+     *
+     * Muodosta kahden tai useamman jakeen kokonaisuuksia dioissa näyttämistä varten
+     *
+     * @param $group_size kuinka monta jaetta niputetaan
+     *
+     */
+    public function GroupVerses($group_size=2){
+        $grouped = [];
+        $thisgroup = "";
+        for($i = 0;$i<sizeof($this->data);$i++){
+            $thisgroup .= ($thisgroup ? " <br><br> " . $this->data[$i] : $this->data[$i]);
+            if (($i+1 )% $group_size == 0 and $i > 0) {
+                $grouped[] = $thisgroup;
+                $thisgroup  = "";
+            }
+        }
+        $this->data = $grouped;
         return $this;
     }
 

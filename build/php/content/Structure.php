@@ -5,6 +5,7 @@ namespace Portal\content;
 
 use Portal\slides\Slide;
 use Portal\slides\Song;
+use Portal\slides\BibleSegment;
 use Portal\slides\Infoslide;
 use Portal\slides\SlideStyle;
 use Medoo\Medoo;
@@ -27,6 +28,7 @@ class Structure{
      *
      */
     protected $con;
+    protected $biblecon = null;
     protected $service_id = 0;
     protected $table = "presentation_structure";
     protected $injectables = Array();
@@ -40,8 +42,9 @@ class Structure{
      *
      *
      */
-    public function __construct(\Medoo\Medoo $con, $m){
+    public function __construct(\Medoo\Medoo $con, $m, $biblecon = null){
         $this->con = $con;
+        $this->biblecon = $biblecon;
         $this->template_engine = $m;
     }
 
@@ -354,6 +357,9 @@ class Structure{
                 case "infosegment":
                     $this->AddInfoSegment($slot, $key);
                     break;
+                case "biblesegment":
+                    $this->AddBibleSegment($slot, $key);
+                    break;
             }
         } 
 
@@ -376,9 +382,9 @@ class Structure{
             ["song_title", "song_id", "songtype"],
             [
                 "service_id" => $this->service_id,
-                "songtype" => $slot["slot_name"]
-            ],
-            ['ORDER' => [ 'id' => 'ASC' ]]);
+                "songtype" => $slot["slot_name"],
+                'ORDER' => [ 'id' => 'ASC' ]
+            ]);
 
         foreach($songs_of_this_type as $song_idx => $song){
             $songdata = $this->con->get("songdata",
@@ -387,8 +393,47 @@ class Structure{
             $songdata["verses"] = $songlist->FetchLyricsById($song["song_id"], true);;
             $this->AddSlide(new Song($this->template_engine, $songdata), 
                 $slot["addedclass"], $slot["header_id"], $slide_idx + $song_idx);
-            ////Lisätään kukin laulu omana dia(sarja)naan
-            //$song_idx++;
+        }
+        return $this;
+    }
+
+
+
+    /**
+     *
+     * Lisää esitykseen raamattusegmentin
+     *
+     * @param Array $slot segmentin yleistiedot
+     * @param Array $slide_idx segmentin järjestysnumero
+     *
+     */
+    public function AddBibleSegment($slot, $slide_idx){
+        $songlist = new Songlist($this->con, $this->service_id);
+        $segments = $this->con->select("serviceverses",
+            [
+            "segment_name", 
+            "testament", 
+            "startbook", "endbook", 
+            "startchapter", "endchapter",
+            "startverse","endverse"
+            ],
+            [
+                "service_id" => $this->service_id,
+                "segment_name" => $slot["slot_name"],
+                'ORDER' => [ 'id' => 'ASC' ]
+            ]);
+
+        foreach($segments as $segment_idx => $segment){
+            $loader = new BibleLoader($segment["testament"], $this->biblecon);
+            //TODO: mahdollisuus ryhmitellä muutenkin kuin 2:n ryhmiin
+            $details = ["segment_name" => $segment["segment_name"]];
+            $details["verses"] = $loader->LoadVerseContent(
+                [$segment["startbook"], $segment["startchapter"], $segment["startverse"]],
+                [$segment["endbook"], $segment["endchapter"], $segment["endverse"]]
+            )->GroupVerses(2)->GetData();
+            $details["address"] = "XX.y:xx-yy";
+            $this->AddSlide(new BibleSegment($this->template_engine, $details), 
+                $slot["addedclass"], $slot["header_id"], $slide_idx + $segment_idx);
         }
         return $this;
     }

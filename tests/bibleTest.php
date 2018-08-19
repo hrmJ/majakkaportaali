@@ -79,6 +79,18 @@ class BibleTest extends TestCase
         $this->assertRegExp("/Jeesuksen/", $loader->GetData()[0]);
     }
 
+    /**
+     * Testaa Sisällön ryhmittelyä
+     */
+    public function testGroupVerses()
+    {
+        $loader = new BibleLoader("nt", $this->con);
+        $loader->LoadVerseContent(["Matt",1,1],["Matt",2,1]);
+        $content = $loader->GroupVerses(2)->GetData();
+        $this->assertEquals(sizeof($content), 12);
+        var_dump($content);
+    }
+
 }
 
 

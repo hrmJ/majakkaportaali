@@ -6,6 +6,9 @@
 - [ ] Raamattudian lisääminen
 - [ ] Ylimääräinen Tallenna-nappi lauluissa, kun service.php iframessa
 - [ ] Laulun rooli näkyvillä dioissa
+- [ ] Rivinvaihdot laulujen säkeistöjen esikatselussa
+- [ ] Raamatun kirjojen nimien suomennokset
+- [ ] Raamatunkohdan (osakohdan) poistaminen
 - [x] Messukohtaiset raamatunkohdat
 - [x] Vastuiden lisääminen
 - [x] Vastuita poistettaessa ei pitäisi palata takaisin yleisnäkymään

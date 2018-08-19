@@ -144,6 +144,7 @@ class ServiceTest extends TestCase
         $service->SaveThemeAndDate(["servicedate" => "2018/02/10", "theme" => "Kaihdettu teema"]);
         $theme = $service->GetTheme();
         $this->assertEquals($theme,"Kaihdettu teema");
+
     }
 
 
