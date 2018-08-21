@@ -26,6 +26,11 @@ article{
     width:100%;
     height:100%;
     @include img_restrictions;
+    img{
+        object-fit: contain;
+        max-height: 97vh;
+        max-width: 97vw;
+    }
 }
 
 .img-left, .img-right{
