@@ -169,8 +169,10 @@ Slides.Presentation = function(){
                 textcontentadder: new Slides.Widgets.ContentAdders.TextContentAdder(this),
                 biblecontentadder: new Slides.Widgets.ContentAdders.BibleContentAdder(this),
                 songcontentadder: new Slides.Widgets.ContentAdders.SongContentAdder(this),
+                imageadder: new Slides.Widgets.ContentAdders.ImageAdder(this),
             }
             this.controls.biblecontentadder.Initialize();
+            this.controls.imageadder.Initialize();
             //Lataa sisältö ja päivitä tieto tällä hetkellä aktiivisena olevasta segmentistä
             this.controls.contentlist.GetContents().PrintContentList().HighlightCurrentContents();
             var self = this;

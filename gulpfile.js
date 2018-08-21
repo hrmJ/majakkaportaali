@@ -114,6 +114,7 @@ gulp.task("js",function(){
                    "js/slides/widgets/contentadders/TextContentAdder",
                    "js/slides/widgets/contentadders/BibleContentAdder",
                    "js/slides/widgets/contentadders/SongContentAdder",
+                   "js/slides/widgets/contentadders/ImageAdder",
 
                    "js/slides/styles/Controller",
                    "js/slides/styles/FontControllers",
