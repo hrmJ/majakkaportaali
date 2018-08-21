@@ -10,6 +10,8 @@
 - [/] Raamatun kirjojen nimien suomennokset
 - [ ] Raamatunkohdan (osakohdan) poistaminen
 - [ ] Muka tallentamattomia muutoksia yleistiedoissa raamatunkohdan takia
+- [ ] Kun lisätään laulu diakäyttöliittmästä, ota huomioon eri versiot
+- [ ] Kun lisätään sisältöä diakäyttöliittmästä, anna mahdollisuus valita dialuokka
 - [x] Messukohtaiset raamatunkohdat
 - [x] Vastuiden lisääminen
 - [x] Vastuita poistettaessa ei pitäisi palata takaisin yleisnäkymään
@@ -18,3 +20,10 @@
 - [x] EI_multisong-sloteista poisto- ja siirtokuvakkeet pois
 - [x] Lauluslotin poistaminen
 - [x] Messukohtaisen slotin poistaminen
+
+Kaukaisemmat
+------------
+
+- [ ] Kuvien uploadaus
+- [ ] Kuvien näyttäminen galleriamuodossa
+- [ ] https://pixabay.com/api/docs/

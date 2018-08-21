@@ -194,7 +194,7 @@ var SongLists = function(){
         this.ExamineSong = function(ev){
             ev.stopPropagation();
             this.GetCurrentSong(ev);
-            var slot = new SongSlots.SongSlot(this.current_song.title,
+            var slot = new Portal.SongSlots.SongSlot(this.current_song.title,
                 0,
                 undefined,
                 this.current_song.id);

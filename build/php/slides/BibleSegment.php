@@ -99,9 +99,6 @@ class BibleSegment extends Slide{
         }
 
         $this->Set("verses",trim($output));
-        #if(strstr($this->details["address"], "Kol")){
-        #    var_dump($verses);
-        #}
 
         return $this;
     }

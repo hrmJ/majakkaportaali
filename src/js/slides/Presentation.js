@@ -170,6 +170,7 @@ Slides.Presentation = function(){
                 biblecontentadder: new Slides.Widgets.ContentAdders.BibleContentAdder(this),
                 songcontentadder: new Slides.Widgets.ContentAdders.SongContentAdder(this),
             }
+            this.controls.biblecontentadder.Initialize();
             //Lataa sisältö ja päivitä tieto tällä hetkellä aktiivisena olevasta segmentistä
             this.controls.contentlist.GetContents().PrintContentList().HighlightCurrentContents();
             var self = this;
@@ -334,13 +335,13 @@ Slides.Presentation = function(){
                 //nuoli ylös
             case 38:
                 //nuoli vasemmalle
-                self.Prev();
+                Slides.Presentation.GetCurrentPresentation().Prev();
                 break;
             case 39:
                 //nuoli alas
             case 40:
                 //nuoli oikealle
-                self.Next();
+                Slides.Presentation.GetCurrentPresentation().Next();
                 break;
         } 
 

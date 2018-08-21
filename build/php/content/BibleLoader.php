@@ -115,8 +115,8 @@ class BibleLoader{
     /**
      * Lataa jakeet käyttäjän märittämältä väliltä
      *
-     * @param array $start Taulukko muotoa (book,chapter,verse)
-     * @param array $end Taulukko muotoa (book,chapter,verse)
+     * @param array $start Taulukko muotoa [book, chapter, verse]
+     * @param array $end Taulukko muotoa [book, chapter, verse]
      *
      */
     public function LoadVerseContent($start, $end=null){

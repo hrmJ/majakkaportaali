@@ -12,6 +12,7 @@ Slides.Widgets.ContentAdders = Slides.Widgets.ContentAdders || {};
  */
 Slides.Widgets.ContentAdders.SongContentAdder = function(parent_presentation) {
 
+    var path = Utilities.GetAjaxPath("Loader.php");
     Slides.Widgets.ContentAdder.call(this, parent_presentation);
 
     this.adderclass = ".songcontentadder";
@@ -19,14 +20,10 @@ Slides.Widgets.ContentAdders.SongContentAdder = function(parent_presentation) {
 
     //Parametrit laulujen automaattista täydennystä varten:
     this.autocomp = {
-        source : function(request, response){
-            $.getJSON("php/loadsongs.php",
-                {songname:request.term},
-                response);
-        },
-        minLength : 0,
-        select: (event, input) => this.CreateContent(input.item.value),
-    }
+        source : Portal.SongSlots.LoadSongTitles,
+        minLength : 2,
+        select: (event, input) => this.CreateContent(input.item.value)
+        };
 
     
     /**
@@ -36,18 +33,24 @@ Slides.Widgets.ContentAdders.SongContentAdder = function(parent_presentation) {
      *
      */
     this.CreateContent = function(songname){
-        var $container = this.GiveContainer();
-        var self=this;
+        //TODO: lataa laulut id:itten perusteella
+        var $container = this.GiveContainer(),
+            self=this,
+            path = Utilities.GetAjaxPath("Loader.php");
         $(".songcontentadder .addtoprescontrols").hide();
         if(songname == undefined) songname = $("#songsearch").val();
-        $.getJSON("php/loadsongs.php",
-            {songname:songname,content:"yes"},
+        $.getJSON(path,
+            {
+                action: "load_song_content_by_title",
+                title: songname,
+            },
             function(data){
-                if(data.verses != null){
-                    $container.append(self.CreateTitleSlide(data.title));
+                if(data.length){
+                    $container.append(self.CreateTitleSlide(songname));
                     //Säkeistöt
-                    $.each(data.verses.split(/\n{2,}/),function(idx,verse){
-                        $container.append("<article class='verse'><p> " + verse.replace(/\n/g,"\n<br>")  + "</p></article>")});
+                    $.each(data,function(idx,verse){
+                        $container.append("<article class='verse'><p> " + verse.replace(/\n/g,"\n<br>")  + "</p></article>")
+                    });
                     //Tallenna valmis data olion $loaded_content-parametriin
                     self.$loaded_content = $container;
                     $(".songcontentadder .addtoprescontrols").show();

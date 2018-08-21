@@ -882,12 +882,14 @@ var Comments = function(){
 
 
 
+Portal = Portal || {};
+
 /**
  *
  * Moduuli yhden messun laulusloteista
  *
  */
-var SongSlots = function(){
+Portal.SongSlots = function(){
 
     var songs_tab;
 
@@ -899,7 +901,8 @@ var SongSlots = function(){
      *
      **/
     function LoadSongTitles(request, response){
-        $.getJSON("php/ajax/Loader.php",{
+        var path = Utilities.GetAjaxPath("Loader.php");
+        $.getJSON(path,{
             action: "get_song_titles",
             service_id: Service.GetServiceId(),
             title:request.term
@@ -1475,7 +1478,8 @@ var SongSlots = function(){
     return {
     
         LoadSongsToSlots,
-        SongSlot
+        SongSlot,
+        LoadSongTitles
     
     };
 
@@ -1677,7 +1681,7 @@ var SongLists = function(){
         this.ExamineSong = function(ev){
             ev.stopPropagation();
             this.GetCurrentSong(ev);
-            var slot = new SongSlots.SongSlot(this.current_song.title,
+            var slot = new Portal.SongSlots.SongSlot(this.current_song.title,
                 0,
                 undefined,
                 this.current_song.id);
@@ -2020,7 +2024,7 @@ Service = function(){
 
         Comments.LoadComments();
         Comments.CreateThemeSelect();
-        SongSlots.LoadSongsToSlots(TabObjects.Songs);
+        Portal.SongSlots.LoadSongsToSlots(TabObjects.Songs);
         SongLists.Initialize();
         $("#prepared_for_insertion").hide()
             .draggable({
@@ -5072,10 +5076,9 @@ var BibleModule = function(){
      *
      * Alku- ja loppujakeen valitsimen muodostama kokonaisuus
      *
-     * @param $parent_el elementti, johon valitsin liitetään
      *
      */
-    var PickerPair = function($parent_el){ 
+    var PickerPair = function(){ 
 
         this.callback = undefined;
         this.$status = $("<div class='bible_address_status'><span class='status_text'></span></div>");
@@ -5133,34 +5136,52 @@ var BibleModule = function(){
 
         /**
          *
+         * Tekee jaeparista yksittäisen, jolloin ei yritetä luoda
+         * mahdollisuutta useilla jaepareille
+         *
+         * @param callback asetettava funktio
+         *
+         */
+        this.SetAsSingle = function(){
+            this.is_single = true;
+            return this;
+        }
+
+        /**
+         *
          * Vahvistaa valitun raamatunkohdan
          *
          */
         this.Confirm = function(){
-            var addr = this.GetHumanReadableAddress(),
-                $par_el = this.startpicker.$picker.parents(".address_pickers");
 
-            this.startpicker.$picker.hide();
-            this.endpicker.$picker.hide();
-            this.$status.find(".status_text").text(addr);
-            this.$cont.removeClass("pickerpair");
+            if(!this.is_single){
 
-            var $all_addresses = $par_el.find(".status_text"),
-                address_string = "";
+                var addr = this.GetHumanReadableAddress(),
+                    $par_el = this.startpicker.$picker.parents(".address_pickers");
+            
+                this.startpicker.$picker.hide();
+                this.endpicker.$picker.hide();
+                this.$status.find(".status_text").text(addr);
+                this.$cont.removeClass("pickerpair");
 
-            $all_addresses.each(function(){
-                if(address_string){
-                    address_string += "; ";
-                }
-                address_string += $(this).text();
-            });
+                var $all_addresses = $par_el.find(".status_text"),
+                    address_string = "";
 
-            $par_el.prev().find(".address_information").text(address_string);
-            this.startpicker.$picker.parents(".bible_address_container:eq(0)")
-                .find(".add_picker_pair").show();
+                $all_addresses.each(function(){
+                    if(address_string){
+                        address_string += "; ";
+                    }
+                    address_string += $(this).text();
+                });
 
-            this.$confirm_link.hide()
-            this.$status.show();
+                $par_el.prev().find(".address_information").text(address_string);
+                this.startpicker.$picker.parents(".bible_address_container:eq(0)")
+                    .find(".add_picker_pair").show();
+
+                this.$confirm_link.hide()
+                this.$status.show();
+            
+            }
 
             if(this.callback){
                 this.callback();
@@ -5341,6 +5362,7 @@ var BibleModule = function(){
          *
          */
         this.GetBookNames = function(event){
+            var path = Utilities.GetAjaxPath("Loader.php");
             if(event){
                 //Jos ajettu valintatapahtuman seurauksena eikä automaattisesti
                 this.testament = this.$picker.find("[name='testament']:checked").val();
@@ -5351,7 +5373,7 @@ var BibleModule = function(){
                         .find(".between-verse-selectors, .bible_address_picker:eq(1)").hide();
                 }
             }
-            return $.getJSON("php/ajax/Loader.php",
+            return $.getJSON(path,
                 {
                     "action": "load_booknames",
                     "testament": this.testament
@@ -5367,12 +5389,13 @@ var BibleModule = function(){
          *
          */
         this.GetChapters = function(event){
+            var path = Utilities.GetAjaxPath("Loader.php");
             if(event){
                 this.book = this.$picker.find(".book").val();
                 this.verse = '';
             }
 
-            return $.getJSON("php/ajax/Loader.php",
+            return $.getJSON(path,
                 {
                     "action": "load_chapters",
                     "testament": this.testament,
@@ -5389,10 +5412,11 @@ var BibleModule = function(){
          *
          */
         this.GetVerses = function(event){
+            var path = Utilities.GetAjaxPath("Loader.php");
             if(event){
                 this.chapter = this.$picker.find(".chapter").val();
             }
-            return $.getJSON("php/ajax/Loader.php",
+            return $.getJSON(path,
                 {
                     "action": "load_verses",
                     "testament": this.testament,
@@ -5454,9 +5478,10 @@ var BibleModule = function(){
          * 
          */
         this.PreviewVerse = function(){
-            var self = this;
+            var self = this,
+                path = Utilities.GetAjaxPath("Loader.php");
             this.verse = this.$picker.find(".verse").val();
-            $.getJSON("php/ajax/Loader.php",
+            $.getJSON(path,
                 {
                     "action": "load_verse_content",
                     "testament": this.testament,
@@ -5516,6 +5541,7 @@ var BibleModule = function(){
     return {
     
         AttachAddressPicker,
+        PickerPair
     
     };
 
@@ -8183,6 +8209,7 @@ Slides.Presentation = function(){
                 biblecontentadder: new Slides.Widgets.ContentAdders.BibleContentAdder(this),
                 songcontentadder: new Slides.Widgets.ContentAdders.SongContentAdder(this),
             }
+            this.controls.biblecontentadder.Initialize();
             //Lataa sisältö ja päivitä tieto tällä hetkellä aktiivisena olevasta segmentistä
             this.controls.contentlist.GetContents().PrintContentList().HighlightCurrentContents();
             var self = this;
@@ -8347,13 +8374,13 @@ Slides.Presentation = function(){
                 //nuoli ylös
             case 38:
                 //nuoli vasemmalle
-                self.Prev();
+                Slides.Presentation.GetCurrentPresentation().Prev();
                 break;
             case 39:
                 //nuoli alas
             case 40:
                 //nuoli oikealle
-                self.Next();
+                Slides.Presentation.GetCurrentPresentation().Next();
                 break;
         } 
 
@@ -8445,7 +8472,7 @@ Slides.Controls = function(){
             $(".side-menu-left .contentadder-open")
                 .append(`<div class='addtoprescontrols'>
                     <a class='addtopreslink' href='javascript:void(0)'>Lisää esitykseen</a> 
-                    <a class='shownowlink' href='javascript:void(0)'> Näytä nyt</a> </div>`);
+                    <!--<a class='shownowlink' href='javascript:void(0)'> Näytä nyt</a> --></div>`);
             //Huolehdi siitä, että navigointipalkin linkkien klikkaus aktivoi oikeanpuolimmaisen menun
             $(".addtopreslink").click(function(){
                 //avaa haluttu sisällönlisäysikkuna 
@@ -8842,21 +8869,22 @@ Slides.Widgets = function(){
             $("#original-content ul").append("<li></li>");
             //Lisää pseudolistaelementtiin myös klikkaustoiminto, joka sijoittaa uuden sisällön esitykseen
             $("<li class='add-here-option'>Lisää tähän</li>")
-                .click(function(){self.CreateSlideDOM($(this))})
+                .click(self.CreateSlideDOM.bind(self))
                 .insertBefore("#original-content li");
             //Poista pseudo-li
             $("#original-content li:last-child").remove();
-            BlurContent($("#original-content"));
+            //Utilities.BlurContent($("#original-content"));
         };
 
         /**
          *
          * Luo uusi dia / uudet diat ja sijoita ne esitykseen.
          *
-         * @param object $launcher klikattu sisällysluettelon kohta, johon uusi sisältö halutaan
+         * @param ev klikkaustapahtuma
          *
          */
-        this.CreateSlideDOM = function($launcher){
+        this.CreateSlideDOM = function(ev){
+            var $launcher = $(ev.target);
             //Luo sisältö
             this.CreateContent();
             //Määritä, mihin kohtaan sijoitetaan - sen perusteella, mones sisältölistan elementti on ennen klikattua linkkiä (tai jälkeen, jos klikattu ekaa)
@@ -8957,107 +8985,48 @@ Slides.Widgets.ContentAdders.BibleContentAdder = function(parent_presentation){
     this.address =  {"start":{},"end":{}};
 
     /**
+     *
+     * Alustaa toiminnallisuuden 
+     *
+     */
+    this.Initialize = function(){
+        this.pickerpair = new BibleModule.PickerPair();
+        this.pickerpair.Initialize($("#biblepicker"));
+        this.pickerpair.SetAsSingle().SetCallBack(this.LoadContent.bind(this));
+        $(".biblecontentadder .addtoprescontrols").hide().insertAfter("#biblepicker");
+        $(".biblecontentadder .pickerpair_controls").show();
+    };
+
+    /**
      * Luo tekstidia käyttäjän antaman inputin pohjalta
+     *
+     *
      */
     this.CreateContent = function(){
-        return "";
-    };
+        var $section = $(`<section class="bibletext Teksti">
+                            <article class="bibleverse">
+                                <h2>TESTI</h2>
+                                <p>${this.verses[0]}</p>
+                            </article>
+                        </section>`);
 
-
-    /**
-     *
-     * Lataa kirjojen nimet tietokannasta (joka vanhasta tai uudesta testamentista)
-     *
-     * @param object $launcher jquery-elementti, joka tapahtuman laukaisi (joko radiobuttonit tai lista)
-     *
-     */
-    this.LoadBooknames = function($launcher){
-        if($launcher.get(0).tagName=="SELECT" && $(".book:eq(0)").children().length<5){
-            alert("Valitse ensin vanha tai uusi testamentti.");
+        if(this.verses.length > 1){
+            $section.append(
+                this.verses.slice(1,).map(
+                    (verse) => `<article class='bibleverse'><p>${verse}</p></article>`
+                )
+            );
         }
-        else if($launcher.attr("name")=="testament"){
-            //Lataa kirjojen nimet select-elementtiin
-            $(".book option:gt(0)").remove();
-            $.getJSON("php/loadbibleverses.php",{"testament":$("[name='testament']:checked").val()},
-                function(data){
-                    $.each(data, function(idx,bookname){$("<option></option>").text(bookname).appendTo(".book") } )});
-            //Poista vanhat luvut ja jakeet
-            $(".book, .chapter, .verse").find("option:gt(0)").remove();
-        }
+
+        this.$loaded_content = $section;
     };
 
-    /**
-     * Lataa kappaleiden tai jakeiden lukumäärä valitun kirjan nimen / kappaleen perusteella
-     *
-     *
-     * @param object launcher toiminnon laukaissut kirjanvalitsin
-     *
-     */
-    this.PreLoad = function($launcher){
-        //etsi seuraava select-elementti
-        var self = this;
-        var $selectparent = $launcher.parents(".verseselector");
-        var $subselect = $launcher.parent().next().find("select")
-        if($subselect.length>0) $subselect.find("option:gt(0)").remove();
 
-        var params = {"testament": $("[name='testament']:checked").val(),
-                      "book": $selectparent.find(".book").val(),
-                      "chapter": $selectparent.find(".chapter").val(),
-                      "verse": $selectparent.find(".verse").val()};
-
-        //Jos haetaan ylemmän tason elementtejä, poista oliosta alemman tason muuttujat
-        if($launcher.hasClass("book") || $launcher.hasClass("chapter")) delete params.verse;
-        if($launcher.hasClass("book")) delete params.chapter;
-
-        $.getJSON("php/loadbibleverses.php",params, function(data){
-                if($launcher.hasClass("verse")){ 
-                    self.ShowVersePreview($selectparent, data);
-                    self.CreateTitle();
-                    self.LoadContent();
-                }
-                else{
-                    $.each(data, function(idx,chapter){$("<option></option>").text(chapter).appendTo($subselect) });
-                    $subselect.parent().next().find("select option:gt(0)").remove();
-                }
-        });
-
-    };
 
     /**
-     * Näyttää pienen esikatseluikkunan siitä Raamatun jakeesta, joka valittu
      *
-     * @param  object $selectparent se elementti, jonka lapsena käytetty jakeen valitsin on
-     * @param  array data ajax-kyselyn palauttama taulukko jakeista
+     * Luo jquery-elementin, joka syötetään Raamatunkohdan otsikoksi
      *
-     */
-    this.ShowVersePreview = function($selectparent,data){
-            //Näytä jakeen esikatselu ja tee siitä klikkauksella poistettava
-            $selectparent.find(".versepreview").text(data[0]).fadeIn().click(function(){$(this).fadeOut()});
-            if($selectparent.hasClass("startverse") && $selectparent.find(".between-verse-selectors").is(":hidden")){
-                $selectparent.find(".between-verse-selectors").slideDown("slow");
-                $selectparent.find(".verseselector").text(data[0]).fadeIn().click(function(){$(this).fadeOut()});
-                //Lisää viimeisen jakeen valitsin
-                var $endverseselectors = $selectparent.clone(true).insertAfter($selectparent);
-                $endverseselectors.find(".between-verse-selectors").remove();
-                //Kopioi lähtöjakeen osoite loppujakeeseen
-                $selectparent.find("select").each(function(){
-                    $endverseselectors.find("." + $(this).attr("class")).val($(this).val());
-                })
-                $(".verseselector:eq(1)").removeClass("startverse").addClass("endverse");
-            }
-    };
-
-    /**
-     * Merkitse muistiin Raamatunkohdan alku- ja loppukohta
-     */
-    this.UpdateAddress = function(){
-        var self = this;
-        $(".startverse select").each(function(){ self.address.start[$(this).attr("class")] = $(this).val()});
-        $(".endverse select").each(function(){ self.address.end[$(this).attr("class")] = $(this).val()});
-    };
-
-    /**
-     * Luo jquery-elementti, joka syötetään Raamatunkohdan otsikoksi
      */
     this.CreateTitle = function(){
         var self = this;
@@ -9088,41 +9057,20 @@ Slides.Widgets.ContentAdders.BibleContentAdder = function(parent_presentation){
      * Lataa varsinainen raamattusisältö
      */
     this.LoadContent = function(){
-        var self = this;
-        $(".biblecontentadder .addtoprescontrols").hide()
-        var params = {"testament": $("[name='testament']:checked").val(),
-                      "startbook": this.address.start.book,
-                      "endbook": this.address.end.book,
-                      "startchapter": this.address.start.chapter,
-                      "endchapter": this.address.end.chapter,
-                      "startverse": this.address.start.verse,
-                      "endverse": this.address.end.verse};
+        var path = Utilities.GetAjaxPath("Loader.php"),
+            start = this.pickerpair.startpicker.GetAddress(),
+            end = this.pickerpair.endpicker.GetAddress();
 
-        $.getJSON("php/loadbibleverses.php",params, function(data){
-            self.$loaded_content = self.GiveContainer();
-            var $segment = $("<article class='bibleverse'></article>");
-            $segment.append(self.$title);
-            console.log(self.$title);
-            for(idx=0;idx<data.length;idx++){
-                //Pilko kahden jakeen mittaisiksi dioiksi, mutta laita otsikko ja eka jae samaan
-                if((idx + 1 )% 2 > 0 && idx > 0){
-                    self.$loaded_content.append($segment);
-                    //Jos ei vika jae, luo uusi dia
-                    if(idx<data.length) var $segment = $("<article class='bibleverse'></article>");
-                }
-                $("<p></p>").text(data[idx]).appendTo($segment);
-            }
-            //Jos jakeita on pariton määrä, lisää viimeinen. Muussa tapauksessa
-            if((data.length -1) % 2 > 0 || data.length==1) self.$loaded_content.append($segment);
-            else{
-                var $slide = $("<article class='bibleverse'></article>");
-                $slide.append($("<p></p>").text(data[data.length-1]));
-                $slide.appendTo(self.$loaded_content);
-            }
-
-            //Kun kaikki valmista, palauta sisällön lisäämisvaihtoehdot näkyviin
-            $(".biblecontentadder .addtoprescontrols").show()
-        });
+        $.getJSON(path,{
+            action: "load_grouped_verses",
+            testament: this.pickerpair.startpicker.testament,
+            start: [start.book, start.chapter, start.verse],
+            end: [end.book, end.chapter, end.verse]
+        }, (verses) => {
+            this.verses = verses;
+            this.AddToPres();
+        }
+        );
     };
 
 } 
@@ -9144,6 +9092,7 @@ Slides.Widgets.ContentAdders = Slides.Widgets.ContentAdders || {};
  */
 Slides.Widgets.ContentAdders.SongContentAdder = function(parent_presentation) {
 
+    var path = Utilities.GetAjaxPath("Loader.php");
     Slides.Widgets.ContentAdder.call(this, parent_presentation);
 
     this.adderclass = ".songcontentadder";
@@ -9151,14 +9100,10 @@ Slides.Widgets.ContentAdders.SongContentAdder = function(parent_presentation) {
 
     //Parametrit laulujen automaattista täydennystä varten:
     this.autocomp = {
-        source : function(request, response){
-            $.getJSON("php/loadsongs.php",
-                {songname:request.term},
-                response);
-        },
-        minLength : 0,
-        select: (event, input) => this.CreateContent(input.item.value),
-    }
+        source : Portal.SongSlots.LoadSongTitles,
+        minLength : 2,
+        select: (event, input) => this.CreateContent(input.item.value)
+        };
 
     
     /**
@@ -9168,18 +9113,24 @@ Slides.Widgets.ContentAdders.SongContentAdder = function(parent_presentation) {
      *
      */
     this.CreateContent = function(songname){
-        var $container = this.GiveContainer();
-        var self=this;
+        //TODO: lataa laulut id:itten perusteella
+        var $container = this.GiveContainer(),
+            self=this,
+            path = Utilities.GetAjaxPath("Loader.php");
         $(".songcontentadder .addtoprescontrols").hide();
         if(songname == undefined) songname = $("#songsearch").val();
-        $.getJSON("php/loadsongs.php",
-            {songname:songname,content:"yes"},
+        $.getJSON(path,
+            {
+                action: "load_song_content_by_title",
+                title: songname,
+            },
             function(data){
-                if(data.verses != null){
-                    $container.append(self.CreateTitleSlide(data.title));
+                if(data.length){
+                    $container.append(self.CreateTitleSlide(songname));
                     //Säkeistöt
-                    $.each(data.verses.split(/\n{2,}/),function(idx,verse){
-                        $container.append("<article class='verse'><p> " + verse.replace(/\n/g,"\n<br>")  + "</p></article>")});
+                    $.each(data,function(idx,verse){
+                        $container.append("<article class='verse'><p> " + verse.replace(/\n/g,"\n<br>")  + "</p></article>")
+                    });
                     //Tallenna valmis data olion $loaded_content-parametriin
                     self.$loaded_content = $container;
                     $(".songcontentadder .addtoprescontrols").show();

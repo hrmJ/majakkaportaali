@@ -80,6 +80,13 @@ switch($params["action"]){
         $loader->LoadVerseContent($params["startverse"], $params["endverse"]);
         echo json_encode($loader->GetData());
         break;
+    case "load_grouped_verses":
+        $loader = new BibleLoader($params["testament"], $database_bible);
+        echo json_encode($loader
+            ->LoadVerseContent($params["start"], $params["end"])
+            ->GroupVerses(2)
+            ->GetData());
+        break;
     case "load_comments":
         $comment= new Comment($database, $params["service_id"], $m);
         echo $comment->LoadAll();
@@ -116,6 +123,10 @@ switch($params["action"]){
     case "get_song_slots":
         $songlist = new Songlist($database, $params["service_id"], $m);
         echo $songlist->LoadSongSlots($params["service_id"])->slots_as_string;
+        break;
+    case "load_song_content_by_title":
+        $songlist = new Songlist($database, 0, $m);
+        echo json_encode($songlist->FetchLyricsById(0, True, $params["title"]));
         break;
     case "load_slots":
         $structure = new Structure($database, $m);

@@ -52,7 +52,7 @@ Slides.Controls = function(){
             $(".side-menu-left .contentadder-open")
                 .append(`<div class='addtoprescontrols'>
                     <a class='addtopreslink' href='javascript:void(0)'>Lisää esitykseen</a> 
-                    <a class='shownowlink' href='javascript:void(0)'> Näytä nyt</a> </div>`);
+                    <!--<a class='shownowlink' href='javascript:void(0)'> Näytä nyt</a> --></div>`);
             //Huolehdi siitä, että navigointipalkin linkkien klikkaus aktivoi oikeanpuolimmaisen menun
             $(".addtopreslink").click(function(){
                 //avaa haluttu sisällönlisäysikkuna 

@@ -127,10 +127,9 @@ var BibleModule = function(){
      *
      * Alku- ja loppujakeen valitsimen muodostama kokonaisuus
      *
-     * @param $parent_el elementti, johon valitsin liitetään
      *
      */
-    var PickerPair = function($parent_el){ 
+    var PickerPair = function(){ 
 
         this.callback = undefined;
         this.$status = $("<div class='bible_address_status'><span class='status_text'></span></div>");
@@ -188,34 +187,52 @@ var BibleModule = function(){
 
         /**
          *
+         * Tekee jaeparista yksittäisen, jolloin ei yritetä luoda
+         * mahdollisuutta useilla jaepareille
+         *
+         * @param callback asetettava funktio
+         *
+         */
+        this.SetAsSingle = function(){
+            this.is_single = true;
+            return this;
+        }
+
+        /**
+         *
          * Vahvistaa valitun raamatunkohdan
          *
          */
         this.Confirm = function(){
-            var addr = this.GetHumanReadableAddress(),
-                $par_el = this.startpicker.$picker.parents(".address_pickers");
 
-            this.startpicker.$picker.hide();
-            this.endpicker.$picker.hide();
-            this.$status.find(".status_text").text(addr);
-            this.$cont.removeClass("pickerpair");
+            if(!this.is_single){
 
-            var $all_addresses = $par_el.find(".status_text"),
-                address_string = "";
+                var addr = this.GetHumanReadableAddress(),
+                    $par_el = this.startpicker.$picker.parents(".address_pickers");
+            
+                this.startpicker.$picker.hide();
+                this.endpicker.$picker.hide();
+                this.$status.find(".status_text").text(addr);
+                this.$cont.removeClass("pickerpair");
 
-            $all_addresses.each(function(){
-                if(address_string){
-                    address_string += "; ";
-                }
-                address_string += $(this).text();
-            });
+                var $all_addresses = $par_el.find(".status_text"),
+                    address_string = "";
 
-            $par_el.prev().find(".address_information").text(address_string);
-            this.startpicker.$picker.parents(".bible_address_container:eq(0)")
-                .find(".add_picker_pair").show();
+                $all_addresses.each(function(){
+                    if(address_string){
+                        address_string += "; ";
+                    }
+                    address_string += $(this).text();
+                });
 
-            this.$confirm_link.hide()
-            this.$status.show();
+                $par_el.prev().find(".address_information").text(address_string);
+                this.startpicker.$picker.parents(".bible_address_container:eq(0)")
+                    .find(".add_picker_pair").show();
+
+                this.$confirm_link.hide()
+                this.$status.show();
+            
+            }
 
             if(this.callback){
                 this.callback();
@@ -396,6 +413,7 @@ var BibleModule = function(){
          *
          */
         this.GetBookNames = function(event){
+            var path = Utilities.GetAjaxPath("Loader.php");
             if(event){
                 //Jos ajettu valintatapahtuman seurauksena eikä automaattisesti
                 this.testament = this.$picker.find("[name='testament']:checked").val();
@@ -406,7 +424,7 @@ var BibleModule = function(){
                         .find(".between-verse-selectors, .bible_address_picker:eq(1)").hide();
                 }
             }
-            return $.getJSON("php/ajax/Loader.php",
+            return $.getJSON(path,
                 {
                     "action": "load_booknames",
                     "testament": this.testament
@@ -422,12 +440,13 @@ var BibleModule = function(){
          *
          */
         this.GetChapters = function(event){
+            var path = Utilities.GetAjaxPath("Loader.php");
             if(event){
                 this.book = this.$picker.find(".book").val();
                 this.verse = '';
             }
 
-            return $.getJSON("php/ajax/Loader.php",
+            return $.getJSON(path,
                 {
                     "action": "load_chapters",
                     "testament": this.testament,
@@ -444,10 +463,11 @@ var BibleModule = function(){
          *
          */
         this.GetVerses = function(event){
+            var path = Utilities.GetAjaxPath("Loader.php");
             if(event){
                 this.chapter = this.$picker.find(".chapter").val();
             }
-            return $.getJSON("php/ajax/Loader.php",
+            return $.getJSON(path,
                 {
                     "action": "load_verses",
                     "testament": this.testament,
@@ -509,9 +529,10 @@ var BibleModule = function(){
          * 
          */
         this.PreviewVerse = function(){
-            var self = this;
+            var self = this,
+                path = Utilities.GetAjaxPath("Loader.php");
             this.verse = this.$picker.find(".verse").val();
-            $.getJSON("php/ajax/Loader.php",
+            $.getJSON(path,
                 {
                     "action": "load_verse_content",
                     "testament": this.testament,
@@ -571,6 +592,7 @@ var BibleModule = function(){
     return {
     
         AttachAddressPicker,
+        PickerPair
     
     };
 

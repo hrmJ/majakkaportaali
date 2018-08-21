@@ -61,21 +61,22 @@ Slides.Widgets = function(){
             $("#original-content ul").append("<li></li>");
             //Lisää pseudolistaelementtiin myös klikkaustoiminto, joka sijoittaa uuden sisällön esitykseen
             $("<li class='add-here-option'>Lisää tähän</li>")
-                .click(function(){self.CreateSlideDOM($(this))})
+                .click(self.CreateSlideDOM.bind(self))
                 .insertBefore("#original-content li");
             //Poista pseudo-li
             $("#original-content li:last-child").remove();
-            BlurContent($("#original-content"));
+            //Utilities.BlurContent($("#original-content"));
         };
 
         /**
          *
          * Luo uusi dia / uudet diat ja sijoita ne esitykseen.
          *
-         * @param object $launcher klikattu sisällysluettelon kohta, johon uusi sisältö halutaan
+         * @param ev klikkaustapahtuma
          *
          */
-        this.CreateSlideDOM = function($launcher){
+        this.CreateSlideDOM = function(ev){
+            var $launcher = $(ev.target);
             //Luo sisältö
             this.CreateContent();
             //Määritä, mihin kohtaan sijoitetaan - sen perusteella, mones sisältölistan elementti on ennen klikattua linkkiä (tai jälkeen, jos klikattu ekaa)

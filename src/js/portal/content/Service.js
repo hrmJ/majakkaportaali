@@ -147,7 +147,7 @@ Service = function(){
 
         Comments.LoadComments();
         Comments.CreateThemeSelect();
-        SongSlots.LoadSongsToSlots(TabObjects.Songs);
+        Portal.SongSlots.LoadSongsToSlots(TabObjects.Songs);
         SongLists.Initialize();
         $("#prepared_for_insertion").hide()
             .draggable({

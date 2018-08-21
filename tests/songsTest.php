@@ -113,6 +113,18 @@ class SongsTest extends TestCase
 
     /**
      *
+     * Testaa sanojen hakemista nimen perusteella.
+     *
+     */
+    public function testFetchLyricsByTitle()
+    {
+        $songlist = new Songlist($this->con, 0, $this->m);
+        $cont = $songlist->FetchLyricsById(0,True, "Be all end all");
+        var_dump($cont);
+    }
+
+    /**
+     *
      * Testaa sanojen tallentamista.
      *
      */
@@ -151,7 +163,6 @@ class SongsTest extends TestCase
             $slots = $this->con->select("service_specific_presentation_structure", 
                 "*",
                 ['ORDER' => [ 'slot_number' => 'ASC' ]]);
-        var_dump($slots);
     }
 
 

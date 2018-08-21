@@ -204,13 +204,18 @@ class Songlist{
      *
      * @param $id laulun id
      * @param $simplify palautetaanko yksinkertaistettu taulukko
+     * @param $title jos määritetty, haetaan nimen eikä id:n perusteella
      *
      */
-    public function FetchLyricsById($id,$simplify=false){
+    public function FetchLyricsById($id=Null,$simplify=false, $title=""){
+        if($title != ""){
+            $id = $this->con->get("songdata","id",["title" => $title]);
+        }
         $text = $this->con->select("versedata",
             "verse",
             ["song_id" => $id],
             ["ORDER" => "id"]);
+
         if($simplify){
             $newtext = [];
             foreach($text as $verse){

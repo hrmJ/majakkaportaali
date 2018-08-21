@@ -1,9 +1,11 @@
+Portal = Portal || {};
+
 /**
  *
  * Moduuli yhden messun laulusloteista
  *
  */
-var SongSlots = function(){
+Portal.SongSlots = function(){
 
     var songs_tab;
 
@@ -15,7 +17,8 @@ var SongSlots = function(){
      *
      **/
     function LoadSongTitles(request, response){
-        $.getJSON("php/ajax/Loader.php",{
+        var path = Utilities.GetAjaxPath("Loader.php");
+        $.getJSON(path,{
             action: "get_song_titles",
             service_id: Service.GetServiceId(),
             title:request.term
@@ -591,7 +594,8 @@ var SongSlots = function(){
     return {
     
         LoadSongsToSlots,
-        SongSlot
+        SongSlot,
+        LoadSongTitles
     
     };
 
