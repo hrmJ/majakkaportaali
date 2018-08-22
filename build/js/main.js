@@ -8675,13 +8675,15 @@ Slides.ContentList = function(parent_presentation){
      *
      */
     this.MovePresentationToVerse = function(launcher){
-        //Etsi esityksestä sisällysluettelon id-attribuutin numeron mukainen section-elementti ja siirry sen ensinmmäiseen osioon
-        var offset = this.pres.$section.hasClass("bibletext") ? 0 : 1;
-        this.pres.Activate(this.pres.d.find(".current")
-            .removeClass("current")
-            .parent().find("article:eq("+ (launcher.index() + offset) +")")
-            .addClass("current"));
-        this.HighlightCurrentContents();
+        if(!launcher.find("textarea").length){
+            //Etsi esityksestä sisällysluettelon id-attribuutin numeron mukainen section-elementti ja siirry sen ensinmmäiseen osioon
+            var offset = this.pres.$section.hasClass("bibletext") ? 0 : 1;
+            this.pres.Activate(this.pres.d.find(".current")
+                .removeClass("current")
+                .parent().find("article:eq("+ (launcher.index() + offset) +")")
+                .addClass("current"));
+            this.HighlightCurrentContents();
+        }
     };
 
     /**
@@ -8730,13 +8732,60 @@ Slides.ContentList = function(parent_presentation){
         //Raamatuntekstit: aloita jo ekasta diasta
         var verseslides = this.pres.$section.hasClass("bibletext") ? "" : ":gt(0)";
         this.pres.$section.find("article" + verseslides  + "").each(function(){
+            var $editlink = $("<i class='fa fa-pencil'></i>").click(self.EditVerse.bind(self));
             $("<div></div>")
             .text($(this).text())
             .appendTo("#verselist")
-            .click(function(){self.MovePresentationToVerse($(this));});
+            .click(function(){self.MovePresentationToVerse($(this));})
+            .append($editlink) ;
         });
     };
 
+    /**
+     *
+     * Muokkaa (väliaikaisesti) säkeistöä ja sitä, miltä se näyttää esitysnäytöllä
+     * TODO tallenna muutokset tietokantaan, jos niin halutaan
+     *
+     * @param ev tapahtuma
+     *
+     */
+    this.EditVerse = function(ev){
+        var $target = $(ev.target).parents("div:eq(0)"),
+            text = $target.text().trim(),
+            $button = $("<button>Tallenna</button>").click(this.SaveVerseEdit.bind(this));
+        ev.stopPropagation();
+        $target.html("")
+            .append(`<textarea>${text}</textarea>`)
+            .append($button);
+    }
+
+    /**
+     *
+     * Tallentaa säkeistöön tms. tehdyt muutokset näytettäväksi esityksessä
+     *
+     * @param ev tapahtuma
+     *
+     */
+    this.SaveVerseEdit = function(ev){
+        var $target = $(ev.target).parents("div:eq(0)"),
+            text = $target.find("textarea").val(),
+            html = "<p>" + text.replace(/\n/g,"<br>") + "</p>",
+            $editlink = $("<i class='fa fa-pencil'></i>").click(this.EditVerse.bind(this)),
+            verseindex = $target.index();
+
+        ev.stopPropagation();
+
+        if("laulu" == "laulu"){
+            //TODO
+            verseindex += 1;
+        }
+
+        Slides.Presentation.GetCurrentPresentation()
+            .$section.find("article:eq(" + verseindex + ")").html(html)
+        $target.html(text).append($editlink);
+        console.log($target.index());
+
+    };
 
     /**
      *
