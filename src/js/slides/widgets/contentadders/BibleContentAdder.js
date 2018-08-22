@@ -37,9 +37,10 @@ Slides.Widgets.ContentAdders.BibleContentAdder = function(parent_presentation){
      *
      */
     this.CreateContent = function(){
-        var $section = $(`<section class="bibletext Teksti">
+        var address = this.pickerpair.GetHumanReadableAddress(),
+            $section = $(`<section class="bibletext Teksti">
                             <article class="bibleverse">
-                                <h2>TESTI</h2>
+                                <h2>${address}</h2>
                                 <p>${this.verses[0]}</p>
                             </article>
                         </section>`);
