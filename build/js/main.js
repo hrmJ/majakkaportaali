@@ -8209,9 +8209,11 @@ Slides.Presentation = function(){
                 biblecontentadder: new Slides.Widgets.ContentAdders.BibleContentAdder(this),
                 songcontentadder: new Slides.Widgets.ContentAdders.SongContentAdder(this),
                 imageadder: new Slides.Widgets.ContentAdders.ImageAdder(this),
+                youtubeadder: new Slides.Widgets.ContentAdders.YoutubeAdder(this),
             }
             this.controls.biblecontentadder.Initialize();
             this.controls.imageadder.Initialize();
+
             //Lataa sisältö ja päivitä tieto tällä hetkellä aktiivisena olevasta segmentistä
             this.controls.contentlist.GetContents().PrintContentList().HighlightCurrentContents();
             var self = this;
@@ -9211,6 +9213,49 @@ Slides.Widgets.ContentAdders.ImageAdder = function(parent_presentation){
 }
 
 Slides.Widgets.ContentAdders.ImageAdder.prototype = Object.create(Slides.Widgets.ContentAdder.prototype);
+
+Slides = Slides || {};
+Slides.Widgets = Slides.Widgets || {};
+Slides.Widgets.ContentAdders = Slides.Widgets.ContentAdders || {};
+
+/**
+ *
+ * Tekstidian lisäävä widget
+ *
+ * @param Presentation parent_presentation Esitys, johon widgetit liitetään.
+ * @param string adderclass sisällön lisävän widgetin css-luokka
+ * @param string addedclass itse sisällön css-luokka
+ *
+ */
+Slides.Widgets.ContentAdders.YoutubeAdder = function(parent_presentation){
+
+    Slides.Widgets.ContentAdder.call(this, parent_presentation);
+
+    this.adderclass = ".youtubeadder";
+    this.addedclass = "addedcontent";
+
+    /**
+     *
+     * Luo youtubedian.
+     *
+     */
+    this.CreateContent = function(){
+        var url = $('#youtubeadder_url').val().replace("watch?v=","embed/");
+        this.$loaded_content = $(`
+            <section class='infocontent Teksti'>
+                <article class=''>
+                    <input type='hidden' value='Youtube-video'>
+                        <iframe width="560" height="315" src="${url}" 
+                        frameborder="0" allow="autoplay; encrypted-media" 
+                        allowfullscreen></iframe>
+                </article>
+            </section>
+            `)
+    };
+
+}
+
+Slides.Widgets.ContentAdders.YoutubeAdder.prototype = Object.create(Slides.Widgets.ContentAdder.prototype);
 
 Slides = Slides || {};
 Slides.Styles = Slides.Styles || {};
