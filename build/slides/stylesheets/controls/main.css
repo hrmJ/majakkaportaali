@@ -126,6 +126,8 @@ label {
     color: #737373; }
   .contentlist + .contentlist {
     margin-left: 3em; }
+  .contentlist .fa + .fa {
+    margin-left: 0.4em; }
 
 .highlight {
   background: #737373;

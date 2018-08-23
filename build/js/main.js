@@ -8732,12 +8732,14 @@ Slides.ContentList = function(parent_presentation){
         //Raamatuntekstit: aloita jo ekasta diasta
         var verseslides = this.pres.$section.hasClass("bibletext") ? "" : ":gt(0)";
         this.pres.$section.find("article" + verseslides  + "").each(function(){
-            var $editlink = $("<i class='fa fa-pencil'></i>").click(self.EditVerse.bind(self));
+            var $editlink = $("<i class='fa fa-pencil'></i>").click(self.EditVerse.bind(self)),
+                $removelink = $("<i class='fa fa-trash'></i>").click(self.RemoveVerse.bind(self));
             $("<div></div>")
             .text($(this).text())
             .appendTo("#verselist")
             .click(function(){self.MovePresentationToVerse($(this));})
-            .append($editlink) ;
+            .append($editlink) 
+            .append($removelink);
         });
     };
 
@@ -8757,6 +8759,30 @@ Slides.ContentList = function(parent_presentation){
         $target.html("")
             .append(`<textarea>${text}</textarea>`)
             .append($button);
+    }
+
+    /**
+     *
+     * Poista (väliaikaisesti) säkeistö esitysruudulta ja hallintaruudulta
+     * TODO tallenna muutokset tietokantaan, jos niin halutaan
+     *
+     * @param ev tapahtuma
+     *
+     */
+    this.RemoveVerse = function(ev){
+        var $target = $(ev.target).parents("div:eq(0)"),
+            verseindex = $target.index();
+
+        ev.stopPropagation();
+
+        if("laulu" == "laulu"){
+            //TODO GetVerseIndex-funktio tms.
+            verseindex += 1;
+        }
+
+        Slides.Presentation.GetCurrentPresentation()
+            .$section.find("article:eq(" + verseindex + ")").remove();
+        $target.remove();
     }
 
     /**
@@ -8783,7 +8809,6 @@ Slides.ContentList = function(parent_presentation){
         Slides.Presentation.GetCurrentPresentation()
             .$section.find("article:eq(" + verseindex + ")").html(html)
         $target.html(text).append($editlink);
-        console.log($target.index());
 
     };
 
