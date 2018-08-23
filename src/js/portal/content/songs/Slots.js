@@ -414,6 +414,41 @@ Portal.SongSlots = function(){
 
         /**
          *
+         * Muokkaa lauluun liitettyjä tägejä tai lisää uusia.
+         *
+         * TODO: myös suoraan laululistassa, nopeammin
+         *
+         * @param ev tapahtuma
+         *
+         */
+        this.EditTags = function(ev){
+            var $li = $(ev.target),
+                $tagsaver = $("<button class='tagsaverbutton'>Tallenna tägit</button>").click(
+                this.SaveEditedTags.bind(this));
+            $li.find(".tageditor, button").remove();
+            $li
+                .append(`<div class='tageditor'>
+                <input type='text' placeholder='Erota tägit pilkulla, ei #-merkkejä'
+                value='Adsad, asdlksajd, asldkjsad'> </input>
+                </div>`)
+                .append($tagsaver);
+        };
+
+        /**
+         *
+         * Tallentaa laulua koskeviin tägeihin tehdyt muutokset
+         *
+         * @param ev tapahtuma
+         *
+         */
+        this.SaveEditedTags = function(ev){
+            ev.stopPropagation();
+            $(".tageditor, .tagsaverbutton").remove();
+            console.log(this);
+        }
+
+        /**
+         *
          * Avaa ikkunan, jossa voi tarkkailla laulun yksityiskohtia ja esim. muokata sanoja
          *
          */
@@ -441,7 +476,7 @@ Portal.SongSlots = function(){
             SongLists.SetEditedLyricsCallback(function(){
                 var input_id_val = $("#songdetails .lyrics_id").val();
                 self.picked_id = input_id_val || self.picked_id;
-                if(!this.is_service_specific){
+                if(this.is_service_specific){
                     $.when(self.RefreshVersions(
                         self.LoadVersionPicker.bind(self)
                     )).done(self.PrintEditActions.bind(self));
@@ -468,7 +503,10 @@ Portal.SongSlots = function(){
                             .click(self.EditWords.bind(self)),
                         $(`<li class='new_version_li'>
                         Lisää uusi laulu tai versio samalla nimellä </li>`)
-                            .click(self.AddNewVersion.bind(self))
+                            .click(self.AddNewVersion.bind(self)),
+                        $(`<li class='new_version_li'>
+                        Lisää tai muokkaa tägejä </li>`)
+                            .click(self.EditTags.bind(self))
                     ]
                 };
             if(!this.is_service_specific){
@@ -543,16 +581,18 @@ Portal.SongSlots = function(){
          *
          **/
         this.CheckLyrics = function(ev, item){
-            var self = this;
-            //Jos käynnistetty klikkaamalla autocomplete-listaa, käytä sen arvoa
-            var title = (item ? item.item.value :  this.$div.find(".songinput:eq(0)").val());
-            $.getJSON("php/ajax/Loader.php",{
-                    action:  "check_song_title",
-                    service_id: Service.GetServiceId(),
-                    title: title
-                    },
-                    self.IndicateLyrics.bind(self)
-                    );
+            if(this.is_service_specific){
+                var self = this;
+                //Jos käynnistetty klikkaamalla autocomplete-listaa, käytä sen arvoa
+                var title = (item ? item.item.value :  this.$div.find(".songinput:eq(0)").val());
+                $.getJSON("php/ajax/Loader.php",{
+                        action:  "check_song_title",
+                        service_id: Service.GetServiceId(),
+                        title: title
+                        },
+                        self.IndicateLyrics.bind(self)
+                        );
+            }
         };
 
 

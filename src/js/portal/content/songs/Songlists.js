@@ -9,7 +9,8 @@ var SongLists = function(){
     var waiting_for_attachment,
         edited_lyrics_callback,
         current_song,
-        not_service_specific=false;
+        not_service_specific=false,
+        alphalist;
 
     /**
      * Lista, josta käyttäjä näkee kaikki selattavissa olevat laulut
@@ -277,7 +278,7 @@ var SongLists = function(){
      *
      */
     function LoadSongLists(){
-        var alphalist = new AlphabeticalSonglist();
+        alphalist = alphalist || new AlphabeticalSonglist();
         alphalist.GetAndSetSubCategories();
     }
 
@@ -374,6 +375,7 @@ var SongLists = function(){
             }
             SetLyrics(saved_id*1, $target_el)
             Portal.SongSlots.GetCurrentSlot().CheckLyrics();
+            LoadSongLists();
         });
     
     }
