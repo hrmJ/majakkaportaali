@@ -12,6 +12,14 @@ Portaali
 - [/] Raamatun kirjojen nimien suomennokset
 - [ ] Raamatunkohdan (osakohdan) poistaminen
 - [ ] Muka tallentamattomia muutoksia yleistiedoissa raamatunkohdan takia
+- [ ] Mahdollisuus editoida lauluja muualtakin kuin vain messunäkymästä
+    - ehkä "hallitse lauluja" -alavalikko?
+
+Bugit
+-----
+
+- [ ] check-merkki, kun lisätty uusi laulu
+- [ ] älä luule, että on sanat, kun muutettu nimi uudeksi
 
 Diat
 ----

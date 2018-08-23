@@ -289,6 +289,8 @@ Portal.Servicelist = function(){
                     });
                 }));
         });
+        //Alusta myös laululista käyttöä varten
+        SongLists.Initialize(true);
         $("#savebutton").click(list_of_services.Save.bind(list_of_services));
         $("#structure_launcher").click(() => window.location="service_structure.php");
         //Vastuukohtainen suodattaminen

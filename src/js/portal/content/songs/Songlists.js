@@ -8,7 +8,8 @@ var SongLists = function(){
 
     var waiting_for_attachment,
         edited_lyrics_callback,
-        current_song;
+        current_song,
+        not_service_specific=false;
 
     /**
      * Lista, josta käyttäjä näkee kaikki selattavissa olevat laulut
@@ -102,13 +103,17 @@ var SongLists = function(){
          *
          */
         this.ShowVersionInfo = function(e){
-                    var self = this,
-                        li_elements = [
-                        $("<li><a href='javascript:void(0);'>Käytä tässä messussa</a></li>")
-                            .click(self.PrepareSongForInsertion.bind(this)),
-                        $("<li><a href='javascript:void(0);'>Tutki / muokkaa</a></li>")
-                            .click(self.ExamineSong.bind(this))],
-                        $ul = $("<ul class=lyrics_actions></ul>");
+            var self = this,
+                li_elements = [
+                $("<li><a href='javascript:void(0);'>Käytä tässä messussa</a></li>")
+                    .click(self.PrepareSongForInsertion.bind(this)),
+                $("<li><a href='javascript:void(0);'>Tutki / muokkaa</a></li>")
+                    .click(self.ExamineSong.bind(this))],
+                $ul = $("<ul class=lyrics_actions></ul>");
+            if (not_service_specific){
+                //Poistetaan "Käytä messussa" -kohta, jos ei messuspesifi
+                li_elements = li_elements.slice(1);
+            }
             //Estetään subheading-elementin sulkeutuminen takaisin
             e.stopPropagation();
             $(e.target).parent().find(".lyrics_actions").remove();
@@ -195,9 +200,12 @@ var SongLists = function(){
             ev.stopPropagation();
             this.GetCurrentSong(ev);
             var slot = new Portal.SongSlots.SongSlot(this.current_song.title,
-                0,
-                undefined,
-                this.current_song.id);
+                    0,
+                    undefined,
+                    this.current_song.id);
+            if(not_service_specific){
+                slot.SetNotServiceSpecific();
+            }
             slot.CheckDetails();
         };
 
@@ -277,8 +285,13 @@ var SongLists = function(){
      *
      * Valmistaa laululistoihin ja sanoihin liittyvät toiminnot
      *
+     * @pararm make_not_service_specific Jos kyseessä ei ole messukohtainen laululista, aseta tämä todeksi
+     *
      */
-    function Initialize(){
+    function Initialize(make_not_service_specific){
+        if (make_not_service_specific){
+            not_service_specific = true;
+        }
         LoadSongLists();
         $("#save_lyrics").click(function(){
             var id = $("#songdetails .lyrics_id").val(),
@@ -360,6 +373,7 @@ var SongLists = function(){
                 $(idselector).val(saved_id*1);
             }
             SetLyrics(saved_id*1, $target_el)
+            Portal.SongSlots.GetCurrentSlot().CheckLyrics();
         });
     
     }

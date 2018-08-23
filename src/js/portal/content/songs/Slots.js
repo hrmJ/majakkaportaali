@@ -7,7 +7,26 @@ Portal = Portal || {};
  */
 Portal.SongSlots = function(){
 
-    var songs_tab;
+    var songs_tab,
+        current_slot;
+
+    /**
+     *
+     * Palauttaa aktiivisen, esim. sanojen muokkausta odottavan slotin
+     *
+     */
+    function GetCurrentSlot(){
+        return current_slot;
+    }
+
+    /**
+     *
+     * Asettaa aktiivisen slotin
+     *
+     */
+    function SetCurrentSlot(slot){
+        current_slot = slot;
+    }
 
     //TODO: tallenna muutokset automaattisesti, jos n minuuttia tallentamatta
 
@@ -256,6 +275,16 @@ Portal.SongSlots = function(){
         this.song_ids = [];
         this.$lyrics = undefined;
         this.newsongtext = "";
+        this.is_service_specific = true;
+
+        /**
+         *
+         * Tekee slotista ei-messukohtaisen (jos hallitaan lauluja muualta)
+         *
+         */
+        this.SetNotServiceSpecific = function(){
+            this.is_service_specific = false;
+        }
 
         /**
          *
@@ -404,21 +433,26 @@ Portal.SongSlots = function(){
             $("#songdetails").find("h3").text(this.title);
             $("#songdetails").find(".song_id").val(this.picked_id);
             $("#songdetails").slideDown();
+            //Varmista, että uusien sanojen tallennuksen jälkeen pystytään viittaamaan
+            SetCurrentSlot(this);
 
             //Varmista, että versiot päivitetään 
             //asettamalla callback
             SongLists.SetEditedLyricsCallback(function(){
                 var input_id_val = $("#songdetails .lyrics_id").val();
                 self.picked_id = input_id_val || self.picked_id;
-                $.when(self.RefreshVersions(
-                    self.LoadVersionPicker.bind(self)
-                )).done(self.PrintEditActions.bind(self));
+                if(!this.is_service_specific){
+                    $.when(self.RefreshVersions(
+                        self.LoadVersionPicker.bind(self)
+                    )).done(self.PrintEditActions.bind(self));
+                }
             });
         };
 
         /**
          *
          * Lisää toiminnallisuuden laulun tarkasteluikkunaan
+         *
          *
          */
         this.PrintEditActions = function(){
@@ -437,6 +471,9 @@ Portal.SongSlots = function(){
                             .click(self.AddNewVersion.bind(self))
                     ]
                 };
+            if(!this.is_service_specific){
+                lyrics_status = "has_lyrics";
+            }
             $("#songdetails_actions").html("");
             $.each(edit_actions[lyrics_status],function(idx, $el){
                 $("#songdetails_actions").append($el);
@@ -548,6 +585,8 @@ Portal.SongSlots = function(){
 
             if(!song_ids.length){
                 this.$div.removeClass("has_lyrics").addClass("no_lyrics");
+                this.song_ids = [];
+                this.picked_id = null;
             }
             else{
                 this.$div.removeClass("no_lyrics").addClass("has_lyrics");
@@ -595,7 +634,8 @@ Portal.SongSlots = function(){
     
         LoadSongsToSlots,
         SongSlot,
-        LoadSongTitles
+        LoadSongTitles,
+        GetCurrentSlot
     
     };
 
