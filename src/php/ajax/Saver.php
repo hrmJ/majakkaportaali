@@ -167,11 +167,18 @@ switch($params["action"]){
         break;
     case "save_songtags":
         $songlist = new Songlist($database, 0, $m);
-        $songlist->SaveEditedTags($params["song_id"], $params["tags"]);
         break;
-    case "save_edited_author":
+    case "save_edited_meta":
         $songlist = new Songlist($database, 0, $m);
-        $songlist->SaveEditedAuthors($params["song_id"], $params["authortype"], $params["new_val"]);
+        if($params["meta_type"] == "songtags"){
+            $songlist->SaveEditedTags($params["song_id"], $params["new_val"]);
+        }
+        else{
+            if($params["meta_type"] == "lyricsby"){
+                $params["meta_type"] = "lyrics";
+            }
+            $songlist->SaveEditedAuthors($params["song_id"], $params["meta_type"], $params["new_val"]);
+        }
         break;
 
 }

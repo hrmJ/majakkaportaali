@@ -465,6 +465,10 @@ h3 {
     width: 70%;
     min-height: 60vh; }
 
+.editcont {
+  padding-left: 1em;
+  width: 80%; }
+
 .below_lyrics {
   display: none; }
 
@@ -499,15 +503,15 @@ h3 {
   font-style: italic;
   font-size: 0.7em; }
 
-.song_authors strong {
-  margin-right: 0.5em; }
+.song_authors {
+  font-size: 0.8em; }
+  .song_authors strong {
+    margin-right: 0.5em; }
 
-.songtags .fa-tags {
-  font-size: 0.9em;
-  margin-right: 0.6em; }
-.songtags span {
-  font-size: 0.7em;
-  font-style: italic; }
+li.songtags {
+  font-size: 0.74em; }
+  li.songtags span {
+    font-style: italic; }
 
 .insert_box {
   font-size: 0.7em;

@@ -137,7 +137,7 @@ switch($params["action"]){
     case "get_song_tags":
         $songlist = new Songlist($database, 0, $m);
         $id = (isset($params["song_id"]) ? $params["song_id"] : null);
-        echo json_encode($id);
+        echo json_encode($songlist->LoadSongTags($id));
         break;
     case "load_song_content_by_title":
         $songlist = new Songlist($database, 0, $m);

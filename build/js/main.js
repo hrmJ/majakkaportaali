@@ -969,6 +969,7 @@ Portal.SongSlots = function(){
             song_id: this.picked_id
         }, 
             function(data){
+                console.log(data);
                 response($.ui.autocomplete.filter(
                         data, Utilities.extractLast( request.term ) ) );
             }
@@ -1341,63 +1342,6 @@ Portal.SongSlots = function(){
                 .append(`<textarea class='edited_lyrics'></textarea>`);
         };
 
-        /**
-         *
-         * Muokkaa lauluun liitettyjä tägejä tai lisää uusia.
-         *
-         * TODO: myös suoraan laululistassa, nopeammin
-         *
-         * @param ev tapahtuma
-         *
-         */
-        this.EditTags = function(ev){
-            var $li = $(ev.target),
-                $tagsaver = $("<button class='tagsaverbutton'>Tallenna tägit</button>").click(
-                this.SaveEditedTags.bind(this)),
-                $tageditor =  $(`<input type='text'
-                    placeholder='Erota tägit pilkulla, ei #-merkkejä' 
-                    value='${this.tags}'>`).autocomplete({
-                        source: LoadSongTags,
-                        minLength: 2,
-                        focus: () => false,
-                        select: function(event, ui) {
-                          var terms = Utilities.split( this.value );
-                          terms.pop();
-                          terms.push( ui.item.value );
-                          terms.push("");
-                          this.value = terms.join( ", " );
-                          return false;
-                        }
-                        });
-            $li.find(".tageditor, button").remove();
-            $li.append(`<div class='tageditor'></div>`).append($tagsaver);;
-            $li.find(".tageditor").append($tageditor);
-                
-        };
-
-        /**
-         *
-         * Tallentaa laulua koskeviin tägeihin tehdyt muutokset
-         *
-         * @param ev tapahtuma
-         *
-         */
-        this.SaveEditedTags = function(ev){
-            var path = Utilities.GetAjaxPath("Saver.php"),
-                tagval = $(".tageditor input").val();
-                tags = tagval.split(/, ?/).filter((v)=>v != "");
-            console.log(tags);
-            ev.stopPropagation();
-            $.post(path, {
-                "action": "save_songtags",
-                "song_id": this.picked_id,
-                "tags": tags
-            }, () => {
-                $(".tageditor, .tagsaverbutton").remove();
-                SongLists.SetSongMeta(this.picked_id);
-            }
-            );
-        }
 
         /**
          *
@@ -1457,10 +1401,7 @@ Portal.SongSlots = function(){
                             .click(self.EditWords.bind(self)),
                         $(`<li class='new_version_li'>
                         Lisää uusi laulu tai versio samalla nimellä </li>`)
-                            .click(self.AddNewVersion.bind(self)),
-                        $(`<li class='new_version_li'>
-                        Lisää tai muokkaa tägejä </li>`)
-                            .click(self.EditTags.bind(self))
+                            .click(self.AddNewVersion.bind(self))
                     ]
                 };
             if(!this.is_service_specific){
@@ -1471,30 +1412,56 @@ Portal.SongSlots = function(){
                 $("#songdetails_actions").append($el);
             });
 
-            $("#songdetails .edit_icon").click(this.EditAuthors.bind(this));
+            $("#songdetails .edit_icon").click(this.EditMeta.bind(this));
         }
 
         /**
          *
-         * Muokkaa laulun säveltäjää / sanoittajaa
+         * Muokkaa laulun säveltäjää / sanoittajaa / tägejä
+         *
+         * TODO: abstraktimman tason muokkausfunktio tai -metodi
          *
          * @paramev klikkaustapahtuma
          *
          */
-        this.EditAuthors = function(ev){
+        this.EditMeta = function(ev){
             var $li = $(ev.target).parents("li"),
                 path = Utilities.GetAjaxPath("Saver.php"),
                 loadpath = Utilities.GetAjaxPath("Loader.php"),
-                authortype = ($li.hasClass("lyricsby") ? "lyrics" : "composer"),
+                meta_type = $li.attr("class");
                 new_val = $li.find(".data_as_input input").val();
-            $li.find(".data_as_input input").autocomplete({
-                source: (request, response) => {
-                    $.getJSON(loadpath, {
-                        "action" : "get_authors",
-                        "authorstring" : request.term
-                    }, (data) => response(data))
-                }
-            });
+
+            if(meta_type == "songtags"){
+                //Pilkuilla erotettu multiautocomplete tägeille
+                $(".taginput").autocomplete({
+                        source: LoadSongTags,
+                        minLength: 2,
+                        focus: () => false,
+                        select: function(event, ui) {
+                          var terms = Utilities.split( this.value );
+                          terms.pop();
+                          terms.push( ui.item.value );
+                          terms.push("");
+                          this.value = terms.join( ", " );
+                          return false;
+                        }
+                        });
+
+                //Jaa tägitekstikentän sisältö taulukoksi
+                new_val = new_val.split(/, ?/).filter((v)=>v != "");
+            }
+            else{
+                //Yksinkertainen autocomplete säveltäjällä ja sanoittajalle
+                $li.find(".data_as_input input").autocomplete({
+                    source: (request, response) => {
+                        $.getJSON(loadpath, {
+                            "action" : "get_authors",
+                            "authorstring" : request.term
+                        }, (data) => response(data))
+                    }
+                });
+            }
+
 
             if($li.find(".edit_icon").hasClass("fa-pencil")){
                 //Jos  aloitetaan muokkaus
@@ -1505,18 +1472,19 @@ Portal.SongSlots = function(){
             else{
                 //Jos lopetetaan muokkaus
                 $.post(path, {
-                    "action": "save_edited_author",
+                    "action": "save_edited_meta",
                     "new_val": new_val,
-                    "authortype": authortype,
+                    "meta_type": meta_type,
                     "song_id": this.picked_id
                 
                 }, () => {
                     $li.find(".data_as_input").hide();
-                    $li.find(".data_as_text").text(new_val).show();
+                    $li.find(".data_as_text")
+                        .text($li.find(".data_as_input input").val())
+                        .show();
                     $li.find(".edit_icon").removeClass("fa-check").addClass("fa-pencil");
                 }
                 );
-            
             }
         }
 
@@ -2054,8 +2022,11 @@ var SongLists = function(){
             tags = meta.tags.join(", ");
             current_slot.tags = tags;
             $("#songdetails").find(".lyricsby .data_as_text").text(meta.lyrics);
-            $("#songdetails").find(".songby .data_as_text").text(meta.composer);
-            $("#songdetails").find(".songtags span").text(tags);
+            $("#songdetails").find(".composer .data_as_text").text(meta.composer);
+            $("#songdetails").find(".songtags .data_as_text").text(tags);
+            $("#songdetails").find(".lyricsby .data_as_input input").val(meta.lyrics);
+            $("#songdetails").find(".composer .data_as_input input").val(meta.composer);
+            $("#songdetails").find(".songtags .data_as_input input").val(tags);
         });
 
     }

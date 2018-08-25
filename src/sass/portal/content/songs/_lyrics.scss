@@ -26,6 +26,11 @@
 
 }
 
+.editcont{
+    padding-left:1em;
+    width:80%;
+}
+
 .below_lyrics{
     display: none;
 }
@@ -86,16 +91,14 @@
     strong{
         margin-right:0.5em;
     }
+    font-size:0.8em;
 
 }
 
-.songtags{
-    .fa-tags{
-        font-size:0.9em;
-        margin-right:0.6em;
-    }
+li.songtags{
+    //margin-left:1em;
+    font-size:0.74em;
     span{
-        font-size:0.7em;
         font-style:italic;
     }
 }

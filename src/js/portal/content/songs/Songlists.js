@@ -369,8 +369,11 @@ var SongLists = function(){
             tags = meta.tags.join(", ");
             current_slot.tags = tags;
             $("#songdetails").find(".lyricsby .data_as_text").text(meta.lyrics);
-            $("#songdetails").find(".songby .data_as_text").text(meta.composer);
-            $("#songdetails").find(".songtags span").text(tags);
+            $("#songdetails").find(".composer .data_as_text").text(meta.composer);
+            $("#songdetails").find(".songtags .data_as_text").text(tags);
+            $("#songdetails").find(".lyricsby .data_as_input input").val(meta.lyrics);
+            $("#songdetails").find(".composer .data_as_input input").val(meta.composer);
+            $("#songdetails").find(".songtags .data_as_input input").val(tags);
         });
 
     }

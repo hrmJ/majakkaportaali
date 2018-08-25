@@ -271,38 +271,50 @@
 
 <div id="songdetails" class="covermenu">
 
-    <h3>Laulun nimi</h3>
+    <div class='editcont'>
 
-   <div class='song_authors'>
-       <ul class='editable_data_list'>
-           <li class='lyricsby'>
-               <strong>San.</strong>
-               <span class='data_as_text'></span>
-               <span class='data_as_input hidden'> <input type='text'></input></span>
-               <i class="edit_icon fa fa-pencil"></i>
-           </li>
-           <li class='songby'>
-               <strong>Säv.</strong>
-               <span class='data_as_text'></span>
-               <span class='data_as_input hidden'> <input type='text'></input></span>
-               <i class="edit_icon fa fa-pencil"></i>
-       </ul>
-   </div>
-   <div class='songtags'><i class="fa fa-tags"></i><span></span></div>
+        <h3>Laulun nimi</h3>
 
-   <div class="version_cont">
-   
-   </div> 
+       <div class='song_authors'>
+           <ul class='editable_data_list'>
+               <li class='lyricsby'>
+                   <strong>San.</strong>
+                   <span class='data_as_text'></span>
+                   <span class='data_as_input hidden'> <input type='text'></input></span>
+                   <i class="edit_icon fa fa-pencil"></i>
+               </li>
+               <li class='composer'>
+                   <strong>Säv.</strong>
+                   <span class='data_as_text'></span>
+                   <span class='data_as_input hidden'> <input type='text'></input></span>
+                   <i class="edit_icon fa fa-pencil"></i>
+               </li>
+               <li class='songtags'>
+                   <strong><i class="fa fa-tags"></i></strong>
+                   <span class='data_as_text'></span>
+                   <span class='data_as_input hidden'> 
+                        <input class='taginput' type='text'
+                        placeholder='Erota tägit pilkulla, ei #-merkkejä'></input>
+                   </span>
+                   <i class="edit_icon fa fa-pencil"></i>
+               </li>
+           </ul>
+       </div>
 
-    <ul id='songdetails_actions'>
-    </ul>
+       <div class="version_cont">
+       
+       </div> 
 
-    <ul class='lyrics'>
-    </ul>
+        <ul id='songdetails_actions'>
+        </ul>
 
-    <div class='below_lyrics'>
-        <input type='hidden' class='lyrics_id'></input>
-        <button id='save_lyrics'>Tallenna sanat</button>
+        <ul class='lyrics'>
+        </ul>
+
+        <div class='below_lyrics'>
+            <input type='hidden' class='lyrics_id'></input>
+            <button id='save_lyrics'>Tallenna sanat</button>
+        </div>
     </div>
 
 </div>
