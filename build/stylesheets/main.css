@@ -405,6 +405,9 @@ h3 {
   padding-left: 1em;
   margin-top: 0.6em; }
 
+.edit_icon {
+  margin-left: 0.4em; }
+
 .songslot_wating {
   background: yellow; }
 
@@ -495,6 +498,16 @@ h3 {
 .songlist_subcat .lyrics {
   font-style: italic;
   font-size: 0.7em; }
+
+.song_authors strong {
+  margin-right: 0.5em; }
+
+.songtags .fa-tags {
+  font-size: 0.9em;
+  margin-right: 0.6em; }
+.songtags span {
+  font-size: 0.7em;
+  font-style: italic; }
 
 .insert_box {
   font-size: 0.7em;
@@ -882,6 +895,12 @@ h3 {
   z-index: 1; }
 
 .songlistview > div:first-of-type {
+  margin-bottom: 1em; }
+
+.tageditor input {
+  width: 90%;
+  max-width: 30em;
+  margin-top: 1em;
   margin-bottom: 1em; }
 
 .multisong-container {

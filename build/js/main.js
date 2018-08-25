@@ -191,6 +191,29 @@ var Utilities = function(){
 
     /**
      *
+     * Apufunktio jquery ui:n pilkutettua autocomplete-kenttää varten
+     *
+     * @param split 
+     *
+     */
+    function split(val) {
+      return val.split( /,\s*/ );
+    }
+
+    /**
+     *
+     * Apufunktio jquery ui:n pilkutettua autocomplete-kenttää varten
+     *
+     * @param term syötetty avainsana
+     *
+     */
+    function extractLast(term) {
+      return split(term).pop();
+    }
+
+
+    /**
+     *
      * Piilottaa portaalin ylämenun. Hyödyllinen esim. käytettäessä iframesta käsin.
      *
      */
@@ -522,7 +545,9 @@ var Utilities = function(){
         GetImgPath,
         HideUpperMenu,
         Preview,
-        getDaysBetweenDates
+        getDaysBetweenDates,
+        split,
+        extractLast
     
     }
 
@@ -934,6 +959,25 @@ Portal.SongSlots = function(){
 
     /**
      *
+     * Hakee tietokannasta laulujen tägit
+     *
+     **/
+    function LoadSongTags(request, response){
+        var path = Utilities.GetAjaxPath("Loader.php");
+        $.getJSON(path,{
+            action: "get_song_tags",
+            song_id: this.picked_id
+        }, 
+            function(data){
+                response($.ui.autocomplete.filter(
+                        data, Utilities.extractLast( request.term ) ) );
+            }
+        );
+    }
+
+
+    /**
+     *
      * Hakee nyt käsiteltävässä messussa käytössä olevat laulut
      *
      * @param songtab Laulut-välilehti omana olionaan
@@ -1153,6 +1197,7 @@ Portal.SongSlots = function(){
 
         var self = this;
         this.title = title;
+        this.tags = "";
         this.position = position;
         this.picked_id = picked_id || '';
         this.cont = cont;
@@ -1308,14 +1353,26 @@ Portal.SongSlots = function(){
         this.EditTags = function(ev){
             var $li = $(ev.target),
                 $tagsaver = $("<button class='tagsaverbutton'>Tallenna tägit</button>").click(
-                this.SaveEditedTags.bind(this));
+                this.SaveEditedTags.bind(this)),
+                $tageditor =  $(`<input type='text'
+                    placeholder='Erota tägit pilkulla, ei #-merkkejä' 
+                    value='${this.tags}'>`).autocomplete({
+                        source: LoadSongTags,
+                        minLength: 2,
+                        focus: () => false,
+                        select: function(event, ui) {
+                          var terms = Utilities.split( this.value );
+                          terms.pop();
+                          terms.push( ui.item.value );
+                          terms.push("");
+                          this.value = terms.join( ", " );
+                          return false;
+                        }
+                        });
             $li.find(".tageditor, button").remove();
-            $li
-                .append(`<div class='tageditor'>
-                <input type='text' placeholder='Erota tägit pilkulla, ei #-merkkejä'
-                value='Adsad, asdlksajd, asldkjsad'> </input>
-                </div>`)
-                .append($tagsaver);
+            $li.append(`<div class='tageditor'></div>`).append($tagsaver);;
+            $li.find(".tageditor").append($tageditor);
+                
         };
 
         /**
@@ -1326,9 +1383,20 @@ Portal.SongSlots = function(){
          *
          */
         this.SaveEditedTags = function(ev){
+            var path = Utilities.GetAjaxPath("Saver.php"),
+                tagval = $(".tageditor input").val();
+                tags = tagval.split(/, ?/).filter((v)=>v != "");
+            console.log(tags);
             ev.stopPropagation();
-            $(".tageditor, .tagsaverbutton").remove();
-            console.log(this);
+            $.post(path, {
+                "action": "save_songtags",
+                "song_id": this.picked_id,
+                "tags": tags
+            }, () => {
+                $(".tageditor, .tagsaverbutton").remove();
+                SongLists.SetSongMeta(this.picked_id);
+            }
+            );
         }
 
         /**
@@ -1345,15 +1413,17 @@ Portal.SongSlots = function(){
             // launched by e.g.  a songlist
             this.title = (this.$div ? this.$div.find(".songinput").val() : this.title);
 
+            SetCurrentSlot(this);
+
             $("#songdetails").find(".version_cont, .lyrics").html("");
             SongLists.SetLyrics(this.picked_id, $("#songdetails .lyrics"));
-            this.PrintEditActions();
+            SongLists.SetSongMeta();
 
+            this.PrintEditActions();
             $("#songdetails").find("h3").text(this.title);
             $("#songdetails").find(".song_id").val(this.picked_id);
             $("#songdetails").slideDown();
             //Varmista, että uusien sanojen tallennuksen jälkeen pystytään viittaamaan
-            SetCurrentSlot(this);
 
             //Varmista, että versiot päivitetään 
             //asettamalla callback
@@ -1400,6 +1470,54 @@ Portal.SongSlots = function(){
             $.each(edit_actions[lyrics_status],function(idx, $el){
                 $("#songdetails_actions").append($el);
             });
+
+            $("#songdetails .edit_icon").click(this.EditAuthors.bind(this));
+        }
+
+        /**
+         *
+         * Muokkaa laulun säveltäjää / sanoittajaa
+         *
+         * @paramev klikkaustapahtuma
+         *
+         */
+        this.EditAuthors = function(ev){
+            var $li = $(ev.target).parents("li"),
+                path = Utilities.GetAjaxPath("Saver.php"),
+                loadpath = Utilities.GetAjaxPath("Loader.php"),
+                authortype = ($li.hasClass("lyricsby") ? "lyrics" : "composer"),
+                new_val = $li.find(".data_as_input input").val();
+            $li.find(".data_as_input input").autocomplete({
+                source: (request, response) => {
+                    $.getJSON(loadpath, {
+                        "action" : "get_authors",
+                        "authorstring" : request.term
+                    }, (data) => response(data))
+                }
+            });
+
+            if($li.find(".edit_icon").hasClass("fa-pencil")){
+                //Jos  aloitetaan muokkaus
+                $li.find(".data_as_text").hide()
+                $li.find(".data_as_input").show()
+                $li.find(".edit_icon").removeClass("fa-pencil").addClass("fa-check");
+            }
+            else{
+                //Jos lopetetaan muokkaus
+                $.post(path, {
+                    "action": "save_edited_author",
+                    "new_val": new_val,
+                    "authortype": authortype,
+                    "song_id": this.picked_id
+                
+                }, () => {
+                    $li.find(".data_as_input").hide();
+                    $li.find(".data_as_text").text(new_val).show();
+                    $li.find(".edit_icon").removeClass("fa-check").addClass("fa-pencil");
+                }
+                );
+            
+            }
         }
 
 
@@ -1771,9 +1889,7 @@ var SongLists = function(){
                     0,
                     undefined,
                     this.current_song.id);
-            if(not_service_specific){
-                slot.SetNotServiceSpecific();
-            }
+            slot.SetNotServiceSpecific();
             slot.CheckDetails();
         };
 
@@ -1919,6 +2035,34 @@ var SongLists = function(){
 
     /**
      *
+     * Hakee tiedot laulun tägeistä, säveltäjästä ja sanoittajasta
+     *
+     *
+     */
+    function SetSongMeta(){
+
+        var current_slot = Portal.SongSlots.GetCurrentSlot(),
+            params = {
+                "action": "get_song_meta",
+                "song_id": current_slot.picked_id,
+            },
+            tags = "";
+        console.log(params);
+
+        return $.getJSON("php/ajax/Loader.php",params,(meta) => {
+            console.log(meta.tags);
+            tags = meta.tags.join(", ");
+            current_slot.tags = tags;
+            $("#songdetails").find(".lyricsby .data_as_text").text(meta.lyrics);
+            $("#songdetails").find(".songby .data_as_text").text(meta.composer);
+            $("#songdetails").find(".songtags span").text(tags);
+        });
+
+    }
+
+
+    /**
+     *
      * Talentaa muokatut sanat tai uuden version.
      *
      * @param id muokattavan laulun id tai nimi, jos uusi
@@ -1965,6 +2109,7 @@ var SongLists = function(){
         Initialize,
         GetWaitingForAttachment,
         SetLyrics,
+        SetSongMeta,
         SetEditedLyricsCallback,
 
     };

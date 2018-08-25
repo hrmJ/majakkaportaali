@@ -7,6 +7,29 @@ var Utilities = function(){
 
     /**
      *
+     * Apufunktio jquery ui:n pilkutettua autocomplete-kenttää varten
+     *
+     * @param split 
+     *
+     */
+    function split(val) {
+      return val.split( /,\s*/ );
+    }
+
+    /**
+     *
+     * Apufunktio jquery ui:n pilkutettua autocomplete-kenttää varten
+     *
+     * @param term syötetty avainsana
+     *
+     */
+    function extractLast(term) {
+      return split(term).pop();
+    }
+
+
+    /**
+     *
      * Piilottaa portaalin ylämenun. Hyödyllinen esim. käytettäessä iframesta käsin.
      *
      */
@@ -338,7 +361,9 @@ var Utilities = function(){
         GetImgPath,
         HideUpperMenu,
         Preview,
-        getDaysBetweenDates
+        getDaysBetweenDates,
+        split,
+        extractLast
     
     }
 

@@ -18,8 +18,8 @@ Portaali
 Bugit
 -----
 
-- [ ] check-merkki, kun lisätty uusi laulu
-- [ ] älä luule, että on sanat, kun muutettu nimi uudeksi
+- [x] check-merkki, kun lisätty uusi laulu
+- [x] älä luule, että on sanat, kun muutettu nimi uudeksi
 
 Diat
 ----

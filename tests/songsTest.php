@@ -74,8 +74,7 @@ class SongsTest extends TestCase
     public function testLoadSongTitles()
     {
         $songlist = new Songlist($this->con, 2, $this->m);
-        #var_dump($songlist->GetTitles("Satu"));
-        $this->assertTrue(sizeof($songlist->GetTitles("Ukk"))>0);
+        $this->assertTrue(sizeof($songlist->GetAutoCompleteData("title", "Ukk"))>0);
     }
 
     /**
@@ -120,7 +119,6 @@ class SongsTest extends TestCase
     {
         $songlist = new Songlist($this->con, 0, $this->m);
         $cont = $songlist->FetchLyricsById(0,True, "Be all end all");
-        var_dump($cont);
     }
 
     /**
@@ -163,6 +161,28 @@ class SongsTest extends TestCase
             $slots = $this->con->select("service_specific_presentation_structure", 
                 "*",
                 ['ORDER' => [ 'slot_number' => 'ASC' ]]);
+    }
+
+    function testSongTagsLoading(){
+
+        $songlist = new Songlist($this->con, 0, $this->m);
+        $tags = $songlist->LoadSongTags();
+        $this->assertTrue(sizeof($tags) > 0);
+    
+    }
+
+    function testSongMetaLoading(){
+
+        $songlist = new Songlist($this->con, 0, $this->m);
+        $meta = $songlist->LoadSongMeta(1);
+        $this->assertTrue(sizeof($meta) > 0);
+    }
+
+    function testSongAuthorSaving(){
+        $songlist = new Songlist($this->con, 0, $this->m);
+        $meta = $songlist->SaveEditedAuthors(1,"lyrics","Pekka Pouta");
+        $lyrics = $this->con->get("songdata","lyrics",["id" => 1]);
+        $this->assertEquals("Pekka Pouta", $lyrics);
     }
 
 

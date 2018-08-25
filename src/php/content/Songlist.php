@@ -63,26 +63,28 @@ class Songlist{
 
     /**
      *
-     * Hakee kaikki laulut, jotka alkavat tietyllä kirjaimella
+     * Hakee kaikki laulut / säveltäjät / sanoittajat, jotka alkavat tietyllä kirjaimella
      *
-     * @param string $title 
+     * @param $type mitä etsitään ('title', 'lyrics', jne.)
+     * @param $search_this etsittävä merkkijono
      *
      * @return lista kirjaimista
      *
      **/
-    public function GetTitles($title){
-        $titles = $this->con->select("songdata",
-             ["title" =>  Medoo::raw('DISTINCT(title)')],
+    public function GetAutoCompleteData($type, $search_this){
+        $vals = $this->con->select("songdata",
+             [$type =>  Medoo::raw("DISTINCT($type)")],
              ["OR" => [
-                "title[~]" => strtolower("%$title%"),
-                "title[~]" => strtoupper("%$title%")
+                $type. "[~]" => strtolower("%$search_this%"),
+                $type. "[~]" => strtoupper("%$search_this%")
             ]]);
         $returns = [];
-        foreach($titles as $title){
-            $returns[] =  $title["title"];
+        foreach($vals as $val){
+            $returns[] =  $val[$type];
         }
         return $returns;
     }
+
 
     /**
      *
@@ -227,6 +229,21 @@ class Songlist{
     }
 
 
+
+    /**
+     * Hakee lauluun liittyvät metatiedot
+     *
+     * @param $id laulun id
+     *
+     */
+    public function LoadSongMeta($id){
+        $meta = $this->con->get("songdata",
+            ["composer","lyrics"],
+            ["id" => $id]);
+        $meta["tags"] = $this->LoadSongTags($id);
+        return($meta);
+    }
+
     /**
      *
      * Lisää uudet laulun sanat: joko kokonaan uuden laulun tai uuden version
@@ -265,9 +282,70 @@ class Songlist{
                 "verse" => $verse
             ]);
         }
-        //multisong_position?
     }
 
+
+    /**
+     *
+     * Hakee tietokannasta kaikki eri tägit
+     *
+     */
+    public function LoadSongTags($song_id=null){
+        if($song_id){
+            $tags = $this->con->select("songtags",
+                 ["tag" =>  Medoo::raw('DISTINCT(tag)')],
+                 ["song_id" => $song_id]);
+        }
+        else{
+            $tags = $this->con->select("songtags",
+                 ["tag" =>  Medoo::raw('DISTINCT(tag)')]);
+        }
+        $returns = [];
+        foreach($tags as $tag){
+            $returns[] =  $tag["tag"];
+        }
+        return $returns;
+    }
+
+
+    /**
+     *
+     * Tallentaa muokatut tägit
+     *
+     * @param $id laulun id
+     * @param $verses taulukko tägeistä (?)
+     *
+     */
+    public function SaveEditedTags($id, $tags){
+        $this->con->delete("songtags", ["song_id" => $id]);
+        $used = [];
+        foreach($tags as $tag){
+            if(!in_array($tag, $used)){
+                $this->con->insert("songtags", [
+                    "song_id" => $id,
+                    "tag" => $tag
+                ]);
+                $used[] = $tag;
+            }
+        }
+    }
+
+
+
+    /**
+     *
+     * Tallentaa muokatut säveltäjä-/sanoittajatiedot
+     *
+     * @param $id laulun id
+     * @param $authortype joko 'lyrics' tai 'composer'
+     * @param $newval kentän uusi arvo
+     *
+     */
+    public function SaveEditedAuthors($id, $authortype, $newval){
+        $this->con->update("songdata", 
+            [$authortype => $newval],
+            ["id" => $id]);
+    }
 
 }
 

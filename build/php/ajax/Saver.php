@@ -165,6 +165,14 @@ switch($params["action"]){
         $com = new Community($database);
         $com->SaveSeason($params["params"]["newvals"], $params["params"]["season_id"]);
         break;
+    case "save_songtags":
+        $songlist = new Songlist($database, 0, $m);
+        $songlist->SaveEditedTags($params["song_id"], $params["tags"]);
+        break;
+    case "save_edited_author":
+        $songlist = new Songlist($database, 0, $m);
+        $songlist->SaveEditedAuthors($params["song_id"], $params["authortype"], $params["new_val"]);
+        break;
 
 }
 

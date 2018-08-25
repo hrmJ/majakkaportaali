@@ -204,9 +204,7 @@ var SongLists = function(){
                     0,
                     undefined,
                     this.current_song.id);
-            if(not_service_specific){
-                slot.SetNotServiceSpecific();
-            }
+            slot.SetNotServiceSpecific();
             slot.CheckDetails();
         };
 
@@ -352,6 +350,34 @@ var SongLists = function(){
 
     /**
      *
+     * Hakee tiedot laulun tägeistä, säveltäjästä ja sanoittajasta
+     *
+     *
+     */
+    function SetSongMeta(){
+
+        var current_slot = Portal.SongSlots.GetCurrentSlot(),
+            params = {
+                "action": "get_song_meta",
+                "song_id": current_slot.picked_id,
+            },
+            tags = "";
+        console.log(params);
+
+        return $.getJSON("php/ajax/Loader.php",params,(meta) => {
+            console.log(meta.tags);
+            tags = meta.tags.join(", ");
+            current_slot.tags = tags;
+            $("#songdetails").find(".lyricsby .data_as_text").text(meta.lyrics);
+            $("#songdetails").find(".songby .data_as_text").text(meta.composer);
+            $("#songdetails").find(".songtags span").text(tags);
+        });
+
+    }
+
+
+    /**
+     *
      * Talentaa muokatut sanat tai uuden version.
      *
      * @param id muokattavan laulun id tai nimi, jos uusi
@@ -398,6 +424,7 @@ var SongLists = function(){
         Initialize,
         GetWaitingForAttachment,
         SetLyrics,
+        SetSongMeta,
         SetEditedLyricsCallback,
 
     };

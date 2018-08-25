@@ -287,3 +287,20 @@ CREATE TABLE presentation_content (
 ) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
 
 
+
+--
+-- Laulujen tägit
+--
+
+CREATE TABLE songtags (
+  id int(10) unsigned NOT NULL AUTO_INCREMENT,
+  song_id int(10) unsigned NOT NULL,
+  tag varchar(200) DEFAULT '',
+  PRIMARY KEY (id),
+  KEY `song_index` (`song_id`),
+  FOREIGN KEY (`song_id`) REFERENCES `songdata` (`id`) ON DELETE CASCADE
+) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
+
+
+
+

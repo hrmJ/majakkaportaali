@@ -120,9 +120,24 @@ switch($params["action"]){
         $service = new Service($database, $params["service_id"]);
         echo $service->GetTheme();
         break;
+    case "get_authors":
+        $songlist = new Songlist($database, 0, $m);
+        $lyrics = $songlist->GetAutoCompleteData("lyrics", $params["authorstring"]);
+        $composers = $songlist->GetAutoCompleteData("composer", $params["authorstring"]);
+        echo json_encode(array_unique(array_merge($lyrics, $composers)));
+        break;
     case "get_song_slots":
         $songlist = new Songlist($database, $params["service_id"], $m);
         echo $songlist->LoadSongSlots($params["service_id"])->slots_as_string;
+        break;
+    case "get_song_meta":
+        $songlist = new Songlist($database, 0, $m);
+        echo json_encode($songlist->LoadSongMeta($params["song_id"]));
+        break;
+    case "get_song_tags":
+        $songlist = new Songlist($database, 0, $m);
+        $id = (isset($params["song_id"]) ? $params["song_id"] : null);
+        echo json_encode($id);
         break;
     case "load_song_content_by_title":
         $songlist = new Songlist($database, 0, $m);
@@ -218,7 +233,7 @@ switch($params["action"]){
     case "get_song_titles":
         $sid = (isset($params["service_id"]) ? $params["service_id"] : 0);
         $songlist = new Songlist($database, $sid, $m);
-        echo json_encode($songlist->GetTitles($params["title"]));
+        echo json_encode($songlist->GetAutoCompleteData("title", $params["title"]));
         break;
     case "check_song_title":
         $sid = (isset($params["service_id"]) ? $params["service_id"] : 0);
