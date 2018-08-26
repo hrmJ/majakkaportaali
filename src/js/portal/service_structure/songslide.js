@@ -18,14 +18,15 @@ GeneralStructure.SlotFactory.songslide = function(){
      *
      **/
     this.FillInData = function(data){
-        console.log(data);
         var self = this;
         this.$lightbox.find("[value='multisong']").get(0).checked=false;
-        if(data.is_multi){
+        if(data.is_multi*1){
             this.$lightbox.find("[value='multisong']").get(0).checked=true;
         }
         this.$lightbox.find(".songdescription").val(data.songdescription);
-        this.$lightbox.find("#restrict_to_tags").val(data.restrictedto);
+        this.$lightbox.find("#restrict_to_tags select")
+            .val(data.restrictedto)
+            .selectmenu("refresh");
 
         //Lisää toiminnallisuus valintalaatikkoihin
         this.$lightbox.find("[type='checkbox']").click(function(){ 

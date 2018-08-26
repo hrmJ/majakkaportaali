@@ -126,6 +126,10 @@ switch($params["action"]){
         $composers = $songlist->GetAutoCompleteData("composer", $params["authorstring"]);
         echo json_encode(array_unique(array_merge($lyrics, $composers)));
         break;
+    case "get_songs_with_tag":
+        $songlist = new Songlist($database, 0, $m);
+        echo json_encode($songlist->GetTitlesByTag($params["tag"]));
+        break;
     case "get_song_slots":
         $songlist = new Songlist($database, $params["service_id"], $m);
         echo $songlist->LoadSongSlots($params["service_id"])->slots_as_string;

@@ -139,6 +139,32 @@ class Songlist{
         return $returns;
     }
 
+    /**
+     *
+     * Hakee kaikki laulut, jotka on merkitty tietyllä tägillä
+     *
+     * @param string $tag tägi, jolla etsitään
+     *
+     * @return taulukko laulujen nimistä
+     *
+     */
+    public function GetTitlesByTag($tag){
+        $songs = $this->con->select("songdata",
+            ["[>]songtags" => ["id" => "song_id"]],
+            "songdata.title",
+            ["songtags.tag" => $tag]
+        );
+        $returns = [];
+        foreach($songs as $song){
+            if(!in_array($song, $returns)){
+                $returns[] = $song;
+            }
+        }
+        return $returns;
+    }
+
+
+
 
     /**
      * Lataa tietokannasta kaikki messussa käytössä olevat laulutyypit
@@ -166,7 +192,7 @@ class Songlist{
         $this->slots_as_string = "";
         foreach($slots as $slot){
             $slot_specification = $this->con->get("songsegments",
-                ["songdescription", "is_multi"],
+                ["songdescription", "is_multi", "restrictedto"],
                 ["id" => $slot["content_id"]]
             );
             $output = $this->template_engine->loadTemplate('singlesong'); 
@@ -175,6 +201,7 @@ class Songlist{
                     "name" => "",
                     "value" => "",
                     "is_multi" => $slot_specification["is_multi"],
+                    "restrictedto" => $slot_specification["restrictedto"],
                     "songdescription" => $slot_specification["songdescription"],
                 ]);
         }

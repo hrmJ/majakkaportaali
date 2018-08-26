@@ -2,6 +2,7 @@
 Portaali
 --------
 
+- [ ] "Lisää uusi diaesityksessä näkymätön messun osa"
 - [ ] "Ei sanoja" -laatikko ruksattavaksi
 - [ ] UUden laulun meta sen jälkeen kun sanat syötetty
 - [ ] Messukohtaisen näkymän mobiilimenu(n poistaminen)

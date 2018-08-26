@@ -961,6 +961,9 @@ li.songtags {
 .ui-selectmenu-menu, .ui-selectmenu-button {
   font-size: 0.8em; }
 
+.songslot .ui-selectmenu-menu, .songslot .ui-selectmenu-button {
+  font-size: 0.6em; }
+
 .slidemodel {
   color: #655c5c; }
   .slidemodel .contentadder-open > div + div {

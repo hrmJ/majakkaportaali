@@ -185,6 +185,14 @@ class SongsTest extends TestCase
         $this->assertEquals("Pekka Pouta", $lyrics);
     }
 
+    function testSongLoadingByTag(){
+
+        $songlist = new Songlist($this->con, 0, $this->m);
+        $meta = $songlist->GetTitlesByTag("Jumalan karitsa");
+        $this->assertTrue(sizeof($meta) > 0);
+        var_dump($meta);
+    }
+
 
 }
 

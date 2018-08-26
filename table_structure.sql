@@ -92,7 +92,6 @@ CREATE TABLE servicesongs (
 CREATE TABLE songdata (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
   title varchar(300) DEFAULT NULL,
-  tags varchar(9999) DEFAULT '',
   composer varchar(300) DEFAULT NULL,
   lyrics varchar(300) DEFAULT NULL,
   version_description varchar(300) DEFAULT NULL,

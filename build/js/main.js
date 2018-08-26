@@ -1023,6 +1023,7 @@ Portal.SongSlots = function(){
                 //laulu määritelty usean laulun lauluksi
                 Cont.is_multi = true;
             }
+            Cont.restrictedto = Cont.$div.find(".restriction_val").val();
             Cont.SetMultisongButtons().FetchSlots();
             Cont.SetToolTip();
         });
@@ -1088,7 +1089,12 @@ Portal.SongSlots = function(){
                 slot.Create().AttachEvents().CheckLyrics();
             });
             //Finally, attach drag and drop events
-            this.AddSortability();
+            if(this.is_multi){
+                this.AddSortability();
+            }
+            else{
+                this.$div.find(".cont_name").css({"margin-bottom":"0.7em"});
+            }
         }
 
 
@@ -1222,6 +1228,8 @@ Portal.SongSlots = function(){
          *
          */
         this.Create = function(){
+            var promise = undefined,
+                path = Utilities.GetAjaxPath("Loader.php");
             this.$div = $(`
                 <li class="songslot no_indicator">
                 <div>
@@ -1229,21 +1237,22 @@ Portal.SongSlots = function(){
                     <input type="text" class="songinput" value="${this.title}"> 
                     <input type="hidden" class="song_id" value="${this.picked_id}"> 
                 </div>
-                </li>`),
-                $edit_icon = $("<div class='slot_edit'><i class='fa fa-pencil'></i></div>"),
-                $remove_icon = $("<div class='slot_remove'><i class='fa fa-trash'></i></div>");
+                </li>`);
+            $("<div class='slot_edit'><i class='fa fa-pencil'></i></div>")
+                .click(this.CheckDetails.bind(this))
+                .appendTo(this.$div);
 
+
+            //Laulujen lisävalinnat: monta laulua samassa / rajattu tägillä
             if (this.cont.is_multi){
-                this.$div.append("<div class='slot_handle'><i class='fa fa-arrows'></i></div>");
+                $("<div class='slot_remove'><i class='fa fa-trash'></i></div>")
+                    .click(this.Remove.bind(this))
+                    .appendTo(this.$div);
+                $("<div class='slot_handle'><i class='fa fa-arrows'></i></div>")
+                    .appendTo(this.$div);
             }
 
-            $edit_icon.click(this.CheckDetails.bind(this)).appendTo(this.$div);
-
-            if (this.cont.is_multi){
-                $remove_icon.click(this.Remove.bind(this)).appendTo(this.$div);
-            }
-
-            this.$div.find(".songinput").droppable({
+            this.$div.find("[type='text'].songinput").droppable({
                 accept: "#prepared_for_insertion",
                 drop: this.AcceptDroppedSong.bind(this),
                 classes: {
@@ -1251,10 +1260,36 @@ Portal.SongSlots = function(){
                     "ui-droppable-hover": "slot_recieve",
                 }
             });
+
             this.cont.$ul.append(this.$div);
-            //Lisää välilehtiolioon muutosten tarkkailutoiminto
-            this.$div.find("input[type='text']").on("change paste keyup",
-                songs_tab.MonitorChanges.bind(songs_tab));
+
+            if(this.cont.restrictedto){
+                console.log("moro");
+                // Jos käytössä (johonkin tägiin) rajattu lista lauluja
+                this.$div.find(".songinput").remove();
+                //this.$div.find("div").css({"padding-top":"1em"});
+                //this.$div.find("div").append();
+                promise = $.getJSON(path, {
+                    "action" : "get_songs_with_tag",
+                    "tag": this.cont.restrictedto
+                }, (songs) => {
+                    var $sel = $("<select class='songinput'></select>");
+                    $sel
+                        .append(songs.map((s) => `<option>${s}</option>`))
+                        .append("<option>Jokin muu</option>")
+                        .appendTo(this.$div.find("div:eq(0)"));
+                    $sel.select_withtext();
+                });
+            }
+
+            $.when(promise).done(() => {
+                //Lisää välilehtiolioon muutosten tarkkailutoiminto.
+                //Tämä suoritetaan joko heti tai kun tägillä rajatut laulut on ajettu sisään:
+                this.$div.find("input[type='text'], select").on("change paste keyup",
+                    songs_tab.MonitorChanges.bind(songs_tab));
+            });
+
+
             return this;
         };
 
@@ -1360,6 +1395,7 @@ Portal.SongSlots = function(){
             SetCurrentSlot(this);
 
             $("#songdetails").find(".version_cont, .lyrics").html("");
+            console.log(this.picked_id);
             SongLists.SetLyrics(this.picked_id, $("#songdetails .lyrics"));
             SongLists.SetSongMeta();
 
@@ -3944,14 +3980,15 @@ GeneralStructure.SlotFactory.songslide = function(){
      *
      **/
     this.FillInData = function(data){
-        console.log(data);
         var self = this;
         this.$lightbox.find("[value='multisong']").get(0).checked=false;
-        if(data.is_multi){
+        if(data.is_multi*1){
             this.$lightbox.find("[value='multisong']").get(0).checked=true;
         }
         this.$lightbox.find(".songdescription").val(data.songdescription);
-        this.$lightbox.find("#restrict_to_tags").val(data.restrictedto);
+        this.$lightbox.find("#restrict_to_tags select")
+            .val(data.restrictedto)
+            .selectmenu("refresh");
 
         //Lisää toiminnallisuus valintalaatikkoihin
         this.$lightbox.find("[type='checkbox']").click(function(){ 
