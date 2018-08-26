@@ -3,6 +3,8 @@ Portaali
 --------
 
 - [ ] "Lisää uusi diaesityksessä näkymätön messun osa"
+- [ ] Lauluversion valinta ei toimi??
+- [ ] Slottien raahaaminen ei toimi???
 - [ ] "Ei sanoja" -laatikko ruksattavaksi
 - [ ] UUden laulun meta sen jälkeen kun sanat syötetty
 - [ ] Messukohtaisen näkymän mobiilimenu(n poistaminen)
@@ -17,6 +19,7 @@ Portaali
 - [ ] Muka tallentamattomia muutoksia yleistiedoissa raamatunkohdan takia
 - [ ] Mahdollisuus editoida lauluja muualtakin kuin vain messunäkymästä
     - ehkä "hallitse lauluja" -alavalikko?
+- [ ] Laulun detaljit: Ei aina lataa säveltäjää (??)
 
 Bugit
 -----
@@ -27,6 +30,7 @@ Bugit
 Diat
 ----
 
+- [ ] Mahdollisuus  näyttää laulun nimen sijasta laulun rooli
 - [ ] Blank screen
 - [ ] "Älä liikuta esitystä" -moodi
 - [ ] säkeistöjen ym. tekstin muuttaminen lennosta
@@ -41,3 +45,12 @@ Kaukaisemmat
 - [ ] Kuvien uploadaus
 - [ ] Kuvien näyttäminen galleriamuodossa
 - [ ] https://pixabay.com/api/docs/
+
+
+Dubious
+-------
+
+- [ ] Showing_title-kenttä: (tai Version_description kenttä)
+    - mahdollisuus asettaa Laulun nimeksi eri kuin mikä printataan... hmm?
+    - piilotettuna "lisävalinnat" -linkin taakse?
+

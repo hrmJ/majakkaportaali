@@ -177,7 +177,10 @@ Portal.SongSlots = function(){
                     slot_data.multisong_position, 
                     self,
                     slot_data.song_id);
-                slot.Create().AttachEvents().CheckLyrics();
+                slot.Create().AttachEvents();
+                if(!self.restrictedto){
+                    slot.CheckLyrics();
+                }
             });
             //Finally, attach drag and drop events
             if(this.is_multi){
@@ -333,13 +336,15 @@ Portal.SongSlots = function(){
                 .click(this.CheckDetails.bind(this))
                 .appendTo(this.$div);
 
+            console.log("creating");
+
 
             //Laulujen lisävalinnat: monta laulua samassa / rajattu tägillä
             if (this.cont.is_multi){
+                $("<div class='slot_handle'><i class='fa fa-arrows'></i></div>")
+                    .appendTo(this.$div);
                 $("<div class='slot_remove'><i class='fa fa-trash'></i></div>")
                     .click(this.Remove.bind(this))
-                    .appendTo(this.$div);
-                $("<div class='slot_handle'><i class='fa fa-arrows'></i></div>")
                     .appendTo(this.$div);
             }
 
@@ -355,7 +360,6 @@ Portal.SongSlots = function(){
             this.cont.$ul.append(this.$div);
 
             if(this.cont.restrictedto){
-                console.log("moro");
                 // Jos käytössä (johonkin tägiin) rajattu lista lauluja
                 this.$div.find(".songinput").remove();
                 //this.$div.find("div").css({"padding-top":"1em"});
@@ -366,17 +370,24 @@ Portal.SongSlots = function(){
                 }, (songs) => {
                     var $sel = $("<select class='songinput'></select>");
                     $sel
+                        .append("<option value=''>Valitse</option>")
                         .append(songs.map((s) => `<option>${s}</option>`))
                         .append("<option>Jokin muu</option>")
                         .appendTo(this.$div.find("div:eq(0)"));
-                    $sel.select_withtext();
+                    $sel.select_withtext({
+                        select: () => {
+                            this.picked_id = null;
+                            this.CheckLyrics.bind(this)();
+                        }
+                    });
+                    this.CheckLyrics();
                 });
             }
 
             $.when(promise).done(() => {
                 //Lisää välilehtiolioon muutosten tarkkailutoiminto.
                 //Tämä suoritetaan joko heti tai kun tägillä rajatut laulut on ajettu sisään:
-                this.$div.find("input[type='text'], select").on("change paste keyup",
+                this.$div.find("input[type='text'], select").on("change paste keyup selectmenuchange",
                     songs_tab.MonitorChanges.bind(songs_tab));
             });
 
@@ -482,6 +493,10 @@ Portal.SongSlots = function(){
             // -- this means we're using a pseudo-songslot
             // launched by e.g.  a songlist
             this.title = (this.$div ? this.$div.find(".songinput").val() : this.title);
+            if(!this.title){
+                //Jos tyhjä, älä tee mitään
+                return 0;
+            }
 
             SetCurrentSlot(this);
 
@@ -679,9 +694,10 @@ Portal.SongSlots = function(){
          **/
         this.CheckLyrics = function(ev, item){
             if(this.is_service_specific){
-                var self = this;
-                //Jos käynnistetty klikkaamalla autocomplete-listaa, käytä sen arvoa
-                var title = (item ? item.item.value :  this.$div.find(".songinput:eq(0)").val());
+                var self = this,
+                    //Jos käynnistetty klikkaamalla autocomplete-listaa (tai selectmenua), käytä sen arvoa
+                    title = (item ? item.item.value :  this.$div.find(".songinput:eq(0)").val());
+                console.log("CHECKING lyrics");
                 $.getJSON("php/ajax/Loader.php",{
                         action:  "check_song_title",
                         service_id: Service.GetServiceId(),
