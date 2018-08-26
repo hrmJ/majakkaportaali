@@ -57,7 +57,7 @@ Portal.SongSlots = function(){
         var path = Utilities.GetAjaxPath("Loader.php");
         $.getJSON(path,{
             action: "get_song_tags",
-            song_id: this.picked_id
+            song_id: this.picked_id,
         }, 
             function(data){
                 console.log(data);
@@ -503,7 +503,7 @@ Portal.SongSlots = function(){
                 $("#songdetails_actions").append($el);
             });
 
-            $("#songdetails .edit_icon").click(this.EditMeta.bind(this));
+            $("#songdetails .edit_icon").unbind("click").click(this.EditMeta.bind(this));
         }
 
         /**

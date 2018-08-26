@@ -362,7 +362,10 @@ var SongLists = function(){
                 "song_id": current_slot.picked_id,
             },
             tags = "";
-        console.log(params);
+
+        //Tyhjennä ensin metadata
+        $("#songdetails input").val();
+        $("#songdetails .data_as_text").text("");
 
         return $.getJSON("php/ajax/Loader.php",params,(meta) => {
             console.log(meta.tags);

@@ -1,0 +1,116 @@
+
+<!--  Laulujen hallinta: selattavat laululistat ja yhden laulun muokkaus / tutkiminen -->
+
+
+
+<div id="songlist" class="covermenu">
+
+    <div>
+
+        <h2>Laulujen lista</h2>
+
+        <section>
+            <h3 class="subwindow-opener closed">Selaa lauluja</h3>
+
+            <div class="controller-subwindow">
+                <ul class="contentlist">
+                    <li class="closed subwindow-opener">Aakkosellinen luettelo</li>
+                    <li class="controller-subwindow">
+                        <ul id="songlist_alpha"></ul>
+                    </li>
+                    <li class="closed subwindow-opener">Tägit</li>
+                    <li class="controller-subwindow">
+                        <ul id=""></ul>
+                    </li>
+                    <li class="closed subwindow-opener">Teemat</li>
+                    <li>
+                        <ul id=""></ul>
+                    </li>
+                    <li class="closed subwindow-opener">Lauluntekijät</li>
+                    <li>
+                        <ul id=""></ul>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h3 class="subwindow-opener closed">Syötä uusi laulu</h3>
+            <div class="controller-subwindow">
+            </div>
+        </section>
+
+        <section>
+            <h3 class="subwindow-opener closed">Hae lauluista </h3>
+            <div class="controller-subwindow">
+            </div>
+        </section>
+
+        <section>
+            
+            <h3 class="subwindow-opener closed">Tilastoja lauluista</h3>
+            <div class="controller-subwindow">
+            </div>
+        
+        </section>
+
+
+
+    </div>
+
+
+
+</div>
+
+
+
+<div id="songdetails" class="covermenu">
+
+    <div class='editcont'>
+
+        <h3>Laulun nimi</h3>
+
+       <div class='song_authors'>
+           <ul class='editable_data_list'>
+               <li class='lyricsby'>
+                   <strong>San.</strong>
+                   <span class='data_as_text'></span>
+                   <span class='data_as_input hidden'> <input type='text'></input></span>
+                   <i class="edit_icon fa fa-pencil"></i>
+               </li>
+               <li class='composer'>
+                   <strong>Säv.</strong>
+                   <span class='data_as_text'></span>
+                   <span class='data_as_input hidden'> <input type='text'></input></span>
+                   <i class="edit_icon fa fa-pencil"></i>
+               </li>
+               <li class='songtags'>
+                   <strong><i class="fa fa-tags"></i></strong>
+                   <span class='data_as_text'></span>
+                   <span class='data_as_input hidden'> 
+                        <input class='taginput' type='text'
+                        placeholder='Erota tägit pilkulla, ei #-merkkejä'></input>
+                   </span>
+                   <i class="edit_icon fa fa-pencil"></i>
+               </li>
+           </ul>
+       </div>
+
+       <div class="version_cont">
+       
+       </div> 
+
+        <ul id='songdetails_actions'>
+        </ul>
+
+        <ul class='lyrics'>
+        </ul>
+
+        <div class='below_lyrics'>
+            <input type='hidden' class='lyrics_id'></input>
+            <button id='save_lyrics'>Tallenna sanat</button>
+        </div>
+    </div>
+
+</div>
+

@@ -94,14 +94,10 @@ class Structure{
         //Kokeillaan ensin messukohtaista rakennetta
         $slots = $this->con->select("service_specific_presentation_structure", 
             array_merge($this->columns, ["id"]),
-            ["service_id" => $this->service_id],
-            ['ORDER' => [ 'slot_number' => 'ASC' ]]);
-        if($slots){
-            //HACK! Miksei Medoo sorttaa??
-            usort($slots, function ($item1, $item2) {
-                return $item1['slot_number'] <=> $item2['slot_number'];
-            });
-        }
+            [
+                "service_id" => $this->service_id,
+                'ORDER' => [ 'slot_number' => 'ASC' ]
+            ]);
         if(!$slots){
             //Ei löydy messuspesifiä rakennetta tai haetaan suoraan yleistä
             $slots = $this->con->select("presentation_structure", 

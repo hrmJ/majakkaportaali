@@ -28,12 +28,14 @@ $struct = new Structure($database, $m);
 
 $layout = $m->loadTemplate('layout'); 
 $nav = $m->loadTemplate('service_structure_nav'); 
+$slide_models = $m->loadTemplate('slide_models'); 
 
 $page_content = [
     "content" => $struct->PrintStructure()->OutputPage(),
     "byline" => "<h2>Messupohjan asetukset</h2>",
     "bodyclass" => "service_structure",
-    "nav" => $nav->render()
+    "nav" => $nav->render(),
+    "slide_models" => $slide_models->render()
     ];
 
 echo $layout->render($page_content);

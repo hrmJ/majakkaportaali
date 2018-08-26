@@ -2,6 +2,8 @@
 Portaali
 --------
 
+- [ ] "Ei sanoja" -laatikko ruksattavaksi
+- [ ] UUden laulun meta sen jälkeen kun sanat syötetty
 - [ ] Messukohtaisen näkymän mobiilimenu(n poistaminen)
 - [ ] Messukohtaisen näkymän messulistan lisääminen
 - [ ] TÄGIT ja valittavien laulujen rajoitaminen sillä perusteella
@@ -30,6 +32,7 @@ Diat
 - [ ] säkeistöjen muokkaamisen poistaminen raamatunkohdista?
 - [ ] Kun lisätään laulu diakäyttöliittmästä, ota huomioon eri versiot
 - [ ] Kun lisätään sisältöä diakäyttöliittmästä, anna mahdollisuus valita dialuokka
+- [ ] gulpin kautta yhdisteltävät pilkotut html-tiedostot
 
 Kaukaisemmat
 ------------

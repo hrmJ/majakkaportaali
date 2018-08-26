@@ -41,7 +41,6 @@ GeneralStructure.LightBox = function(){
             this.$lightbox.append($buttons);
             this.$container.append(this.$lightbox);
             this.InitializeInjectableData();
-            if(this.slideclass==".songslide") this.AddAutoComplete();
         };
 
 

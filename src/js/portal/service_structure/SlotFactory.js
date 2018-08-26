@@ -56,13 +56,21 @@ GeneralStructure.SlotFactory = function(){
         GeneralStructure.LightBox.Attach(this);
         GeneralStructure.Preview.Attach(this);
         slot.SetLightBox();
+        slot.Initialize();
         return slot;
     };
 
     SlotFactory.prototype = {
 
-
     }
+
+    /**
+     *
+     * Oletuksena initialize-funktio, vaikkei keikissa tyypeissä käytettäisikään
+     *
+     */
+    SlotFactory.prototype.Initialize = function(){
+    };
 
 
     SlotFactory.infoslide = GeneralStructure.SlotFactory.infoslide;

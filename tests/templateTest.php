@@ -36,8 +36,9 @@ class TemplateTest extends TestCase
     {
         $layout = $this->m->loadTemplate('layout'); 
         $service = $this->m->loadTemplate('service'); 
+        $ctr = $this->m->loadTemplate('song_controls'); 
         $this->assertRegExp('/<ul>/',
-            $layout->render(Array("content"=>$service->render()))
+            $layout->render(Array("content"=>$service->render(), "song_controls"=>$ctr->render()))
         );
     }
 

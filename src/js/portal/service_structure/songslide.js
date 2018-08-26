@@ -9,6 +9,7 @@ GeneralStructure.SlotFactory.songslide = function(){
     this.slideclass = ".songslide";
     this.segment_type = "songsegment";
 
+
     /**
      *
      * Lisää ajax-ladatun datan slottiin
@@ -17,18 +18,14 @@ GeneralStructure.SlotFactory.songslide = function(){
      *
      **/
     this.FillInData = function(data){
+        console.log(data);
         var self = this;
         this.$lightbox.find("[value='multisong']").get(0).checked=false;
         if(data.is_multi){
             this.$lightbox.find("[value='multisong']").get(0).checked=true;
         }
-        if(data.restrictedto){
-            this.$lightbox.find("[value='restrictedsong']").get(0).checked=true;
-            this.$lightbox.find(".restrictionlist").show();
-            this.$lightbox.find("[name=restrictions_input]").val(data.restrictedto);
-        }
         this.$lightbox.find(".songdescription").val(data.songdescription);
-        this.AddAutoComplete();
+        this.$lightbox.find("#restrict_to_tags").val(data.restrictedto);
 
         //Lisää toiminnallisuus valintalaatikkoihin
         this.$lightbox.find("[type='checkbox']").click(function(){ 
@@ -49,63 +46,37 @@ GeneralStructure.SlotFactory.songslide = function(){
             songdescription: this.$lightbox.find(".songdescription").val(),
             singlename: this.$lightbox.find(".segment-name").val(),
             is_multi: (this.$lightbox.find("[value='multisong']").get(0).checked ? 1 : 0),
-            restrictedto: this.$lightbox.find("[name='restrictions_input']").val()
-        }
-        if(!this.$lightbox.find("[value='restrictedsong']").get(0).checked){
-            //Jos ei ruksia rajoita-laatikossa, ignooraa kirjoitetut rajoitukset
-            this.slide_params.restrictedto = "";
+            restrictedto: this.$lightbox.find("#restrict_to_tags select").val()
         }
         return this;
     }
 
     /**
-     * Aseta autocomplete-mahdollisuus etsiä lauluja rajoitettuun listaan
-     * Käytetään hyväksi jquery ui:n skriptiä useista autocomplete-arvoista
-     * (https://jqueryui.com/autocomplete/#multiple)
+     * Lisätään select-elementti, jonka avulla laulut voidaan rajata vain
+     * tiettyyn tägiin. Käytetään with_text-lisäystä, niin että voidaan lisätä
+     * uusia.
+     *
      */
-    this.AddAutoComplete = function(){
-        var self = this;
-        function split( val ) {
-          return val.split( /,\s*/ );
-        }
-        function extractLast( term ) {
-          return split( term ).pop();
-        }
-        self.$container.find("[name='restrictions_input']")
-            // don't navigate away from the field on tab when selecting an item
-            .on( "keydown", function( event ) {
-              if ( event.keyCode === $.ui.keyCode.TAB &&
-                  $( this ).autocomplete( "instance" ).menu.active ) {
-                event.preventDefault();
-              }
-            })
-            .autocomplete({ source: 
-                            function(request, response){ 
-                                var data = undefined;
-                                $.getJSON("php/ajax/Loader.php",
-                                    {
-                                    action: "get_song_titles",
-                                    title:extractLast(request.term)
-                                    },
-                                    response);
-                            },
-                            minLength: 0,
-                            focus: function() {
-                              // prevent value inserted on focus
-                              return false;
-                            },
-                            select: function( event, ui ) {
-                              var terms = split( this.value );
-                              // remove the current input
-                              terms.pop();
-                              // add the selected item
-                              terms.push( ui.item.value );
-                              // add placeholder to get the comma-and-space at the end
-                              terms.push( "" );
-                              this.value = terms.join( ", " );
-                              return false;
-                        } });
+    this.AddTagSelect = function(){
+        var $sel = $("<select><option value=''>Ei rajoitusta</option></select>"),
+            path = Utilities.GetAjaxPath("Loader.php");
+        $.getJSON(path, {"action": "get_song_tags"}, 
+            (tags) => {
+                $sel
+                    .append(tags.map((tag)=>`<option>${tag}</option>`))
+                    .appendTo("#restrict_to_tags")
+                    .selectmenu()
+            });
     };
 
+
+    /**
+     *
+     * Alustaa toiminnallisuuden
+     *
+     */
+    this.Initialize = function(){
+        this.AddTagSelect();
+    }
 
 }

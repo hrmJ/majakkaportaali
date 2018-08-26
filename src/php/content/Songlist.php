@@ -240,7 +240,7 @@ class Songlist{
         $meta = $this->con->get("songdata",
             ["composer","lyrics"],
             ["id" => $id]);
-        $meta["tags"] = $this->LoadSongTags($id);
+        $meta["tags"] = $this->LoadSongTags($id, true);
         return($meta);
     }
 
@@ -289,14 +289,17 @@ class Songlist{
      *
      * Hakee tietokannasta kaikki eri tägit
      *
+     * @param $song_id haettavan laulun id
+     * @param $only_existing haetaanko vain tietystä laulusta
+     *
      */
-    public function LoadSongTags($song_id=null){
+    public function LoadSongTags($song_id=null, $only_existing=False){
         if($song_id){
             $tags = $this->con->select("songtags",
                  ["tag" =>  Medoo::raw('DISTINCT(tag)')],
                  ["song_id" => $song_id]);
         }
-        else{
+        else if(!$only_existing){
             $tags = $this->con->select("songtags",
                  ["tag" =>  Medoo::raw('DISTINCT(tag)')]);
         }
