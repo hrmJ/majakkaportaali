@@ -567,6 +567,10 @@ Portal.SongSlots = function(){
             });
 
             $("#songdetails .edit_icon").unbind("click").click(this.EditMeta.bind(this));
+
+            if(lyrics_status == "no_lyrics"){
+                $("#songdetails .song_authors").hide();
+            }
         }
 
         /**

@@ -408,6 +408,7 @@ var SongLists = function(){
             SetLyrics(saved_id*1, $target_el)
             Portal.SongSlots.GetCurrentSlot().CheckLyrics();
             LoadSongLists();
+            $("#songdetails .song_authors").show();
         });
     
     }

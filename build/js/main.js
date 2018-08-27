@@ -1482,6 +1482,10 @@ Portal.SongSlots = function(){
             });
 
             $("#songdetails .edit_icon").unbind("click").click(this.EditMeta.bind(this));
+
+            if(lyrics_status == "no_lyrics"){
+                $("#songdetails .song_authors").hide();
+            }
         }
 
         /**
@@ -2123,6 +2127,7 @@ var SongLists = function(){
             SetLyrics(saved_id*1, $target_el)
             Portal.SongSlots.GetCurrentSlot().CheckLyrics();
             LoadSongLists();
+            $("#songdetails .song_authors").show();
         });
     
     }

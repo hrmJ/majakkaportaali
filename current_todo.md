@@ -4,10 +4,8 @@ Portaali
 
 - [ ] "Lisää uusi diaesityksessä näkymätön messun osa"
 - [ ] "Ei sanoja" -laatikko ruksattavaksi
-- [ ] UUden laulun meta sen jälkeen kun sanat syötetty
 - [ ] Messukohtaisen näkymän mobiilimenu(n poistaminen)
 - [ ] Messukohtaisen näkymän messulistan lisääminen
-- [ ] TÄGIT ja valittavien laulujen rajoitaminen sillä perusteella
 - [ ] Tulostettava biisilista
 - [ ] Ylimääräinen Tallenna-nappi lauluissa, kun service.php iframessa
 - [ ] Laulun rooli näkyvillä dioissa
@@ -15,9 +13,11 @@ Portaali
 - [/] Raamatun kirjojen nimien suomennokset
 - [ ] Raamatunkohdan (osakohdan) poistaminen
 - [ ] Muka tallentamattomia muutoksia yleistiedoissa raamatunkohdan takia
-- [ ] Mahdollisuus editoida lauluja muualtakin kuin vain messunäkymästä
+- [x] Mahdollisuus editoida lauluja muualtakin kuin vain messunäkymästä
     - ehkä "hallitse lauluja" -alavalikko?
-- [ ] Laulun detaljit: Ei aina lataa säveltäjää (??)
+- [x] Laulun detaljit: Ei aina lataa säveltäjää (??)
+- [x] TÄGIT ja valittavien laulujen rajoitaminen sillä perusteella
+- [x] UUden laulun meta sen jälkeen kun sanat syötetty
 
 Bugit
 -----
