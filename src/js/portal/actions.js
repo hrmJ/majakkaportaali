@@ -11,7 +11,7 @@ $(function(){
     if ($("body").hasClass("servicedetails")){
         //Messukohtainen näkymä
         $("#tabs").tabs();
-        Service.Initialize();
+        Portal.Service.Initialize();
     }
     else if ($("body").hasClass("servicelist")){
         //Kaikkien messujen lista

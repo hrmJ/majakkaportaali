@@ -812,7 +812,7 @@ var Comments = function(){
     function LoadComments(){
         $.get("php/ajax/Loader.php", {
             action: "load_comments",
-            service_id: Service.GetServiceId()
+            service_id: Portal.Service.GetServiceId()
             },
             function(data){
                 $(".loadedcomments").html(data);
@@ -853,7 +853,7 @@ var Comments = function(){
             theme = $container.find("select").get(0).selectedIndex>1 ? $container.find("select").val() : "";
         }
         var queryparams = {action: "save_comment",
-                           service_id:Service.GetServiceId(),
+                           service_id:Portal.Service.GetServiceId(),
                            theme: theme,
                            content:$container.find(".newcomment").val(),
                            commentator:$container.find(".commentator").val(),
@@ -953,7 +953,7 @@ Portal.SongSlots = function(){
         var path = Utilities.GetAjaxPath("Loader.php");
         $.getJSON(path,{
             action: "get_song_titles",
-            service_id: Service.GetServiceId(),
+            service_id: Portal.Service.GetServiceId(),
             title:request.term
         }, 
             function(data){
@@ -991,7 +991,7 @@ Portal.SongSlots = function(){
         var path = Utilities.GetAjaxPath("Loader.php");
         $.get(path, {
             action: "get_song_slots",
-            service_id: Service.GetServiceId()
+            service_id: Portal.Service.GetServiceId()
             }, 
             InitializeContainers);
     }
@@ -1065,7 +1065,7 @@ Portal.SongSlots = function(){
         this.FetchSlots = function(){
             $.getJSON("php/ajax/Loader.php",{
                 action: "load_slots_to_container",
-                service_id: Service.GetServiceId(),
+                service_id: Portal.Service.GetServiceId(),
                 cont_name: this.name
             }, this.SetSlots.bind(this));
         }
@@ -1304,6 +1304,8 @@ Portal.SongSlots = function(){
                                 )();
                         }
                     });
+                    $sel.val(this.title);
+                    $sel.select_withtext("refresh");
                     this.CheckLyrics();
                 });
             }
@@ -1565,7 +1567,7 @@ Portal.SongSlots = function(){
             var self = this;
             return $.getJSON("php/ajax/Loader.php",{
                     action:  "check_song_title",
-                    service_id: Service.GetServiceId(),
+                    service_id: Portal.Service.GetServiceId(),
                     title: this.title
                     },
                 function(ids){
@@ -1625,7 +1627,7 @@ Portal.SongSlots = function(){
                 console.log("CHECKING lyrics");
                 $.getJSON("php/ajax/Loader.php",{
                         action:  "check_song_title",
-                        service_id: Service.GetServiceId(),
+                        service_id: Portal.Service.GetServiceId(),
                         title: title
                         },
                         self.IndicateLyrics.bind(self)
@@ -1743,7 +1745,7 @@ var SongLists = function(){
             $.getJSON("php/ajax/Loader.php",
                 {
                     action: "get_songlist_" + this.list_type,
-                    service_id: Service.GetServiceId(),
+                    service_id: Portal.Service.GetServiceId(),
                 },
                 function(data){
                     self.SetSubCategories(data,self);
@@ -1853,7 +1855,7 @@ var SongLists = function(){
                 title = $li.find(".song_title").text();
             $.getJSON("php/ajax/Loader.php",{
                     action:  "check_song_title",
-                    service_id: Service.GetServiceId(),
+                    service_id: Portal.Service.GetServiceId(),
                     title: title
                     },
                 function(ids){
@@ -1969,7 +1971,7 @@ var SongLists = function(){
                 $.getJSON("php/ajax/Loader.php",
                     {
                         action: "get_songs_in_list_alpha",
-                        service_id: Service.GetServiceId(),
+                        service_id: Portal.Service.GetServiceId(),
                         letter: $launcher.text().charAt(0),
                     },
                     function(data){
@@ -2199,7 +2201,7 @@ Portal.Service = function(){
         this.tabdata = this.GetTabData();
         $.post("php/ajax/Saver.php",{
             action: self.action,
-            service_id: Service.GetServiceId(),
+            service_id: Portal.Service.GetServiceId(),
             data: self.tabdata
             }, protoself.AfterSavedChanges.bind(protoself));
     };
@@ -2354,7 +2356,7 @@ Portal.Service = function(){
  * Messun vastuunkantajat. (Vastuunkantajat-välilehti)
  *
  **/
-Service.TabFactory.People = function(){
+Portal.Service.TabFactory.People = function(){
 
     this.action = "save_responsibles";
 
@@ -2427,7 +2429,7 @@ Service.TabFactory.People = function(){
  * ja muu yleisen tason (ei ihmisiä koskeva )info, tämän muokkaus ym.
  *
  **/
-Service.TabFactory.Details = function(){
+Portal.Service.TabFactory.Details = function(){
 
     this.action = "save_details";
     this.bible_segments = [];
@@ -2491,7 +2493,7 @@ Service.TabFactory.Details = function(){
         console.log("fetching.." + this.name);
         $.getJSON("php/ajax/Loader.php",{
             action: "load_slots_to_container",
-            service_id: Service.GetServiceId(),
+            service_id: Portal.Service.GetServiceId(),
             cont_name: this.name
         }, this.SetSlots.bind(this));
     }
@@ -2525,7 +2527,7 @@ Service.TabFactory.Details = function(){
         var self = this;
         $.getJSON("php/ajax/Loader.php",{
             action: "get_bible_segments_content",
-            service_id: Service.GetServiceId(),
+            service_id: Portal.Service.GetServiceId(),
         }, function(data){
                 $.each(self.bible_segments, function(idx, seg){
                     if(! data[seg.title]){
@@ -2584,7 +2586,7 @@ Service.TabFactory.Details = function(){
                 data.push({
                     type: "bible",
                     segment_name: seg.title,
-                    service_id: Service.GetServiceId(),
+                    service_id: Portal.Service.GetServiceId(),
                     testament: picker_pair.startpicker.testament,
                     startbook: start.book,
                     startchapter: start.chapter,
@@ -2609,7 +2611,7 @@ Service.TabFactory.Details = function(){
  * Messun rakenteen säätely
  *
  **/
-Service.TabFactory.Structure = function(){
+Portal.Service.TabFactory.Structure = function(){
 
     /**
      *
@@ -2618,7 +2620,7 @@ Service.TabFactory.Structure = function(){
      **/
     this.SetStructure = function(html){
         $("#service_specific_structure").html(html);
-        GeneralStructure.SetServiceid(Service.GetServiceId());
+        GeneralStructure.SetServiceid(Portal.Service.GetServiceId());
         GeneralStructure.Initialize(".structural-element-add");
     };
 
@@ -2633,7 +2635,7 @@ Service.TabFactory.Structure = function(){
     this.GetStructure = function(callback){
         $.get("php/ajax/Loader.php",{
             action : "load_slots",
-            service_id: Service.GetServiceId()
+            service_id: Portal.Service.GetServiceId()
         }, callback.bind(this));
     };
 
@@ -2670,7 +2672,7 @@ Service.TabFactory.Structure = function(){
  * Messun infodiat
  *
  **/
-Service.TabFactory.Infoslides = function(){
+Portal.Service.TabFactory.Infoslides = function(){
     /**
      *
      *
@@ -2684,7 +2686,7 @@ Service.TabFactory.Infoslides = function(){
  * Lauluvälilehti ja sen toiminnallisuus (huom, lauluslotit ja laululistat omia luokkiaan)
  *
  **/
-Service.TabFactory.Songs = function(){
+Portal.Service.TabFactory.Songs = function(){
 
     this.action = "save_songs";
 
@@ -5831,7 +5833,7 @@ $(function(){
     if ($("body").hasClass("servicedetails")){
         //Messukohtainen näkymä
         $("#tabs").tabs();
-        Service.Initialize();
+        Portal.Service.Initialize();
     }
     else if ($("body").hasClass("servicelist")){
         //Kaikkien messujen lista
@@ -8779,8 +8781,8 @@ Slides.Controls = function(){
         //var iframe = document.getElementById("service-data-iframe");
         var id = $(this).val();
         $("#service-data-iframe").on("load", function() {
-            this.contentWindow.Service.SetServiceId(id);
-            this.contentWindow.Service.Initialize();
+            this.contentWindow.Portal.Service.SetServiceId(id);
+            this.contentWindow.Portal.Service.Initialize();
             this.contentWindow.Utilities.HideUpperMenu();
         });
         $("#service-data-iframe").attr("src","../service.php");

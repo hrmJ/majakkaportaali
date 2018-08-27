@@ -3,7 +3,7 @@
  * Lauluvälilehti ja sen toiminnallisuus (huom, lauluslotit ja laululistat omia luokkiaan)
  *
  **/
-Service.TabFactory.Songs = function(){
+Portal.Service.TabFactory.Songs = function(){
 
     this.action = "save_songs";
 

@@ -3,7 +3,7 @@
  * Messun vastuunkantajat. (Vastuunkantajat-välilehti)
  *
  **/
-Service.TabFactory.People = function(){
+Portal.Service.TabFactory.People = function(){
 
     this.action = "save_responsibles";
 

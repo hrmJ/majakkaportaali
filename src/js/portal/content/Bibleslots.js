@@ -21,7 +21,7 @@ var BibleSlots = function(){
         details_tab = details_tab;
         $.get("php/ajax/Loader.php", {
             action: "get_bible_slots",
-            service_id: Service.GetServiceId()
+            service_id: Portal.Service.GetServiceId()
             }, 
             InitializeSegments);
     }
@@ -78,7 +78,7 @@ var BibleSlots = function(){
             console.log("fetching.." + this.name);
             $.getJSON("php/ajax/Loader.php",{
                 action: "load_slots_to_container",
-                service_id: Service.GetServiceId(),
+                service_id: Portal.Service.GetServiceId(),
                 cont_name: this.name
             }, this.SetSlots.bind(this));
         }
@@ -378,7 +378,7 @@ var BibleSlots = function(){
             var self = this;
             return $.getJSON("php/ajax/Loader.php",{
                     action:  "check_song_title",
-                    service_id: Service.GetServiceId(),
+                    service_id: Portal.Service.GetServiceId(),
                     title: this.title
                     },
                 function(ids){
@@ -435,7 +435,7 @@ var BibleSlots = function(){
             var title = (item ? item.item.value :  this.$div.find(".songinput:eq(0)").val());
             $.getJSON("php/ajax/Loader.php",{
                     action:  "check_song_title",
-                    service_id: Service.GetServiceId(),
+                    service_id: Portal.Service.GetServiceId(),
                     title: title
                     },
                     self.IndicateLyrics.bind(self)

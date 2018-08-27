@@ -3,7 +3,7 @@
  * Messun infodiat
  *
  **/
-Service.TabFactory.Infoslides = function(){
+Portal.Service.TabFactory.Infoslides = function(){
     /**
      *
      *

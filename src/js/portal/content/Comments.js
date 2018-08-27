@@ -31,7 +31,7 @@ var Comments = function(){
     function LoadComments(){
         $.get("php/ajax/Loader.php", {
             action: "load_comments",
-            service_id: Service.GetServiceId()
+            service_id: Portal.Service.GetServiceId()
             },
             function(data){
                 $(".loadedcomments").html(data);
@@ -72,7 +72,7 @@ var Comments = function(){
             theme = $container.find("select").get(0).selectedIndex>1 ? $container.find("select").val() : "";
         }
         var queryparams = {action: "save_comment",
-                           service_id:Service.GetServiceId(),
+                           service_id:Portal.Service.GetServiceId(),
                            theme: theme,
                            content:$container.find(".newcomment").val(),
                            commentator:$container.find(".commentator").val(),

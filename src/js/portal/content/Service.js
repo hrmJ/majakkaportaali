@@ -47,7 +47,7 @@ Portal.Service = function(){
         this.tabdata = this.GetTabData();
         $.post("php/ajax/Saver.php",{
             action: self.action,
-            service_id: Service.GetServiceId(),
+            service_id: Portal.Service.GetServiceId(),
             data: self.tabdata
             }, protoself.AfterSavedChanges.bind(protoself));
     };

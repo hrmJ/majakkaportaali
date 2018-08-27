@@ -30,7 +30,7 @@ var SongLists = function(){
             $.getJSON("php/ajax/Loader.php",
                 {
                     action: "get_songlist_" + this.list_type,
-                    service_id: Service.GetServiceId(),
+                    service_id: Portal.Service.GetServiceId(),
                 },
                 function(data){
                     self.SetSubCategories(data,self);
@@ -140,7 +140,7 @@ var SongLists = function(){
                 title = $li.find(".song_title").text();
             $.getJSON("php/ajax/Loader.php",{
                     action:  "check_song_title",
-                    service_id: Service.GetServiceId(),
+                    service_id: Portal.Service.GetServiceId(),
                     title: title
                     },
                 function(ids){
@@ -256,7 +256,7 @@ var SongLists = function(){
                 $.getJSON("php/ajax/Loader.php",
                     {
                         action: "get_songs_in_list_alpha",
-                        service_id: Service.GetServiceId(),
+                        service_id: Portal.Service.GetServiceId(),
                         letter: $launcher.text().charAt(0),
                     },
                     function(data){

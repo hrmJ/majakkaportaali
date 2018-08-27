@@ -3,7 +3,7 @@
  * Messun rakenteen säätely
  *
  **/
-Service.TabFactory.Structure = function(){
+Portal.Service.TabFactory.Structure = function(){
 
     /**
      *
@@ -12,7 +12,7 @@ Service.TabFactory.Structure = function(){
      **/
     this.SetStructure = function(html){
         $("#service_specific_structure").html(html);
-        GeneralStructure.SetServiceid(Service.GetServiceId());
+        GeneralStructure.SetServiceid(Portal.Service.GetServiceId());
         GeneralStructure.Initialize(".structural-element-add");
     };
 
@@ -27,7 +27,7 @@ Service.TabFactory.Structure = function(){
     this.GetStructure = function(callback){
         $.get("php/ajax/Loader.php",{
             action : "load_slots",
-            service_id: Service.GetServiceId()
+            service_id: Portal.Service.GetServiceId()
         }, callback.bind(this));
     };
 

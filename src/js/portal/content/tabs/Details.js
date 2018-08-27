@@ -3,7 +3,7 @@
  * ja muu yleisen tason (ei ihmisiä koskeva )info, tämän muokkaus ym.
  *
  **/
-Service.TabFactory.Details = function(){
+Portal.Service.TabFactory.Details = function(){
 
     this.action = "save_details";
     this.bible_segments = [];
@@ -67,7 +67,7 @@ Service.TabFactory.Details = function(){
         console.log("fetching.." + this.name);
         $.getJSON("php/ajax/Loader.php",{
             action: "load_slots_to_container",
-            service_id: Service.GetServiceId(),
+            service_id: Portal.Service.GetServiceId(),
             cont_name: this.name
         }, this.SetSlots.bind(this));
     }
@@ -101,7 +101,7 @@ Service.TabFactory.Details = function(){
         var self = this;
         $.getJSON("php/ajax/Loader.php",{
             action: "get_bible_segments_content",
-            service_id: Service.GetServiceId(),
+            service_id: Portal.Service.GetServiceId(),
         }, function(data){
                 $.each(self.bible_segments, function(idx, seg){
                     if(! data[seg.title]){
@@ -160,7 +160,7 @@ Service.TabFactory.Details = function(){
                 data.push({
                     type: "bible",
                     segment_name: seg.title,
-                    service_id: Service.GetServiceId(),
+                    service_id: Portal.Service.GetServiceId(),
                     testament: picker_pair.startpicker.testament,
                     startbook: start.book,
                     startchapter: start.chapter,

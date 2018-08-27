@@ -85,8 +85,8 @@ Slides.Controls = function(){
         //var iframe = document.getElementById("service-data-iframe");
         var id = $(this).val();
         $("#service-data-iframe").on("load", function() {
-            this.contentWindow.Service.SetServiceId(id);
-            this.contentWindow.Service.Initialize();
+            this.contentWindow.Portal.Service.SetServiceId(id);
+            this.contentWindow.Portal.Service.Initialize();
             this.contentWindow.Utilities.HideUpperMenu();
         });
         $("#service-data-iframe").attr("src","../service.php");

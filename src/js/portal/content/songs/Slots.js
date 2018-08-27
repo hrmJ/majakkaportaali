@@ -38,7 +38,7 @@ Portal.SongSlots = function(){
         var path = Utilities.GetAjaxPath("Loader.php");
         $.getJSON(path,{
             action: "get_song_titles",
-            service_id: Service.GetServiceId(),
+            service_id: Portal.Service.GetServiceId(),
             title:request.term
         }, 
             function(data){
@@ -76,7 +76,7 @@ Portal.SongSlots = function(){
         var path = Utilities.GetAjaxPath("Loader.php");
         $.get(path, {
             action: "get_song_slots",
-            service_id: Service.GetServiceId()
+            service_id: Portal.Service.GetServiceId()
             }, 
             InitializeContainers);
     }
@@ -150,7 +150,7 @@ Portal.SongSlots = function(){
         this.FetchSlots = function(){
             $.getJSON("php/ajax/Loader.php",{
                 action: "load_slots_to_container",
-                service_id: Service.GetServiceId(),
+                service_id: Portal.Service.GetServiceId(),
                 cont_name: this.name
             }, this.SetSlots.bind(this));
         }
@@ -389,6 +389,8 @@ Portal.SongSlots = function(){
                                 )();
                         }
                     });
+                    $sel.val(this.title);
+                    $sel.select_withtext("refresh");
                     this.CheckLyrics();
                 });
             }
@@ -650,7 +652,7 @@ Portal.SongSlots = function(){
             var self = this;
             return $.getJSON("php/ajax/Loader.php",{
                     action:  "check_song_title",
-                    service_id: Service.GetServiceId(),
+                    service_id: Portal.Service.GetServiceId(),
                     title: this.title
                     },
                 function(ids){
@@ -710,7 +712,7 @@ Portal.SongSlots = function(){
                 console.log("CHECKING lyrics");
                 $.getJSON("php/ajax/Loader.php",{
                         action:  "check_song_title",
-                        service_id: Service.GetServiceId(),
+                        service_id: Portal.Service.GetServiceId(),
                         title: title
                         },
                         self.IndicateLyrics.bind(self)
