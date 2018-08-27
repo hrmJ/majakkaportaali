@@ -3,8 +3,6 @@ Portaali
 --------
 
 - [ ] "Lisää uusi diaesityksessä näkymätön messun osa"
-- [ ] Lauluversion valinta ei toimi??
-- [ ] Slottien raahaaminen ei toimi???
 - [ ] "Ei sanoja" -laatikko ruksattavaksi
 - [ ] UUden laulun meta sen jälkeen kun sanat syötetty
 - [ ] Messukohtaisen näkymän mobiilimenu(n poistaminen)

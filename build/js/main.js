@@ -1241,21 +1241,26 @@ Portal.SongSlots = function(){
                     <input type="hidden" class="song_id" value="${this.picked_id}"> 
                 </div>
                 </li>`);
-            $("<div class='slot_edit'><i class='fa fa-pencil'></i></div>")
-                .click(this.CheckDetails.bind(this))
-                .appendTo(this.$div);
-
-            console.log("creating");
-
 
             //Laulujen lisävalinnat: monta laulua samassa / rajattu tägillä
             if (this.cont.is_multi){
                 $("<div class='slot_handle'><i class='fa fa-arrows'></i></div>")
                     .appendTo(this.$div);
+            }
+
+
+
+            $("<div class='slot_edit'><i class='fa fa-pencil'></i></div>")
+                .click(this.CheckDetails.bind(this))
+                .appendTo(this.$div);
+
+            if (this.cont.is_multi){
+                //Lisää lisävalintoja: poistaminen
                 $("<div class='slot_remove'><i class='fa fa-trash'></i></div>")
                     .click(this.Remove.bind(this))
                     .appendTo(this.$div);
             }
+
 
             this.$div.find("[type='text'].songinput").droppable({
                 accept: "#prepared_for_insertion",
@@ -1425,7 +1430,7 @@ Portal.SongSlots = function(){
             SongLists.SetEditedLyricsCallback(function(){
                 var input_id_val = $("#songdetails .lyrics_id").val();
                 self.picked_id = input_id_val || self.picked_id;
-                if(this.is_service_specific){
+                if(self.is_service_specific){
                     $.when(self.RefreshVersions(
                         self.LoadVersionPicker.bind(self)
                     )).done(self.PrintEditActions.bind(self));
