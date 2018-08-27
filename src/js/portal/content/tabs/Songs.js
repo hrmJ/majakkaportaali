@@ -68,11 +68,11 @@ Service.TabFactory.Songs = function(){
         var data = [];
         this.$div.find(".slotcontainer").each(function(idx, cont){
             $.each($(cont).find(".songslot"), function(slot_no,slot){
-                console.log("LOOK: " + $(slot).find(".song_id").val() || 'BÖÖ');
                 data.push({
                     song_title: $(slot).find(".songinput").val() || '',
                     song_id: $(slot).find(".song_id").val() || null,
                     songtype: $(cont).find(".cont_name").text(),
+                    tag: $(cont).find(".restriction_val").val(),
                 });
             });
         });

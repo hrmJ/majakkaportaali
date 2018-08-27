@@ -6,7 +6,7 @@
 
 Portal = Portal || {};
 
-Service = function(){
+Portal.Service = function(){
 
     //Kukin välilehti tallennetaan tähän
     TabObjects = {};
@@ -80,6 +80,8 @@ Service = function(){
      *
      **/
     TabFactory.prototype.AfterSavedChanges = function(response){
+        console.log("вот здесь: ");
+        console.log(response);
         this.MonitorChanges();
         var msg = new Utilities.Message("Muutokset tallennettu", this.$div);
         msg.Show(2000);
@@ -110,11 +112,22 @@ Service = function(){
      *
      * Palauttaa tämänhetkisen messun id:n
      *
-     **/
+     */
     function GetServiceId(){
         return service_id;
     }
 
+
+    /**
+     *
+     * Palauttaa aktiivisen välilehden määritellystä tyypistä
+     *
+     * @param tabtype välilehden tyyppi
+     *
+     */
+    function GetCurrentTab(tabtype){
+        return TabObjects[tabtype];
+    }
 
     /**
      *
@@ -178,7 +191,8 @@ Service = function(){
         Initialize,
         GetServiceId,
         TabFactory,
-        SetServiceId
+        SetServiceId,
+        GetCurrentTab
     };
 
 }();

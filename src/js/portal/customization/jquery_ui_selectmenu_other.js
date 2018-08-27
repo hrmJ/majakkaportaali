@@ -7,8 +7,6 @@
  $.widget("custom.select_withtext", $.ui.selectmenu, 
      { 
          _renderItem: function( ul, item ) {
-            var custom_labels = ["Uusi luokka", "Uusi tunniste"];
-            if(custom_labels.indexOf(item.label) > -1){
                 //TODO: abstract this, so that these options can be set appropriately and don't have to be hard coded.
                 var $input = $("<input type='text' placeholder='" + item.label + "...'>");
                 $input.on("keydown",function(){
@@ -17,7 +15,6 @@
                         $("<button>Lisää</button>")
                             .click(function(){
                                 //Lisää äsken lisätty uusi arvo KAIKKIIN tällä sivulla oleviin select-elementteihin, joissa addedclass-nimi
-                                console.log($(this));
                                 //Etsi id nappia lähimmästä ul-elementistä
                                 //Tämä on sama kuin select-emementillä (ilman menu-liitettä)
                                 var $select = $("#" + $(this).parents("ul").attr("id").replace("-menu",""));
@@ -35,20 +32,29 @@
                             .appendTo($div);
                     }
                 });
-            }
-             else if(item.label=="Jokin muu"){
-                var $input = $("<input type='text' placeholder='Jokin muu...'>")
-                var self = this;
-                var thisitem = item;
+             if(item.label=="Jokin muu"){
+                    self = this,
+                    thisitem = item;
+
                 $input.autocomplete( {
-                    source: function(request, response){ $.getJSON(loaderpath + "/songtitles.php",{songname:request.term,fullname:"no"},response);},
+                    source: Portal.SongSlots.LoadSongTitles,
                     minLength: 2,
                     select: function(event,input){
-                        $(self.element).find("[value='Jokin muu']").before("<option>" +  input.item.value +"</option>");
-                        self.refresh();
+                        var $select = $("#" + $(this).parents("ul").attr("id").replace("-menu",""));
+                        $("<option>" + input.item.value + "</option>")
+                            .insertBefore($select.find("option:last-child"));
+                        $select.val(input.item.value);
+                        try{
+                            $select.select_withtext("refresh");
+                        }
+                        catch(e){
+                            $(this).select_withtext();
+                        }
+                        Portal.SongSlots.GetCurrentSlot().CheckLyrics();
+                        Portal.Service.GetCurrentTab("Songs").MonitorChanges();
                     },
                 });
-            }
+                }
              
 
             var wrapper = (["Uusi luokka","Jokin muu","Uusi tunniste"].indexOf(item.label)>-1 ? $("<div class='other-option'>").append($input) : $("<div>").text(item.label));

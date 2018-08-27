@@ -7,8 +7,7 @@ Portal = Portal || {};
  */
 Portal.SongSlots = function(){
 
-    var songs_tab,
-        current_slot;
+    var current_slot;
 
     /**
      *
@@ -72,11 +71,8 @@ Portal.SongSlots = function(){
      *
      * Hakee nyt käsiteltävässä messussa käytössä olevat laulut
      *
-     * @param songtab Laulut-välilehti omana olionaan
-     *
-     **/
-    function LoadSongsToSlots(songtab){
-        songs_tab = songtab;
+     */
+    function LoadSongsToSlots(){
         var path = Utilities.GetAjaxPath("Loader.php");
         $.get(path, {
             action: "get_song_slots",
@@ -93,7 +89,7 @@ Portal.SongSlots = function(){
      **/
     function SaveSlotOrder($parent_el){
         var $slots = $parent_el.find(".songslot");
-        songs_tab.MonitorChanges();
+        Portal.Service.GetCurrentTab("Songs").MonitorChanges();
     }
 
     /**
@@ -263,7 +259,7 @@ Portal.SongSlots = function(){
             slot.Create().AttachEvents();
             this.AddSortability();
             //Varmista, että uuden slotin lisääminen lasketaan muutokseksi
-            songs_tab.MonitorChanges();
+            Portal.Service.GetCurrentTab("Songs").MonitorChanges();
         };
 
 
@@ -323,7 +319,8 @@ Portal.SongSlots = function(){
          */
         this.Create = function(){
             var promise = undefined,
-                path = Utilities.GetAjaxPath("Loader.php");
+                path = Utilities.GetAjaxPath("Loader.php"),
+                self = this;
             this.$div = $(`
                 <li class="songslot no_indicator">
                 <div>
@@ -332,6 +329,9 @@ Portal.SongSlots = function(){
                     <input type="hidden" class="song_id" value="${this.picked_id}"> 
                 </div>
                 </li>`);
+
+            //Varmista, että slotti on merkitty valituksi, kun siihen kosketaan
+            this.$div.click(()=>{ SetCurrentSlot(self); });
 
             //Laulujen lisävalinnat: monta laulua samassa / rajattu tägillä
             if (this.cont.is_multi){
@@ -383,6 +383,10 @@ Portal.SongSlots = function(){
                         select: () => {
                             this.picked_id = null;
                             this.CheckLyrics.bind(this)();
+                            Portal.Service.GetCurrentTab("Songs")
+                                .MonitorChanges.bind(
+                                    Portal.Service.GetCurrentTab("Songs")
+                                )();
                         }
                     });
                     this.CheckLyrics();
@@ -393,7 +397,8 @@ Portal.SongSlots = function(){
                 //Lisää välilehtiolioon muutosten tarkkailutoiminto.
                 //Tämä suoritetaan joko heti tai kun tägillä rajatut laulut on ajettu sisään:
                 this.$div.find("input[type='text'], select").on("change paste keyup selectmenuchange",
-                    songs_tab.MonitorChanges.bind(songs_tab));
+                    Portal.Service.GetCurrentTab("Songs")
+                        .MonitorChanges.bind(Portal.Service.GetCurrentTab("Songs")));
             });
 
 
@@ -774,14 +779,6 @@ Portal.SongSlots = function(){
             return this;
 
         }
-
-
-
-        //$(`
-        //<div class='songslot_info'> &#10003; Laulu on tietokannassa</div>
-        //<div class='songslot_info'>Katso sanat</div>
-        //`).appendTo()
-
 
     
     }

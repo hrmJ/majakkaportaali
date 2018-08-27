@@ -7,8 +7,6 @@
  $.widget("custom.select_withtext", $.ui.selectmenu, 
      { 
          _renderItem: function( ul, item ) {
-            var custom_labels = ["Uusi luokka", "Uusi tunniste"];
-            if(custom_labels.indexOf(item.label) > -1){
                 //TODO: abstract this, so that these options can be set appropriately and don't have to be hard coded.
                 var $input = $("<input type='text' placeholder='" + item.label + "...'>");
                 $input.on("keydown",function(){
@@ -17,7 +15,6 @@
                         $("<button>Lisää</button>")
                             .click(function(){
                                 //Lisää äsken lisätty uusi arvo KAIKKIIN tällä sivulla oleviin select-elementteihin, joissa addedclass-nimi
-                                console.log($(this));
                                 //Etsi id nappia lähimmästä ul-elementistä
                                 //Tämä on sama kuin select-emementillä (ilman menu-liitettä)
                                 var $select = $("#" + $(this).parents("ul").attr("id").replace("-menu",""));
@@ -35,20 +32,29 @@
                             .appendTo($div);
                     }
                 });
-            }
-             else if(item.label=="Jokin muu"){
-                var $input = $("<input type='text' placeholder='Jokin muu...'>")
-                var self = this;
-                var thisitem = item;
+             if(item.label=="Jokin muu"){
+                    self = this,
+                    thisitem = item;
+
                 $input.autocomplete( {
-                    source: function(request, response){ $.getJSON(loaderpath + "/songtitles.php",{songname:request.term,fullname:"no"},response);},
+                    source: Portal.SongSlots.LoadSongTitles,
                     minLength: 2,
                     select: function(event,input){
-                        $(self.element).find("[value='Jokin muu']").before("<option>" +  input.item.value +"</option>");
-                        self.refresh();
+                        var $select = $("#" + $(this).parents("ul").attr("id").replace("-menu",""));
+                        $("<option>" + input.item.value + "</option>")
+                            .insertBefore($select.find("option:last-child"));
+                        $select.val(input.item.value);
+                        try{
+                            $select.select_withtext("refresh");
+                        }
+                        catch(e){
+                            $(this).select_withtext();
+                        }
+                        Portal.SongSlots.GetCurrentSlot().CheckLyrics();
+                        Portal.Service.GetCurrentTab("Songs").MonitorChanges();
                     },
                 });
-            }
+                }
              
 
             var wrapper = (["Uusi luokka","Jokin muu","Uusi tunniste"].indexOf(item.label)>-1 ? $("<div class='other-option'>").append($input) : $("<div>").text(item.label));
@@ -916,8 +922,7 @@ Portal = Portal || {};
  */
 Portal.SongSlots = function(){
 
-    var songs_tab,
-        current_slot;
+    var current_slot;
 
     /**
      *
@@ -981,11 +986,8 @@ Portal.SongSlots = function(){
      *
      * Hakee nyt käsiteltävässä messussa käytössä olevat laulut
      *
-     * @param songtab Laulut-välilehti omana olionaan
-     *
-     **/
-    function LoadSongsToSlots(songtab){
-        songs_tab = songtab;
+     */
+    function LoadSongsToSlots(){
         var path = Utilities.GetAjaxPath("Loader.php");
         $.get(path, {
             action: "get_song_slots",
@@ -1002,7 +1004,7 @@ Portal.SongSlots = function(){
      **/
     function SaveSlotOrder($parent_el){
         var $slots = $parent_el.find(".songslot");
-        songs_tab.MonitorChanges();
+        Portal.Service.GetCurrentTab("Songs").MonitorChanges();
     }
 
     /**
@@ -1172,7 +1174,7 @@ Portal.SongSlots = function(){
             slot.Create().AttachEvents();
             this.AddSortability();
             //Varmista, että uuden slotin lisääminen lasketaan muutokseksi
-            songs_tab.MonitorChanges();
+            Portal.Service.GetCurrentTab("Songs").MonitorChanges();
         };
 
 
@@ -1232,7 +1234,8 @@ Portal.SongSlots = function(){
          */
         this.Create = function(){
             var promise = undefined,
-                path = Utilities.GetAjaxPath("Loader.php");
+                path = Utilities.GetAjaxPath("Loader.php"),
+                self = this;
             this.$div = $(`
                 <li class="songslot no_indicator">
                 <div>
@@ -1241,6 +1244,9 @@ Portal.SongSlots = function(){
                     <input type="hidden" class="song_id" value="${this.picked_id}"> 
                 </div>
                 </li>`);
+
+            //Varmista, että slotti on merkitty valituksi, kun siihen kosketaan
+            this.$div.click(()=>{ SetCurrentSlot(self); });
 
             //Laulujen lisävalinnat: monta laulua samassa / rajattu tägillä
             if (this.cont.is_multi){
@@ -1292,6 +1298,10 @@ Portal.SongSlots = function(){
                         select: () => {
                             this.picked_id = null;
                             this.CheckLyrics.bind(this)();
+                            Portal.Service.GetCurrentTab("Songs")
+                                .MonitorChanges.bind(
+                                    Portal.Service.GetCurrentTab("Songs")
+                                )();
                         }
                     });
                     this.CheckLyrics();
@@ -1302,7 +1312,8 @@ Portal.SongSlots = function(){
                 //Lisää välilehtiolioon muutosten tarkkailutoiminto.
                 //Tämä suoritetaan joko heti tai kun tägillä rajatut laulut on ajettu sisään:
                 this.$div.find("input[type='text'], select").on("change paste keyup selectmenuchange",
-                    songs_tab.MonitorChanges.bind(songs_tab));
+                    Portal.Service.GetCurrentTab("Songs")
+                        .MonitorChanges.bind(Portal.Service.GetCurrentTab("Songs")));
             });
 
 
@@ -1683,14 +1694,6 @@ Portal.SongSlots = function(){
             return this;
 
         }
-
-
-
-        //$(`
-        //<div class='songslot_info'> &#10003; Laulu on tietokannassa</div>
-        //<div class='songslot_info'>Katso sanat</div>
-        //`).appendTo()
-
 
     
     }
@@ -2155,7 +2158,7 @@ var SongLists = function(){
 
 Portal = Portal || {};
 
-Service = function(){
+Portal.Service = function(){
 
     //Kukin välilehti tallennetaan tähän
     TabObjects = {};
@@ -2229,6 +2232,8 @@ Service = function(){
      *
      **/
     TabFactory.prototype.AfterSavedChanges = function(response){
+        console.log("вот здесь: ");
+        console.log(response);
         this.MonitorChanges();
         var msg = new Utilities.Message("Muutokset tallennettu", this.$div);
         msg.Show(2000);
@@ -2259,11 +2264,22 @@ Service = function(){
      *
      * Palauttaa tämänhetkisen messun id:n
      *
-     **/
+     */
     function GetServiceId(){
         return service_id;
     }
 
+
+    /**
+     *
+     * Palauttaa aktiivisen välilehden määritellystä tyypistä
+     *
+     * @param tabtype välilehden tyyppi
+     *
+     */
+    function GetCurrentTab(tabtype){
+        return TabObjects[tabtype];
+    }
 
     /**
      *
@@ -2327,7 +2343,8 @@ Service = function(){
         Initialize,
         GetServiceId,
         TabFactory,
-        SetServiceId
+        SetServiceId,
+        GetCurrentTab
     };
 
 }();
@@ -2732,11 +2749,11 @@ Service.TabFactory.Songs = function(){
         var data = [];
         this.$div.find(".slotcontainer").each(function(idx, cont){
             $.each($(cont).find(".songslot"), function(slot_no,slot){
-                console.log("LOOK: " + $(slot).find(".song_id").val() || 'BÖÖ');
                 data.push({
                     song_title: $(slot).find(".songinput").val() || '',
                     song_id: $(slot).find(".song_id").val() || null,
                     songtype: $(cont).find(".cont_name").text(),
+                    tag: $(cont).find(".restriction_val").val(),
                 });
             });
         });

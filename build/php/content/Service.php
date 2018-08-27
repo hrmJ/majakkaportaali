@@ -202,7 +202,19 @@ class Service{
     public function SaveSongs($data){
         //TODO: kasvattaaako id:iten määrää liikaa?
         $this->con->delete("servicesongs", ["service_id" => $this->id]);
+        $songlist = new Songlist($this->con, 0);
         foreach($data as $entry){
+            if($entry["tag"]){
+                $existing_tags = $songlist->LoadSongTags($entry["song_id"]);
+                if(!in_array($entry["tag"], $existing_tags)){
+                    //Jos tallennettu tägein rajoitettuun rooliin laulu, muttei vielä tägätty ko. laulua
+                    $this->con->insert("songtags",
+                        [
+                        "tag"=>$entry["tag"],
+                        "song_id"=>$entry["song_id"]
+                        ]);
+                }
+            }
             $this->con->insert("servicesongs",
                 [
                     "service_id" => $this->id,
@@ -223,8 +235,6 @@ class Service{
      *
      */
     public function SaveThemeAndDate($newvals){
-        var_dump($this->id);
-        var_dump($newvals);
         $this->con->update("services", $newvals, ["id" => $this->id]);
         return $this;
     }
