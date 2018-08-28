@@ -100,6 +100,10 @@ switch($params["action"]){
         $com = new Community($database);
         echo json_encode($com->GetListOfSeasons());
         break;
+    case "mlist_Offerings":
+        $com = new Community($database);
+        echo json_encode([]);
+        break;
     case "list_seasons_unformatted":
         $com = new Community($database);
         echo json_encode($com->GetListOfSeasons(false));

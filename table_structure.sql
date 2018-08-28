@@ -301,5 +301,31 @@ CREATE TABLE songtags (
 ) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
 
 
+--
+-- Kolehtikohteet
+--
 
+
+CREATE TABLE offering_targets (
+  id int(10) unsigned NOT NULL AUTO_INCREMENT,
+  name varchar(100) DEFAULT NULL,
+  description varchar(9999) DEFAULT NULL,
+  PRIMARY KEY (id)
+);
+
+
+
+--- kolehtitavoitteet
+
+
+CREATE TABLE offering_goals (
+  id int(10) unsigned NOT NULL AUTO_INCREMENT,
+  target_id int(10) unsigned NOT NULL,
+  name varchar(100) DEFAULT NULL,
+  description varchar(9999) DEFAULT NULL,
+  amount decimal(60,2) DEFAULT 0,
+  PRIMARY KEY (id),
+  KEY `target_index` (`target_id`),
+  FOREIGN KEY (`target_id`) REFERENCES `offering_targets` (`id`) ON DELETE CASCADE
+);
 

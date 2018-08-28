@@ -40,7 +40,6 @@ Portal.ManageableLists = function(){
      *
      */
     ListFactory.prototype.LoadList = function(data){
-        console.log(data);
         current_list = this;
         $("#list_editor").hide();
         var path = Utilities.GetAjaxPath("Loader.php");

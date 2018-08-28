@@ -47,6 +47,16 @@ switch($params["action"]){
             $params["params"]["description"]
         );
         break;
+    case "save_added_Offerings":
+        $com= new Community($database);
+        $id = $com->SaveNewOfferingTargets(
+            $params["params"]["target_name"],
+            $params["params"]["target_description"]
+        );
+        if($params["params"]["goals"]){
+            $com->SaveOfferingGoals($id, $params["params"]["goals"]);
+        }
+        break;
     case "remove_responsibility":
         $com= new Community($database);
         $com->RemoveResponsibility($params["responsibility"]);

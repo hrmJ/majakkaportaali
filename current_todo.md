@@ -2,32 +2,26 @@
 Portaali
 --------
 
+- [ ] Kolehtikohteiden hallinta
+- [ ] Kolehtidian lisääminen
 - [ ] "Lisää uusi diaesityksessä näkymätön messun osa"
 - [ ] "Ei sanoja" -laatikko ruksattavaksi
 - [ ] Messukohtaisen näkymän mobiilimenu(n poistaminen)
 - [ ] Messukohtaisen näkymän messulistan lisääminen
 - [ ] Tulostettava biisilista
-- [ ] Ylimääräinen Tallenna-nappi lauluissa, kun service.php iframessa
 - [ ] Laulun rooli näkyvillä dioissa
 - [ ] Rivinvaihdot laulujen säkeistöjen esikatselussa
-- [/] Raamatun kirjojen nimien suomennokset
 - [ ] Raamatunkohdan (osakohdan) poistaminen
 - [ ] Muka tallentamattomia muutoksia yleistiedoissa raamatunkohdan takia
-- [x] Mahdollisuus editoida lauluja muualtakin kuin vain messunäkymästä
-    - ehkä "hallitse lauluja" -alavalikko?
-- [x] Laulun detaljit: Ei aina lataa säveltäjää (??)
-- [x] TÄGIT ja valittavien laulujen rajoitaminen sillä perusteella
-- [x] UUden laulun meta sen jälkeen kun sanat syötetty
 
 Bugit
 -----
 
-- [x] check-merkki, kun lisätty uusi laulu
-- [x] älä luule, että on sanat, kun muutettu nimi uudeksi
 
 Diat
 ----
 
+- [ ] Ylimääräinen Tallenna-nappi lauluissa, kun service.php iframessa
 - [ ] Mahdollisuus  näyttää laulun nimen sijasta laulun rooli
 - [ ] Blank screen
 - [ ] "Älä liikuta esitystä" -moodi
@@ -40,6 +34,7 @@ Diat
 Kaukaisemmat
 ------------
 
+- [/] Raamatun kirjojen nimien suomennokset
 - [ ] Kuvien uploadaus
 - [ ] Kuvien näyttäminen galleriamuodossa
 - [ ] https://pixabay.com/api/docs/

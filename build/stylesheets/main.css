@@ -584,6 +584,9 @@ li.songtags {
   margin-top: 1em;
   list-style-type: none; }
 
+.goal_amount {
+  width: 10em; }
+
 .slidemodel {
   position: relative;
   left: -10px;

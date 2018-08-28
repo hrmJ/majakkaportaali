@@ -244,6 +244,48 @@ class Community{
         return $seasons[0];
     }
 
+
+    /**
+     *
+     * Tallentaa uuden kolehtikohteen
+     *
+     * @param $name kohteen nimi
+     * @param $description kohteen kuvaus
+     * @return uuden kohteen id
+     *
+     */
+    public function SaveNewOfferingTargets($name, $description){
+        $this->con->insert("offering_targets", 
+            ["name"=>$name,"description"=>$description]);  
+        return $this->con->max("offering_targets","id");
+    }
+
+    /**
+     *
+     * Tallentaa kolehtikohteeseen tavoitteita
+     *
+     * @param $id kohteen id
+     * @param $goals taulukko tallennettavista tavoitteista
+     *
+     */
+    public function SaveOfferingGoals($id, $goals){
+        foreach($goals as $goal){
+            $goal_id = $this->con->select("offering_goals",["id"],["name" => $goal["name"]]);
+            $params = [
+                        "name" => $goal["name"],
+                        "amount" => $goal["amount"],
+                        "description" => $goal["description"],
+                        "target_id" => $id,
+                      ];
+            if($existing_data){
+                $this->con->update("offering_goals", $params, ["id" => $goal_id]);
+            }
+            else{
+                $this->con->insert("offering_goals", $params);
+            }
+        }
+    }
+
 }
 
 
