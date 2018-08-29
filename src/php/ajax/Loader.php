@@ -102,7 +102,7 @@ switch($params["action"]){
         break;
     case "mlist_Offerings":
         $com = new Community($database);
-        echo json_encode([]);
+        echo json_encode($com->GetListOfOfferingTargetsAndGoals());
         break;
     case "list_seasons_unformatted":
         $com = new Community($database);

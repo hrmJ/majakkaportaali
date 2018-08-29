@@ -39,7 +39,7 @@ Portal.ManageableLists = function(){
      * Lataa listan datan tietokannasta
      *
      */
-    ListFactory.prototype.LoadList = function(data){
+    ListFactory.prototype.LoadList = function(){
         current_list = this;
         $("#list_editor").hide();
         var path = Utilities.GetAjaxPath("Loader.php");
@@ -59,6 +59,7 @@ Portal.ManageableLists = function(){
      *
      */
     ListFactory.prototype.PrintList = function(data){
+        console.log(data);
        $("#managelist .manageable_list").html("");
        $("#managelist .list_header").text(this.list_header);
        $("#managelist .description").hide();

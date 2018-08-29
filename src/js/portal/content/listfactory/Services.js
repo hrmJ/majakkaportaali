@@ -94,7 +94,7 @@ Portal.ManageableLists.ListFactory.Services = function(){
 
         /**
          *
-         * Tallentaa listätyn messun
+         * Tallentaa lisätyn messun
          *
          */
         this.GetAddedParams = function(){

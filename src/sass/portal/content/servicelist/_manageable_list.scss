@@ -16,7 +16,23 @@
         }
 
     }
+    .mlist_subclass{
+        padding-left:2em;
+        font-size:0.9em;
+        li{
+            list-style-type:initial;
+        }
+        .adder_li{
+            list-style-type:none;
+            @include pointer;
+            text-decoration:underline;
+            font-size:0.8em;
+        }
+    }
+
 }
+
+
 
 .list_editor_box{
     position: absolute;
@@ -59,5 +75,6 @@
 .goal_amount{
     width:10em;
 }
+
 
 

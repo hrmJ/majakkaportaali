@@ -50,6 +50,36 @@ class Community{
     }
 
 
+    /**
+     *
+     * Hakee kaikki käytössä olevat kolehtikohteeet ja palauttaa listan niistä
+     *
+     */
+    public function GetListOfOfferingTargets(){
+        $targets = $this->con->select("offering_targets", ["id","name","description"]);
+        return $targets;
+    }
+
+
+    /**
+     *
+     * Hakee kaikki käytössä olevat kolehtikohteeet ja kuhunkin liittyvät kaikki tavoitteet
+     *
+     */
+    public function GetListOfOfferingTargetsAndGoals(){
+        $targets = $this->GetListOfOfferingTargets();
+        $return_vals = [];
+        foreach($targets as $target){
+            $goals = $this->con->select("offering_goals",
+                ["id","name","description","amount"],
+                ["target_id" => $target["id"]]
+            );
+            $return_vals[] = ["target"=> $target, "goals" => $goals];
+        }
+        return $return_vals;
+    }
+
+
 
     /**
      *

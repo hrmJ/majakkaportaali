@@ -555,6 +555,16 @@ li.songtags {
   margin-top: 0.5em; }
   .manageable_list li * {
     margin-right: 0.4em; }
+.manageable_list .mlist_subclass {
+  padding-left: 2em;
+  font-size: 0.9em; }
+  .manageable_list .mlist_subclass li {
+    list-style-type: initial; }
+  .manageable_list .mlist_subclass .adder_li {
+    list-style-type: none;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 0.8em; }
 
 .list_editor_box {
   position: absolute;

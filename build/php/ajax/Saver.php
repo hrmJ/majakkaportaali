@@ -178,6 +178,10 @@ switch($params["action"]){
     case "save_songtags":
         $songlist = new Songlist($database, 0, $m);
         break;
+    case "add_offering_goal":
+        $com = new Community($database);
+        $com->SaveOfferingGoals($params["target_id"], $params["goals"]);
+        break;
     case "save_edited_meta":
         $songlist = new Songlist($database, 0, $m);
         if($params["meta_type"] == "songtags"){
