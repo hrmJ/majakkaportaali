@@ -767,12 +767,23 @@ Portal.Menus = function(){
     }
 
 
+    /**
+     *
+     * Lisää valintaikkunan tms. sulkevan painikkeen
+     *
+     */
+    function AddCloseButton($parent_el){
+        var $a = $("<a class='boxclose'></a>").click(() => $parent_el.hide());
+        $parent_el.prepend($a);
+    }
+
     return {
         InitializeMenus,
         InitializeFoldMenu,
         GetInitialized,
         menus,
         GetSideMenu,
+        AddCloseButton,
     }
 
 
@@ -2810,7 +2821,8 @@ Portal.ManageableLists = function(){
      * Lataa listan datan tietokannasta
      *
      */
-    ListFactory.prototype.LoadList = function(){
+    ListFactory.prototype.LoadList = function(d){
+        console.log(d);
         current_list = this;
         $("#list_editor").hide();
         var path = Utilities.GetAjaxPath("Loader.php");
@@ -2830,7 +2842,6 @@ Portal.ManageableLists = function(){
      *
      */
     ListFactory.prototype.PrintList = function(data){
-        console.log(data);
        $("#managelist .manageable_list").html("");
        $("#managelist .list_header").text(this.list_header);
        $("#managelist .description").hide();
@@ -2903,6 +2914,7 @@ Portal.ManageableLists = function(){
         $("#list_editor .edit_container").html("");
         $("#list_editor button").remove();
         $("#list_editor").fadeIn();
+        Portal.Menus.AddCloseButton($("#list_editor"));
     };
 
     /**
@@ -3837,6 +3849,12 @@ Portal.ManageableLists.ListFactory = Portal.ManageableLists.ListFactory || {};
 Portal.ManageableLists.ListFactory.Offerings = function(){
 
     this.current_target_id = undefined;
+    this.goal_param_names = [
+                "goal_name",
+                "goal_description",
+                "goal_amount",
+                "goal_id"
+            ];
 
     this.edithtml = `
                     <article>
@@ -3881,20 +3899,55 @@ Portal.ManageableLists.ListFactory.Offerings = function(){
 
     /**
      *
+     * Avaa kolehtitavoitteen muokkaimen joko muokkausta tai uuden lisäämistä varten
+     *
+     * @param ev tapahtuma
+     *
+     */
+    this.OpenGoalEditor = function(ev){
+        if(ev){
+            var $li = $(ev.target).parent();
+            this.current_li = {};
+            $.each(this.goal_param_names, (idx, el) => {
+                this.current_li[el] = $li.find("." + el).val()
+            });
+            this.current_li.target_id = $li.parents("li").find(".target_id").val();
+        };
+        this.OpenBox();
+        $(this.newgoal_html)
+            .removeClass("hidden")
+            .appendTo("#list_editor .edit_container");
+        this.AddAmountSlider();
+    };
+
+    /**
+     *
      * Lisää uuden kolehtitavoitteen nykyisen kohteen alle
      *
      * @param ev tapahtuma
      *
      */
     this.AddGoal = function(ev){
-        this.current_target_id = $(ev.target).parents(".offerings_list").find(".target_id").val();
-        this.OpenBox();
-        $(this.newgoal_html)
-            .removeClass("hidden")
-            .appendTo("#list_editor .edit_container");
-        this.AddAmountSlider();
+        this.OpenGoalEditor(ev);
         this.AddSaveButton(this.SaveAddedGoal.bind(this));
+    }
+
+    /**
+     *
+     * Tallentaa muokatun kolehtitavoitteen
+     *
+     */
+    this.SaveEditedGoal = function(ev){
+        var path = Utilities.GetAjaxPath("Saver.php"),
+            params ={
+                "action" : "edit_offering_goal",
+                "goal_id" : this.current_li.goal_id,
+                "goal_params": this.GetGoalParams()
+            };
+        console.log(params);
+        $.post(path, params, this.LoadList.bind(this));
     };
+
 
     /**
      *
@@ -3905,7 +3958,7 @@ Portal.ManageableLists.ListFactory.Offerings = function(){
         var path = Utilities.GetAjaxPath("Saver.php"),
             params ={
                 "action" : "add_offering_goal",
-                "target_id" : this.current_target_id,
+                "target_id" : this.current_li.target_id,
                 "goals": [this.GetGoalParams()]
             };
         console.log(params);
@@ -3921,12 +3974,17 @@ Portal.ManageableLists.ListFactory.Offerings = function(){
      *
      */
     this.EditGoal = function(ev){
-        console.log(ev);
-        //var path = Utilities.GetAjaxPath("Saver.php");
-        //$.post(path,{
-        //    "action" : "add_offering_goal",
-        //    "target_id" : "add_offering_goal",
-        //});
+        this.OpenGoalEditor(ev);
+        $.each(this.goal_param_names, (idx, el) => {
+            if(el == "goal_amount"){
+                $("#list_editor").find("." + el).slider("value", this.current_li[el]);
+                $("#list_editor").find(".amount_num").text(this.current_li[el]);
+            }
+            else{
+                $("#list_editor").find("." + el).val(this.current_li[el]);
+            }
+        });
+        this.AddSaveButton(this.SaveEditedGoal.bind(this));
     };
 
     /**
@@ -3937,12 +3995,12 @@ Portal.ManageableLists.ListFactory.Offerings = function(){
      *
      */
     this.RemoveGoal = function(ev){
-        console.log(ev);
-        //var path = Utilities.GetAjaxPath("Saver.php");
-        //$.post(path,{
-        //    "action" : "add_offering_goal",
-        //    "target_id" : "add_offering_goal",
-        //});
+        var path = Utilities.GetAjaxPath("Saver.php"),
+            goal_id = $(ev.target).parent().find(".goal_id").val();
+        $.post(path,{
+            "action" : "remove_offering_goal",
+            "goal_id" : goal_id
+        }, this.LoadList.bind(this));
     };
 
 
@@ -3955,23 +4013,24 @@ Portal.ManageableLists.ListFactory.Offerings = function(){
     this.AddListRow = function(raw_data, $li){
         var $ul = $("<ul class='mlist_subclass'></ul>"),
             $plus = $("<li class='adder_li'>Uusi tavoite</li>")
-                .click(this.AddGoal.bind(this)),
-            $edit = $("<i class='fa fa-pencil'></i>")
-                .click(this.EditGoal.bind(this)),
-            $remove = $("<i class='fa fa-trash'></i>")
-                .click(this.RemoveGoal.bind(this));
+                .click(this.AddGoal.bind(this));
         $li.addClass("offerings_list");
         $li.find("span").html(`<strong>${raw_data.target.name}</strong>`);
         $li.append(`<input class='target_id' type='hidden' value=${raw_data.target.id}></input>`);
-        $.each(raw_data.goals, function(idx, goal){
-            $ul.append(`
-                <li> ${goal.name}
-                    <input type='hidden' class='goal_description' value='${goal.description}'></input>
-                    <input type='hidden' class='goal_amount' value='${goal.amount}'></input>
-                    <input type='hidden' class='goal_name' value='${goal.name}'></input>
-                </li>
-                `);
-            $ul.find("li").append($edit).append($remove);
+        $.each(raw_data.goals, (idx, goal) => {
+            var $subli = $(`<li> ${goal.name}
+                        <input type='hidden' class='goal_description' value='${goal.description}'></input>
+                        <input type='hidden' class='goal_amount' value='${goal.amount}'></input>
+                        <input type='hidden' class='goal_name' value='${goal.name}'></input>
+                        <input type='hidden' class='goal_id' value='${goal.id}'></input>
+                        </li>`);
+            $("<i class='fa fa-pencil'></i>")
+                .click(this.EditGoal.bind(this))
+                .appendTo($subli);
+            $("<i class='fa fa-trash'></i>")
+                .click(this.RemoveGoal.bind(this))
+                .appendTo($subli);
+            $subli.appendTo($ul);
         });
         $ul.append($plus).appendTo($li);
         //$li.append(

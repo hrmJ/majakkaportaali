@@ -204,12 +204,23 @@ Portal.Menus = function(){
     }
 
 
+    /**
+     *
+     * Lisää valintaikkunan tms. sulkevan painikkeen
+     *
+     */
+    function AddCloseButton($parent_el){
+        var $a = $("<a class='boxclose'></a>").click(() => $parent_el.hide());
+        $parent_el.prepend($a);
+    }
+
     return {
         InitializeMenus,
         InitializeFoldMenu,
         GetInitialized,
         menus,
         GetSideMenu,
+        AddCloseButton,
     }
 
 

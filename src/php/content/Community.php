@@ -290,6 +290,30 @@ class Community{
         return $this->con->max("offering_targets","id");
     }
 
+
+    /**
+     *
+     * Muokkaa yhtä kolehtikohteen tavoitetta
+     *
+     * @param $goal_id kolehtitavoitteen id
+     * @param $goal_params taulukko tallennettavista parametreista
+     *
+     */
+    public function EditOfferingGoal($goal_id, $goal_params){
+        $this->con->update("offering_goals", $goal_params, ["id" => $goal_id]);
+    }
+
+    /**
+     *
+     * Poistaa yhden kolehtikohteen
+     *
+     * @param $goal_id kolehtitavoitteen id
+     *
+     */
+    public function RemoveOfferingGoal($goal_id){
+        $this->con->delete("offering_goals", ["id" => $goal_id]);
+    }
+
     /**
      *
      * Tallentaa kolehtikohteeseen tavoitteita

@@ -39,7 +39,8 @@ Portal.ManageableLists = function(){
      * Lataa listan datan tietokannasta
      *
      */
-    ListFactory.prototype.LoadList = function(){
+    ListFactory.prototype.LoadList = function(d){
+        console.log(d);
         current_list = this;
         $("#list_editor").hide();
         var path = Utilities.GetAjaxPath("Loader.php");
@@ -59,7 +60,6 @@ Portal.ManageableLists = function(){
      *
      */
     ListFactory.prototype.PrintList = function(data){
-        console.log(data);
        $("#managelist .manageable_list").html("");
        $("#managelist .list_header").text(this.list_header);
        $("#managelist .description").hide();
@@ -132,6 +132,7 @@ Portal.ManageableLists = function(){
         $("#list_editor .edit_container").html("");
         $("#list_editor button").remove();
         $("#list_editor").fadeIn();
+        Portal.Menus.AddCloseButton($("#list_editor"));
     };
 
     /**
