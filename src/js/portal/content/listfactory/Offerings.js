@@ -308,6 +308,11 @@ Portal.ManageableLists.ListFactory.Offerings = function(){
      *
      */
     this.GetRemoveParams = function($li){
+        var params =  {
+            "action" : "remove_offering_target",
+            "target_id" : $li.find(".target_id").val()
+        };
+        return params;
     }
     
 };

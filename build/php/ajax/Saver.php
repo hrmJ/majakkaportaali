@@ -190,6 +190,10 @@ switch($params["action"]){
         $com = new Community($database);
         $com->RemoveOfferingGoal($params["goal_id"]);
         break;
+    case "remove_offering_target":
+        $com = new Community($database);
+        $com->RemoveOfferingTarget($params["target_id"]);
+        break;
     case "save_edited_meta":
         $songlist = new Songlist($database, 0, $m);
         if($params["meta_type"] == "songtags"){

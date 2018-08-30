@@ -140,8 +140,6 @@ Portal.ManageableLists.ListFactory.Services = function(){
                 "action" : "remove_service",
                 "service_id" : $li.find(".id_container").val()
             };
-            console.log(params);
-
             return params;
         }
 

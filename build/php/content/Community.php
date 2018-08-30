@@ -305,13 +305,25 @@ class Community{
 
     /**
      *
-     * Poistaa yhden kolehtikohteen
+     * Poistaa yhden kolehtitavoitteen
      *
      * @param $goal_id kolehtitavoitteen id
      *
      */
     public function RemoveOfferingGoal($goal_id){
         $this->con->delete("offering_goals", ["id" => $goal_id]);
+    }
+
+
+    /**
+     *
+     * Poistaa yhden kolehtikohteen
+     *
+     * @param $target_id kolehtikohteen id
+     *
+     */
+    public function RemoveOfferingTarget($target_id){
+        $this->con->delete("offering_targets", ["id" => $target_id]);
     }
 
     /**
