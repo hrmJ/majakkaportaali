@@ -60,6 +60,19 @@ class Community{
         return $targets;
     }
 
+    /**
+     *
+     * Hakee ko. messun kolehtikohteen tai käyttää oletusta
+     *
+     * @param $service_id messun id
+     *
+     */
+    public function GetCurrentOfferingGoal($service_id){
+        return $this->con->select("collected_offerings",
+            "target_id", ["service_id" => $service_id]);
+
+    }
+
 
     /**
      *

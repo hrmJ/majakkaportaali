@@ -104,6 +104,10 @@ switch($params["action"]){
         $com = new Community($database);
         echo json_encode($com->GetListOfOfferingTargetsAndGoals());
         break;
+    case "get_current_offering_goal":
+        $com = new Community($database);
+        echo json_encode($com->GetCurrentOfferingGoal($params["service_id"]));
+        break;
     case "list_seasons_unformatted":
         $com = new Community($database);
         echo json_encode($com->GetListOfSeasons(false));

@@ -172,6 +172,16 @@ class Service{
                             "id" => $this->id
                         ]);
                     break;
+                case "offerings":
+                    $update_cond =  [
+                        "target_id" => $entry["goal_id"],
+                        "service_id" => $entry["service_id"],
+                    ];
+                    $update_vals = ["amount" => $entry["amount"]];
+                    $this->con->delete("collected_offerings", ["service_id" => $entry["service_id"]]);
+                    $this->con->insert("collected_offerings", 
+                            array_merge($update_vals, $update_cond));
+                    break;
                 case "bible":
                     $this->con->insert("serviceverses", [
                         "service_id" => $this->id,

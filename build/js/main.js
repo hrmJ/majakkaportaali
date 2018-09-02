@@ -2230,6 +2230,7 @@ Portal.Service = function(){
      **/
     TabFactory.prototype.MonitorChanges = function(){
         var $tabheader = $(`.${this.tab_type}_tabheader`);
+        console.log(this.tabdata);
         if(JSON.stringify(this.tabdata) !== JSON.stringify(this.GetTabData())){
             //Jos muutoksia, näytä tallenna-painike ja muutosindikaattorit
             this.$div.find(".save_tab_data").show();
@@ -2321,6 +2322,7 @@ Portal.Service = function(){
             TabFactory.make($(this));
         })
         TabObjects.Details.GetTheme(TabObjects.Details.SetTheme);
+        TabObjects.Details.GetOfferingTargets(TabObjects.Details.SetOfferingTarget);
         TabObjects.Details.GetBibleSegments(TabObjects.Details.SetBibleSegments);
         TabObjects.People.GetResponsibles(TabObjects.People.SetResponsibles);
         TabObjects.Structure.GetStructure(TabObjects.Structure.SetStructure);
@@ -2534,6 +2536,59 @@ Portal.Service.TabFactory.Details = function(){
         this.SetBibleSegmentContent();
     };
 
+
+    /**
+     *
+     * Hakee saatavilla olevat kolehtikohteet  ja luo select-elementin niistä
+     *
+     * @param callback funktio, joka ajetaan kun lataus on valmis
+     *
+     **/
+    this.GetOfferingTargets = function(callback){
+        var path = Utilities.GetAjaxPath("Loader.php"),
+            $sel = $("<select><option>Ei valittu</option></select>");
+        $("#offering_amount").on("change paste keyup",this.MonitorChanges.bind(this));
+        $.getJSON(path,
+            {action: "mlist_Offerings" },
+            (offering_targets) => {
+                $.each(offering_targets, (idx,target)=>{
+                    $(`<optgroup label='${target.target.name}'></optgroup>`)
+                        .append(target.goals.map(
+                            (g) => `<option value='${g.id}'>${g.name}</option>`)
+                        )
+                        .appendTo($sel);
+                }); 
+
+                $sel
+                    .appendTo("#offering_target_select")
+                    .selectmenu()
+                    .on("selectmenuchange",this.MonitorChanges.bind(this));
+                callback();
+            });
+    };
+
+
+    /**
+     *
+     * Asettaa nykyisen kolehtikohteen
+     *
+     *
+     **/
+    this.SetOfferingTarget = function(){
+        //Oletus?
+        var path = Utilities.GetAjaxPath("Loader.php");
+        $.getJSON(path,
+        {
+            "action": "get_current_offering_goal",
+            "service_id": Portal.Service.GetServiceId()
+        },
+            (goal) => {
+                $("#offering_target_select").val(goal);
+            }
+        );
+    };
+
+
     /**
      *
      * Hakee tietokannasta sen, mitä sisältöä raamatunkohtaslotteihin on määritelty
@@ -2593,7 +2648,16 @@ Portal.Service.TabFactory.Details = function(){
      **/
     this.GetTabData = function(){
         var data = [
-                {"type":"theme","value":$("#service_theme").val()}
+                {
+                    type: "theme",
+                    value: $("#service_theme").val()
+                },
+                {
+                    type: "offerings",
+                    goal_id: $("#offering_target_select select").val(),
+                    amount: $("#offering_amount").val(),
+                    service_id: Portal.Service.GetServiceId(),
+                },
             ];
         $.each(this.bible_segments, function(idx, seg){
             $.each(seg.picker_pairs, function(pair_idx, picker_pair){

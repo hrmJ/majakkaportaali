@@ -13,6 +13,7 @@ Portaali
 - [ ] Rivinvaihdot laulujen säkeistöjen esikatselussa
 - [ ] Raamatunkohdan (osakohdan) poistaminen
 - [ ] Muka tallentamattomia muutoksia yleistiedoissa raamatunkohdan takia
+- [ ] tarpeeksi iso muuttujatyyppi collected_offerings-id:hen?
 
 Bugit
 -----

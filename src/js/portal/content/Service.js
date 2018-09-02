@@ -60,6 +60,7 @@ Portal.Service = function(){
      **/
     TabFactory.prototype.MonitorChanges = function(){
         var $tabheader = $(`.${this.tab_type}_tabheader`);
+        console.log(this.tabdata);
         if(JSON.stringify(this.tabdata) !== JSON.stringify(this.GetTabData())){
             //Jos muutoksia, näytä tallenna-painike ja muutosindikaattorit
             this.$div.find(".save_tab_data").show();
@@ -151,6 +152,7 @@ Portal.Service = function(){
             TabFactory.make($(this));
         })
         TabObjects.Details.GetTheme(TabObjects.Details.SetTheme);
+        TabObjects.Details.GetOfferingTargets(TabObjects.Details.SetOfferingTarget);
         TabObjects.Details.GetBibleSegments(TabObjects.Details.SetBibleSegments);
         TabObjects.People.GetResponsibles(TabObjects.People.SetResponsibles);
         TabObjects.Structure.GetStructure(TabObjects.Structure.SetStructure);
