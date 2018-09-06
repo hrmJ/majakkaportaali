@@ -199,6 +199,10 @@ Slides.Presentation = function(){
             this.controls.layoutloader.UpdateStyleSheets();
             this.controls.layoutloader.InitializeEvents();
 
+            // Lopuksi muita ladattavia plugineja
+            Portal.PercentBar.InitializePercentBars(this.d);
+            Portal.PercentBar.UpdateStyles();
+
         };
 
         /**
@@ -263,7 +267,13 @@ Slides.Presentation = function(){
         this.AdjustLayout = function(){
             //Varmista, että tyhjät elementit eivät vie tilaa esityksen kankaalta:
             this.d.find("div,h1,h2,h3,h4,p").each(function(){
-                if($(this).text().trim()=="" && !$(this).find("img").length){
+                if(
+                    $(this).text().trim()=="" && 
+                    !$(this).find("img").length && 
+                    !$(this).hasClass("percent_bar") &&
+                    !$(this).hasClass("denominator") &&
+                    !$(this).hasClass("numerator")
+                ){
                     $(this).hide();
                 } 
             })

@@ -110,6 +110,7 @@ Portal.Service.TabFactory.Details = function(){
                 $.each(offering_targets, (idx,target)=>{
                     $(`<optgroup label='${target.target.name}'></optgroup>`)
                         .append(target.goals.map(
+                            //(g) => `<option value='${g.id}'>${target.target.name}: ${g.name}</option>`)
                             (g) => `<option value='${g.id}'>${g.name}</option>`)
                         )
                         .appendTo($sel);
@@ -139,7 +140,10 @@ Portal.Service.TabFactory.Details = function(){
             "service_id": Portal.Service.GetServiceId()
         },
             (goal) => {
-                $("#offering_target_select").val(goal);
+                console.log(goal);
+                $("#offering_target_select select").val(goal.target_id);
+                $("#offering_target_select select").selectmenu("refresh");
+                $("#offering_amount").val(goal.amount);
             }
         );
     };

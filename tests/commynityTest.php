@@ -102,8 +102,7 @@ class CommunityTest extends TestCase
             ["responsibility" => "TESTIvastuu"]);
         $this->assertEquals($tv, "MOROvaan selitys");
             
-         $inserted = $this->con->insert("collected_offerings", ["amount" => 33, "target_id" => 1, "service_id" => 4]);
-         var_dump($inserted->rowCount());
+        var_dump($community->GetCurrentBalanceForOfferingGoal(12));
     }
 }
 

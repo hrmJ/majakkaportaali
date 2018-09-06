@@ -60,6 +60,23 @@ class Community{
         return $targets;
     }
 
+
+    /**
+     *
+     * Hakee nykyisen rahatilanteen jostakin tietystä kolehtitavoitteesta
+     *
+     * @param $goal_id kolehtitavoitteen id
+     *
+     */
+    public function GetCurrentBalanceForOfferingGoal($goal_id){
+        $goal = $this->con->get("offering_goals", "amount", ["id" => $goal_id]);
+        $current = $this->con->sum("collected_offerings", "amount", ["target_id" => $goal_id]);
+        if(!$current){
+            $current = 0;
+        }
+        return ["current" => $current, "goal" => $goal];
+    }
+
     /**
      *
      * Hakee ko. messun kolehtikohteen tai käyttää oletusta
@@ -68,9 +85,9 @@ class Community{
      *
      */
     public function GetCurrentOfferingGoal($service_id){
-        return $this->con->select("collected_offerings",
-            "target_id", ["service_id" => $service_id]);
-
+        $goal =  $this->con->get("collected_offerings",
+            ["amount","target_id"], ["service_id" => $service_id]);
+        return $goal;
     }
 
 
@@ -175,7 +192,8 @@ class Community{
      * Hakee muita metatietoja
      */
     public function GetListOfServiceMeta(){
-        return ["Messun aihe","Messun päivämäärä"];
+        //TODO: tietokannasta
+        return ["Messun aihe","Messun päivämäärä", "Kolehtitilanne", "Kolehtikohteen kuvaus"];
     }
 
 

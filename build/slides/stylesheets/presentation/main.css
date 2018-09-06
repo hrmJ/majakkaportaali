@@ -193,3 +193,24 @@ body {
 
 .byline p {
   background: none; }
+
+div.pcbar_parent {
+  color: white; }
+
+div.denominator {
+  position: relative;
+  height: 3em;
+  width: 80vw;
+  display: block;
+  border: 1px solid white; }
+
+div.numerator {
+  position: absolute;
+  height: 100%;
+  background: white;
+  display: block; }
+
+div.amounts {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between; }

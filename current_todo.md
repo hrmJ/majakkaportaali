@@ -14,6 +14,10 @@ Portaali
 - [ ] Raamatunkohdan (osakohdan) poistaminen
 - [ ] Muka tallentamattomia muutoksia yleistiedoissa raamatunkohdan takia
 - [ ] tarpeeksi iso muuttujatyyppi collected_offerings-id:hen?
+- [ ] Injectable data tietokannasta? niin että kuvaukset myös saatavilla
+- [ ] Tapahtumien syöttö
+- [ ] Infodian syöttö
+- [ ] Dian Esikatselu
 
 Bugit
 -----

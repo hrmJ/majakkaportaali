@@ -34,7 +34,6 @@ GeneralStructure.InjectableData = function(){
                         }
                     }
                 });
-                console.log(identifier);
                 $.getJSON(path, { "action": "get_list_of_" + identifier },
                     function(data){
                         $.each(data,function(idx,el){ 

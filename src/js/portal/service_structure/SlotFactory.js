@@ -48,7 +48,7 @@ GeneralStructure.SlotFactory = function(){
         slot.header_id = ($header_id ? $header_id.val() : 0);
         slot.previewparams = {segment_type: slot.segment_type};
         slot.previewhtml = "";
-        slot.injectables = {"responsibilities":"vastuu tms.", "service_meta": "pvm tms."};
+        slot.injectables = {"responsibilities":"vastuu tms.", "service_meta": "Yleistietoja messusta"};
         GeneralStructure.DataLoading.Attach(this);
         GeneralStructure.InjectableData.Attach(this);
         GeneralStructure.Headers.Attach(this);

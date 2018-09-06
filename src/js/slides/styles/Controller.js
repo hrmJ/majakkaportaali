@@ -237,6 +237,7 @@ Slides.Styles.Controller = function(){
             }
         });
 
+        Portal.PercentBar.UpdateStyles();
     }
 
 

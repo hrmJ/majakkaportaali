@@ -552,6 +552,7 @@ class Structure{
      *
      **/
     function InjectThisPieceOfData($matches){
+        $com = new Community($this->con);
         if (!array_key_exists($matches[1], $this->injectables)){
             //Jos ei vielä haettu tietokannasta tätä informaatiota
             switch($matches[1]){
@@ -560,6 +561,14 @@ class Structure{
                     break;
                 case "Messun päivämäärä":
                     $value = $this->con->get("services", "servicedate", ["id" => $this->service_id]);
+                    break;
+                case "Kolehtitilanne":
+                    $goal_id = $com->GetCurrentOfferingGoal($this->service_id);
+                    $balance = $com->GetCurrentBalanceForOfferingGoal($goal_id);
+                    $value .= "<div class='percent_bar'>";
+                    $value .= "<input type='hidden' class='numerator' value='{$balance["current"]}'></input>";
+                    $value .= "<input type='hidden' class='denominator' value='{$balance["goal"]}'></input>";
+                    $value .= "</div>";
                     break;
                 default:
                     //JOs ei määritelty mitään spesifimpää, etsi vastuut-taulusta
