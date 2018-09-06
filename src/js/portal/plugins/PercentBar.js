@@ -101,10 +101,13 @@ Portal.PercentBar = function(){
      *
      * Päivittää prosenttipalkkien tyylit oikean värisiksi yms.
      *
+     * TODO: jos useita prosenttipalkkeja samassa esityksessä
+     *
      */
     function UpdateStyles(){
         var pres = Slides.Presentation.GetCurrentPresentation(),
-            cl = pres.$section.attr("class").split(" ")[1],
+            $pbsection = pres.d.find(".percent_bar:eq(0)").parents("section"),
+            cl = $pbsection.attr("class").split(" ")[1],
             rule = pres.styles.GetRule("." + cl + " p"),
             col = rule.cssText.replace(/.*color: ([^;]+).*/, "$1");
 

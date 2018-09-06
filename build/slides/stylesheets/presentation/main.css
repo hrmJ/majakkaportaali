@@ -195,7 +195,8 @@ body {
   background: none; }
 
 div.pcbar_parent {
-  color: white; }
+  color: white;
+  margin-top: 1em; }
 
 div.denominator {
   position: relative;

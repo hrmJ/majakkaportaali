@@ -193,7 +193,11 @@ class Community{
      */
     public function GetListOfServiceMeta(){
         //TODO: tietokannasta
-        return ["Messun aihe","Messun päivämäärä", "Kolehtitilanne", "Kolehtikohteen kuvaus"];
+        return [
+            "Messun aihe", "Messun päivämäärä", 
+            "Kolehtitilanne", "Kolehtikohteen nimi",  "Kolehtikohteen kuvaus",
+            "Kolehtitavoitteen nimi", "Kolehtitavoitteen kuvaus" 
+        ];
     }
 
 

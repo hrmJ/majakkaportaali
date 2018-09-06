@@ -562,6 +562,24 @@ class Structure{
                 case "Messun päivämäärä":
                     $value = $this->con->get("services", "servicedate", ["id" => $this->service_id]);
                     break;
+                case "Kolehtikohteen kuvaus":
+                    $goal_id = $com->GetCurrentOfferingGoal($this->service_id);
+                    $target_id = $this->con->get("offering_goals", "target_id", ["id" => $goal_id]);
+                    $value = $this->con->get("offering_targets", "description", ["id" => $target_id]);
+                    break;
+                case "Kolehtitavoitteen kuvaus":
+                    $goal_id = $com->GetCurrentOfferingGoal($this->service_id);
+                    $value = $this->con->get("offering_goals", "description", ["id" => $goal_id]);
+                    break;
+                case "Kolehtitavoitteen nimi":
+                    $goal_id = $com->GetCurrentOfferingGoal($this->service_id);
+                    $value = $this->con->get("offering_goals", "name", ["id" => $goal_id]);
+                    break;
+                case "Kolehtikohteen nimi":
+                    $goal_id = $com->GetCurrentOfferingGoal($this->service_id);
+                    $target_id = $this->con->get("offering_goals", "target_id", ["id" => $goal_id]);
+                    $value = $this->con->get("offering_targets", "name", ["id" => $target_id]);
+                    break;
                 case "Kolehtitilanne":
                     $goal_id = $com->GetCurrentOfferingGoal($this->service_id);
                     $balance = $com->GetCurrentBalanceForOfferingGoal($goal_id);
