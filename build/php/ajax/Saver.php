@@ -87,17 +87,14 @@ switch($params["action"]){
         break;
     case "save_added_Infos":
     case "save_edited_Infos":
-        $content_id = null;
-        $struct->SaveInfo($params["params"]);
-        unset($params["params"]["service_ids"]);
-        unset($params["params"]["header_id"]);
-        if(isset($params["params"]["content_id"])){
-            $params["id"] = $params["params"]["content_id"];
-            unset($params["params"]["content_id"]);
-        }
-        $params["table"] = "infosegments";
         var_dump($params);
-        //Huom: jatkuu tarkoituksella ilman break:ia
+        if(!$params["params"]["content_id"]){
+            $struct->InsertSlide($params["params"]["segment"], "infosegments");
+        }
+        else{
+            $struct->UpdateSlide($params["params"]["content_id"], "infosegments", $params["params"]["segment"]);
+        }
+        $struct->SaveInfo($params["params"]);
         break;
     case "save_slide":
         if(!$params["id"]){

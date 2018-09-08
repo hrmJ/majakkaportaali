@@ -94,15 +94,15 @@ class Structure{
         $content_id = $params["content_id"];
         $this->table = "infos";
         if(!$content_id){
-            //Jos lisätään kokonaan uusi, oletetaan infosegments-taulusta suurinta seuraava id
-            $content_id = $this->con->max("infosegments", "id") + 1;
+            //Jos lisätään kokonaan uusi, oletetaan infosegments-taulusta suurin (syötetty juuri äsken)
+            $content_id = $this->con->max("infosegments", "id");
         }
         else{
             $this->con->delete("infos",["content_id" => $content_id]);
         }
         foreach($params["service_ids"] as $service_id){
             $this->con->insert("infos", [
-                "slot_name" => $params["header"],
+                "slot_name" => $params["segment"]["header"],
                 "service_id" => $service_id,
                 "content_id" => $content_id,
                 "header_id" => $params["header_id"]

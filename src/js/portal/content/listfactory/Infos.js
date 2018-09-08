@@ -156,11 +156,13 @@ Portal.ManageableLists.ListFactory.Infos = function(){
             this.cancel_save = false;
             $.each($checked, (idx, el) => service_ids.push($(el).val()));
             return {
-                header: $(selector + ".header").val(),
-                //id: this.slide_id,
-                maintext: $(selector + ".maintext").val(),
-                imgname: $(selector + ".img-select").val() || "" ,
-                imgposition: $(selector + ".img-pos-select").val(),
+                segment: {
+                    header: $(selector + ".header").val(),
+                    //id: this.slide_id,
+                    maintext: $(selector + ".maintext").val(),
+                    imgname: $(selector + ".img-select").val() || "" ,
+                    imgposition: $(selector + ".img-pos-select").val(),
+                },
                 header_id: $(selector + "[name='header_select']").val(),
                 service_ids:  service_ids
             };
