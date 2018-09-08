@@ -20,7 +20,7 @@ GeneralStructure.Images = function(){
         source.prototype.AddImageLoader = function(){
             var self = this;
             this.$lightbox.find(".img-select").remove();
-            $.getJSON("php/ajax/Loader.php",
+            return $.getJSON("php/ajax/Loader.php",
                     {"action":"get_slide_image_names"},
                     this.CreateListOfImages.bind(this));
         };

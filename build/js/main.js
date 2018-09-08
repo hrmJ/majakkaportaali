@@ -4255,14 +4255,14 @@ Portal.ManageableLists.ListFactory.Infos = function(){
                     <section>
                             <div class='label-parent some-margin'>
                                 <div>Dian otsikko</div>
-                                <input class='slide_header'></input>
+                                <input class='header'></input>
                             </div>
                             <div class='label-parent some-margin'>
                                 <div>Dian teksti</div>
                                 <textarea class='maintext' placeholder='esim. lauleskellaan yhdessä'></textarea>
                             </div>
                             <h4 class='closed'>Kuva?</h4>
-                            <div class='label-parent some-margin hidden'>
+                            <div class='label-parent some-margin hidden slide-img'>
                                 <div>Kuvatiedosto</div>
                                 <div class='with-preview'>
                                     <div class='img-select-parent'></div>
@@ -4271,7 +4271,7 @@ Portal.ManageableLists.ListFactory.Infos = function(){
                                 <div class="basic-flex">
                                     <div>Kuvan sijainti</div>
                                     <div>
-                                        <select class="img-pos-select">
+                                        <select class="img-pos-select imgposition">
                                             <option value="left">Tekstin vasemmalla puolella</option>
                                             <option value="right">Tekstin oikealla puolella</option>
                                             <option value="top">Tekstin yläpuolella</option>
@@ -4298,6 +4298,16 @@ Portal.ManageableLists.ListFactory.Infos = function(){
          *
          */
         this.AddListRow = function(raw_data, $li){
+            var keys = ["id", "header_id", "header", "imgname", "imgposition", "maintext"];
+            $li.find("span").html(`${raw_data.header}`);
+            console.log(raw_data);
+            $.each(keys, (idx, key) => {
+                $li.append(`<input type='hidden' class='${key}-container' 
+                    value='${raw_data[key]}'></input>`)
+            }
+            );
+            $li.append(`<input type='hidden' class='services-container' 
+                value='${raw_data.services.join(";")}'></input>`);
             return $li;
         }
 
@@ -4308,6 +4318,29 @@ Portal.ManageableLists.ListFactory.Infos = function(){
          *
          */
         this.EditEntry = function(){
+            var selector = "#list_editor .edit_container",
+                keys = ["header", "imgposition", "maintext"],
+                oldval = undefined,
+                service_ids = this.$current_li.find(".services-container").val().split(";");
+            //Header_id-attribuutin asettaminen valitsee automaattisesti oikean ylätunnisteen listasta
+            this.header_id = this.$current_li.find(".header_id-container").val();
+            this.PrintEditOrAdderBox(this.addhtml);
+            //Kuvan lataus vasta kun tietokannasta haku valmis
+            $.when(this.imageloader_added).done(() => {
+                oldval = this.$current_li.find(".imgname-container").val();
+                $(".slide-img .img-select").val(oldval);
+            });
+            //Messujen valinta kun tietokannasta haku valmis
+            $.when(this.servicelist_added).done(() => {
+                $.each(service_ids, (idx, service_id) => {
+                    $(`.service_for_info[value='${service_id}']`).get(0).checked = true;
+                });
+            });
+            //Muut arvot: otsikko, kuvan paikka, teksti
+            $.each(keys, (idx, key) => {
+                oldval = this.$current_li.find("." + key + "-container").val();
+                $(selector + " ."  + key).val(oldval);
+            });
         };
 
 
@@ -4323,13 +4356,13 @@ Portal.ManageableLists.ListFactory.Infos = function(){
             $("#list_editor .edit_container").html("");
             $(htmlstring).appendTo("#list_editor .edit_container");
             this.$lightbox = $("#list_editor");
-            this.AddImageLoader();
+            this.imageloader_added =  this.AddImageLoader();
             $("#list_editor .edit_container h4").click(Portal.Menus.InitializeFoldMenu);
             //$(".datepicker_input").datepicker();
             $("#list_editor .header_settings")
                 .append($("#headertemplate_container > *").clone(true));
             $("#list_editor .header_settings *").show();
-            list.LoadServices(this.PrintSelectableServiceList.bind(this));
+            this.servicelist_added = list.LoadServices(this.PrintSelectableServiceList.bind(this));
         }
 
 
@@ -4345,7 +4378,7 @@ Portal.ManageableLists.ListFactory.Infos = function(){
             $ul.append(
                 services.map((s)=> {
                     return `<li>
-                        <input type='checkbox' value='${s.id}'></input>
+                        <input type='checkbox' class='service_for_info' value='${s.id}'></input>
                         ${s.servicedate}
                     </li>`;
                 })
@@ -4361,7 +4394,7 @@ Portal.ManageableLists.ListFactory.Infos = function(){
          */
         this.GetSlideParams = function(){
             var selector = "#list_editor .edit_container ",
-                $checked = $(selector  + "[type='checkbox']:checked"),
+                $checked = $(selector  + ".service_for_info:checked"),
                 service_ids = [];
             $.each($checked, (idx, el) => service_ids.push($(el).val()));
             return {
@@ -4395,7 +4428,7 @@ Portal.ManageableLists.ListFactory.Infos = function(){
          */
         this.AddEntry = function(){
             this.OpenBox();
-            this.PrintEditOrAdderBox($(this.addhtml));
+            this.PrintEditOrAdderBox(this.addhtml);
             this.AddSaveButton(this.SaveAdded);
         };
 
@@ -5199,7 +5232,7 @@ GeneralStructure.Images = function(){
         source.prototype.AddImageLoader = function(){
             var self = this;
             this.$lightbox.find(".img-select").remove();
-            $.getJSON("php/ajax/Loader.php",
+            return $.getJSON("php/ajax/Loader.php",
                     {"action":"get_slide_image_names"},
                     this.CreateListOfImages.bind(this));
         };

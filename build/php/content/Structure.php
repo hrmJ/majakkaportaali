@@ -49,6 +49,26 @@ class Structure{
     }
 
 
+
+    /**
+     *
+     * Hakee kaikki tietokannassa olevat mainosdiat
+     *
+     */
+    public function GetInfos(){
+        $data = $this->con->query("SELECT DISTINCT
+            infosegments.id, 
+            maintext, header, header_id, imgname, imgposition FROM infosegments 
+                LEFT JOIN infos ON infosegments.id = infos.content_id 
+            WHERE infosegments.id IN (SELECT DISTINCT content_id FROM infos)")
+            ->fetchAll();
+        foreach($data as $idx => $entry){
+            $data[$idx]["services"] = $this->con->select("infos","service_id", ["content_id" => $entry["id"]]);
+        }
+        return $data;
+    }
+
+
     /**
      *
      * Syöttää uuden mainosdian tai päivittää vanhan
@@ -75,6 +95,7 @@ class Structure{
             ]);
         }
     }
+
 
 
 

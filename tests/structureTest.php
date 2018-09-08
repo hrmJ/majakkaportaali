@@ -90,21 +90,21 @@ class StructureTest extends TestCase{
     /**
      * Testaa, että infodian tallentaminen onnistuu
      */
-    public function testSaveInfoSlide()
-    {
-        $struct = new Structure($this->con, $this->m);
-        $params = [
-            "maintext" =>  "Tällanen info nyt sitten!",
-            "header" => "Infoa",
-            "genheader" => NULL,
-            "subgenheader" => NULL,
-            "imgname" => NULL,
-            "imgposition" => "left"
-            ];
-        $struct->UpdateSlide($this->con->max("infosegments","id"), "infosegments", $params);
-        $newinfo = $struct->LoadSlide($this->con->max("infosegments","id"), "infosegments");
-        $this->assertRegExp("/Tällanen info/",$newinfo["maintext"]);
-    }
+#    public function testSaveInfoSlide()
+#    {
+#        $struct = new Structure($this->con, $this->m);
+#        $params = [
+#            "maintext" =>  "Tällanen info nyt sitten!",
+#            "header" => "Infoa",
+#            "genheader" => NULL,
+#            "subgenheader" => NULL,
+#            "imgname" => NULL,
+#            "imgposition" => "left"
+#            ];
+#        $struct->UpdateSlide($this->con->max("infosegments","id"), "infosegments", $params);
+#        $newinfo = $struct->LoadSlide($this->con->max("infosegments","id"), "infosegments");
+#        $this->assertRegExp("/Tällanen info/",$newinfo["maintext"]);
+#    }
 
     /**
      * Testaa, että uuden infodian syöttäminen onnistuu
@@ -219,6 +219,17 @@ class StructureTest extends TestCase{
         $struct->UpdateHeaderTemplate(1,["maintext"=>"TÖTTÖRÖÖ"]);
         $id = $this->con->get("headers","maintext", ["id" => 1]);
         $this->assertTrue($id == "TÖTTÖRÖÖ");
+    }
+
+    /**
+     *
+     * Testaa mainosdiojen lataus
+     *
+     */
+    public function testGetInfos()
+    {
+        $struct = new Structure($this->con, $this->m);
+        $struct->GetInfos();
     }
 
     ///**
