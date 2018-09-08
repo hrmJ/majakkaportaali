@@ -4396,9 +4396,10 @@ Portal.ManageableLists.ListFactory.Infos = function(){
             var selector = "#list_editor .edit_container ",
                 $checked = $(selector  + ".service_for_info:checked"),
                 service_ids = [];
+            this.cancel_save = false;
             $.each($checked, (idx, el) => service_ids.push($(el).val()));
             return {
-                header: $(selector + ".slide_header").val(),
+                header: $(selector + ".header").val(),
                 //id: this.slide_id,
                 maintext: $(selector + ".maintext").val(),
                 imgname: $(selector + ".img-select").val() || "" ,
@@ -4414,7 +4415,6 @@ Portal.ManageableLists.ListFactory.Infos = function(){
          *
          */
         this.GetAddedParams = function(){
-            console.log(this.GetSlideParams());
             return this.GetSlideParams();
         };
 
@@ -4429,7 +4429,24 @@ Portal.ManageableLists.ListFactory.Infos = function(){
         this.AddEntry = function(){
             this.OpenBox();
             this.PrintEditOrAdderBox(this.addhtml);
-            this.AddSaveButton(this.SaveAdded);
+            this.AddSaveButton(this.CheckAndSave);
+        };
+
+
+        /**
+         *
+         * Tarkistaa, että kaikki tarpeellinen on valittu ja käynnistää tallennusprosessin
+         *
+         *
+         */
+        this.CheckAndSave = function(){
+            var params = this.GetSlideParams();
+            if(!params.service_ids.length){
+                alert("Valitsi ainakin yksi messu, jossa infoa näytetään!");
+            }
+            else{
+                this.SaveAdded();
+            }
         };
 
 
@@ -4441,6 +4458,11 @@ Portal.ManageableLists.ListFactory.Infos = function(){
          *
          */
         this.GetRemoveParams = function($li){
+            var params =  {
+                "action" : "remove_info",
+                "content_id" : $li.find(".id-container").val()
+            };
+            return params;
         }
 
 
@@ -4451,6 +4473,8 @@ Portal.ManageableLists.ListFactory.Infos = function(){
          *
          */
         this.GetEditParams = function(){
+            var params =  this.GetSlideParams();
+            params.content_id = this.$current_li.find(".id-container").val();
             return params;
         }
 

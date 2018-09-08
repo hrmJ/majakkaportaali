@@ -69,6 +69,20 @@ class Structure{
     }
 
 
+
+
+    /**
+     *
+     * Poistaa yhden tietyn mainosdian
+     *
+     * @param $content_id dian id infosegments-taulussa
+     *
+     */
+    public function RemoveInfo($content_id){
+        $this->con->delete("infos",["content_id" => $content_id]);
+        $this->con->delete("infosegments",["id" => $content_id]);
+    }
+
     /**
      *
      * Syöttää uuden mainosdian tai päivittää vanhan

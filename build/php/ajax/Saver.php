@@ -63,6 +63,9 @@ switch($params["action"]){
     case "remove_season":
         $com->RemoveSeason($params["season_id"]);
         break;
+    case "remove_info":
+        $struct->RemoveInfo($params["content_id"]);
+        break;
     case "remove_service":
         $com->RemoveService($params["service_id"]);
         break;
@@ -83,18 +86,19 @@ switch($params["action"]){
         $service->SaveSongs($params["data"]);
         break;
     case "save_added_Infos":
+    case "save_edited_Infos":
         $content_id = null;
-        if(isset($params["params"]["content_id"])){
-            $content_id = $params["params"]["content_id"];
-        }
         $struct->SaveInfo($params["params"]);
         unset($params["params"]["service_ids"]);
         unset($params["params"]["header_id"]);
         if(isset($params["params"]["content_id"])){
+            $params["id"] = $params["params"]["content_id"];
             unset($params["params"]["content_id"]);
         }
         $params["table"] = "infosegments";
+        var_dump($params);
         //Huom: jatkuu tarkoituksella ilman break:ia
+        break;
     case "save_slide":
         if(!$params["id"]){
             $struct->InsertSlide($params["params"], $params["table"]);
