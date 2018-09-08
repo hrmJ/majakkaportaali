@@ -51,6 +51,35 @@ class Structure{
 
     /**
      *
+     * Syöttää uuden mainosdian tai päivittää vanhan
+     *
+     * @param $params Assotiatiivinen taulukko dian parametreista
+     *
+     */
+    public function SaveInfo($params){
+        $content_id = $params["content_id"];
+        $this->table = "infos";
+        if(!$content_id){
+            //Jos lisätään kokonaan uusi, oletetaan infosegments-taulusta suurinta seuraava id
+            $content_id = $this->con->max("infosegments", "id") + 1;
+        }
+        else{
+            $this->con->delete("infos",["content_id" => $content_id]);
+        }
+        foreach($params["service_ids"] as $service_id){
+            $this->con->insert("infos", [
+                "slot_name" => $params["header"],
+                "service_id" => $service_id,
+                "content_id" => $content_id,
+                "header_id" => $params["header_id"]
+            ]);
+        }
+    }
+
+
+
+    /**
+     *
      * Tekee rakenteesta messukohtaisen
      *
      * @param $service_id messun id

@@ -107,7 +107,6 @@ Portal.ManageableLists.ListFactory.Infos = function(){
                     </li>`;
                 })
             );
-            console.log($ul.get(0));
             $("#list_editor .selected_services").html("").append($ul);
         }
 
@@ -118,7 +117,10 @@ Portal.ManageableLists.ListFactory.Infos = function(){
          *
          */
         this.GetSlideParams = function(){
-            var selector = "#list_editor .edit_container ";
+            var selector = "#list_editor .edit_container ",
+                $checked = $(selector  + "[type='checkbox']:checked"),
+                service_ids = [];
+            $.each($checked, (idx, el) => service_ids.push($(el).val()));
             return {
                 header: $(selector + ".slide_header").val(),
                 //id: this.slide_id,
@@ -126,7 +128,8 @@ Portal.ManageableLists.ListFactory.Infos = function(){
                 imgname: $(selector + ".img-select").val() || "" ,
                 imgposition: $(selector + ".img-pos-select").val(),
                 header_id: $(selector + "[name='header_select']").val(),
-            }
+                service_ids:  service_ids
+            };
         };
 
         /**
@@ -135,6 +138,7 @@ Portal.ManageableLists.ListFactory.Infos = function(){
          *
          */
         this.GetAddedParams = function(){
+            console.log(this.GetSlideParams());
             return this.GetSlideParams();
         };
 

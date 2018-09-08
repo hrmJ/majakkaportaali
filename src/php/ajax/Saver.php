@@ -35,20 +35,20 @@ $m = new Mustache_Engine(array(
 //DEV: Käytä joko get- tai post-dataa riippuen kutsujasta
 $params = (isset($_GET["action"]) ? $_GET : $_POST);
 
+$struct = new Structure($database, $m);
+$com = new Community($database);
+
 switch($params["action"]){
     case "save_added_Services":
-        $com= new Community($database);
         $com->SaveNewServices($params["params"]["dates"]);
         break;
     case "save_added_Responsibilities":
-        $com= new Community($database);
         $com->SaveNewResponsibility(
             $params["params"]["responsibility"], 
             $params["params"]["description"]
         );
         break;
     case "save_added_Offerings":
-        $com= new Community($database);
         $id = $com->SaveNewOfferingTargets(
             $params["params"]["target_name"],
             $params["params"]["target_description"]
@@ -58,15 +58,12 @@ switch($params["action"]){
         }
         break;
     case "remove_responsibility":
-        $com= new Community($database);
         $com->RemoveResponsibility($params["responsibility"]);
         break;
     case "remove_season":
-        $com= new Community($database);
         $com->RemoveSeason($params["season_id"]);
         break;
     case "remove_service":
-        $com= new Community($database);
         $com->RemoveService($params["service_id"]);
         break;
     case "save_responsibles":
@@ -86,12 +83,19 @@ switch($params["action"]){
         $service->SaveSongs($params["data"]);
         break;
     case "save_added_Infos":
-        #$struct = new Structure($database, $m);
-        #$struct->UpdateSlide($params["id"], $table, $params["params"]);
+        $content_id = null;
+        if(isset($params["params"]["content_id"])){
+            $content_id = $params["params"]["content_id"];
+        }
+        $struct->SaveInfo($params["params"]);
+        unset($params["params"]["service_ids"]);
+        unset($params["params"]["header_id"]);
+        if(isset($params["params"]["content_id"])){
+            unset($params["params"]["content_id"]);
+        }
         $params["table"] = "infosegments";
         //Huom: jatkuu tarkoituksella ilman break:ia
     case "save_slide":
-        $struct = new Structure($database, $m);
         if(!$params["id"]){
             $struct->InsertSlide($params["params"], $params["table"]);
         }
@@ -100,15 +104,12 @@ switch($params["action"]){
         }
         break;
     case "insert_headertemplate":
-        $struct = new Structure($database, $m);
         $struct->InsertHeaderTemplate($params["template_name"]);
         break;
     case "update_headertemplate":
-        $struct = new Structure($database, $m);
         $struct->UpdateHeaderTemplate($params["header_id"], $params["params"]);
         break;
     case "remove_slot":
-        $struct = new Structure($database, $m);
         if($params["service_id"] != 0){
             //tarkoituksella != eikä !==
             $struct->SetAsServiceSpecific($params["service_id"]);
@@ -116,7 +117,6 @@ switch($params["action"]){
         $struct->RemoveSlot($params["id"]);
         break;
     case "save_slot":
-        $struct = new Structure($database, $m);
         $table = "presentation_structure";
         if($params["service_id"] != 0){
             //tarkoituksella != eikä !==
@@ -126,7 +126,6 @@ switch($params["action"]){
         $struct->UpdateSlide($params["id"], $table, $params["params"]);
         break;
     case "add_new_slot":
-        $struct = new Structure($database, $m);
         if($params["service_id"] != 0){
             //tarkoituksella != eikä !==
             $struct->SetAsServiceSpecific($params["service_id"]);
@@ -134,7 +133,6 @@ switch($params["action"]){
         $struct->InsertNewSlot($params["params"]);
         break;
     case "update_slot_order":
-        $struct = new Structure($database, $m);
         if($params["service_id"] != 0){
             //tarkoituksella != eikä !==
             $struct->SetAsServiceSpecific($params["service_id"]);
@@ -168,26 +166,21 @@ switch($params["action"]){
         break;
     case "save_added_Seasons":
     case "save_edited_Seasons":
-        $com = new Community($database);
         $com->SaveSeason($params["params"]["newvals"], $params["params"]["season_id"]);
         break;
     case "save_songtags":
         $songlist = new Songlist($database, 0, $m);
         break;
     case "add_offering_goal":
-        $com = new Community($database);
         $com->SaveOfferingGoals($params["target_id"], $params["goals"]);
         break;
     case "edit_offering_goal":
-        $com = new Community($database);
         $com->EditOfferingGoal($params["goal_id"], $params["goal_params"]);
         break;
     case "remove_offering_goal":
-        $com = new Community($database);
         $com->RemoveOfferingGoal($params["goal_id"]);
         break;
     case "remove_offering_target":
-        $com = new Community($database);
         $com->RemoveOfferingTarget($params["target_id"]);
         break;
     case "save_edited_meta":

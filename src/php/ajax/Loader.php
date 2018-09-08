@@ -105,8 +105,7 @@ switch($params["action"]){
         echo json_encode($com->GetListOfOfferingTargetsAndGoals());
         break;
     case "mlist_Infos":
-        $com = new Community($database);
-        echo json_encode([]);
+        echo json_encode($struct->GetInfos($params["startdate"],$params["enddate"]));
         break;
     case "get_current_offering_goal":
         $com = new Community($database);
