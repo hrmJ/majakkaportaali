@@ -12,7 +12,8 @@ Portal.Servicelist = function(){
     var current_season = {},
         all_seasons = {},
         list_of_services = undefined,
-        manageable_lists = {};
+        manageable_lists = {},
+        current_data_list;
 
 
     /**
@@ -97,12 +98,16 @@ Portal.Servicelist = function(){
          **/
         this.LoadServices = function(callback){
             var path = Utilities.GetAjaxPath("Loader.php");
-                callback = callback || this.Output.bind(this);
+                callback = callback || this.Output.bind(this),
+                self = this;
             return $.getJSON(path,{
                 action: "get_list_of_services",
                 startdate: current_season.startdate,
                 enddate: current_season.enddate,
-                }, callback);
+                }, (data) => {
+                    current_data_list = data;
+                    callback(data);
+                });
         };
 
         /**
@@ -324,6 +329,15 @@ Portal.Servicelist = function(){
     }
 
 
+    /**
+     *
+     * Palauttaa nyt aktiivisena olevan listan taulukkona
+     *
+     **/
+    function GetActiveListAsData(){
+        return current_data_list;
+    }
+
     //Alustetaan eri osiot
     list_of_services = new List();
 
@@ -331,6 +345,7 @@ Portal.Servicelist = function(){
         Initialize,
         List,
         GetCurrentSeason,
+        GetActiveListAsData,
         SetSeasonByCurrentDate
     };
 

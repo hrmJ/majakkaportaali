@@ -27,13 +27,15 @@ $layout = $m->loadTemplate('layout');
 $nav = $m->loadTemplate('servicelist_nav'); 
 $servicelist = $m->loadTemplate('servicelist'); 
 $song_controls = $m->loadTemplate('song_controls'); 
+$slide_models = $m->loadTemplate('slide_models'); 
 
 $page_content = [
     "content" => $servicelist->render(),
     "byline" => "<h2>Messut / kausi</h2>",
     "bodyclass" => "servicelist",
     "nav" => $nav->render(),
-    "song_controls" => $song_controls->render()
+    "song_controls" => $song_controls->render(),
+    "slide_models" => $slide_models->render(),
     ];
 
 echo $layout->render($page_content);

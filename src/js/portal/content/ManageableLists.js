@@ -182,6 +182,8 @@ Portal.ManageableLists = function(){
         list = new ListFactory[list_type]();
         list.list_type = list_type;
         list.list_header = list_header;
+        GeneralStructure.Images.Attach(this);
+        GeneralStructure.Headers.Attach(this);
         return list;
     };
 

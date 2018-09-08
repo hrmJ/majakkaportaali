@@ -85,15 +85,11 @@ switch($params["action"]){
         $service = new Service($database, $params["service_id"]);
         $service->SaveSongs($params["data"]);
         break;
-    case "save_infosegment":
-        $struct = new Structure($database, $m);
-        if(isset($params["id"])){
-            $struct->UpdateSlide($params["id"], "infosegments", $params["params"]);
-        }
-        else{
-            $struct->InsertInfoSlide($params["params"], "infosegments");
-        }
-        break;
+    case "save_added_Infos":
+        #$struct = new Structure($database, $m);
+        #$struct->UpdateSlide($params["id"], $table, $params["params"]);
+        $params["table"] = "infosegments";
+        //Huom: jatkuu tarkoituksella ilman break:ia
     case "save_slide":
         $struct = new Structure($database, $m);
         if(!$params["id"]){

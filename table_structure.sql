@@ -271,6 +271,23 @@ CREATE TABLE service_specific_presentation_structure (
 
 
 --
+-- infodiat messuihin
+--
+
+CREATE TABLE infos (
+  id int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `service_id` int(10) unsigned NOT NULL,
+  slot_name varchar(300) DEFAULT NULL,
+  content_id int(10) unsigned NOT NULL,
+  addedclass varchar(300) DEFAULT '.Infocontent',
+  header_id int(10) DEFAULT NULL,
+  PRIMARY KEY (id)
+) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
+
+
+
+
+--
 -- Table structure for table presentation_content``
 --
 
