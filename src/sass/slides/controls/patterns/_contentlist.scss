@@ -77,6 +77,13 @@
         margin-left:0.4em;
     }
 
+    .info{
+        background: #79b99b;
+        &::before{
+            content: "Info:"
+            margin-right: 0.5em;
+        }
+    }
 
 }
 

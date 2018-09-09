@@ -56,16 +56,12 @@ nav{
     background: lighten($navbg,35%);
     font-size:0.8em;
     justify-content:center;
+    overflow:hidden;
 
     a{
         color:darken($navlink,10%);
         text-decoration:none;
         font-size:0.9em;
-    }
-
-    h4{
-        color:#ffff5e;
-        margin-right:2em;
     }
 
 }

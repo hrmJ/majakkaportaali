@@ -423,6 +423,7 @@ class Structure{
     public function LoadSlidesForPresentation(){
         $infoslots = $this->GetInfoSlots();
         foreach($infoslots as $key => $slot){
+            $slot["addedclass"] .= " event_info_at_beginning";
             $this->AddInfoSegment($slot, $key);
         }
         $slots = $this->GetSlots();

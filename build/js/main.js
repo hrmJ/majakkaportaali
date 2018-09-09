@@ -9710,15 +9710,22 @@ Slides.ContentList = function(parent_presentation){
      */
     this.PrintContentList = function(){
         $("#original-content").html("");
-        var $toc = $("<ul></ul>").prependTo("#original-content");
-        var self = this;
+        var $toc = $("<ul></ul>").prependTo("#original-content"),
+            self = this
+            info_classname = "event_info_at_beginning",
+            number_of_infos = this.pres.d.find("section." + info_classname).length,
+            $li = undefined;
         //Hae kaikki esityksessä olevat osiot ja tee niistä sisällysluettelo
         $.each(this.headings,function(idx, heading){
-            $("<li draggable='true'></li>")
+            $li = $("<li draggable='true'></li>")
             .text(heading)
             .appendTo($toc)
             .attr({"id":"content_" + idx})
             .click(function(){self.MovePresentationToSection($(this));});
+            if(idx < number_of_infos){
+                $li.addClass("info");
+                //Lisätään merkki viimeisestä infodiasta
+            }
         });
         //Lisää raahaamisjärjestelyä varten sisällysluettelon li-elementtien väliin tyhjät li-elementit
         $("<li class='drop-target'>").insertBefore("#original-content li");
