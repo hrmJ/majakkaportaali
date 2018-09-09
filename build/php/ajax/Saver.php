@@ -46,8 +46,10 @@ switch($params["action"]){
         $com->SaveNewSmallgroup($params["params"]);
         break;
     case "save_edited_Smallgroups":
-        var_dump($params);
         $com->SaveEditedSmallgroup($params["params"]["id"], $params["params"]["cols"]);
+        break;
+    case "remove_smallgroup":
+        $com->RemoveSmallGroup($params["id"]);
         break;
     case "save_added_Responsibilities":
         $com->SaveNewResponsibility(

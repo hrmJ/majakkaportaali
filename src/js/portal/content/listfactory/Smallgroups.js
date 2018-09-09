@@ -32,7 +32,7 @@ Portal.ManageableLists.ListFactory.Smallgroups = function(){
                             </select>
                         </div>
                         <div class='label-parent some-margin'>
-                            <div>Kokoontumisaika ja -paikka</div>
+                            <div>Kokoontumispaikka ja kellonaika</div>
                             <input type='text' class='time_and_place'></input>
                         </div>
                         <div class='label-parent some-margin'>
@@ -146,7 +146,7 @@ Portal.ManageableLists.ListFactory.Smallgroups = function(){
         this.GetRemoveParams = function($li){
             var params =  {
                 "action" : "remove_smallgroup",
-                "service_id" : $li.find(".id_container").val()
+                "id" : $li.find(".id-container").val()
             };
             return params;
         }

@@ -238,6 +238,19 @@ class Community{
         $this->con->update("smallgroups", $params, ["id" => $id]);
     }
 
+
+
+    /**
+     *
+     * Poistaa pienryhmän
+     *
+     * @param $id poistettavan ryhmän id
+     *
+     */
+    public function RemoveSmallGroup($id){
+        $this->con->delete("smallgroups", ["id" => $id]);
+    }
+
     /**
      *
      * Tallentaa uuden vastuun
