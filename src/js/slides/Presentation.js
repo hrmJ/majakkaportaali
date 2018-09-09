@@ -232,6 +232,8 @@ Slides.Presentation = function(){
                             slide: (ev, ui) => {
                                 this.looptime = ui.value;
                                 $(".nav_slider .indicator").text(" (" + ui.value/1000 + " s) ");
+                                clearInterval(this.loop_id);
+                                this.LoopSlides(".event_info_at_beginning");
                             }
                         });
             $(".nav_slider").hide();
