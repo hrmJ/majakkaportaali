@@ -9121,11 +9121,21 @@ Slides.Presentation = function(){
      * @param object $section Tällä hetkellä aktiivisena oleva dia
      * @param int service_id tunniste ulkopuolisena diojen lähteenä olevaan messuun
      * @param Array text_levels Mitä eri tekstitasoja esitykessä on käytössä (otsikot, leipäteksti yms.)
+     * @param int looptime kuinka pitkään (ms) oletuksena näytetään luupattavaa diaa
+     * @param integer loop_id luupattavan intervallin id, jota tarvitaan pysäyttämistä varten
+     * @param boolean loop_is_on onko diojen luuppaus päällä
+     * @param Array loopedslides taulukko luuppauksen kohteena olevista dioista
      *
      */
     Presentation = function(){
         this.d = undefined;
         this.dom = undefined;
+
+        this.looptime = 1000;
+        this.loop_is_on = false;
+        this.loop_id = undefined;
+        this.loopedslides = [];
+
         this.service_id = NaN;
         this.$section = $("");
         this.$slide = $("");
@@ -9306,7 +9316,39 @@ Slides.Presentation = function(){
             Portal.PercentBar.InitializePercentBars(this.d);
             Portal.PercentBar.UpdateStyles();
 
+            this.SetControlActions();
+
         };
+
+        /**
+         *
+         * Alustaa diojen hallintaan liittyvän toiminnallisuuden, kun sisältölista ladattu
+         *
+         */
+        this.SetControlActions = function(){
+            $("#infolooplink").click(this.ToggleInfoLoop.bind(this));
+        }
+
+        /**
+         *
+         * Käynnistää infodiojen luuppauksen
+         *
+         * @param ev klikkaustapahtuma
+         *
+         */
+        this.ToggleInfoLoop = function(ev){
+            var current_text = $(ev.target).text(),
+                new_text = (current_text == "Luuppaa infodioja" ?
+                    "Lopeta luuppaus" : "Luuppaa infodioja");
+            $(ev.target).text(new_text);
+            this.loop_is_on = (this.loop_is_on ? false : true);
+            if (this.loop_is_on){
+                this.LoopSlides(".event_info_at_beginning");
+            }
+            else{
+                clearInterval(this.loop_id);
+            }
+        }
 
         /**
          *
@@ -9432,6 +9474,43 @@ Slides.Presentation = function(){
                 this.Activate($target);
                 this.controls.contentlist.HighlightCurrentContents();
             } 
+        };
+
+        /**
+         *
+         * Toistaa tiettyjä dioja  vaihtamalla automaattisesti seuraavaan
+         *
+         * TODO: ota huomioon useasta diasta koostuvat, esim laulut
+         *
+         * @param byclass jos luuppaus tehdään css-luokan perusteella
+         * @param byno jos luuppaus tehdään css-luokan perusteella
+         *
+         */
+        this.LoopSlides = function(byclass, byno){
+            var active_idx = undefined,
+                $target = undefined;
+
+            this.loop_id = setInterval(() => {
+                if(byclass){
+                    sections = this.d.find("section" + byclass);
+                    $.each(sections,(idx, t) => {
+                        if($(t).html() == this.$section.html()){
+                            active_idx = idx;
+                        }
+                    });
+                    if(active_idx !== undefined && (active_idx +1) < sections.length){
+                        //Jos jäljellä luupattavien listassa dioja, siirry seuraavaan
+                        $target = $($(sections[active_idx+1]).find("article:eq(0)"));
+                    }
+                    else{
+                        // Muussa tapauksessa aloita alusta
+                        $target = $($(sections[0]).find("article:eq(0)"));
+                    }
+                    console.log($target);
+                    this.Activate($target);
+                    this.controls.contentlist.HighlightCurrentContents();
+                }
+            }, this.looptime);
         };
 
     };

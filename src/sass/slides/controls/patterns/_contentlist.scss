@@ -80,7 +80,7 @@
     .info{
         background: #79b99b;
         &::before{
-            content: "Info:"
+            content: "Info:";
             margin-right: 0.5em;
         }
     }
