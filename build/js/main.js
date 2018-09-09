@@ -9202,7 +9202,6 @@ Slides.Presentation = function(){
             //Lataa sisältö ulkoisesta lähteestä
             $.when(this.LoadSlides()).done( () => {
                     this.d = $(this.view.document).contents();
-                    console.log(this.d);
                     this.Activate(this.d.find(".current"));
                     ////Käy diat läpi ja poimi kaikki siellä esiintyvät luokat
                     this.LoadSlideClasses();
@@ -9327,6 +9326,17 @@ Slides.Presentation = function(){
          */
         this.SetControlActions = function(){
             $("#infolooplink").click(this.ToggleInfoLoop.bind(this));
+            $("#loop_settings_block")
+                .slider({
+                            min: 0,
+                            max: 15000,
+                            step: 500,
+                            slide: (ev, ui) => {
+                                this.looptime = ui.value;
+                                $(".nav_slider .indicator").text(" (" + ui.value/1000 + " s) ");
+                            }
+                        });
+            $(".nav_slider").hide();
         }
 
         /**
@@ -9341,6 +9351,7 @@ Slides.Presentation = function(){
                 new_text = (current_text == "Luuppaa infodioja" ?
                     "Lopeta luuppaus" : "Luuppaa infodioja");
             $(ev.target).text(new_text);
+            $(".nav_slider").toggle();
             this.loop_is_on = (this.loop_is_on ? false : true);
             if (this.loop_is_on){
                 this.LoopSlides(".event_info_at_beginning");
@@ -9506,7 +9517,6 @@ Slides.Presentation = function(){
                         // Muussa tapauksessa aloita alusta
                         $target = $($(sections[0]).find("article:eq(0)"));
                     }
-                    console.log($target);
                     this.Activate($target);
                     this.controls.contentlist.HighlightCurrentContents();
                 }

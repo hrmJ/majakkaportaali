@@ -23,7 +23,8 @@ nav{
         padding-bottom:1em;
         padding-left:0.4em;
         padding-right:0.4em;
-        display:inline;
+        display:inline-flex;
+        align-items:center;
         list-style-type:none;
     }
 
@@ -33,10 +34,12 @@ nav{
         font-size:0.9em;
     }
 
-    li:hover, li.activetab{
-        background:$navhlbg;
-        a{
-            color:$antinavlink;
+    li:not(.nomenu), li.activetab{
+        &:hover{
+            background:$navhlbg;
+            a{
+                color:$antinavlink;
+            }
         }
     }
 
@@ -64,6 +67,22 @@ nav{
         font-size:0.9em;
     }
 
+}
+
+
+.nav_slider{
+    margin-right: 1em;
+    display:inline-flex;
+    color:white;
+    font-size:0.8em;
+    >div:last-child{
+        margin-left:1em;
+        width:7em;
+    }
+    .indicator{
+        width:3.5em;
+        margin-left:0.4em;
+    }
 }
 
 
