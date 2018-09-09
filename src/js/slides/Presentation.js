@@ -44,6 +44,7 @@ Slides.Presentation = function(){
         this.ToggleOpen = function(){
             var abort = false;
             var wasclosed = false;
+            $(".nav_below").toggle();
             if($("#launchlink").text()=="Sulje esitys"){
                 this.view.close();
                 $("#original-content").html("");

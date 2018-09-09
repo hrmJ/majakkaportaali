@@ -60,6 +60,19 @@ nav {
     nav li.active-menutab a {
       color: black; }
 
+.nav_below {
+  padding-left: 1em;
+  background: gray;
+  font-size: 0.8em;
+  justify-content: center; }
+  .nav_below a {
+    color: #e6e6e6;
+    text-decoration: none;
+    font-size: 0.9em; }
+  .nav_below h4 {
+    color: #ffff5e;
+    margin-right: 2em; }
+
 .menu-close ::before {
   content: "▶"; }
 

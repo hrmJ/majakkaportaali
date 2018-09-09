@@ -102,7 +102,7 @@ Slides.Controls = function(){
     
         $("#service-select").selectmenu();
         $("#service-select").on("selectmenuchange", ShowServiceInPortal);
-        $(".side-menu-left, .side-menu-right").hide();
+        $(".side-menu-left, .side-menu-right, .nav_below").hide();
         $(".addlink").click(OpenMenu);
         $("#launchlink").click(Slides.Presentation.Initialize);
 
@@ -115,6 +115,7 @@ Slides.Controls = function(){
      *
      */
     function OpenMenu(){
+        $(".nav_below").toggle();
         if($(this).parents("ul").hasClass("leftmenu")){
             $(".side-menu-left").toggle();
         }
