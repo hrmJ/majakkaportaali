@@ -56,8 +56,7 @@ Portal.ManageableLists.ListFactory.Infos = function(){
          */
         this.AddListRow = function(raw_data, $li){
             var keys = ["id", "header_id", "header", "imgname", "imgposition", "maintext"];
-            $li.find("span").html(`${raw_data.header}`);
-            console.log(raw_data);
+            $li.find("span").html(raw_data.header);
             $.each(keys, (idx, key) => {
                 $li.append(`<input type='hidden' class='${key}-container' 
                     value='${raw_data[key]}'></input>`)

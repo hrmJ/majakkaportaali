@@ -102,7 +102,6 @@ class CommunityTest extends TestCase
             ["responsibility" => "TESTIvastuu"]);
         $this->assertEquals($tv, "MOROvaan selitys");
             
-        var_dump($community->GetCurrentBalanceForOfferingGoal(12));
     }
 }
 

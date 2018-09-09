@@ -43,8 +43,11 @@ switch($params["action"]){
         $com->SaveNewServices($params["params"]["dates"]);
         break;
     case "save_added_Smallgroups":
-        var_dump($params);
         $com->SaveNewSmallgroup($params["params"]);
+        break;
+    case "save_edited_Smallgroups":
+        var_dump($params);
+        $com->SaveEditedSmallgroup($params["params"]["id"], $params["params"]["cols"]);
         break;
     case "save_added_Responsibilities":
         $com->SaveNewResponsibility(
@@ -91,7 +94,6 @@ switch($params["action"]){
         break;
     case "save_added_Infos":
     case "save_edited_Infos":
-        var_dump($params);
         if(!$params["params"]["content_id"]){
             $struct->InsertSlide($params["params"]["segment"], "infosegments");
         }

@@ -93,6 +93,18 @@ class Community{
 
     /**
      *
+     * Hakee tiedot pienryhmistä
+     *
+     */
+    public function GetListOfSmallGroups(){
+        $groups = $this->con->select("smallgroups", 
+            ["id","name","description","time_and_place","day","resp_name","is_active"]);
+        return $groups;
+    }
+
+
+    /**
+     *
      * Hakee kaikki käytössä olevat kolehtikohteeet ja kuhunkin liittyvät kaikki tavoitteet
      *
      */
@@ -212,6 +224,19 @@ class Community{
         $this->con->insert("smallgroups", $params);
     }
 
+
+
+    /**
+     *
+     * Tallentaa muokatun pienryhmän
+     *
+     * @param $id ryhmän id
+     * @param $params tallennettavat parametrit
+     *
+     */
+    public function SaveEditedSmallgroup($id, $params){
+        $this->con->update("smallgroups", $params, ["id" => $id]);
+    }
 
     /**
      *

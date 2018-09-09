@@ -4299,8 +4299,7 @@ Portal.ManageableLists.ListFactory.Infos = function(){
          */
         this.AddListRow = function(raw_data, $li){
             var keys = ["id", "header_id", "header", "imgname", "imgposition", "maintext"];
-            $li.find("span").html(`${raw_data.header}`);
-            console.log(raw_data);
+            $li.find("span").html(raw_data.header);
             $.each(keys, (idx, key) => {
                 $li.append(`<input type='hidden' class='${key}-container' 
                     value='${raw_data[key]}'></input>`)
@@ -4494,6 +4493,7 @@ Portal.ManageableLists.ListFactory = Portal.ManageableLists.ListFactory || {};
  */
 Portal.ManageableLists.ListFactory.Smallgroups = function(){
 
+        this.keys = ["name", "description", "resp_name", "day", "time_and_place"];
         this.addhtml = (`
                     <section>
                         <div class='label-parent some-margin'>
@@ -4538,6 +4538,14 @@ Portal.ManageableLists.ListFactory.Smallgroups = function(){
          *
          */
         this.AddListRow = function(raw_data, $li){
+            $li.find("span").text(raw_data.name);
+            $.each(this.keys.concat(["id"]), (idx, key) => {
+                $li.append(`<input type='hidden' class='${key}-container' 
+                    value='${raw_data[key]}'></input>`)
+            }
+            );
+            $li.append(`<input type='hidden' class='is_active-container' 
+                value='${raw_data.is_active}'></input>`);
             return $li;
         }
 
@@ -4548,6 +4556,16 @@ Portal.ManageableLists.ListFactory.Smallgroups = function(){
          *
          */
         this.EditEntry = function(){
+            var selector = "#list_editor .edit_container .",
+                checked = this.$current_li.find(".is_active-container").val()*1;
+            this.PrintEditOrAdderBox(this.addhtml);
+            $.each(this.keys, (idx, key) => {
+                oldval = this.$current_li.find("." + key + "-container").val();
+                $(selector + key).val(oldval);
+            });
+            if(checked){
+                $(selector + "is_active").get(0).checked = true;
+            }
         };
 
 
@@ -4571,11 +4589,10 @@ Portal.ManageableLists.ListFactory.Smallgroups = function(){
          */
         this.GetParams = function(){
             var selector = "#list_editor .edit_container .",
-                keys = ["name", "description", "resp_name", "day", "time_and_place"],
                 params = {},
                 is_active = $(selector + "is_active").is(":checked");
-            vals = keys.map((key) => $(selector + key).val());
-            $.each(keys,(idx,el)=>params[el] = vals[idx]);
+            vals = this.keys.map((key) => $(selector + key).val());
+            $.each(this.keys,(idx,el)=>params[el] = vals[idx]);
             params.is_active = (is_active ? 1 : 0);
             return params;
         };
@@ -4627,7 +4644,10 @@ Portal.ManageableLists.ListFactory.Smallgroups = function(){
          *
          */
         this.GetEditParams = function(){
-            return params;
+            return  {
+                 "cols" : this.GetParams(),
+                 "id" : this.$current_li.find(".id-container").val(),
+                }
         }
 
 

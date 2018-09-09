@@ -93,7 +93,8 @@ switch($params["action"]){
         break;
     case "mlist_Events":
     case "mlist_Smallgroups":
-        echo json_encode([]);
+        $com= new Community($database);
+        echo json_encode($com->GetListOfSmallGroups());
         break;
     case "mlist_Responsibilities":
     case "get_list_of_responsibilities":
