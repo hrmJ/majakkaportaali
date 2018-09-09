@@ -279,7 +279,7 @@ CREATE TABLE infos (
   `service_id` int(10) unsigned NOT NULL,
   slot_name varchar(300) DEFAULT NULL,
   content_id int(10) unsigned NOT NULL,
-  addedclass varchar(300) DEFAULT '.Infocontent',
+  addedclass varchar(300) DEFAULT '.Infodia',
   header_id int(10) DEFAULT NULL,
   PRIMARY KEY (id)
 ) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;

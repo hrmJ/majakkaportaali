@@ -80,7 +80,7 @@ bodyvals = collections.OrderedDict([
 
 
 #Oletuksena mukana olevat segmenttityypit:
-default_classes = ["sample", ".Laulu", ".Raamatunteksti", ".Teksti"]
+default_classes = ["sample", ".Laulu", ".Raamatunteksti", ".Teksti", ".Infodia"]
 
 
 for classname in default_classes:

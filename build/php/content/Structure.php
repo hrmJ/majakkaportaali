@@ -172,6 +172,20 @@ class Structure{
         return $slots;
     }
 
+    /**
+     *
+     * Hakee messuun määritellyt info(/mainos)diat
+     *
+     */
+    public function GetInfoSlots(){
+        //HUOM: tässä järjestystä ei määritelty
+        $slots = $this->con->select("infos", 
+            ["slot_name", "content_id", "header_id", "addedclass"],
+            ["service_id" => $this->service_id]);
+
+        return $slots;
+    }
+
 
     /**
      *
@@ -407,9 +421,16 @@ class Structure{
      * 
      */
     public function LoadSlidesForPresentation(){
+        $infoslots = $this->GetInfoSlots();
+        foreach($infoslots as $key => $slot){
+            $this->AddInfoSegment($slot, $key);
+        }
         $slots = $this->GetSlots();
         foreach($slots as $key => $slot){
-            //var_dump($slot["slot_type"]);
+            if(sizeof($infoslots) > 0){
+                //Jos infoja mukana, merkitään ensimmäinen infodia ensimmäiseksi diaksi
+                $key += 99;
+            }
             switch($slot["slot_type"]){
                 case "songsegment":
                     $this->AddSongSegment($slot, $key);
@@ -540,7 +561,7 @@ class Structure{
      * @param Slide $slide Slide-olio, joka representoi lisättävä diaa (laulu, info, raamattu jne.)
      * @param string $addedclass dialle määritelty tyyliluokka
      * @param string $header_id dian ylätunnisteen id
-     * @param Array $slide_idx segmentin järjestysnumero
+     * @param Array $slide_idx segmentin järjestysnumero, jotta tiedetään, mikä dia on ensimmäinen
      *
      */
     public function AddSlide($slide, $addedclass, $header_id, $slide_idx){
