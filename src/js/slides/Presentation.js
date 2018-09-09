@@ -29,7 +29,7 @@ Slides.Presentation = function(){
         this.d = undefined;
         this.dom = undefined;
 
-        this.looptime = 1000;
+        this.looptime = 7500;
         this.loop_is_on = false;
         this.loop_id = undefined;
         this.loopedslides = [];
@@ -229,6 +229,7 @@ Slides.Presentation = function(){
                             min: 0,
                             max: 15000,
                             step: 500,
+                            value: this.looptime,
                             slide: (ev, ui) => {
                                 this.looptime = ui.value;
                                 $(".nav_slider .indicator").text(" (" + ui.value/1000 + " s) ");

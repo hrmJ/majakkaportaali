@@ -42,6 +42,10 @@ switch($params["action"]){
     case "save_added_Services":
         $com->SaveNewServices($params["params"]["dates"]);
         break;
+    case "save_added_Smallgroups":
+        var_dump($params);
+        $com->SaveNewSmallgroup($params["params"]);
+        break;
     case "save_added_Responsibilities":
         $com->SaveNewResponsibility(
             $params["params"]["responsibility"], 

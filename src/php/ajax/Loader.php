@@ -91,6 +91,10 @@ switch($params["action"]){
         $comment= new Comment($database, $params["service_id"], $m);
         echo $comment->LoadAll();
         break;
+    case "mlist_Events":
+    case "mlist_Smallgroups":
+        echo json_encode([]);
+        break;
     case "mlist_Responsibilities":
     case "get_list_of_responsibilities":
         $com= new Community($database);

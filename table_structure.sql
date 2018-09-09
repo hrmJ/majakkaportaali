@@ -360,3 +360,19 @@ CREATE TABLE collected_offerings (
   KEY `service_index` (`service_id`),
   FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON DELETE CASCADE
 );
+
+
+
+--- Pienryhmien tiedot
+
+
+CREATE TABLE smallgroups (
+  id int(10) unsigned NOT NULL AUTO_INCREMENT,
+  name varchar(100) DEFAULT NULL,
+  description varchar(9999) DEFAULT NULL,
+  resp_name varchar(100) DEFAULT NULL,
+  day varchar(100) DEFAULT NULL,
+  time_and_place varchar(400) DEFAULT NULL,
+  is_active boolean DEFAULT false,
+  PRIMARY KEY (id)
+);

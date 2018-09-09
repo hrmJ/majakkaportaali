@@ -203,6 +203,18 @@ class Community{
 
     /**
      *
+     * Tallentaa uuden pienryhmän
+     *
+     * @param $params tauluun syötettävät arvot (associative array)
+     *
+     */
+    public function SaveNewSmallgroup($params){
+        $this->con->insert("smallgroups", $params);
+    }
+
+
+    /**
+     *
      * Tallentaa uuden vastuun
      *
      * @param $responsibility vastuun nimi
