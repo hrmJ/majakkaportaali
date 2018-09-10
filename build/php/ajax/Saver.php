@@ -42,6 +42,15 @@ switch($params["action"]){
     case "save_added_Services":
         $com->SaveNewServices($params["params"]["dates"]);
         break;
+    case "save_added_Events":
+        $com->SaveNewEvent($params["params"]);
+        break;
+    case "save_edited_Events":
+        $com->SaveEditedEvent($params["params"]["id"], $params["params"]["cols"]);
+        break;
+    case "remove_event":
+        $com->RemoveEvent($params["id"]);
+        break;
     case "save_added_Smallgroups":
         $com->SaveNewSmallgroup($params["params"]);
         break;

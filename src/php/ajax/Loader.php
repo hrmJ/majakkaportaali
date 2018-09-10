@@ -92,6 +92,9 @@ switch($params["action"]){
         echo $comment->LoadAll();
         break;
     case "mlist_Events":
+        $com= new Community($database);
+        echo json_encode($com->GetListOfEvents());
+        break;
     case "mlist_Smallgroups":
         $com= new Community($database);
         echo json_encode($com->GetListOfSmallGroups());

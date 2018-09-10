@@ -285,6 +285,20 @@ CREATE TABLE infos (
 ) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
 
 
+--
+-- muita kuin messuja olevat tapahtumat
+--
+
+CREATE TABLE events (
+  id int(10) unsigned NOT NULL AUTO_INCREMENT,
+  name varchar(300) DEFAULT NULL,
+  place_and_time varchar(300) DEFAULT NULL,
+  description varchar(5000) DEFAULT NULL,
+  event_date date DEFAULT NULL,
+  has_songs boolean DEFAULT false,
+  PRIMARY KEY (id)
+) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
+
 
 
 --

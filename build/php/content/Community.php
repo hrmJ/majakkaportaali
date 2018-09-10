@@ -93,6 +93,20 @@ class Community{
 
     /**
      *
+     * Hakee tiedot tapahtumista
+     *
+     */
+    public function GetListOfEvents(){
+        $groups = $this->con->select("events", 
+            ["id","name","description","place_and_time","event_date","has_songs"]
+        );
+        return $groups;
+    }
+
+
+
+    /**
+     *
      * Hakee tiedot pienryhmistä
      *
      */
@@ -228,6 +242,32 @@ class Community{
 
     /**
      *
+     * Tallentaa uuden tapahtuman
+     *
+     * @param $params tauluun syötettävät arvot (associative array)
+     *
+     */
+    public function SaveNewEvent($params){
+        $this->con->insert("events", $params);
+    }
+
+
+    /**
+     *
+     * Tallentaa muokatun tapahtuman
+     *
+     * @param $id tapahtuman id
+     * @param $params tallennettavat parametrit
+     *
+     */
+    public function SaveEditedEvent($id, $params){
+        $this->con->update("events", $params, ["id" => $id]);
+    }
+
+
+
+    /**
+     *
      * Tallentaa muokatun pienryhmän
      *
      * @param $id ryhmän id
@@ -238,6 +278,18 @@ class Community{
         $this->con->update("smallgroups", $params, ["id" => $id]);
     }
 
+
+
+    /**
+     *
+     * Poistaa tapahtuman
+     *
+     * @param $id poistettavan tapahtuman id
+     *
+     */
+    public function RemoveEvent($id){
+        $this->con->delete("events", ["id" => $id]);
+    }
 
 
     /**
