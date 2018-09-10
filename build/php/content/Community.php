@@ -96,9 +96,11 @@ class Community{
      * Hakee tiedot tapahtumista
      *
      */
-    public function GetListOfEvents(){
+    public function GetListOfEvents($id=null){
+        $cond = ($id ? ["id" => $id] : []);
         $groups = $this->con->select("events", 
-            ["id","name","description","place_and_time","event_date","has_songs"]
+            ["id","name","description","place_and_time","event_date","has_songs"],
+            $cond
         );
         return $groups;
     }

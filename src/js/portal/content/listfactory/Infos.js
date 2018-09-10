@@ -18,6 +18,9 @@ Portal.ManageableLists.ListFactory.Infos = function(){
                                 <div>Dian teksti</div>
                                 <textarea class='maintext' placeholder='esim. lauleskellaan yhdessä'></textarea>
                             </div>
+                            <h4 class='closed'>Käytä pohjana tapahtumaa</h4>
+                            <div class='label-parent some-margin hidden event_list'>
+                            </div>
                             <h4 class='closed'>Kuva?</h4>
                             <div class='label-parent some-margin hidden slide-img'>
                                 <div>Kuvatiedosto</div>
@@ -89,7 +92,9 @@ Portal.ManageableLists.ListFactory.Infos = function(){
             //Messujen valinta kun tietokannasta haku valmis
             $.when(this.servicelist_added).done(() => {
                 $.each(service_ids, (idx, service_id) => {
-                    $(`.service_for_info[value='${service_id}']`).get(0).checked = true;
+                    if($(`.service_for_info[value='${service_id}']`).length){
+                        $(`.service_for_info[value='${service_id}']`).get(0).checked = true;
+                    }
                 });
             });
             //Muut arvot: otsikko, kuvan paikka, teksti
@@ -108,7 +113,9 @@ Portal.ManageableLists.ListFactory.Infos = function(){
          *
          */
         this.PrintEditOrAdderBox = function(htmlstring){
-            var list = new Portal.Servicelist.List();
+            var list = new Portal.Servicelist.List(),
+                path = Utilities.GetAjaxPath("Loader.php"),
+                $sel = $("<select><option value=''>Ei tapahtumaa</option></select>");
             $("#list_editor .edit_container").html("");
             $(htmlstring).appendTo("#list_editor .edit_container");
             this.$lightbox = $("#list_editor");
@@ -119,8 +126,14 @@ Portal.ManageableLists.ListFactory.Infos = function(){
                 .append($("#headertemplate_container > *").clone(true));
             $("#list_editor .header_settings *").show();
             this.servicelist_added = list.LoadServices(this.PrintSelectableServiceList.bind(this));
-        }
-
+            $.getJSON(path, {"action" : "mlist_Events"}, (data) => {
+                $sel
+                    .append(data.map((e) => `<option value='${e.id}'>${e.name}</option>`))
+                    .appendTo("#list_editor .event_list");
+                $sel.selectmenu();
+                $sel.on("selectmenuchange", this.GetDataFromEvent.bind(this));
+            });
+        };
 
         /**
          *
@@ -236,6 +249,32 @@ Portal.ManageableLists.ListFactory.Infos = function(){
             return params;
         }
 
+        /**
+         *
+         * Hakee infon pohjaksi tiedot tapahtumasta
+         *
+         */
+        this.GetDataFromEvent = function(ev_id){
+            var id = $("#list_editor .event_list select").val(),
+                path = Utilities.GetAjaxPath("Loader.php"),
+                text = "",
+                event_date = undefined;
+            if(id){
+                $.getJSON(path,
+                    {
+                    "action" : "get_event_details",
+                    "id" : id
+                    }, (data) => {
+                        data = data[0];
+                        event_date = $.datepicker.parseDate("yy-mm-dd", data.event_date);
+                        event_date = $.datepicker.formatDate('dd.mm', event_date);
+                        text += data.description + " " + event_date +  " " + data.place_and_time;
+                        $("#list_editor .maintext").val(text);
+                        $("#list_editor .header").val(data.name);
+                    }
+                );
+            }
+        }
 
 };
 
