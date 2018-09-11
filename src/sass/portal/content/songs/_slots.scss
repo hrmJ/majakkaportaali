@@ -17,7 +17,9 @@
     width:100%;
     display:flex;
     flex-direction:column;
-    margin: 1em auto 1em auto;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    max-width:30em;
     border-radius:10px;
     border:1px solid #a7a7a7;
     padding:1em;

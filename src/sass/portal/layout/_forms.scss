@@ -1,3 +1,26 @@
+button {
+  background: lighten($navbg, 20%);
+  -webkit-border-radius: 9px;
+  -moz-border-radius: 9px;
+  border-radius: 9px;
+  font-family: $roboto;
+  color: #ffffff;
+  font-size: 0.8em;
+  padding: 7px 6px 7px 6px;
+  text-decoration: none;
+  border:0;
+
+  &:hover{
+      @include pointer;
+      background: #ffffff;
+      border: 1px solid lighten($navbg, 20%);
+      color: lighten($navbg, 20%);
+  }
+}
+
+
+
+
 .form-input-container{
     select{
         width:100%;
@@ -7,9 +30,21 @@
 div + .form-input-container{
     margin-top:2em;
 }
+.my-lightbox{
+    button{
+        font-size:0.6em;
+    
+    }
+
+}
+
+.save_tab_data{
+    margin-top:1em;
+}
 
 
 @media only screen and (min-width: 920px){
     .form-input-container{
     }
 }
+

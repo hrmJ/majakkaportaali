@@ -145,7 +145,7 @@ Portal.Menus = function(){
      **/
     function OpenDropDown(){
         var $child = $(this).find(".menu-child, .menu-child-upper");
-        $child.css({"top": $(this).height() + "px"});
+        $child.css({"top": $(this).height() - 5 + "px"});
         if($(this).hasClass("active-menu")){
             $child.slideUp(() => $(this).removeClass("active-menu"));
         }

@@ -26,7 +26,7 @@ Portal.Servicelist = function(){
     function LoadListOfRoles(){
         var path = Utilities.GetAjaxPath("Loader.php"),
             $list = $(".menu-parent:visible .show-options").html(""),
-            $header_li = $("<li>yleisnäkymä</li>")
+            $header_li = $("<li><span>yleisnäkymä</span></li>")
                 .click(list_of_services.LoadServicesClean.bind(list_of_services))
                 .appendTo($list),
             cl = 'class="launch-action"',
@@ -34,7 +34,7 @@ Portal.Servicelist = function(){
                 {
                     action: "get_list_of_responsibilities"
                 }, 
-                (resps) =>  $list.append(resps.map((resp) => `<li ${cl}>${resp}</li>`))
+                (resps) =>  $list.append(resps.map((resp) => `<li ${cl}><span>${resp}</span></li>`))
             );
 
         $.when(promise).done(() => {
@@ -155,7 +155,7 @@ Portal.Servicelist = function(){
                 thismonth = service.servicedate.replace(/\d+\.(\d+)\.\d+/g,"$1") * 1 ;
                 if (thismonth != prevmonth){
                     prevmonth = thismonth;
-                    $("#servicelist").append(`<li>${MonthName(thismonth)}</li>`);
+                    $("#servicelist").append(`<li class='monthname'>${MonthName(thismonth)}</li>`);
                 }
                 var $li = $(`<li class='service_link_li' id="service_id_${service.id}">
                     <span>${service.servicedate}</span>

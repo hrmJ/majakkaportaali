@@ -16,8 +16,8 @@ GeneralStructure.LightBox = function(){
          *  Näytä ikkuna, jossa käyttäjä voi muokata messun rakenteeseen lisättävää diaa
          */
         source.prototype.ShowWindow = function(){
-            var self = this
-            var $buttons = $("<div class='button-container'>")
+            var self = this,
+                $buttons = $("<div class='button-container'>");
             $("<button>Sulje tallentamatta</button>")
                 .click(function(){ 
                         self.$lightbox.html("").hide();

@@ -16,9 +16,11 @@
 
 //sisältösivut (service-sivun välilehdet)
 @import 'content/songs/slots';
+@import 'content/service/tabs';
 @import 'content/songs/lyrics';
 @import 'content/songs/lyrics_dragging';
 @import 'content/servicelist/manageable_list';
+@import 'content/servicelist/general_view';
 
 //Rakennesivut
 @import 'structure/slidemodels';

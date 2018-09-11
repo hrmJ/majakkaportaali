@@ -7,6 +7,24 @@
     }
 }
 
+.navcorner {
+
+    margin-left:0.5em;
+    margin-right:1.1em;
+
+    .fa{
+        color:white;
+        font-size:1.2em;
+    }
+    a {
+        color:white;
+
+        &:visited, &:active{
+            color:white;
+        }
+    }
+}
+
 
 nav{
     position:relative;
@@ -55,22 +73,30 @@ nav{
             }
         }
     }
+
+
     .menu-child-upper{
                 @include bottomshadow;
                 display:none;
                 position: absolute;
                 margin-left:0;
                 left:0;
-                min-width:7em;
+                min-width:9em;
                 padding-left:0px;
                 padding-right:0px;
                 background: darken($navfg,10%);
                 color: $navbg;
                 margin-top: 0px;
                 z-index:200;
+
+                border-top-left-radius: 0px;
+                border-top-right-radius: 5px;
+                border-bottom-right-radius: 5px;
+                border-bottom-left-radius: 5px;
+
                 li{
-                    height:2em;
-                    padding-left:3px;
+                    height:2.7em;
+                    padding-left:0em;
                     display:flex;
                     align-items:center;
                     &:hover{
@@ -85,11 +111,28 @@ nav{
 
     .menu-child{
         font-size:0.9em;
+        padding-left:1em;
         li{
+            height:1.4em;
+            padding-left:0em;
             margin-top:0.8em;
         }
     }
 
+    .menu-child, .menu-child-upper{
+
+        li span {
+            padding-left:0.6em;
+            padding-right:0.3em;
+        }
+    }
+
+   // .portal_logo{
+   //     width:20px;
+   //     height:$navheight;
+   //     background: url(../assets/images/icons/majakka_logo.png)
+
+   // }
 
 }
 
@@ -197,21 +240,27 @@ a i {
             position:relative;
         }
 
+
         .menu-child, .menu-child-upper{
             @include bottomshadow;
             position: absolute;
             margin-left:0;
             left:0;
-            min-width:7em;
-            padding-left:0px;
+            min-width:9em;
             padding-right:0px;
+            padding-left:0em;
             background: darken($navfg,10%);
             color: $navbg;
             z-index:200;
+            border-top-left-radius: 0px;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+            border-bottom-left-radius: 5px;
+
             li{
                 height:2em;
-                padding-left:3px;
                 display:flex;
+                padding-left:0em;
                 align-items:center;
                 &:hover{
                     background:$navbg;
@@ -234,7 +283,7 @@ a i {
             display:inline-flex;
             align-items:center;
             margin-left: 10px;
-            //min-width:7em;
+            //min-width:9em;
             padding-left:2px;
             padding-right:2px;
 

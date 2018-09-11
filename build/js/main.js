@@ -708,7 +708,7 @@ Portal.Menus = function(){
      **/
     function OpenDropDown(){
         var $child = $(this).find(".menu-child, .menu-child-upper");
-        $child.css({"top": $(this).height() + "px"});
+        $child.css({"top": $(this).height() - 5 + "px"});
         if($(this).hasClass("active-menu")){
             $child.slideUp(() => $(this).removeClass("active-menu"));
         }
@@ -3080,7 +3080,7 @@ Portal.Servicelist = function(){
     function LoadListOfRoles(){
         var path = Utilities.GetAjaxPath("Loader.php"),
             $list = $(".menu-parent:visible .show-options").html(""),
-            $header_li = $("<li>yleisnäkymä</li>")
+            $header_li = $("<li><span>yleisnäkymä</span></li>")
                 .click(list_of_services.LoadServicesClean.bind(list_of_services))
                 .appendTo($list),
             cl = 'class="launch-action"',
@@ -3088,7 +3088,7 @@ Portal.Servicelist = function(){
                 {
                     action: "get_list_of_responsibilities"
                 }, 
-                (resps) =>  $list.append(resps.map((resp) => `<li ${cl}>${resp}</li>`))
+                (resps) =>  $list.append(resps.map((resp) => `<li ${cl}><span>${resp}</span></li>`))
             );
 
         $.when(promise).done(() => {
@@ -3209,7 +3209,7 @@ Portal.Servicelist = function(){
                 thismonth = service.servicedate.replace(/\d+\.(\d+)\.\d+/g,"$1") * 1 ;
                 if (thismonth != prevmonth){
                     prevmonth = thismonth;
-                    $("#servicelist").append(`<li>${MonthName(thismonth)}</li>`);
+                    $("#servicelist").append(`<li class='monthname'>${MonthName(thismonth)}</li>`);
                 }
                 var $li = $(`<li class='service_link_li' id="service_id_${service.id}">
                     <span>${service.servicedate}</span>
@@ -5272,8 +5272,8 @@ GeneralStructure.LightBox = function(){
          *  Näytä ikkuna, jossa käyttäjä voi muokata messun rakenteeseen lisättävää diaa
          */
         source.prototype.ShowWindow = function(){
-            var self = this
-            var $buttons = $("<div class='button-container'>")
+            var self = this,
+                $buttons = $("<div class='button-container'>");
             $("<button>Sulje tallentamatta</button>")
                 .click(function(){ 
                         self.$lightbox.html("").hide();

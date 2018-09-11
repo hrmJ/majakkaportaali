@@ -1,3 +1,11 @@
+.my-lightbox input[type='text']{
+    outline: none;
+    border: none;
+    border-bottom: 1px dashed lighten($navbg,32%);
+    font-family: $inputfont;
+    color: darken($datarowbg, 40%);
+}
+
 .editable_data_list{
     // li-elementit, joiden toisena osana muokattavat tiedot
     padding:0;
@@ -44,11 +52,12 @@
     display:flex;
     flex-flow: row wrap;
     align-items:center;
-    justify-content: space-between;
+    //justify-content: space-between;
 
     > div:first-child{
         width:6em;
         margin-right:1em;
+        margin-bottom:0.5em; //wrapped items
     }
 
     & + & {

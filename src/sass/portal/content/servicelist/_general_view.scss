@@ -1,0 +1,40 @@
+
+// The general list of services containing links to individual services
+
+.monthly_list {
+    padding-left:1.5em;
+}
+
+.service_link_li{
+
+    padding:0.2em;
+    border-radius:5px;
+
+    &:hover{
+        @include pointer;
+        background: lighten($navbg, 30%);
+        color:#ffffff;
+        >span:first-child{
+            color:#ffffff;
+        }
+    }
+
+    span{
+        font-size:0.95em;
+    }
+
+    >span:first-child{
+        width:5em;
+        margin-right: 0.5em;
+        font-style:italic;
+        color: darken($datarowbg, 30%);
+    }
+
+    >span:nth-child(2){
+    }
+
+}
+
+.monthname {
+    font-weight:bold;
+}

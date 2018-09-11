@@ -30,7 +30,7 @@ main {
   main > * {
     width: 100%;
     display: flex;
-    justify-content: center; }
+    justify-content: left; }
 
 #tabs {
   border: none;
@@ -116,6 +116,17 @@ main {
   .covermenu a:visited {
     color: #404040; }
 
+.navcorner {
+  margin-left: 0.5em;
+  margin-right: 1.1em; }
+  .navcorner .fa {
+    color: white;
+    font-size: 1.2em; }
+  .navcorner a {
+    color: white; }
+    .navcorner a:visited, .navcorner a:active {
+      color: white; }
+
 nav {
   position: relative;
   height: 40px;
@@ -149,32 +160,42 @@ nav {
       nav li a i {
         color: #ffffff; }
   nav .menu-child-upper {
-    -moz-box-shadow: -2px 6px 3px 4px #5f5f5f;
-    -webkit-box-shadow: -2px 6px 3px 4px #5f5f5f;
-    box-shadow: -2px 6px 3px 4px #5f5f5f;
+    -moz-box-shadow: -2px 8px 3px 4px #5f5f5f;
+    -webkit-box-shadow: -2px 8px 3px 4px #5f5f5f;
+    box-shadow: -2px 8px 3px 4px #5f5f5f;
     display: none;
     position: absolute;
     margin-left: 0;
     left: 0;
-    min-width: 7em;
+    min-width: 9em;
     padding-left: 0px;
     padding-right: 0px;
     background: #e6e6e6;
     color: #262626;
     margin-top: 0px;
-    z-index: 200; }
+    z-index: 200;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px; }
     nav .menu-child-upper li {
-      height: 2em;
-      padding-left: 3px;
+      height: 2.7em;
+      padding-left: 0em;
       display: flex;
       align-items: center; }
       nav .menu-child-upper li:hover {
         background: #262626;
         color: #ffffff; }
   nav .menu-child {
-    font-size: 0.9em; }
+    font-size: 0.9em;
+    padding-left: 1em; }
     nav .menu-child li {
+      height: 1.4em;
+      padding-left: 0em;
       margin-top: 0.8em; }
+  nav .menu-child li span, nav .menu-child-upper li span {
+    padding-left: 0.6em;
+    padding-right: 0.3em; }
 
 @media only screen and (max-width: 920px) {
   .sidemenu-launcher {
@@ -256,22 +277,26 @@ a i {
   nav .menu-parent {
     position: relative; }
   nav .menu-child, nav .menu-child-upper {
-    -moz-box-shadow: -2px 6px 3px 4px #5f5f5f;
-    -webkit-box-shadow: -2px 6px 3px 4px #5f5f5f;
-    box-shadow: -2px 6px 3px 4px #5f5f5f;
+    -moz-box-shadow: -2px 8px 3px 4px #5f5f5f;
+    -webkit-box-shadow: -2px 8px 3px 4px #5f5f5f;
+    box-shadow: -2px 8px 3px 4px #5f5f5f;
     position: absolute;
     margin-left: 0;
     left: 0;
-    min-width: 7em;
-    padding-left: 0px;
+    min-width: 9em;
     padding-right: 0px;
+    padding-left: 0em;
     background: #e6e6e6;
     color: #262626;
-    z-index: 200; }
+    z-index: 200;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px; }
     nav .menu-child li, nav .menu-child-upper li {
       height: 2em;
-      padding-left: 3px;
       display: flex;
+      padding-left: 0em;
       align-items: center; }
       nav .menu-child li:hover, nav .menu-child-upper li:hover {
         background: #262626;
@@ -304,11 +329,34 @@ a i {
 a .fa-arrow-left {
   margin-right: 0.7em; }
 
+button {
+  background: #595959;
+  -webkit-border-radius: 9px;
+  -moz-border-radius: 9px;
+  border-radius: 9px;
+  font-family: "Roboto", sans-serif;
+  color: #ffffff;
+  font-size: 0.8em;
+  padding: 7px 6px 7px 6px;
+  text-decoration: none;
+  border: 0; }
+  button:hover {
+    cursor: pointer;
+    background: #ffffff;
+    border: 1px solid #595959;
+    color: #595959; }
+
 .form-input-container select {
   width: 100%; }
 
 div + .form-input-container {
   margin-top: 2em; }
+
+.my-lightbox button {
+  font-size: 0.6em; }
+
+.save_tab_data {
+  margin-top: 1em; }
 
 .songs .innercontent {
   flex-flow: row;
@@ -358,6 +406,13 @@ h3 {
   color: white;
   font-family: "Amatic SC", cursive; }
 
+.my-lightbox input[type='text'] {
+  outline: none;
+  border: none;
+  border-bottom: 1px dashed #787878;
+  font-family: "Josefin Slab", sans-serif;
+  color: #747474; }
+
 .editable_data_list {
   padding: 0; }
   .editable_data_list input {
@@ -383,11 +438,11 @@ h3 {
 .label_parent {
   display: flex;
   flex-flow: row wrap;
-  align-items: center;
-  justify-content: space-between; }
+  align-items: center; }
   .label_parent > div:first-child {
     width: 6em;
-    margin-right: 1em; }
+    margin-right: 1em;
+    margin-bottom: 0.5em; }
   .label_parent + .label_parent {
     margin-top: 1em; }
 
@@ -422,7 +477,9 @@ h3 {
   width: 100%;
   display: flex;
   flex-direction: column;
-  margin: 1em auto 1em auto;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  max-width: 30em;
   border-radius: 10px;
   border: 1px solid #a7a7a7;
   padding: 1em; }
@@ -597,6 +654,29 @@ li.songtags {
 .goal_amount {
   width: 10em; }
 
+.monthly_list {
+  padding-left: 1.5em; }
+
+.service_link_li {
+  padding: 0.2em;
+  border-radius: 5px; }
+  .service_link_li:hover {
+    cursor: pointer;
+    background: #737373;
+    color: #ffffff; }
+    .service_link_li:hover > span:first-child {
+      color: #ffffff; }
+  .service_link_li span {
+    font-size: 0.95em; }
+  .service_link_li > span:first-child {
+    width: 5em;
+    margin-right: 0.5em;
+    font-style: italic;
+    color: #8d8d8d; }
+
+.monthname {
+  font-weight: bold; }
+
 .slidemodel {
   position: relative;
   left: -10px;
@@ -681,7 +761,8 @@ li.songtags {
   display: flex;
   flex-flow: row wrap; }
   .bible_address_header div:first-child {
-    font-weight: bold; }
+    font-weight: bold;
+    margin-bottom: 0.4em; }
   .bible_address_header div:not(:first-child) {
     margin-left: 0.5em; }
 
@@ -691,7 +772,6 @@ li.songtags {
     margin-left: 0.6em; }
 
 .bible_address_container {
-  border: 1px dashed darkgrey;
   padding: 0.4em; }
 
 .address_pickers {
@@ -998,6 +1078,10 @@ div.amounts {
 
 .songslot .ui-selectmenu-menu, .songslot .ui-selectmenu-button {
   font-size: 0.6em; }
+
+.offering_details .ui-selectmenu-menu, .offering_details .ui-selectmenu-button, .my-lightbox .ui-selectmenu-menu, .my-lightbox .ui-selectmenu-button {
+  margin-top: 0.3em;
+  font-size: 0.8em; }
 
 .slidemodel {
   color: #655c5c; }
