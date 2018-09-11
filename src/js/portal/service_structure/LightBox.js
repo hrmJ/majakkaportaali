@@ -26,8 +26,10 @@ GeneralStructure.LightBox = function(){
                 .appendTo($buttons);
             $("<button>Tallenna</button>")
                 .click(function(){
+                    console.log("SAVING---->");
                     self.SetSlideParams()
-                        .SaveParams(function(){
+                        .SaveParams(function(d){
+                            console.log("php data:" + d);
                             self.CloseLightBox();
                             GeneralStructure.ReloadSlots();
                         });

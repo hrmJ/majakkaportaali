@@ -129,10 +129,11 @@ class Structure{
         if(!$rows and $create_if_not_exist){
             $this->service_specific_created = true;
             $slots = $this->con->select("presentation_structure",
-                array_merge($this->columns, ["id"]),
+                $this->columns, 
                 ['ORDER' => [ 'slot_number' => 'ASC' ]]);
             foreach($slots as $slot){
                 $slot["service_id"] = $this->service_id;
+                var_dump($slot);
                 $this->con->insert("service_specific_presentation_structure", $slot);
             }
         }

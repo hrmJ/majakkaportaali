@@ -2,6 +2,7 @@
 Portaali
 --------
 
+- [ ] Kun luo messukohtaisen rakenteen: ettei vanha rakenne katoaisi alta!
 - [ ] Kolehtikohteiden hallinta
 - [ ] Kolehtidian lisääminen
 - [ ] "Lisää uusi diaesityksessä näkymätön messun osa"
