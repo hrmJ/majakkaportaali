@@ -14,6 +14,7 @@ Portal.Service = function(){
     //Ota messun id simppelisti url:sta
     service_id = window.location.href.replace(/.*service_id=(\d+).*/,"$1")*1;
     service_date = {};
+    is_refreshed = false;
 
     /**
      *
@@ -31,10 +32,12 @@ Portal.Service = function(){
      **/
     TabFactory.prototype.AddSaveButton = function(){
         var self = this;
-        var $but = $("<button class='save_tab_data'>Tallenna</button>")
-            .click(this.SaveTabData.bind(this))
-            .hide();
-            this.$div.append($but);
+        if(!$("button.save_tab_data").length){
+            var $but = $("<button class='save_tab_data'>Tallenna</button>")
+                .click(this.SaveTabData.bind(this))
+                .hide();
+                this.$div.append($but);
+        }
     };
 
     /**
@@ -60,10 +63,11 @@ Portal.Service = function(){
      *
      **/
     TabFactory.prototype.MonitorChanges = function(){
+        console.log("Monitoring... " + this.tab_type);
         var $tabheader = $(`.${this.tab_type}_tabheader`);
-        console.log(this.tabdata);
-        if(JSON.stringify(this.tabdata) !== JSON.stringify(this.GetTabData())){
+        if(JSON.stringify(this.tabdata) !== JSON.stringify(this.GetTabData()) && !is_refreshed){
             //Jos muutoksia, näytä tallenna-painike ja muutosindikaattorit
+            console.log("found changes!")
             this.$div.find(".save_tab_data").show();
             $tabheader.text($tabheader.text().replace(" *","") + " *");
         }
@@ -159,7 +163,10 @@ Portal.Service = function(){
                         .append(d.map((s) => `<option value='${s.id}'>${s.servicedate}</option>`))
                         .appendTo($("#service_select_cont").html(""));
                     $sel.selectmenu();
-                    $sel.on("selectmenuchange", function(){console.log($(this).val())});
+                    $sel.on("selectmenuchange", function(){
+                        SetServiceId($(this).val());
+                        Initialize();
+                    });
                     $sel.val(GetServiceId());
                     $sel.selectmenu("refresh");
                 });
@@ -205,11 +212,13 @@ Portal.Service = function(){
      **/
     function Initialize(){
         console.log("Initializing the service view...");
+
         $("#tabs > div").each(function(){
             TabFactory.make($(this));
         })
         TabObjects.Details.GetTheme(TabObjects.Details.SetTheme);
-        TabObjects.Details.GetOfferingTargets(TabObjects.Details.SetOfferingTarget);
+        TabObjects.Details.GetOfferingTargets(
+            TabObjects.Details.SetOfferingTarget.bind(TabObjects.Details));
         TabObjects.Details.GetBibleSegments(TabObjects.Details.SetBibleSegments);
         TabObjects.People.GetResponsibles(TabObjects.People.SetResponsibles);
         TabObjects.Structure.GetStructure(TabObjects.Structure.SetStructure);
@@ -244,6 +253,7 @@ Portal.Service = function(){
             });
         //Hae messun päivämäärä ja muodosta messujen vaihtamiseen lista
         $.when(SetDate()).done(() => AddServiceList());
+
     }
 
 

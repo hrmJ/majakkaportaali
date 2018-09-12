@@ -2184,6 +2184,7 @@ Portal.Service = function(){
     //Ota messun id simppelisti url:sta
     service_id = window.location.href.replace(/.*service_id=(\d+).*/,"$1")*1;
     service_date = {};
+    is_refreshed = false;
 
     /**
      *
@@ -2201,10 +2202,12 @@ Portal.Service = function(){
      **/
     TabFactory.prototype.AddSaveButton = function(){
         var self = this;
-        var $but = $("<button class='save_tab_data'>Tallenna</button>")
-            .click(this.SaveTabData.bind(this))
-            .hide();
-            this.$div.append($but);
+        if(!$("button.save_tab_data").length){
+            var $but = $("<button class='save_tab_data'>Tallenna</button>")
+                .click(this.SaveTabData.bind(this))
+                .hide();
+                this.$div.append($but);
+        }
     };
 
     /**
@@ -2230,10 +2233,11 @@ Portal.Service = function(){
      *
      **/
     TabFactory.prototype.MonitorChanges = function(){
+        console.log("Monitoring... " + this.tab_type);
         var $tabheader = $(`.${this.tab_type}_tabheader`);
-        console.log(this.tabdata);
-        if(JSON.stringify(this.tabdata) !== JSON.stringify(this.GetTabData())){
+        if(JSON.stringify(this.tabdata) !== JSON.stringify(this.GetTabData()) && !is_refreshed){
             //Jos muutoksia, näytä tallenna-painike ja muutosindikaattorit
+            console.log("found changes!")
             this.$div.find(".save_tab_data").show();
             $tabheader.text($tabheader.text().replace(" *","") + " *");
         }
@@ -2329,7 +2333,10 @@ Portal.Service = function(){
                         .append(d.map((s) => `<option value='${s.id}'>${s.servicedate}</option>`))
                         .appendTo($("#service_select_cont").html(""));
                     $sel.selectmenu();
-                    $sel.on("selectmenuchange", function(){console.log($(this).val())});
+                    $sel.on("selectmenuchange", function(){
+                        SetServiceId($(this).val());
+                        Initialize();
+                    });
                     $sel.val(GetServiceId());
                     $sel.selectmenu("refresh");
                 });
@@ -2375,11 +2382,13 @@ Portal.Service = function(){
      **/
     function Initialize(){
         console.log("Initializing the service view...");
+
         $("#tabs > div").each(function(){
             TabFactory.make($(this));
         })
         TabObjects.Details.GetTheme(TabObjects.Details.SetTheme);
-        TabObjects.Details.GetOfferingTargets(TabObjects.Details.SetOfferingTarget);
+        TabObjects.Details.GetOfferingTargets(
+            TabObjects.Details.SetOfferingTarget.bind(TabObjects.Details));
         TabObjects.Details.GetBibleSegments(TabObjects.Details.SetBibleSegments);
         TabObjects.People.GetResponsibles(TabObjects.People.SetResponsibles);
         TabObjects.Structure.GetStructure(TabObjects.Structure.SetStructure);
@@ -2414,6 +2423,7 @@ Portal.Service = function(){
             });
         //Hae messun päivämäärä ja muodosta messujen vaihtamiseen lista
         $.when(SetDate()).done(() => AddServiceList());
+
     }
 
 
@@ -2618,10 +2628,11 @@ Portal.Service.TabFactory.Details = function(){
                         .appendTo($sel);
                 }); 
 
-                $sel
-                    .appendTo("#offering_target_select")
-                    .selectmenu()
-                    .on("selectmenuchange",this.MonitorChanges.bind(this));
+                if(!$("#offering_target_select select").length){
+                    $sel
+                        .appendTo("#offering_target_select")
+                        .selectmenu();
+                }
                 callback();
             });
     };
@@ -2646,6 +2657,7 @@ Portal.Service.TabFactory.Details = function(){
                 $("#offering_target_select select").val(goal.target_id);
                 $("#offering_target_select select").selectmenu("refresh");
                 $("#offering_amount").val(goal.amount);
+                $("#offering_target_select select").on("selectmenuchange",this.MonitorChanges.bind(this));
             }
         );
     };
@@ -2689,7 +2701,7 @@ Portal.Service.TabFactory.Details = function(){
                                         },
                                         data[seg.title][pair_idx].testament
                                         )).done(function(){
-                                            picker_pair.Confirm();
+                                            picker_pair.Confirm(undefined, true);
                                             self.tabdata = self.GetTabData();
                                         });
                                 }
@@ -6415,6 +6427,9 @@ var BibleModule = function(){
             this.$edit_link = $("<i class='fa fa-pencil addr_edit_link'></i>")
                 .click(this.Edit.bind(this))
                 .appendTo(this.$status);
+            this.$prev_link = $("<i class='fa fa-eye'></i>")
+                .click(this.Preview.bind(this))
+                .appendTo(this.$status);
             this.startpicker.AttachTo(this.$cont).AddPickerEvents();
             this.endpicker.AddPickerEvents();
             this.endpicker.$picker
@@ -6448,6 +6463,28 @@ var BibleModule = function(){
 
         /**
          *
+         * Näytä esikatseluikkuna
+         *
+         */
+        this.Preview = function(){
+            var path = Utilities.GetAjaxPath("Loader.php"),
+                msg = undefined;
+            $.getJSON(path, {
+                "action": "load_verse_content",
+                "testament": this.startpicker.testament,
+                "startverse": [this.startpicker.book, this.startpicker.chapter, this.startpicker.verse],
+                "endverse": [this.endpicker.book, this.endpicker.chapter, this.endpicker.verse]
+            }, (verses)=>{
+                msg = new Utilities.Message(verses, this.$cont);
+                msg.SetTitle(this.GetHumanReadableAddress());
+                msg.AddCloseButton();
+                msg.Show(120000);
+            }
+            );
+        };
+
+        /**
+         *
          * Asettaa funktion tarkkailemaan valitsimissa tapahtuvia muutoksia
          *
          * @param callback asetettava funktio
@@ -6475,8 +6512,11 @@ var BibleModule = function(){
          *
          * Vahvistaa valitun raamatunkohdan
          *
+         * @param ev funktion laukaissut tapahtuma
+         * @param no_callback jos tosi, yleensä laukaistavaa callback-funktiota ei kutsutakaan
+         *
          */
-        this.Confirm = function(){
+        this.Confirm = function(ev, no_callback){
 
             if(!this.is_single){
 
@@ -6507,7 +6547,8 @@ var BibleModule = function(){
             
             }
 
-            if(this.callback){
+            console.log(no_callback);
+            if(this.callback && !no_callback){
                 this.callback();
             }
         }

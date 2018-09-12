@@ -1,3 +1,8 @@
+
+.fa-pencil, .fa-eye{
+    @include pointer;
+}
+
 .my-lightbox input[type='text']{
     outline: none;
     border: none;

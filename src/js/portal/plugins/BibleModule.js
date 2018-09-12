@@ -142,6 +142,9 @@ var BibleModule = function(){
             this.$edit_link = $("<i class='fa fa-pencil addr_edit_link'></i>")
                 .click(this.Edit.bind(this))
                 .appendTo(this.$status);
+            this.$prev_link = $("<i class='fa fa-eye'></i>")
+                .click(this.Preview.bind(this))
+                .appendTo(this.$status);
             this.startpicker.AttachTo(this.$cont).AddPickerEvents();
             this.endpicker.AddPickerEvents();
             this.endpicker.$picker
@@ -175,6 +178,28 @@ var BibleModule = function(){
 
         /**
          *
+         * Näytä esikatseluikkuna
+         *
+         */
+        this.Preview = function(){
+            var path = Utilities.GetAjaxPath("Loader.php"),
+                msg = undefined;
+            $.getJSON(path, {
+                "action": "load_verse_content",
+                "testament": this.startpicker.testament,
+                "startverse": [this.startpicker.book, this.startpicker.chapter, this.startpicker.verse],
+                "endverse": [this.endpicker.book, this.endpicker.chapter, this.endpicker.verse]
+            }, (verses)=>{
+                msg = new Utilities.Message(verses, this.$cont);
+                msg.SetTitle(this.GetHumanReadableAddress());
+                msg.AddCloseButton();
+                msg.Show(120000);
+            }
+            );
+        };
+
+        /**
+         *
          * Asettaa funktion tarkkailemaan valitsimissa tapahtuvia muutoksia
          *
          * @param callback asetettava funktio
@@ -202,8 +227,11 @@ var BibleModule = function(){
          *
          * Vahvistaa valitun raamatunkohdan
          *
+         * @param ev funktion laukaissut tapahtuma
+         * @param no_callback jos tosi, yleensä laukaistavaa callback-funktiota ei kutsutakaan
+         *
          */
-        this.Confirm = function(){
+        this.Confirm = function(ev, no_callback){
 
             if(!this.is_single){
 
@@ -234,7 +262,8 @@ var BibleModule = function(){
             
             }
 
-            if(this.callback){
+            console.log(no_callback);
+            if(this.callback && !no_callback){
                 this.callback();
             }
         }

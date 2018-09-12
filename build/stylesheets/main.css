@@ -406,6 +406,9 @@ h3 {
   color: white;
   font-family: "Amatic SC", cursive; }
 
+.fa-pencil, .fa-eye {
+  cursor: pointer; }
+
 .my-lightbox input[type='text'] {
   outline: none;
   border: none;

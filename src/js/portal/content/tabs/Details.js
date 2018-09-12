@@ -116,10 +116,11 @@ Portal.Service.TabFactory.Details = function(){
                         .appendTo($sel);
                 }); 
 
-                $sel
-                    .appendTo("#offering_target_select")
-                    .selectmenu()
-                    .on("selectmenuchange",this.MonitorChanges.bind(this));
+                if(!$("#offering_target_select select").length){
+                    $sel
+                        .appendTo("#offering_target_select")
+                        .selectmenu();
+                }
                 callback();
             });
     };
@@ -144,6 +145,7 @@ Portal.Service.TabFactory.Details = function(){
                 $("#offering_target_select select").val(goal.target_id);
                 $("#offering_target_select select").selectmenu("refresh");
                 $("#offering_amount").val(goal.amount);
+                $("#offering_target_select select").on("selectmenuchange",this.MonitorChanges.bind(this));
             }
         );
     };
@@ -187,7 +189,7 @@ Portal.Service.TabFactory.Details = function(){
                                         },
                                         data[seg.title][pair_idx].testament
                                         )).done(function(){
-                                            picker_pair.Confirm();
+                                            picker_pair.Confirm(undefined, true);
                                             self.tabdata = self.GetTabData();
                                         });
                                 }
