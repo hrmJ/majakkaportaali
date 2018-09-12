@@ -135,6 +135,7 @@ var BibleModule = function(){
         this.$status = $("<div class='bible_address_status'><span class='status_text'></span></div>");
         this.startpicker = new StartAddressPicker();
         this.endpicker = new EndAddressPicker();
+        this.is_removed = false;
 
         this.Initialize = function($parent_el){
             this.$cont = $("<div class='pickerpair'></div>").appendTo($parent_el);
@@ -144,6 +145,9 @@ var BibleModule = function(){
                 .appendTo(this.$status);
             this.$prev_link = $("<i class='fa fa-eye'></i>")
                 .click(this.Preview.bind(this))
+                .appendTo(this.$status);
+            this.$remove_link = $("<i class='fa fa-trash'></i>")
+                .click(this.Remove.bind(this))
                 .appendTo(this.$status);
             this.startpicker.AttachTo(this.$cont).AddPickerEvents();
             this.endpicker.AddPickerEvents();
@@ -178,6 +182,22 @@ var BibleModule = function(){
 
         /**
          *
+         * Poista jaeparin, jos ei viimeinen
+         *
+         */
+        this.Remove = function(){
+            var amount = this.$cont.parents(".address_pickers").find(".status_text").length,
+                $par_el = this.startpicker.$picker.parents(".address_pickers");
+            if(amount > 1){
+                this.$cont.remove();
+                this.UpdateHeader($par_el);
+                this.is_removed = true;
+                this.callback();
+            }
+        };
+
+        /**
+         *
          * Näytä esikatseluikkuna
          *
          */
@@ -190,7 +210,7 @@ var BibleModule = function(){
                 "startverse": [this.startpicker.book, this.startpicker.chapter, this.startpicker.verse],
                 "endverse": [this.endpicker.book, this.endpicker.chapter, this.endpicker.verse]
             }, (verses)=>{
-                msg = new Utilities.Message(verses, this.$cont);
+                msg = new Utilities.Message(verses.join(" "), this.$cont);
                 msg.SetTitle(this.GetHumanReadableAddress());
                 msg.AddCloseButton();
                 msg.Show(120000);
@@ -225,6 +245,30 @@ var BibleModule = function(){
 
         /**
          *
+         * Päivittää koko valitsimen otsikon
+         *
+         * @param $par_el jaevalitsimien yläpuolinen elementti jquery-oliona
+         *
+         */
+        this.UpdateHeader = function($par_el){
+            var $par_el = $par_el || this.startpicker.$picker.parents(".address_pickers"),
+                address_string = "",
+                $all_addresses = $par_el.find(".status_text");
+
+            console.log($all_addresses);
+            $all_addresses.each(function(){
+                if(address_string){
+                    address_string += "; ";
+                }
+                address_string += $(this).text();
+            });
+
+            $par_el.prev().find(".address_information").text(address_string);
+        
+        };
+
+        /**
+         *
          * Vahvistaa valitun raamatunkohdan
          *
          * @param ev funktion laukaissut tapahtuma
@@ -235,34 +279,22 @@ var BibleModule = function(){
 
             if(!this.is_single){
 
-                var addr = this.GetHumanReadableAddress(),
-                    $par_el = this.startpicker.$picker.parents(".address_pickers");
+                var addr = this.GetHumanReadableAddress();
             
                 this.startpicker.$picker.hide();
                 this.endpicker.$picker.hide();
                 this.$status.find(".status_text").text(addr);
                 this.$cont.removeClass("pickerpair");
 
-                var $all_addresses = $par_el.find(".status_text"),
-                    address_string = "";
-
-                $all_addresses.each(function(){
-                    if(address_string){
-                        address_string += "; ";
-                    }
-                    address_string += $(this).text();
-                });
-
-                $par_el.prev().find(".address_information").text(address_string);
                 this.startpicker.$picker.parents(".bible_address_container:eq(0)")
                     .find(".add_picker_pair").show();
+                this.UpdateHeader();
 
                 this.$confirm_link.hide()
                 this.$status.show();
             
             }
 
-            console.log(no_callback);
             if(this.callback && !no_callback){
                 this.callback();
             }

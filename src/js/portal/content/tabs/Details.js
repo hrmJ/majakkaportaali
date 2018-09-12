@@ -225,18 +225,20 @@ Portal.Service.TabFactory.Details = function(){
             $.each(seg.picker_pairs, function(pair_idx, picker_pair){
                 var start = picker_pair.startpicker.GetAddress(),
                     end = picker_pair.endpicker.GetAddress();
-                data.push({
-                    type: "bible",
-                    segment_name: seg.title,
-                    service_id: Portal.Service.GetServiceId(),
-                    testament: picker_pair.startpicker.testament,
-                    startbook: start.book,
-                    startchapter: start.chapter,
-                    startverse: start.verse,
-                    endbook: end.book,
-                    endchapter: end.chapter,
-                    endverse: end.verse,
-                });
+                if(!picker_pair.is_removed){
+                    data.push({
+                        type: "bible",
+                        segment_name: seg.title,
+                        service_id: Portal.Service.GetServiceId(),
+                        testament: picker_pair.startpicker.testament,
+                        startbook: start.book,
+                        startchapter: start.chapter,
+                        startverse: start.verse,
+                        endbook: end.book,
+                        endchapter: end.chapter,
+                        endverse: end.verse,
+                    });
+                }
             });
         });
         return data;
