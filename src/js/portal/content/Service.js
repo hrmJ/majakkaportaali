@@ -163,9 +163,11 @@ Portal.Service = function(){
                         .appendTo($("#service_select_cont").html(""));
                     $sel.selectmenu();
                     $sel.on("selectmenuchange", function(){
-                        SetServiceId($(this).val());
-                        RefreshServiceView();
-                        Initialize();
+                        window.location.search="?service_id=" + $(this).val();
+                        //service_id = window.location.href.replace(/.*service_id=(\d+).*/,"$1")*1;
+                        //SetServiceId($(this).val());
+                        //RefreshServiceView();
+                        //Initialize();
                     });
                     $sel.val(GetServiceId());
                     $sel.selectmenu("refresh");

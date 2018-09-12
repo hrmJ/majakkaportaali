@@ -2332,9 +2332,11 @@ Portal.Service = function(){
                         .appendTo($("#service_select_cont").html(""));
                     $sel.selectmenu();
                     $sel.on("selectmenuchange", function(){
-                        SetServiceId($(this).val());
-                        RefreshServiceView();
-                        Initialize();
+                        window.location.search="?service_id=" + $(this).val();
+                        //service_id = window.location.href.replace(/.*service_id=(\d+).*/,"$1")*1;
+                        //SetServiceId($(this).val());
+                        //RefreshServiceView();
+                        //Initialize();
                     });
                     $sel.val(GetServiceId());
                     $sel.selectmenu("refresh");
@@ -6324,6 +6326,7 @@ var BibleModule = function(){
      */
     function AttachAddressPicker($parent_el, title){
         var title = title || "";
+        ClearPickers();
         all_pickers.push(new PickerContainer(title))
         all_pickers[all_pickers.length-1].AttachTo($parent_el);
         return all_pickers[all_pickers.length-1];

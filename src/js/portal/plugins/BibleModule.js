@@ -18,6 +18,7 @@ var BibleModule = function(){
      */
     function AttachAddressPicker($parent_el, title){
         var title = title || "";
+        ClearPickers();
         all_pickers.push(new PickerContainer(title))
         all_pickers[all_pickers.length-1].AttachTo($parent_el);
         return all_pickers[all_pickers.length-1];
