@@ -6,6 +6,7 @@
  **/
 var BibleModule = function(){
 
+    all_pickers = [];
 
     /**
      *
@@ -17,9 +18,9 @@ var BibleModule = function(){
      */
     function AttachAddressPicker($parent_el, title){
         var title = title || "";
-        var cont = new PickerContainer(title);
-        cont.AttachTo($parent_el);
-        return cont;
+        all_pickers.push(new PickerContainer(title))
+        all_pickers[all_pickers.length-1].AttachTo($parent_el);
+        return all_pickers[all_pickers.length-1];
     }
 
     /**
@@ -649,11 +650,22 @@ var BibleModule = function(){
 
     EndAddressPicker.prototype = Object.create(BibleAddressPicker.prototype);
 
+    function GetAllPickers (){
+        return all_pickers;
+    }
+
+    function ClearPickers (){
+        $.each(all_pickers,(idx,o)=>delete o);
+        all_pickers.splice(0);
+    }
+
 
     return {
     
         AttachAddressPicker,
-        PickerPair
+        PickerPair,
+        GetAllPickers,
+        ClearPickers,
     
     };
 

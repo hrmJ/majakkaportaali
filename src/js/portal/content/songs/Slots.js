@@ -713,7 +713,6 @@ Portal.SongSlots = function(){
                 var self = this,
                     //Jos käynnistetty klikkaamalla autocomplete-listaa (tai selectmenua), käytä sen arvoa
                     title = (item ? item.item.value :  this.$div.find(".songinput:eq(0)").val());
-                console.log("CHECKING lyrics");
                 $.getJSON("php/ajax/Loader.php",{
                         action:  "check_song_title",
                         service_id: Portal.Service.GetServiceId(),

@@ -1639,7 +1639,6 @@ Portal.SongSlots = function(){
                 var self = this,
                     //Jos käynnistetty klikkaamalla autocomplete-listaa (tai selectmenua), käytä sen arvoa
                     title = (item ? item.item.value :  this.$div.find(".songinput:eq(0)").val());
-                console.log("CHECKING lyrics");
                 $.getJSON("php/ajax/Loader.php",{
                         action:  "check_song_title",
                         service_id: Portal.Service.GetServiceId(),
@@ -2233,11 +2232,11 @@ Portal.Service = function(){
      *
      **/
     TabFactory.prototype.MonitorChanges = function(){
-        console.log("Monitoring... " + this.tab_type);
+        console.log("MONITORING!!");
+        console.log(this.bible_segments);
         var $tabheader = $(`.${this.tab_type}_tabheader`);
         if(JSON.stringify(this.tabdata) !== JSON.stringify(this.GetTabData()) && !is_refreshed){
             //Jos muutoksia, näytä tallenna-painike ja muutosindikaattorit
-            console.log("found changes!")
             this.$div.find(".save_tab_data").show();
             $tabheader.text($tabheader.text().replace(" *","") + " *");
         }
@@ -2325,7 +2324,6 @@ Portal.Service = function(){
     function AddServiceList(){
         var list = new Portal.Servicelist.List(),
             $sel = $("<select><option>Valitse messu</option></select>");
-        console.log(service_date.dbformat);
         $.when(
             Portal.Servicelist.SetSeasonByCustomDate(service_date.dbformat)).done(() => {
                 list.LoadServices((d)=>{
@@ -2335,6 +2333,7 @@ Portal.Service = function(){
                     $sel.selectmenu();
                     $sel.on("selectmenuchange", function(){
                         SetServiceId($(this).val());
+                        RefreshServiceView();
                         Initialize();
                     });
                     $sel.val(GetServiceId());
@@ -2345,13 +2344,27 @@ Portal.Service = function(){
 
     /**
      *
+     * Alusta messukohtainen näkymä uuden messun lataamiseksi näytölle.
+     *
+     */
+    function RefreshServiceView(){
+        BibleModule.ClearPickers()
+        $.each(TabObjects, (idx, o)=> delete o);
+        $(".tabheader").each(function(){
+            $(this).text($(this).text().replace(" *",""));
+        });
+        $(".save_tab_data").hide();
+    }
+
+    /**
+     *
      * Asettaa nykyisen messun päivämäärän
      *
      *
      */
     function SetDate(){
         var path = Utilities.GetAjaxPath("Loader.php"),
-            raw_dat = undefined;
+            raw_date = undefined;
         return $.getJSON(path, {
             "action" : "get_service_date",
             "id" : GetServiceId()
@@ -2518,7 +2531,6 @@ Portal.Service.TabFactory.People = function(){
 Portal.Service.TabFactory.Details = function(){
 
     this.action = "save_details";
-    this.bible_segments = [];
 
 
     /**
@@ -2562,10 +2574,10 @@ Portal.Service.TabFactory.Details = function(){
      *
      **/
     this.GetBibleSegments = function(callback){
-        console.log("getting bible segments...");
+        this.bible_segments = [];
         $.getJSON("php/ajax/Loader.php",{
             action: "get_service_verses",
-            service_id: service_id
+            service_id: Portal.Service.GetServiceId()
             }, callback.bind(this));
     };
 
@@ -2576,7 +2588,6 @@ Portal.Service.TabFactory.Details = function(){
      *
      **/
     this.FetchSlots = function(){
-        console.log("fetching.." + this.name);
         $.getJSON("php/ajax/Loader.php",{
             action: "load_slots_to_container",
             service_id: Portal.Service.GetServiceId(),
@@ -2653,7 +2664,6 @@ Portal.Service.TabFactory.Details = function(){
             "service_id": Portal.Service.GetServiceId()
         },
             (goal) => {
-                console.log("Kolehtikohde: " + goal);
                 $("#offering_target_select select").val(goal.target_id);
                 $("#offering_target_select select").selectmenu("refresh");
                 $("#offering_amount").val(goal.amount);
@@ -3231,7 +3241,6 @@ Portal.Servicelist = function(){
                 startdate: current_season.startdate,
                 enddate: current_season.enddate,
                 }, (data) => {
-                    console.log(data)
                     current_data_list = data;
                     callback(data);
                 });
@@ -6303,6 +6312,7 @@ GeneralStructure.DragAndDrop = function(){
  **/
 var BibleModule = function(){
 
+    all_pickers = [];
 
     /**
      *
@@ -6314,9 +6324,9 @@ var BibleModule = function(){
      */
     function AttachAddressPicker($parent_el, title){
         var title = title || "";
-        var cont = new PickerContainer(title);
-        cont.AttachTo($parent_el);
-        return cont;
+        all_pickers.push(new PickerContainer(title))
+        all_pickers[all_pickers.length-1].AttachTo($parent_el);
+        return all_pickers[all_pickers.length-1];
     }
 
     /**
@@ -6946,11 +6956,22 @@ var BibleModule = function(){
 
     EndAddressPicker.prototype = Object.create(BibleAddressPicker.prototype);
 
+    function GetAllPickers (){
+        return all_pickers;
+    }
+
+    function ClearPickers (){
+        $.each(all_pickers,(idx,o)=>delete o);
+        all_pickers.splice(0);
+    }
+
 
     return {
     
         AttachAddressPicker,
-        PickerPair
+        PickerPair,
+        GetAllPickers,
+        ClearPickers,
     
     };
 

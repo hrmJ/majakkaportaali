@@ -2,16 +2,8 @@
 Portaali
 --------
 
-- [X] Kun luo messukohtaisen rakenteen: ettei vanha rakenne katoaisi alta!
-- [X] Kolehtikohteiden hallinta
-- [X] Kolehtidian lisääminen
 - [ ] "Ei sanoja" -laatikko ruksattavaksi
-- [X] Messukohtaisen näkymän mobiilimenu(n poistaminen)
-- [X] Messukohtaisen näkymän messulistan lisääminen
-- [X] Raamatunkohdan (osakohdan) poistaminen
-- [ ] Muka tallentamattomia muutoksia yleistiedoissa raamatunkohdan takia
-- [X] Tapahtumien syöttö
-- [X] Infodian syöttö
+- [ ] Jos useampi raamatunkohta, GetTabData ei toimi
 
 Bugit
 -----

@@ -105,7 +105,6 @@ Portal.Servicelist = function(){
                 startdate: current_season.startdate,
                 enddate: current_season.enddate,
                 }, (data) => {
-                    console.log(data)
                     current_data_list = data;
                     callback(data);
                 });

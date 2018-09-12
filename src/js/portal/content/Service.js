@@ -63,11 +63,11 @@ Portal.Service = function(){
      *
      **/
     TabFactory.prototype.MonitorChanges = function(){
-        console.log("Monitoring... " + this.tab_type);
+        console.log("MONITORING!!");
+        console.log(this.bible_segments);
         var $tabheader = $(`.${this.tab_type}_tabheader`);
         if(JSON.stringify(this.tabdata) !== JSON.stringify(this.GetTabData()) && !is_refreshed){
             //Jos muutoksia, näytä tallenna-painike ja muutosindikaattorit
-            console.log("found changes!")
             this.$div.find(".save_tab_data").show();
             $tabheader.text($tabheader.text().replace(" *","") + " *");
         }
@@ -155,7 +155,6 @@ Portal.Service = function(){
     function AddServiceList(){
         var list = new Portal.Servicelist.List(),
             $sel = $("<select><option>Valitse messu</option></select>");
-        console.log(service_date.dbformat);
         $.when(
             Portal.Servicelist.SetSeasonByCustomDate(service_date.dbformat)).done(() => {
                 list.LoadServices((d)=>{
@@ -165,6 +164,7 @@ Portal.Service = function(){
                     $sel.selectmenu();
                     $sel.on("selectmenuchange", function(){
                         SetServiceId($(this).val());
+                        RefreshServiceView();
                         Initialize();
                     });
                     $sel.val(GetServiceId());
@@ -175,13 +175,27 @@ Portal.Service = function(){
 
     /**
      *
+     * Alusta messukohtainen näkymä uuden messun lataamiseksi näytölle.
+     *
+     */
+    function RefreshServiceView(){
+        BibleModule.ClearPickers()
+        $.each(TabObjects, (idx, o)=> delete o);
+        $(".tabheader").each(function(){
+            $(this).text($(this).text().replace(" *",""));
+        });
+        $(".save_tab_data").hide();
+    }
+
+    /**
+     *
      * Asettaa nykyisen messun päivämäärän
      *
      *
      */
     function SetDate(){
         var path = Utilities.GetAjaxPath("Loader.php"),
-            raw_dat = undefined;
+            raw_date = undefined;
         return $.getJSON(path, {
             "action" : "get_service_date",
             "id" : GetServiceId()

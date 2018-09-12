@@ -6,7 +6,6 @@
 Portal.Service.TabFactory.Details = function(){
 
     this.action = "save_details";
-    this.bible_segments = [];
 
 
     /**
@@ -50,10 +49,10 @@ Portal.Service.TabFactory.Details = function(){
      *
      **/
     this.GetBibleSegments = function(callback){
-        console.log("getting bible segments...");
+        this.bible_segments = [];
         $.getJSON("php/ajax/Loader.php",{
             action: "get_service_verses",
-            service_id: service_id
+            service_id: Portal.Service.GetServiceId()
             }, callback.bind(this));
     };
 
@@ -64,7 +63,6 @@ Portal.Service.TabFactory.Details = function(){
      *
      **/
     this.FetchSlots = function(){
-        console.log("fetching.." + this.name);
         $.getJSON("php/ajax/Loader.php",{
             action: "load_slots_to_container",
             service_id: Portal.Service.GetServiceId(),
@@ -141,7 +139,6 @@ Portal.Service.TabFactory.Details = function(){
             "service_id": Portal.Service.GetServiceId()
         },
             (goal) => {
-                console.log("Kolehtikohde: " + goal);
                 $("#offering_target_select select").val(goal.target_id);
                 $("#offering_target_select select").selectmenu("refresh");
                 $("#offering_amount").val(goal.amount);
