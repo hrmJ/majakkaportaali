@@ -2,23 +2,16 @@
 Portaali
 --------
 
-- [ ] Kun luo messukohtaisen rakenteen: ettei vanha rakenne katoaisi alta!
-- [ ] Kolehtikohteiden hallinta
-- [ ] Kolehtidian lisääminen
-- [ ] "Lisää uusi diaesityksessä näkymätön messun osa"
+- [X] Kun luo messukohtaisen rakenteen: ettei vanha rakenne katoaisi alta!
+- [X] Kolehtikohteiden hallinta
+- [X] Kolehtidian lisääminen
 - [ ] "Ei sanoja" -laatikko ruksattavaksi
-- [ ] Messukohtaisen näkymän mobiilimenu(n poistaminen)
-- [ ] Messukohtaisen näkymän messulistan lisääminen
-- [ ] Tulostettava biisilista
-- [ ] Laulun rooli näkyvillä dioissa
-- [ ] Rivinvaihdot laulujen säkeistöjen esikatselussa
-- [ ] Raamatunkohdan (osakohdan) poistaminen
+- [X] Messukohtaisen näkymän mobiilimenu(n poistaminen)
+- [X] Messukohtaisen näkymän messulistan lisääminen
+- [X] Raamatunkohdan (osakohdan) poistaminen
 - [ ] Muka tallentamattomia muutoksia yleistiedoissa raamatunkohdan takia
-- [ ] tarpeeksi iso muuttujatyyppi collected_offerings-id:hen?
-- [ ] Injectable data tietokannasta? niin että kuvaukset myös saatavilla
-- [ ] Tapahtumien syöttö
-- [ ] Infodian syöttö
-- [ ] Dian Esikatselu
+- [X] Tapahtumien syöttö
+- [X] Infodian syöttö
 
 Bugit
 -----
@@ -44,6 +37,9 @@ Kaukaisemmat
 - [ ] Kuvien uploadaus
 - [ ] Kuvien näyttäminen galleriamuodossa
 - [ ] https://pixabay.com/api/docs/
+- [ ] Tulostettava biisilista
+- [ ] Rivinvaihdot laulujen säkeistöjen esikatselussa
+- [ ] Injectable data tietokannasta? niin että kuvaukset myös saatavilla
 
 
 Dubious
@@ -52,4 +48,8 @@ Dubious
 - [ ] Showing_title-kenttä: (tai Version_description kenttä)
     - mahdollisuus asettaa Laulun nimeksi eri kuin mikä printataan... hmm?
     - piilotettuna "lisävalinnat" -linkin taakse?
+- [ ] "Lisää uusi diaesityksessä näkymätön messun osa"
+- [ ] Laulun rooli näkyvillä dioissa
+- [ ] Dian Esikatselu
+- [ ] tarpeeksi iso muuttujatyyppi collected_offerings-id:hen?
 
