@@ -2183,6 +2183,7 @@ Portal.Service = function(){
 
     //Ota messun id simppelisti url:sta
     service_id = window.location.href.replace(/.*service_id=(\d+).*/,"$1")*1;
+    service_date = {};
 
     /**
      *
@@ -2259,6 +2260,7 @@ Portal.Service = function(){
     };
 
 
+
     /**
      *
      * Tuottaa yhden välilehtiolion haluttua tyyppiä
@@ -2313,6 +2315,61 @@ Portal.Service = function(){
 
     /**
      *
+     * Lisää valintaelementin, jolla voi vaihtaa nykyistä messua
+     *
+     */
+    function AddServiceList(){
+        var list = new Portal.Servicelist.List(),
+            $sel = $("<select><option>Valitse messu</option></select>");
+        console.log(service_date.dbformat);
+        $.when(
+            Portal.Servicelist.SetSeasonByCustomDate(service_date.dbformat)).done(() => {
+                list.LoadServices((d)=>{
+                    $sel
+                        .append(d.map((s) => `<option value='${s.id}'>${s.servicedate}</option>`))
+                        .appendTo($("#service_select_cont").html(""));
+                    $sel.selectmenu();
+                    $sel.on("selectmenuchange", function(){console.log($(this).val())});
+                    $sel.val(GetServiceId());
+                    $sel.selectmenu("refresh");
+                });
+            });
+    }
+
+    /**
+     *
+     * Asettaa nykyisen messun päivämäärän
+     *
+     *
+     */
+    function SetDate(){
+        var path = Utilities.GetAjaxPath("Loader.php"),
+            raw_dat = undefined;
+        return $.getJSON(path, {
+            "action" : "get_service_date",
+            "id" : GetServiceId()
+            }, 
+            (d) => {
+                raw_date = $.datepicker.parseDate("yy-mm-dd", d);
+                service_date = {
+                    dbformat: d,
+                    hrformat: $.datepicker.formatDate('dd.mm.yy', raw_date)
+                };
+                $(".byline h2").text("Majakkamessu " + service_date.hrformat);
+            });
+    }
+
+    /**
+     *
+     * Palauttaa messun päivämäärän
+     *
+     */
+    function GetDate(){
+        return service_date;
+    }
+
+    /**
+     *
      * Alusta messunäkymän sisältö, tapahtumat ym.
      *
      **/
@@ -2355,7 +2412,8 @@ Portal.Service = function(){
                 handle: ".fa-arrows",
                 //snap:".songinput",
             });
-        //Luodaana kustakin välilehdestä oma olionsa
+        //Hae messun päivämäärä ja muodosta messujen vaihtamiseen lista
+        $.when(SetDate()).done(() => AddServiceList());
     }
 
 
@@ -3159,6 +3217,7 @@ Portal.Servicelist = function(){
                 startdate: current_season.startdate,
                 enddate: current_season.enddate,
                 }, (data) => {
+                    console.log(data)
                     current_data_list = data;
                     callback(data);
                 });
@@ -3295,6 +3354,21 @@ Portal.Servicelist = function(){
 
     /**
      *
+     * Hakee käyttäjän määrittelemää päivämäärää lähimmän messukauden
+     *
+     * @param customdate 
+     *
+     */
+    function SetSeasonByCustomDate(customdate){
+        var path = Utilities.GetAjaxPath("Loader.php");
+        return $.getJSON(path, {
+            "action": "get_current_season",
+            "date": customdate
+        }, (season) => current_season = season);
+    }
+
+    /**
+     *
      * Lataa valikkopalkin select-elementtiin kaudet ja valitsee nykyistä
      * päivää lähinnä olevan.
      *
@@ -3400,7 +3474,8 @@ Portal.Servicelist = function(){
         List,
         GetCurrentSeason,
         GetActiveListAsData,
-        SetSeasonByCurrentDate
+        SetSeasonByCurrentDate,
+        SetSeasonByCustomDate
     };
 
 }()

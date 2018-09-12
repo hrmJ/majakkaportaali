@@ -60,6 +60,9 @@ switch($params["action"]){
         $comment= new Comment($database, $params["service_id"], $m);
         echo $comment->LoadAll();
         break;
+    case "get_service_date":
+        echo json_encode($database->get("services","servicedate", ["id" => $params["id"]]));
+        break;
     case "load_booknames":
         $loader = new BibleLoader($params["testament"], $database_bible);
         $loader->LoadBooknames();

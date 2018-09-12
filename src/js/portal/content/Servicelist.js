@@ -105,6 +105,7 @@ Portal.Servicelist = function(){
                 startdate: current_season.startdate,
                 enddate: current_season.enddate,
                 }, (data) => {
+                    console.log(data)
                     current_data_list = data;
                     callback(data);
                 });
@@ -241,6 +242,21 @@ Portal.Servicelist = function(){
 
     /**
      *
+     * Hakee käyttäjän määrittelemää päivämäärää lähimmän messukauden
+     *
+     * @param customdate 
+     *
+     */
+    function SetSeasonByCustomDate(customdate){
+        var path = Utilities.GetAjaxPath("Loader.php");
+        return $.getJSON(path, {
+            "action": "get_current_season",
+            "date": customdate
+        }, (season) => current_season = season);
+    }
+
+    /**
+     *
      * Lataa valikkopalkin select-elementtiin kaudet ja valitsee nykyistä
      * päivää lähinnä olevan.
      *
@@ -346,7 +362,8 @@ Portal.Servicelist = function(){
         List,
         GetCurrentSeason,
         GetActiveListAsData,
-        SetSeasonByCurrentDate
+        SetSeasonByCurrentDate,
+        SetSeasonByCustomDate
     };
 
 }()
