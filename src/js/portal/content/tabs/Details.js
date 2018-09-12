@@ -141,7 +141,7 @@ Portal.Service.TabFactory.Details = function(){
             "service_id": Portal.Service.GetServiceId()
         },
             (goal) => {
-                console.log(goal);
+                console.log("Kolehtikohde: " + goal);
                 $("#offering_target_select select").val(goal.target_id);
                 $("#offering_target_select select").selectmenu("refresh");
                 $("#offering_amount").val(goal.amount);

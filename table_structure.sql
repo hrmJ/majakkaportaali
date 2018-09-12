@@ -355,6 +355,7 @@ CREATE TABLE offering_goals (
   name varchar(100) DEFAULT NULL,
   description varchar(9999) DEFAULT NULL,
   amount decimal(60,2) DEFAULT 0,
+  is_default boolean DEFAULT false,
   PRIMARY KEY (id),
   KEY `target_index` (`target_id`),
   FOREIGN KEY (`target_id`) REFERENCES `offering_targets` (`id`) ON DELETE CASCADE

@@ -87,6 +87,17 @@ class Community{
     public function GetCurrentOfferingGoal($service_id){
         $goal =  $this->con->get("collected_offerings",
             ["amount","target_id"], ["service_id" => $service_id]);
+        if(!$goal){
+            //Jos ei olemassa tietoja, käytä oletusta
+            $id =  $this->con->get("offering_goals",
+                "id", ["is_default" => 1]);
+            if($id){
+                $this->con->insert("collected_offerings",
+                    ["amount"=>0,"target_id"=>$id, "service_id" => $service_id]);
+                $goal =  $this->con->get("collected_offerings",
+                    ["amount","target_id"], ["service_id" => $service_id]);
+            }
+        }
         return $goal;
     }
 
@@ -129,7 +140,7 @@ class Community{
         $return_vals = [];
         foreach($targets as $target){
             $goals = $this->con->select("offering_goals",
-                ["id","name","description","amount"],
+                ["id","name","description","amount","is_default"],
                 ["target_id" => $target["id"]]
             );
             $return_vals[] = ["target"=> $target, "goals" => $goals];
@@ -439,6 +450,12 @@ class Community{
      *
      */
     public function EditOfferingGoal($goal_id, $goal_params){
+        if($goal_params["is_default"] == 1){
+            $this->con->update("offering_goals", ["is_default" => 0]);
+            //Päivitä kaikkien sellaisten messujen kolehtikohteeksi uusi oletus,
+            //joille on merkitty kolehtisummaksi 0 e
+            $this->con->update("collected_offerings", ["target_id"=>$goal_id], ["amount" => 0]);
+        }
         $this->con->update("offering_goals", $goal_params, ["id" => $goal_id]);
     }
 
@@ -487,6 +504,13 @@ class Community{
             }
             else{
                 $this->con->insert("offering_goals", $params);
+            }
+            if($goal["is_default"] == 1){
+                $this->con->update("offering_goals", ["is_default" => 0]);
+                $this->con->update("offering_goals", ["is_default" => 1], ["id" => $goal_id]);
+                //Päivitä kaikkien sellaisten messujen kolehtikohteeksi uusi oletus,
+                //joille on merkitty kolehtisummaksi 0 e
+                $this->con->update("collected_offerings", ["target_id"=>$goal_id], ["amount" => 0]);
             }
         }
     }

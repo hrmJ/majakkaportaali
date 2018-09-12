@@ -2653,7 +2653,7 @@ Portal.Service.TabFactory.Details = function(){
             "service_id": Portal.Service.GetServiceId()
         },
             (goal) => {
-                console.log(goal);
+                console.log("Kolehtikohde: " + goal);
                 $("#offering_target_select select").val(goal.target_id);
                 $("#offering_target_select select").selectmenu("refresh");
                 $("#offering_amount").val(goal.amount);
@@ -4131,7 +4131,8 @@ Portal.ManageableLists.ListFactory.Offerings = function(){
                 "goal_name",
                 "goal_description",
                 "goal_amount",
-                "goal_id"
+                "goal_id",
+                "is_default_goal"
             ];
 
     this.edithtml = `
@@ -4172,6 +4173,9 @@ Portal.ManageableLists.ListFactory.Offerings = function(){
                                     <textarea class='goal_description' placeholder='esimerkiksi "vuoden ruoka ja vaatteet kymmenelle lastenkodin lapselle"'></textarea>
                                 </div>
                         </div> 
+                        <div class='some-margin'>
+                            <input class='is_default_goal' type='checkbox'></input> Oletuskohde? 
+                        </div>
                     </section>`;
 
 
@@ -4222,7 +4226,6 @@ Portal.ManageableLists.ListFactory.Offerings = function(){
                 "goal_id" : this.current_li.goal_id,
                 "goal_params": this.GetGoalParams()
             };
-        console.log(params);
         $.post(path, params, this.LoadList.bind(this));
     };
 
@@ -4257,6 +4260,11 @@ Portal.ManageableLists.ListFactory.Offerings = function(){
             if(el == "goal_amount"){
                 $("#list_editor").find("." + el).slider("value", this.current_li[el]);
                 $("#list_editor").find(".amount_num").text(this.current_li[el]);
+            }
+            else if (el == "is_default_goal"){
+                if(this.current_li[el]*1){
+                    $("#list_editor").find("." + el).get(0).checked = true;
+                }
             }
             else{
                 $("#list_editor").find("." + el).val(this.current_li[el]);
@@ -4301,6 +4309,7 @@ Portal.ManageableLists.ListFactory.Offerings = function(){
                         <input type='hidden' class='goal_amount' value='${goal.amount}'></input>
                         <input type='hidden' class='goal_name' value='${goal.name}'></input>
                         <input type='hidden' class='goal_id' value='${goal.id}'></input>
+                        <input type='hidden' class='is_default_goal' value='${goal.is_default}'></input>
                         </li>`);
             $("<i class='fa fa-pencil'></i>")
                 .click(this.EditGoal.bind(this))
@@ -4366,6 +4375,7 @@ Portal.ManageableLists.ListFactory.Offerings = function(){
             name: $("#list_editor .goal_name").val(),
             description: $("#list_editor .goal_description").val(),
             amount: $("#list_editor .amount_num").text()*1,
+            is_default: $("#list_editor .is_default_goal").get(0).checked*1
         };
     }
 
