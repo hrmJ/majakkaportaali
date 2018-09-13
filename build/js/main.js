@@ -852,7 +852,6 @@ var Comments = function(){
      *
      */
     function SaveComment(){
-        console.log("raz!");
         $container = $(this).parent().parent().parent();
         var theme = "";
         var replyto = 0;
@@ -1349,7 +1348,7 @@ Portal.SongSlots = function(){
             $("#prepared_for_insertion").hide();
             this.picked_id = $(ui.draggable).find(".song_id").val();
             this.CheckLyrics();
-            songs_tab.MonitorChanges();
+            Portal.Service.GetCurrentTab("Songs").MonitorChanges();
         };
 
 
@@ -1373,7 +1372,7 @@ Portal.SongSlots = function(){
                     this.$div.prev().remove();
                 }
                 this.$div.remove();
-                songs_tab.MonitorChanges();
+                Portal.Service.GetCurrentTab("Songs").MonitorChanges();
             }
             else{
                 window.alert("Et voi poistaa viimeistä laulua. Jos tätä laulua ei lauleta, jätä kenttä vain tyhjäksi.");
@@ -1625,7 +1624,7 @@ Portal.SongSlots = function(){
             $("#songdetails .lyrics_id").val(this.picked_id);
             this.$div.find(".song_id").val(this.picked_id);
             SongLists.SetLyrics(this.picked_id, $("#songdetails .lyrics"));
-            songs_tab.MonitorChanges();
+            Portal.Service.GetCurrentTab("Songs").MonitorChanges();
         }
 
 
@@ -2179,11 +2178,16 @@ Portal.Service = function(){
 
     //Kukin välilehti tallennetaan tähän
     TabObjects = {};
-
+    active_tab = undefined;
+    tab_titles = { 
+        "Yleistiedot":"Details",
+        "Vastuunkantajat":"People",
+        "Laulut":"Songs",
+        "Messun rakenne":"Structure"
+    };
+    service_date = {};
     //Ota messun id simppelisti url:sta
     service_id = window.location.href.replace(/.*service_id=(\d+).*/,"$1")*1;
-    service_date = {};
-    is_refreshed = false;
 
     /**
      *
@@ -2201,7 +2205,7 @@ Portal.Service = function(){
      **/
     TabFactory.prototype.AddSaveButton = function(){
         var self = this;
-        if(!$("button.save_tab_data").length){
+        if(!this.$div.find("button.save_tab_data").length){
             var $but = $("<button class='save_tab_data'>Tallenna</button>")
                 .click(this.SaveTabData.bind(this))
                 .hide();
@@ -2232,10 +2236,8 @@ Portal.Service = function(){
      *
      **/
     TabFactory.prototype.MonitorChanges = function(){
-        console.log("MONITORING!!");
-        console.log(this.bible_segments);
         var $tabheader = $(`.${this.tab_type}_tabheader`);
-        if(JSON.stringify(this.tabdata) !== JSON.stringify(this.GetTabData()) && !is_refreshed){
+        if(JSON.stringify(this.tabdata) !== JSON.stringify(this.GetTabData())){
             //Jos muutoksia, näytä tallenna-painike ja muutosindikaattorit
             this.$div.find(".save_tab_data").show();
             $tabheader.text($tabheader.text().replace(" *","") + " *");
@@ -2255,8 +2257,6 @@ Portal.Service = function(){
      *
      **/
     TabFactory.prototype.AfterSavedChanges = function(response){
-        console.log("вот здесь: ");
-        console.log(response);
         this.MonitorChanges();
         var msg = new Utilities.Message("Muutokset tallennettu", this.$div);
         msg.Show(2000);
@@ -2307,6 +2307,37 @@ Portal.Service = function(){
 
     /**
      *
+     * Asettaa aktiivisen välilehden klikkauksen pohjalta
+     *
+     * @param e tapahtuma
+     * @param ui jquery ui -elementti
+     *
+     */
+    function SetActiveTabByEvent(e, ui){
+        var title =  $(ui.newTab[0]).text();
+        active_tab = TabObjects[tab_titles[title]];
+        active_tab.Initialize();
+    }
+
+
+
+    /**
+     *
+     * Asettaa aktiivisen välilehden täbin järjestysnumeron pohjalta
+     *
+     * @param idx välilehden järjrestysnumero, alkaen 0:sta
+     *
+     */
+    function SetActiveTabByIndex(idx){
+        console.log("id is " + idx);
+        var id =  $("#tabs > div:eq(" + idx + ")").attr("id");
+        active_tab = TabObjects[id];
+    }
+
+
+
+    /**
+     *
      * asettaa tämänhetkisen messun id:n
      *
      * @param id uusi id
@@ -2332,11 +2363,11 @@ Portal.Service = function(){
                         .appendTo($("#service_select_cont").html(""));
                     $sel.selectmenu();
                     $sel.on("selectmenuchange", function(){
-                        window.location.search="?service_id=" + $(this).val();
-                        //service_id = window.location.href.replace(/.*service_id=(\d+).*/,"$1")*1;
-                        //SetServiceId($(this).val());
-                        //RefreshServiceView();
-                        //Initialize();
+                        //Vaihtaa messua pudotusvalikon kautta
+                        SetServiceId($(this).val());
+                        active_tab.Initialize();
+                        Comments.LoadComments();
+                        Comments.CreateThemeSelect();
                     });
                     $sel.val(GetServiceId());
                     $sel.selectmenu("refresh");
@@ -2344,19 +2375,6 @@ Portal.Service = function(){
             });
     }
 
-    /**
-     *
-     * Alusta messukohtainen näkymä uuden messun lataamiseksi näytölle.
-     *
-     */
-    function RefreshServiceView(){
-        BibleModule.ClearPickers()
-        $.each(TabObjects, (idx, o)=> delete o);
-        $(".tabheader").each(function(){
-            $(this).text($(this).text().replace(" *",""));
-        });
-        $(".save_tab_data").hide();
-    }
 
     /**
      *
@@ -2396,46 +2414,29 @@ Portal.Service = function(){
      *
      **/
     function Initialize(){
+        var tab_name_raw, tab_name;
         console.log("Initializing the service view...");
-
+        $("#tabs").tabs({ activate: SetActiveTabByEvent});
         $("#tabs > div").each(function(){
             TabFactory.make($(this));
-        })
-        TabObjects.Details.GetTheme(TabObjects.Details.SetTheme);
-        TabObjects.Details.GetOfferingTargets(
-            TabObjects.Details.SetOfferingTarget.bind(TabObjects.Details));
-        TabObjects.Details.GetBibleSegments(TabObjects.Details.SetBibleSegments);
-        TabObjects.People.GetResponsibles(TabObjects.People.SetResponsibles);
-        TabObjects.Structure.GetStructure(TabObjects.Structure.SetStructure);
-        for(this_tab in TabObjects){
-            TabObjects[this_tab].AddSaveButton();
-        }
+        });
+        //tarkista, onko välilehti asetettu urlissa
+        tab_name_raw = window.location.href.replace(/.*tab=([a-öA-ö]+).*/,"$1");
+        tab_idx = 0;
+        $.each(tab_titles, (title,id) => {
+            if(tab_name_raw == id){
+                tab_idx =  $("#" + id).index() -1;
+                $("#tabs").tabs("option", "active", tab_idx);
+                return 0;
+            }
+        });
+
+        $("#prepared_for_insertion").hide();
+        SetActiveTabByIndex(tab_idx);
+        active_tab.Initialize();
 
         Comments.LoadComments();
         Comments.CreateThemeSelect();
-        Portal.SongSlots.LoadSongsToSlots(TabObjects.Songs);
-        SongLists.Initialize();
-        $("#prepared_for_insertion").hide()
-            .draggable({
-                revert: true,
-                refreshPositions: true,
-                cursor: "move",
-                opacity:0.89,
-                zIndex:100,
-                start: function(e){
-                     $(e.target).find(".attach_instructions").hide();
-                     $(e.target).find("h4").addClass("attaching_title");
-                },
-                stop: function(e){
-                     $(e.target).find(".attach_instructions").show();
-                     $(e.target).find("h4").removeClass("attaching_title");
-                },
-                classes: {
-                    "ui-draggable-dragging": "insert_box_dragging"
-                },
-                handle: ".fa-arrows",
-                //snap:".songinput",
-            });
         //Hae messun päivämäärä ja muodosta messujen vaihtamiseen lista
         $.when(SetDate()).done(() => AddServiceList());
 
@@ -2463,6 +2464,18 @@ Portal.Service.TabFactory.People = function(){
 
     /**
      *
+     * Avaa välilehden ja lataa / päivittää sisällön
+     *
+     */
+    this.Initialize = function(){
+        console.log("Initializing the people tab");
+        this.GetResponsibles(this.SetResponsibles);
+        this.AddSaveButton();
+    };
+
+
+    /**
+     *
      * Tulostaa kaikkien messussa mukana olevien vastuunkantajien nimet
      *
      * @param list_of_people ajax-responssina saatu taulukko muodossa [{responsible:x,responsibility:x},{:},...]
@@ -2480,7 +2493,6 @@ Portal.Service.TabFactory.People = function(){
                         </div>
                 </li>`);
         });
-        //Tarkkaile muutoksia:
         $ul.find("input[type='text']").on("change paste keyup",this.MonitorChanges.bind(this));
         $ul.appendTo("#People .embed-data");
         //Tallennetaan data, jotta voidaan tarkastella sen muutoksia
@@ -2533,7 +2545,26 @@ Portal.Service.TabFactory.People = function(){
 Portal.Service.TabFactory.Details = function(){
 
     this.action = "save_details";
+    initialized = {
+        theme : false,
+        offerings : false,
+        bible : false,
+    };
 
+
+    /**
+     *
+     * Avaa välilehden ja lataa / päivittää sisällön
+     *
+     */
+    this.Initialize = function(){
+        console.log("Initializing the details tab");
+        this.bible_segments = [];
+        this.GetTheme(this.SetTheme);
+        this.GetOfferingTargets(this.SetOfferingTarget.bind(this));
+        this.GetBibleSegments(this.SetBibleSegments);
+        this.AddSaveButton();
+    };
 
     /**
      *
@@ -2544,8 +2575,7 @@ Portal.Service.TabFactory.Details = function(){
      *
      **/
     this.GetTheme = function(callback){
-        $("#service_theme").on("change paste keyup",this.MonitorChanges.bind(this));
-        $.get("php/ajax/Loader.php",{
+        return $.get("php/ajax/Loader.php",{
             action: "get_service_theme",
             service_id: service_id
             }, callback.bind(this));
@@ -2561,9 +2591,10 @@ Portal.Service.TabFactory.Details = function(){
     this.SetTheme = function(theme){
         $("#service_theme").val(theme);
         this.tabdata = this.GetTabData();
-        $("#service_theme").on("change paste keyup",this.MonitorChanges.bind(this));
-        //Tarkkaile muutoksia:
-        
+        if(!initialized.theme){
+            $("#service_theme").on("change paste keyup",this.MonitorChanges.bind(this));
+            initialized.theme = true;
+        }
     };
 
 
@@ -2669,7 +2700,11 @@ Portal.Service.TabFactory.Details = function(){
                 $("#offering_target_select select").val(goal.target_id);
                 $("#offering_target_select select").selectmenu("refresh");
                 $("#offering_amount").val(goal.amount);
-                $("#offering_target_select select").on("selectmenuchange",this.MonitorChanges.bind(this));
+                if(!initialized.offerings){
+                    $("#offering_target_select select")
+                        .on("selectmenuchange",this.MonitorChanges.bind(this));
+                    initialized.offerings = true;
+                }
             }
         );
     };
@@ -2781,6 +2816,19 @@ Portal.Service.TabFactory.Details = function(){
  **/
 Portal.Service.TabFactory.Structure = function(){
 
+
+    /**
+     *
+     * Avaa välilehden ja lataa / päivittää sisällön
+     *
+     */
+    this.Initialize = function(){
+        console.log("Initializing the structure tab");
+        this.GetStructure(this.SetStructure);
+        this.AddSaveButton();
+    };
+
+
     /**
      *
      * Syöttää tietokannasta haetun rakennedatan html:ään
@@ -2858,6 +2906,37 @@ Portal.Service.TabFactory.Songs = function(){
 
     this.action = "save_songs";
 
+    /**
+     *
+     * Avaa välilehden ja lataa / päivittää sisällön
+     *
+     */
+    this.Initialize = function(){
+        Portal.SongSlots.LoadSongsToSlots(this);
+        SongLists.Initialize();
+        $("#prepared_for_insertion")
+            .draggable({
+                revert: true,
+                refreshPositions: true,
+                cursor: "move",
+                opacity:0.89,
+                zIndex:100,
+                start: function(e){
+                     $(e.target).find(".attach_instructions").hide();
+                     $(e.target).find("h4").addClass("attaching_title");
+                },
+                stop: function(e){
+                     $(e.target).find(".attach_instructions").show();
+                     $(e.target).find("h4").removeClass("attaching_title");
+                },
+                classes: {
+                    "ui-draggable-dragging": "insert_box_dragging"
+                },
+                handle: ".fa-arrows",
+                //snap:".songinput",
+            });
+        this.AddSaveButton();
+    }
 
     /**
      *
@@ -7123,8 +7202,6 @@ $(function(){
     }
     //Other actions:
     if ($("body").hasClass("servicedetails")){
-        //Messukohtainen näkymä
-        $("#tabs").tabs();
         Portal.Service.Initialize();
     }
     else if ($("body").hasClass("servicelist")){

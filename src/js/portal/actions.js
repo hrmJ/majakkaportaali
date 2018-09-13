@@ -9,8 +9,6 @@ $(function(){
     }
     //Other actions:
     if ($("body").hasClass("servicedetails")){
-        //Messukohtainen näkymä
-        $("#tabs").tabs();
         Portal.Service.Initialize();
     }
     else if ($("body").hasClass("servicelist")){

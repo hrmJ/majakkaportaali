@@ -7,6 +7,37 @@ Portal.Service.TabFactory.Songs = function(){
 
     this.action = "save_songs";
 
+    /**
+     *
+     * Avaa välilehden ja lataa / päivittää sisällön
+     *
+     */
+    this.Initialize = function(){
+        Portal.SongSlots.LoadSongsToSlots(this);
+        SongLists.Initialize();
+        $("#prepared_for_insertion")
+            .draggable({
+                revert: true,
+                refreshPositions: true,
+                cursor: "move",
+                opacity:0.89,
+                zIndex:100,
+                start: function(e){
+                     $(e.target).find(".attach_instructions").hide();
+                     $(e.target).find("h4").addClass("attaching_title");
+                },
+                stop: function(e){
+                     $(e.target).find(".attach_instructions").show();
+                     $(e.target).find("h4").removeClass("attaching_title");
+                },
+                classes: {
+                    "ui-draggable-dragging": "insert_box_dragging"
+                },
+                handle: ".fa-arrows",
+                //snap:".songinput",
+            });
+        this.AddSaveButton();
+    }
 
     /**
      *

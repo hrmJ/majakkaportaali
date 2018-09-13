@@ -60,7 +60,6 @@ var Comments = function(){
      *
      */
     function SaveComment(){
-        console.log("raz!");
         $container = $(this).parent().parent().parent();
         var theme = "";
         var replyto = 0;

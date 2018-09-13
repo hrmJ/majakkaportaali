@@ -9,6 +9,18 @@ Portal.Service.TabFactory.People = function(){
 
     /**
      *
+     * Avaa välilehden ja lataa / päivittää sisällön
+     *
+     */
+    this.Initialize = function(){
+        console.log("Initializing the people tab");
+        this.GetResponsibles(this.SetResponsibles);
+        this.AddSaveButton();
+    };
+
+
+    /**
+     *
      * Tulostaa kaikkien messussa mukana olevien vastuunkantajien nimet
      *
      * @param list_of_people ajax-responssina saatu taulukko muodossa [{responsible:x,responsibility:x},{:},...]
@@ -26,7 +38,6 @@ Portal.Service.TabFactory.People = function(){
                         </div>
                 </li>`);
         });
-        //Tarkkaile muutoksia:
         $ul.find("input[type='text']").on("change paste keyup",this.MonitorChanges.bind(this));
         $ul.appendTo("#People .embed-data");
         //Tallennetaan data, jotta voidaan tarkastella sen muutoksia

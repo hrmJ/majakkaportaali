@@ -423,7 +423,7 @@ Portal.SongSlots = function(){
             $("#prepared_for_insertion").hide();
             this.picked_id = $(ui.draggable).find(".song_id").val();
             this.CheckLyrics();
-            songs_tab.MonitorChanges();
+            Portal.Service.GetCurrentTab("Songs").MonitorChanges();
         };
 
 
@@ -447,7 +447,7 @@ Portal.SongSlots = function(){
                     this.$div.prev().remove();
                 }
                 this.$div.remove();
-                songs_tab.MonitorChanges();
+                Portal.Service.GetCurrentTab("Songs").MonitorChanges();
             }
             else{
                 window.alert("Et voi poistaa viimeistä laulua. Jos tätä laulua ei lauleta, jätä kenttä vain tyhjäksi.");
@@ -699,7 +699,7 @@ Portal.SongSlots = function(){
             $("#songdetails .lyrics_id").val(this.picked_id);
             this.$div.find(".song_id").val(this.picked_id);
             SongLists.SetLyrics(this.picked_id, $("#songdetails .lyrics"));
-            songs_tab.MonitorChanges();
+            Portal.Service.GetCurrentTab("Songs").MonitorChanges();
         }
 
 

@@ -5,6 +5,19 @@
  **/
 Portal.Service.TabFactory.Structure = function(){
 
+
+    /**
+     *
+     * Avaa välilehden ja lataa / päivittää sisällön
+     *
+     */
+    this.Initialize = function(){
+        console.log("Initializing the structure tab");
+        this.GetStructure(this.SetStructure);
+        this.AddSaveButton();
+    };
+
+
     /**
      *
      * Syöttää tietokannasta haetun rakennedatan html:ään

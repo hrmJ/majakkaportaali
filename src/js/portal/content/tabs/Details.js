@@ -6,7 +6,26 @@
 Portal.Service.TabFactory.Details = function(){
 
     this.action = "save_details";
+    initialized = {
+        theme : false,
+        offerings : false,
+        bible : false,
+    };
 
+
+    /**
+     *
+     * Avaa välilehden ja lataa / päivittää sisällön
+     *
+     */
+    this.Initialize = function(){
+        console.log("Initializing the details tab");
+        this.bible_segments = [];
+        this.GetTheme(this.SetTheme);
+        this.GetOfferingTargets(this.SetOfferingTarget.bind(this));
+        this.GetBibleSegments(this.SetBibleSegments);
+        this.AddSaveButton();
+    };
 
     /**
      *
@@ -17,8 +36,7 @@ Portal.Service.TabFactory.Details = function(){
      *
      **/
     this.GetTheme = function(callback){
-        $("#service_theme").on("change paste keyup",this.MonitorChanges.bind(this));
-        $.get("php/ajax/Loader.php",{
+        return $.get("php/ajax/Loader.php",{
             action: "get_service_theme",
             service_id: service_id
             }, callback.bind(this));
@@ -34,9 +52,10 @@ Portal.Service.TabFactory.Details = function(){
     this.SetTheme = function(theme){
         $("#service_theme").val(theme);
         this.tabdata = this.GetTabData();
-        $("#service_theme").on("change paste keyup",this.MonitorChanges.bind(this));
-        //Tarkkaile muutoksia:
-        
+        if(!initialized.theme){
+            $("#service_theme").on("change paste keyup",this.MonitorChanges.bind(this));
+            initialized.theme = true;
+        }
     };
 
 
@@ -142,7 +161,11 @@ Portal.Service.TabFactory.Details = function(){
                 $("#offering_target_select select").val(goal.target_id);
                 $("#offering_target_select select").selectmenu("refresh");
                 $("#offering_amount").val(goal.amount);
-                $("#offering_target_select select").on("selectmenuchange",this.MonitorChanges.bind(this));
+                if(!initialized.offerings){
+                    $("#offering_target_select select")
+                        .on("selectmenuchange",this.MonitorChanges.bind(this));
+                    initialized.offerings = true;
+                }
             }
         );
     };
