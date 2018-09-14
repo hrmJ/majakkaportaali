@@ -291,6 +291,48 @@ Portal.Servicelist = function(){
         });
     }
 
+    /**
+     *
+     * Lataa ja tulostaa listan tulevista tapahtumista 
+     *
+     */
+    function LoadEventList(){
+        var path = Utilities.GetAjaxPath("Loader.php");
+        $("#eventlist").html("");
+        $.getJSON(path, {"action":"future_events"}, (evlist)=>{
+            $.each(evlist, (idx, e)=>{
+                raw_date = $.datepicker.parseDate("yy-mm-dd", e.event_date);
+                event_date =  $.datepicker.formatDate('dd.mm', raw_date);
+                $(`<li>
+                    <strong>${event_date}:</strong>
+                    <span>${e.name}</span>
+                    <input type='hidden' value='${e.place_and_time + ". " + e.description}'></input>
+                </li>`)
+                    .click((e)=>{
+                        var $target = $(e.target);
+                        if ($target.get(0).tagName !== "LI"){
+                            $target = $target.parents("li");
+                        }
+                        var msg = new Utilities.Message($target.find("input").val(), 
+                            $target);
+                        msg.SetTitle($target.find("span").text());
+                        msg.AddCloseButton()
+                        msg.Show(99999);
+                    })
+                    .appendTo("#eventlist");
+            });
+        });
+    }
+
+    /**
+     *
+     * Lataa ja tulostaa listan aktiivisista pienryhmistä
+     *
+     */
+    function LoadSmallGroupList(){
+        console.log("loading small group list");
+    }
+
 
     /**
      *
@@ -317,7 +359,10 @@ Portal.Servicelist = function(){
         $(".covermenu-target_managelist").each(function(){
             var list = Portal.ManageableLists.ListFactory.make($(this));
             $(this).click(list.LoadList.bind(list));
+            manageable_lists[list.list_type] = list;
         });
+        LoadEventList();
+        LoadSmallGroupList();
     }
 
     /**

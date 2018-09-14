@@ -102,9 +102,13 @@ class Community{
     }
 
 
+
+
     /**
      *
      * Hakee tiedot tapahtumista
+     *
+     * @param $id jos haetaan tapahtuman yksityiskohtia, niin tapahtuman id
      *
      */
     public function GetListOfEvents($id=null){
@@ -114,6 +118,20 @@ class Community{
             $cond
         );
         return $groups;
+    }
+
+
+    /**
+     *
+     * Hakee tiedot vain tulevista tapahtumista 
+     *
+     */
+    public function GetListOfFutureEvents(){
+        $events = $this->con->select("events", 
+            ["id","name","description","place_and_time","event_date","has_songs"],
+            ["event_date[>=]" =>  $date = date('Y-m-d')]
+        );
+        return $events;
     }
 
 

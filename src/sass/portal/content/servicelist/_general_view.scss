@@ -38,3 +38,64 @@
 .monthname {
     font-weight:bold;
 }
+
+
+.added_slist_info{
+    //display:none;
+}
+
+article.added_slist_info{
+    display:none;
+}
+
+
+
+@media only screen and (min-width: 920px){
+
+
+    .servicelist_container{
+        width:100%;
+        display:flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        article + article{
+            //margin-left:5em;
+        }
+        font-size:1.0em;
+
+        >article:first-child{
+            flex:0 0 50%;
+        }
+        padding-right:0.3em;
+
+    }
+
+    .added_slist_info{
+    }
+
+    .servicelist_container{
+    }
+
+    article.added_slist_info{
+        font-size:0.7em;
+        display:flex;
+        flex-flow:row wrap;
+        color: lighten(black,55%);
+
+
+        section{
+            background: lighten($navbg,80%);
+            padding:1em;
+            border-radius:5px;
+            margin-left:3em;
+            margin-top:2em;
+        }
+
+        h2 {
+            font-weight:normal;
+        }
+
+    }
+
+}
+

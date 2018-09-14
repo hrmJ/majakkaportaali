@@ -102,6 +102,10 @@ switch($params["action"]){
         $com= new Community($database);
         echo json_encode($com->GetListOfEvents());
         break;
+    case "future_events":
+        $com= new Community($database);
+        echo json_encode($com->GetListOfFutureEvents());
+        break;
     case "mlist_Smallgroups":
         $com= new Community($database);
         echo json_encode($com->GetListOfSmallGroups());

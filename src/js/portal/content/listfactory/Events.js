@@ -30,7 +30,6 @@ Portal.ManageableLists.ListFactory.Events = function(){
                     </section>
                 `);
 
-
         /**
          *
          * @param raw_data tarvittavat tiedot tietokannasta
@@ -76,6 +75,7 @@ Portal.ManageableLists.ListFactory.Events = function(){
             console.log(params)
             return params;
         };
+
 
         /**
          *
