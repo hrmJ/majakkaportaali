@@ -80,6 +80,7 @@ gulp.task("js",function(){
                    "js/portal/content/tabs/Infoslides",
                    "js/portal/content/tabs/Songs",
                    "js/portal/content/ManageableLists",
+                   "js/portal/content/AdditionalInfoBoxes",
 
                    "js/portal/content/Servicelist",
                    "js/portal/content/listfactory/Responsibilities",

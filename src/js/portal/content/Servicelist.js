@@ -13,8 +13,8 @@ Portal.Servicelist = function(){
         all_seasons = {},
         list_of_services = undefined,
         manageable_lists = {},
-        current_data_list;
-
+        current_data_list,
+        infoboxes = {};
 
     /**
      *
@@ -179,7 +179,7 @@ Portal.Servicelist = function(){
                 //Lisää siirtyminen messukohtaiseen näkymään:
                 $(".service_link_li").click(function(){
                     var id = $(this).attr("id").replace(/.*id_(\d+)/,"$1");
-                    window.location = window.location.href = "service.php?service_id=" + id;
+                    window.location =  "service.php?service_id=" + id;
                 });
                 $("#savebutton").hide();
                 $(".byline h2").text("Messut / " + current_season.name);
@@ -280,7 +280,10 @@ Portal.Servicelist = function(){
                 .selectmenu("refresh")
                 .on("selectmenuchange", function() {
                     current_season = all_seasons[$(this).val()];
-                    list_of_services.LoadServices();
+                    $.when(list_of_services.LoadServices()).done(() => {
+                        console.log(infoboxes)
+                            $.each(infoboxes, (key, obj) => obj.LoadData());
+                    });
                     if($("#managelist").is(":visible")){
                         //Päivitä myös mahdollisesti auki oleva hallintavalikko
                         //co
@@ -290,6 +293,8 @@ Portal.Servicelist = function(){
                 });
         });
     }
+
+
 
     /**
      *
@@ -324,14 +329,6 @@ Portal.Servicelist = function(){
         });
     }
 
-    /**
-     *
-     * Lataa ja tulostaa listan aktiivisista pienryhmistä
-     *
-     */
-    function LoadSmallGroupList(){
-        console.log("loading small group list");
-    }
 
 
     /**
@@ -348,6 +345,10 @@ Portal.Servicelist = function(){
             $.when(LoadSeasonSelect().done( () => {
                     $.when(list_of_services.LoadServices()).done(() =>  {
                         LoadListOfRoles()
+                            infoboxes.events = new Portal.AdditionalInfoBoxes.EventInfoBox();
+                            infoboxes.smallgroups = new Portal.AdditionalInfoBoxes.SmallGroupInfoBox();
+                            infoboxes.comments = new Portal.AdditionalInfoBoxes.CommentInfoBox();
+                            $.each(infoboxes, (key, obj) => obj.LoadData());
                     });
                 }));
         });
@@ -361,8 +362,6 @@ Portal.Servicelist = function(){
             $(this).click(list.LoadList.bind(list));
             manageable_lists[list.list_type] = list;
         });
-        LoadEventList();
-        LoadSmallGroupList();
     }
 
     /**

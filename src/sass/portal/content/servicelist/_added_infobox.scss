@@ -1,0 +1,29 @@
+
+.added_infobox{
+    li{
+        display:flex;
+        flex-flow:row nowrap;
+        @include pointer;
+        padding:0.2em;
+        align-items:flex-start;
+
+        > div:first-child{
+            margin-right:0.0em;
+            width:auto;
+            margin-right: 0.4em;
+        }
+
+        &:hover{
+            background: white;
+        
+        }
+
+        .comby{
+            margin-left:0.9em;
+            font-size:0.9em;
+            font-style:italic;
+        }
+
+    }
+
+}

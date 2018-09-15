@@ -115,6 +115,32 @@ class Comment{
         return $this;
     }
 
+
+    /**
+     * 
+     * Lataa tuoreimmat kommentit messusta riippumatta
+     *
+     * @param string $startdate kauden aikaisin päivämäärä muotoa yyyy-mm-dd
+     * @param string $enddate kauden myöhäisin päivämäärä muotoa yyyy-mm-dd
+     *
+     */
+    public function LoadLatest($startdate, $enddate){
+        $servicelist = new Servicelist($this->con);
+        $servicelist->SetSeason($startdate, $enddate);
+        $services = $servicelist->ListServices();
+        $sids = [];
+        foreach($services as $service){
+            $sids[] = $service["id"];
+        }
+        //Järjestä ketjut niin, että tuorein ekana
+        $all =  $this->con->select("comments","*",[
+            'service_id' => $sids,
+            'ORDER' => [ 'comment_time' => 'DESC' ],
+            'LIMIT' => 4
+        ]);
+        return $all;
+    }
+
     /**
      *
      * Lataa kaikki vanhat kommentit tietokannasta

@@ -657,6 +657,23 @@ li.songtags {
 .goal_amount {
   width: 10em; }
 
+.added_infobox li {
+  display: flex;
+  flex-flow: row nowrap;
+  cursor: pointer;
+  padding: 0.2em;
+  align-items: flex-start; }
+  .added_infobox li > div:first-child {
+    margin-right: 0.0em;
+    width: auto;
+    margin-right: 0.4em; }
+  .added_infobox li:hover {
+    background: white; }
+  .added_infobox li .comby {
+    margin-left: 0.9em;
+    font-size: 0.9em;
+    font-style: italic; }
+
 .monthly_list {
   padding-left: 1.5em; }
 
@@ -696,11 +713,11 @@ article.added_slist_info {
 
   article.added_slist_info {
     font-size: 0.7em;
-    display: flex;
-    flex-flow: row wrap;
+    display: block;
     color: #8c8c8c; }
     article.added_slist_info section {
       background: #f2f2f2;
+      float: left;
       padding: 1em;
       border-radius: 5px;
       margin-left: 3em;
