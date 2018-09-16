@@ -21,5 +21,8 @@ $(function(){
         GeneralStructure.Initialize(".structural-element-add");
         //Ehkä filtteröitynä?
     }
-
+    else if ($("body").hasClass("loginpage")){
+        $("main").width($(window).width());
+        Portal.LoginForm.Initialize();
+    }
 });

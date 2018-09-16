@@ -10,6 +10,7 @@
 require '../../../vendor/autoload.php';
 
 use Medoo\Medoo;
+use Portal\LoginController;
 use Portal\content\Comment;
 use Portal\content\Community;
 use Portal\content\Service;
@@ -42,6 +43,8 @@ $database_bible = new Medoo([
 $m = new Mustache_Engine(array(
     'loader' => new Mustache_Loader_FilesystemLoader('../../views')
     ));
+$login_controller = new LoginController($database, $config["salt"]);
+$login_controller->TestIsLoggedIn();
 
 //Käytä joko get- tai post-dataa riippuen kutsujasta
 $params = (isset($_GET["action"]) ? $_GET : $_POST);

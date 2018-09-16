@@ -1,8 +1,20 @@
 //Otsikkotyylit
 
+
+
 h1, h2, h3, h4{
     font-family: $roboto;
 }
+
+header{
+    //background:darken(white,10%);
+
+    h1{
+        font-family: $roboto;
+    }
+
+}
+
 
 h2{
     padding-bottom:0.5em;

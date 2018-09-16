@@ -377,6 +377,18 @@ CREATE TABLE collected_offerings (
 );
 
 
+--- Pienryhmien tiedot
+
+
+CREATE TABLE users (
+  id int(10) unsigned NOT NULL AUTO_INCREMENT,
+  username varchar(20) UNIQUE,
+  password CHAR(32),
+  PRIMARY KEY (id)
+);
+
+
+-- INSERT INTO users (username, password) VALUES ('testikäyttäjä', MD5('testisalasanaSALT')
 
 --- Pienryhmien tiedot
 

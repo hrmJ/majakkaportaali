@@ -3,7 +3,7 @@ Portaali
 --------
 
 - [ ] "Ei sanoja" -laatikko ruksattavaksi
-- [ ] Jos useampi raamatunkohta, GetTabData ei toimi
+- [ ] Liturgiset omaksi segmenttityypikseen (Uskontunnustus, synnintunnustukset...)
 
 Bugit
 -----
@@ -12,6 +12,8 @@ Bugit
 Diat
 ----
 
+- [ ] Ajastin lisättäväksi sisällöksi
+- [ ] Mahdollisuus toteuttaa diojenvälinen siirtymä feidaamalla
 - [ ] Ylimääräinen Tallenna-nappi lauluissa, kun service.php iframessa
 - [ ] Mahdollisuus  näyttää laulun nimen sijasta laulun rooli
 - [ ] Blank screen

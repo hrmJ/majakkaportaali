@@ -23,6 +23,7 @@ class CommunityTest extends TestCase
         'password' => $config["pw"],
         'charset' => 'utf8'
         ]);
+        var_dump($database->select("services","*"));
         $this->con = $database;
     }
 

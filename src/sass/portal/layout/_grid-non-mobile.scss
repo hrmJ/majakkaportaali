@@ -9,6 +9,7 @@
     .container{
         margin-top:10px;
         width:75%;
+        border-radius:5px;
         @include shadow;
 
         //Lisää padding oletuksena kaikkien elementtien sisälle
