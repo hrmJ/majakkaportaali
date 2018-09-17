@@ -154,6 +154,27 @@ class Servicelist{
         return  $this;
     }
 
+    /**
+     *
+     * Hae nykyistä päivää lähin messu
+     *
+     */
+    public function GetNextService(){
+        $date = date('Y-m-d');
+        //Kokeile ensin tätä päivää
+        $next_id = $this->con->get("services", "id", 
+            [
+                "servicedate[>=]" => $date,
+                "ORDER" => ["servicedate" => "ASC"]
+            ]);
+        if(!$next_id){
+            return "no next services";
+        }
+        else{
+            return $next_id;
+        }
+    }
+
 }
 
 

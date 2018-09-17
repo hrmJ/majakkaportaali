@@ -46,7 +46,7 @@ class LoginController{
             "password" =>md5($password . $this->salt)
             ]);
         if ($id){
-            $_SESSION["IsLoggedIn"] = true;
+            $_SESSION["IsLoggedIn"] = $login;
             return "success";
         }
         //Kirjaa kaiken varalta (testit) ulos, jos ei hyväksytty
@@ -75,8 +75,22 @@ class LoginController{
      */
     public function TestIsLoggedIn(){
         if (!isset($_SESSION["IsLoggedIn"])){
-            header("Location: index.php");
+            header("index.php");
             exit();
+        }
+    }
+
+    /**
+     *
+     * Testaa, kuka käyttäjä on kirjautunut sisään
+     *
+     */
+    public function TestWhoIsLoggedIn(){
+        if (!isset($_SESSION["IsLoggedIn"])){
+            return "Ei kirjauduttu";
+        }
+        else{
+            return $_SESSION["IsLoggedIn"];
         }
     }
 

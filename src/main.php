@@ -24,7 +24,6 @@ $m = new Mustache_Engine(array(
     'loader' => new Mustache_Loader_FilesystemLoader(__DIR__ . '/views')
     ));
 $login_controller = new LoginController($database, $config["salt"]);
-$login_controller->TestIsLoggedIn();
 
 $layout = $m->loadTemplate('layout'); 
 $nav = $m->loadTemplate('servicelist_nav'); 
@@ -39,6 +38,7 @@ $page_content = [
     "nav" => $nav->render(),
     "song_controls" => $song_controls->render(),
     "slide_models" => $slide_models->render(),
+    "login_ready" => $login_controller->TestWhoIsLoggedIn(),
     ];
 
 echo $layout->render($page_content);

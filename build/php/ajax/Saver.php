@@ -38,7 +38,6 @@ $login_controller = new LoginController($database, $config["salt"]);
 //DEV: Käytä joko get- tai post-dataa riippuen kutsujasta
 //$params = (isset($_GET["action"]) ? $_GET : $_POST);
 $params = $_POST;
-var_dump($_SESSION);
 if($params["action"] == "login"){
     echo $login_controller->TryLogin($params["username"], $params["password"]);
 }

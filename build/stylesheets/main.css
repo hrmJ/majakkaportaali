@@ -326,7 +326,10 @@ a i {
     right: 1em; }
 
   .sidemenu-launcher {
-    display: none; } }
+    display: none; }
+
+  .user_indicator {
+    display: block; } }
 a .fa-arrow-left {
   margin-right: 0.7em; }
 
@@ -519,7 +522,8 @@ h3 {
     font-family: "Gloria Hallelujah", cursive;
     font-size: 2em;
     max-width: 100%;
-    max-height: 100%; }
+    max-height: 100%;
+    margin-bottom: 1em; }
   .loginpage main {
     width: 100vw;
     height: 95vh;
@@ -527,13 +531,14 @@ h3 {
     justify-content: center;
     align-items: center; }
     .loginpage main .login-details {
+      position: relative;
       display: flex;
       flex-flow: row wrap;
       justify-content: center;
-      align-items: center; }
+      align-items: flex-end; }
       .loginpage main .login-details > div {
         min-width: 10em; }
-      .loginpage main .login-details > div:nth-child(2) {
+      .loginpage main .login-details > div:nth-child(2), .loginpage main .login-details > div:nth-child(3) {
         margin-top: 1em; }
     .loginpage main .logincontent {
       display: flex;
@@ -544,6 +549,8 @@ h3 {
       .loginpage main {
         overflow-y: hidden;
         height: auto; }
+        .loginpage main .nav_options ul li {
+          max-width: 22em; }
         .loginpage main h1 {
           font-family: "Gloria Hallelujah", cursive;
           font-size: 6em;
@@ -552,6 +559,40 @@ h3 {
         .loginpage main .login-details > div:nth-child(2) {
           margin-top: 0px;
           margin-left: 2em; } }
+
+.nav_options {
+  position: relative; }
+  .nav_options ul {
+    margin-top: -1em;
+    list-style-type: none;
+    display: flex;
+    flex-flow: row wrap;
+    padding-left: 1em;
+    margin-left: 1em; }
+  .nav_options li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    background: #f2f2f2;
+    padding: 1em;
+    margin: 0.5em;
+    font-size: 0.7em;
+    max-width: 9em;
+    cursor: pointer;
+    border: 1px solid #949494; }
+    .nav_options li:hover {
+      background: #404040;
+      color: white; }
+  .nav_options li + li {
+    margin-left: 1em; }
+
+.login_iframe {
+  position: absolute;
+  z-index: 99999;
+  width: 100vw;
+  height: 100vh;
+  border: 0; }
 
 .lyrics {
   padding: 0;

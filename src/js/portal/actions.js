@@ -3,6 +3,7 @@
 
 
 $(function(){
+    Portal.LoginForm.Initialize();
     //Navigation etc:
     if (!Portal.Menus.GetInitialized()){
         Portal.Menus.InitializeMenus();
@@ -23,6 +24,5 @@ $(function(){
     }
     else if ($("body").hasClass("loginpage")){
         $("main").width($(window).width());
-        Portal.LoginForm.Initialize();
     }
 });

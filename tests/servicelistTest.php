@@ -66,6 +66,15 @@ class ServicelistTest extends TestCase
         $result = $servicelist->ListServicesFilteredBy("diat");
     }
 
+    /**
+     * Testaa päivämäärän perusteella lähimmän tulevan messun hakemista
+     */
+    public function testGetNextService()
+    {
+        $servicelist = new Servicelist($this->con);
+        $servicelist->GetNextService();
+    }
+
 
 
 }

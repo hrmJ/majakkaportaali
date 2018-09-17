@@ -42,19 +42,21 @@
                     </div>
                 </div>
 
-                <div class='label-parent some-margin button_container'>
-                    <button class='loginbutton'>Kirjaudu</button>
+                <div class='label-parent button_container'>
+                    <div></div>
+                    <div><button class='loginbutton'>Kirjaudu</button></div>
                 </div>
 
             </div>
 
-            <div class='hidden'>
+            <div id='navigation_options' class='hidden nav_options'>
 
                 <ul>
-                    <li>Tulevan messun laulut</li>
-                    <li>Tulevan messun vastuut</li>
-                    <li>Pääsivu</li>
-                    <li>Lisää ilmoitusdia</li>
+                    <li class='nextservicelink' id="Songs">Seuraavan messun laulut</li>
+                    <li class='nextservicelink' id="People">Seuraavan messun vastuuhenkilöt</li>
+                    <li id="main">Pääsivu (messujen lista)</li>
+                    <li id="add_info">Lisää ilmoitusdia</li>
+                    <li><select id="login_resp_sel"><option>Valitse rooli</option></select></li>
                 </ul>
 
             </div>

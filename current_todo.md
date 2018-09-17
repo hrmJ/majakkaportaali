@@ -12,6 +12,8 @@ Bugit
 Diat
 ----
 
+- [ ] Kysymysikoni, joka kertoo tarkemmin esim. siitä, missä kohtaa messua
+      alkulaulu ja mitä sen jälkeen yms.
 - [ ] Ajastin lisättäväksi sisällöksi
 - [ ] Mahdollisuus toteuttaa diojenvälinen siirtymä feidaamalla
 - [ ] Ylimääräinen Tallenna-nappi lauluissa, kun service.php iframessa
