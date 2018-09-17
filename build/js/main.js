@@ -595,18 +595,24 @@ Portal.LoginForm = function(){
                     iframe_callback();
                 }
                 else{
-                    $(".login-details").hide();
-                    $("#navigation_options").fadeIn();
-                    //show the options for navigation
-
-                    //if(!$("[name='username']").val()){
-                    //    //..only if this isn't a failed login attempt
-                    //
-                    //}
+                    ShowLoginOptions();
                 }
             }
         
         });
+    }
+
+    /**
+     *
+     * Näyttää pikalinkit sisältöön, jos kirjauduttu onnistuneesti
+     *
+     * (huom: ei haittaa, vaikka tämä on front end -koodia, koska ilman onnistuneesti
+     * asetettua php:n sessiomuuttujaa sisältöön ei pääse käsiksi vaikka linkit olisikin)
+     *
+     */
+    function ShowLoginOptions(){
+        $(".login-details").hide();
+        $("#navigation_options").fadeIn();
     }
 
     /**
@@ -617,6 +623,24 @@ Portal.LoginForm = function(){
     function SetIframeCallback(callback){
         iframe_callback = callback;
         console.log(callback);
+    }
+
+    /**
+     *
+     * Lisää valintaelementin, jolla voi suoraan siirtyä yhden roolin vastuihin
+     *
+     */
+    function AddRoleSelect(){
+        var path = Utilities.GetAjaxPath("Loader.php");
+        $.getJSON(path, { "action" : "get_list_of_responsibilities" },
+            (d) => {
+                $("#login_resp_sel").append((d.map((resp) => `<option>${resp}</option>`)));
+                $("#login_resp_sel").selectmenu();
+                $("#login_resp_sel").on("selectmenuchange", function(){
+                    window.location="main.php?role="+$(this).val();
+                });
+            }
+        );
     }
 
 
@@ -637,7 +661,11 @@ Portal.LoginForm = function(){
             $iframe.on("load", function() {
                this.contentWindow.Portal.LoginForm.SetIframeCallback(CloseIframe)
             });
-
+        }
+        else{
+            if($("body").hasClass("loginpage")){
+                ShowLoginOptions();
+            }
         }
     }
 
@@ -689,6 +717,9 @@ Portal.LoginForm = function(){
         TestIsLogged();
         $("#main").click(() => window.location="main.php");
         $(".nextservicelink").click(GetNextService);
+        if($("body").hasClass("loginpage")){
+            AddRoleSelect();
+        }
     }
 
 
@@ -3632,6 +3663,8 @@ Portal.Servicelist = function(){
         this.LoadServicesClean = function(){
             this.is_editable = false;
             $(".covermenu").hide();
+            $("#show_main_link").hide();
+            $(".menu-header").text("Valitse rooli");
             this.LoadServices();
         };
 
@@ -3665,6 +3698,7 @@ Portal.Servicelist = function(){
             this.is_editable = true;
             var path = Utilities.GetAjaxPath("Loader.php");
             $(".covermenu").hide();
+            $("#show_main_link").show();
             $.when($.getJSON(path,{
                 action: "get_filtered_list_of_services",
                 "startdate" : current_season.startdate,
@@ -3672,6 +3706,7 @@ Portal.Servicelist = function(){
                 filteredby: this.filteredby
                 }, this.Output.bind(this))).done(()=>{
                     $(".byline h2").text(this.filteredby);
+                    $(".menu-header").text(this.filteredby);
                 } );
         };
 
@@ -3885,7 +3920,8 @@ Portal.Servicelist = function(){
      *
      **/
     function Initialize(no_current_date){
-        var list_type = '';
+        var list_type = '',
+            role = '';
         console.log("Initializing the list of services...");
         $.when(SetSeasonByCurrentDate(no_current_date)).done(() => {
             $.when(LoadSeasonSelect().done( () => {
@@ -3895,12 +3931,24 @@ Portal.Servicelist = function(){
                             infoboxes.smallgroups = new Portal.AdditionalInfoBoxes.SmallGroupInfoBox();
                             infoboxes.comments = new Portal.AdditionalInfoBoxes.CommentInfoBox();
                             $.each(infoboxes, (key, obj) => obj.LoadData());
+                        if(window.location.href.indexOf("role")>0){
+                            //Jos määritetty url:ssa, että suodatetaan vastuun mukaan
+                            role = window.location.href.replace(/.*role=([^&]+).*/,"$1");
+                            list_of_services.SetFilteredBy(role);
+                            list_of_services.FilterServices();
+                            $(".menu-header").text(role);
+                        }
                     });
                 }));
         });
         //Alusta myös laululista käyttöä varten
         SongLists.Initialize(true);
         $("#savebutton").click(list_of_services.Save.bind(list_of_services));
+        $("#show_main_link").hide();
+        $("#show_main_link").click(()=>{
+            list_of_services.LoadServicesClean()
+            Portal.Menus.GetSideMenu().Close();
+        });
         $("#structure_launcher").click(() => window.location="service_structure.php");
         //Vastuukohtainen suodattaminen
         $(".covermenu-target_managelist").each(function(){

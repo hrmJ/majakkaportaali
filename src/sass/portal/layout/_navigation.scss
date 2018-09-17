@@ -1,11 +1,12 @@
 //Navigointipalkin ulkoasu
 
-.covermenu a {
+a {
     color: $navbg;
     &:visited{
         color: lighten($navbg, 10%);
     }
 }
+
 
 .navcorner {
 

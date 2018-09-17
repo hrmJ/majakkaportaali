@@ -86,6 +86,8 @@ Portal.Servicelist = function(){
         this.LoadServicesClean = function(){
             this.is_editable = false;
             $(".covermenu").hide();
+            $("#show_main_link").hide();
+            $(".menu-header").text("Valitse rooli");
             this.LoadServices();
         };
 
@@ -119,6 +121,7 @@ Portal.Servicelist = function(){
             this.is_editable = true;
             var path = Utilities.GetAjaxPath("Loader.php");
             $(".covermenu").hide();
+            $("#show_main_link").show();
             $.when($.getJSON(path,{
                 action: "get_filtered_list_of_services",
                 "startdate" : current_season.startdate,
@@ -126,6 +129,7 @@ Portal.Servicelist = function(){
                 filteredby: this.filteredby
                 }, this.Output.bind(this))).done(()=>{
                     $(".byline h2").text(this.filteredby);
+                    $(".menu-header").text(this.filteredby);
                 } );
         };
 
@@ -339,7 +343,8 @@ Portal.Servicelist = function(){
      *
      **/
     function Initialize(no_current_date){
-        var list_type = '';
+        var list_type = '',
+            role = '';
         console.log("Initializing the list of services...");
         $.when(SetSeasonByCurrentDate(no_current_date)).done(() => {
             $.when(LoadSeasonSelect().done( () => {
@@ -349,12 +354,24 @@ Portal.Servicelist = function(){
                             infoboxes.smallgroups = new Portal.AdditionalInfoBoxes.SmallGroupInfoBox();
                             infoboxes.comments = new Portal.AdditionalInfoBoxes.CommentInfoBox();
                             $.each(infoboxes, (key, obj) => obj.LoadData());
+                        if(window.location.href.indexOf("role")>0){
+                            //Jos määritetty url:ssa, että suodatetaan vastuun mukaan
+                            role = window.location.href.replace(/.*role=([^&]+).*/,"$1");
+                            list_of_services.SetFilteredBy(role);
+                            list_of_services.FilterServices();
+                            $(".menu-header").text(role);
+                        }
                     });
                 }));
         });
         //Alusta myös laululista käyttöä varten
         SongLists.Initialize(true);
         $("#savebutton").click(list_of_services.Save.bind(list_of_services));
+        $("#show_main_link").hide();
+        $("#show_main_link").click(()=>{
+            list_of_services.LoadServicesClean()
+            Portal.Menus.GetSideMenu().Close();
+        });
         $("#structure_launcher").click(() => window.location="service_structure.php");
         //Vastuukohtainen suodattaminen
         $(".covermenu-target_managelist").each(function(){

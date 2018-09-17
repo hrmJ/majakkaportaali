@@ -32,18 +32,24 @@ Portal.LoginForm = function(){
                     iframe_callback();
                 }
                 else{
-                    $(".login-details").hide();
-                    $("#navigation_options").fadeIn();
-                    //show the options for navigation
-
-                    //if(!$("[name='username']").val()){
-                    //    //..only if this isn't a failed login attempt
-                    //
-                    //}
+                    ShowLoginOptions();
                 }
             }
         
         });
+    }
+
+    /**
+     *
+     * Näyttää pikalinkit sisältöön, jos kirjauduttu onnistuneesti
+     *
+     * (huom: ei haittaa, vaikka tämä on front end -koodia, koska ilman onnistuneesti
+     * asetettua php:n sessiomuuttujaa sisältöön ei pääse käsiksi vaikka linkit olisikin)
+     *
+     */
+    function ShowLoginOptions(){
+        $(".login-details").hide();
+        $("#navigation_options").fadeIn();
     }
 
     /**
@@ -54,6 +60,24 @@ Portal.LoginForm = function(){
     function SetIframeCallback(callback){
         iframe_callback = callback;
         console.log(callback);
+    }
+
+    /**
+     *
+     * Lisää valintaelementin, jolla voi suoraan siirtyä yhden roolin vastuihin
+     *
+     */
+    function AddRoleSelect(){
+        var path = Utilities.GetAjaxPath("Loader.php");
+        $.getJSON(path, { "action" : "get_list_of_responsibilities" },
+            (d) => {
+                $("#login_resp_sel").append((d.map((resp) => `<option>${resp}</option>`)));
+                $("#login_resp_sel").selectmenu();
+                $("#login_resp_sel").on("selectmenuchange", function(){
+                    window.location="main.php?role="+$(this).val();
+                });
+            }
+        );
     }
 
 
@@ -74,7 +98,11 @@ Portal.LoginForm = function(){
             $iframe.on("load", function() {
                this.contentWindow.Portal.LoginForm.SetIframeCallback(CloseIframe)
             });
-
+        }
+        else{
+            if($("body").hasClass("loginpage")){
+                ShowLoginOptions();
+            }
         }
     }
 
@@ -126,6 +154,9 @@ Portal.LoginForm = function(){
         TestIsLogged();
         $("#main").click(() => window.location="main.php");
         $(".nextservicelink").click(GetNextService);
+        if($("body").hasClass("loginpage")){
+            AddRoleSelect();
+        }
     }
 
 

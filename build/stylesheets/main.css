@@ -112,9 +112,9 @@ main {
 
   .inner-title {
     display: none; } }
-.covermenu a {
+a {
   color: #262626; }
-  .covermenu a:visited {
+  a:visited {
     color: #404040; }
 
 .navcorner {
@@ -784,6 +784,11 @@ li.songtags {
 
 article.added_slist_info {
   display: none; }
+
+.showmainlink_container {
+  font-size: 0.7em;
+  font-style: italic;
+  margin-top: 1em; }
 
 @media only screen and (min-width: 920px) {
   .servicelist_container {

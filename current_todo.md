@@ -4,6 +4,7 @@ Portaali
 
 - [ ] "Ei sanoja" -laatikko ruksattavaksi
 - [ ] Liturgiset omaksi segmenttityypikseen (Uskontunnustus, synnintunnustukset...)
+- [ ] Materiaalit-osio
 
 Bugit
 -----
