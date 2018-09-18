@@ -90,7 +90,8 @@ Portal.LoginForm = function(){
      */
     function TestIsLogged(){
         var login_status = $("[name='login_ready']").val(),
-            $iframe = undefined;
+            $iframe = undefined,
+            path = Utilities.GetAjaxPath("Loader.php");
         if(login_status == "Ei kirjauduttu"){
             //Utilities.BlurContent();
             $("main, nav, byline, .container").hide();
@@ -99,10 +100,12 @@ Portal.LoginForm = function(){
                this.contentWindow.Portal.LoginForm.SetIframeCallback(CloseIframe)
             });
         }
-        else{
-            if($("body").hasClass("loginpage")){
-                ShowLoginOptions();
-            }
+        if($("body").hasClass("loginpage")){
+            $.getJSON(path, {"action" : "test_is_logged"}, (user) => {
+                if(user !== "Ei kirjauduttu"){
+                    ShowLoginOptions();
+                }
+            });
         }
     }
 

@@ -54,6 +54,16 @@ else{
         case "save_added_Services":
             $com->SaveNewServices($params["params"]["dates"]);
             break;
+        case "save_added_LiturgicalTexts":
+            $songlist = new Songlist($database, 0, $m);
+            $songlist->AddLtext($params["params"]["title"], $params["params"]["content"]);
+            break;
+        case "save_edited_LiturgicalTexts":
+            $songlist = new Songlist($database, 0, $m);
+            $songlist->SaveEditedLyrics($params["params"]["id"],
+                $params["params"]["cols"]["content"], true);
+            $songlist->SaveEditedLtextTitle($params["params"]["cols"]["title"], $params["params"]["id"]);
+            break;
         case "save_added_Events":
             $com->SaveNewEvent($params["params"]);
             break;

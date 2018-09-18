@@ -227,6 +227,20 @@ class Songlist{
         return($slots);
     }
 
+    /**
+     * Hakee liturgisen tekstin sanat id:n perusteella
+     *
+     * @param $id tekstin id
+     *
+     */
+    public function FetchLtextById($id){
+        $text = $this->con->select("ltextversedata",
+            "verse",
+            ["ltext_id" => $id],
+            ["ORDER" => "id"]);
+        return $text;
+    }
+
 
     /**
      * Hakee laulun sanat sen id:n perusteella
@@ -293,19 +307,72 @@ class Songlist{
         //multisong_position?
     }
 
+
     /**
      *
-     * Tallentaa muokatut laulun sanat sen id:n perusteella
+     * Lisää uudet liturgisen tekstin sanat
+     *
+     * @param $title tekstin nimi
+     * @param $verses taulukko "säkeistöistä"
+     *
+     */
+    public function AddLtext($title, $verses){
+        $this->con->insert("ltextdata", [
+            "title" => $title
+        ]);
+        $id = $this->con->max("ltextdata","id");
+        foreach($verses as $verse){
+            $this->con->insert("ltextversedata", [
+                "ltext_id" => $id,
+                "verse" => $verse
+            ]);
+        }
+        //multisong_position?
+    }
+
+    /**
+     *
+     * Hakee kaikki liturgiset tekstit (id:n ja otsikon)
+     *
+     */
+    public function FetchLtexts(){
+        $texts = $this->con->select("ltextdata", ["title","id"], ["ORDER" => "title"]);
+        return($texts);
+    }
+
+
+    /**
+     *
+     * Tallentaa mahdollisesti muokatun liturgisen tekstin otsikon
+     *
+     * @param $title uusi otsikko
+     * @param $id tekstin id
+     *
+     */
+    public function SaveEditedLtextTitle($title, $id){
+        $texts = $this->con->update("ltextdata", ["title" => $title], ["id" => $id]);
+    }
+
+    /**
+     *
+     * Tallentaa muokatut laulun (tai liturgisen tekstin) sanat sen id:n perusteella
      *
      * @param $id laulun id
      * @param $verses taulukko säkeistöistä
      *
      */
-    public function SaveEditedLyrics($id, $verses){
-        $this->con->delete("versedata", ["song_id" => $id]);
+    public function SaveEditedLyrics($id, $verses, $is_liturgical=false){
+        $idcol = "song_id";
+        $table = "versedata";
+        if($is_liturgical){
+            $idcol = "ltext_id";
+            $table = "ltextversedata";
+        }
+        
+        $this->con->delete($table, [$idcol => $id]);
         foreach($verses as $verse){
-            $this->con->insert("versedata", [
-                "song_id" => $id,
+            $this->con->insert($table, [
+                $idcol => $id,
                 "verse" => $verse
             ]);
         }

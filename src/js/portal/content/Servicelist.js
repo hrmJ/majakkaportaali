@@ -285,7 +285,6 @@ Portal.Servicelist = function(){
                 .on("selectmenuchange", function() {
                     current_season = all_seasons[$(this).val()];
                     $.when(list_of_services.LoadServices()).done(() => {
-                        console.log(infoboxes)
                             $.each(infoboxes, (key, obj) => obj.LoadData());
                     });
                     if($("#managelist").is(":visible")){

@@ -59,6 +59,8 @@ switch($params["action"]){
             ->SetReplyTo($params["replyto"])
             ->Save();
         break;
+    case "test_is_logged":
+        echo json_encode($login_controller->TestWhoIsLoggedIn());
     case "load_comments":
         $comment= new Comment($database, $params["service_id"], $m);
         echo $comment->LoadAll();
@@ -108,6 +110,14 @@ switch($params["action"]){
     case "get_event_details":
         $com= new Community($database);
         echo json_encode($com->GetListOfEvents($params["id"]));
+        break;
+    case "mlist_LiturgicalTexts":
+        $songlist = new Songlist($database, 0, $m);
+        echo json_encode($songlist->FetchLtexts());
+        break;
+    case "get_ltext_verses":
+        $songlist = new Songlist($database, 0, $m);
+        echo json_encode($songlist->FetchLtextById($params["id"]));
         break;
     case "mlist_Events":
         $com= new Community($database);

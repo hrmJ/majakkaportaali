@@ -653,7 +653,8 @@ Portal.LoginForm = function(){
      */
     function TestIsLogged(){
         var login_status = $("[name='login_ready']").val(),
-            $iframe = undefined;
+            $iframe = undefined,
+            path = Utilities.GetAjaxPath("Loader.php");
         if(login_status == "Ei kirjauduttu"){
             //Utilities.BlurContent();
             $("main, nav, byline, .container").hide();
@@ -662,10 +663,12 @@ Portal.LoginForm = function(){
                this.contentWindow.Portal.LoginForm.SetIframeCallback(CloseIframe)
             });
         }
-        else{
-            if($("body").hasClass("loginpage")){
-                ShowLoginOptions();
-            }
+        if($("body").hasClass("loginpage")){
+            $.getJSON(path, {"action" : "test_is_logged"}, (user) => {
+                if(user !== "Ei kirjauduttu"){
+                    ShowLoginOptions();
+                }
+            });
         }
     }
 
@@ -3397,7 +3400,6 @@ Portal.AdditionalInfoBoxes = function(){
     
         this.LoadData = function(){
             var season = Portal.Servicelist.GetCurrentSeason();
-            console.log(season.startdate);
             $.getJSON(apath, 
                 {
                     "action":this.action,
@@ -3414,11 +3416,8 @@ Portal.AdditionalInfoBoxes = function(){
          *
          */
         this.PrintList = function(data){
-            console.log("DATAA" + this.list_id);
-            console.log(data);
             $(this.list_id).html("");
             $.each(data, this.PrintRow.bind(this));
-            console.log(this.list_id);
         };
 
         /**
@@ -3534,7 +3533,6 @@ Portal.AdditionalInfoBoxes = function(){
          *
          */
         this.ProcessDataRow = function(row){
-            console.log(row);
             var commentator = (row.commentator ? ` (${row.commentator})` : '');
                 raw_date = $.datepicker.parseDate("yy-mm-dd", row.comment_time.replace(/ .*/g,'')),
                 event_date =  $.datepicker.formatDate('dd.mm', raw_date),
@@ -3862,7 +3860,6 @@ Portal.Servicelist = function(){
                 .on("selectmenuchange", function() {
                     current_season = all_seasons[$(this).val()];
                     $.when(list_of_services.LoadServices()).done(() => {
-                        console.log(infoboxes)
                             $.each(infoboxes, (key, obj) => obj.LoadData());
                     });
                     if($("#managelist").is(":visible")){
@@ -5406,6 +5403,165 @@ Portal.ManageableLists.ListFactory.Smallgroups = function(){
         }
 
 
+};
+
+
+Portal = Portal || {};
+Portal.ManageableLists.ListFactory = Portal.ManageableLists.ListFactory || {};
+
+/**
+ *
+ * Liturgisten tekstien (isä meidän, uskontunnustus jne) hallinta
+ *
+ */
+Portal.ManageableLists.ListFactory.LiturgicalTexts = function(){
+
+    this.current_target_id = undefined;
+    this.keys = [
+            "title",
+            "content",
+            ];
+
+    this.edithtml = `
+                    <article>
+                        <section>
+                            <div class='label_parent'>
+                                <div>Tekstin nimi</div>
+                                <div>
+                                    <input class='title' type='text' placeholder='esim. Apostolinen uskontunnustus' value=''></input>
+                                </div>
+                            </div>
+                            <h4>Teksti</h4>
+                            <p>Huom! Erota tyhjällä rivivälillä toisistaan pätkät, jotka näytetään näytöllä kerralla.</p>
+                            <div>
+                            <textarea placeholder='Esim. Minä uskon Jumalaan\nIsään kaikki..' class='content'></textarea>
+                            </div>
+                        </section>
+                    </article>
+                    `;
+
+
+
+
+    /**
+     *
+     * @param raw_data tarvittavat tiedot tietokannasta
+     * @param $li muokattava ja palautettava listaelementti
+     *
+     */
+    this.AddListRow = function(raw_data, $li){
+        var path = Utilities.GetAjaxPath("Loader.php");
+        $li.find("span").text(raw_data.title);
+        $.each(this.keys.concat(["id"]), (idx, key) => {
+            if(key != "content"){
+                $li.append(`<input type='hidden' class='${key}-container' 
+                    value='${raw_data[key]}'></input>`);
+            }
+        }
+        );
+        return $li;
+    };
+
+
+    /**
+     *
+     * Tulostaa muokkauslaatikon tai uuden lisäämislaatikon
+     *
+     */
+    this.PrintEditOrAdderBox = function(){
+        $(this.edithtml)
+            .appendTo("#list_editor .edit_container");
+    };
+
+    /**
+     *
+     * Nåyttää ikkunan, jossa voi muokata yhtä listan alkiota.
+     * TODO kaikille tyypeille yhteinen lähtötilanne?
+     *
+     */
+    this.EditEntry = function(){
+        var path = Utilities.GetAjaxPath("Loader.php"),
+            id = this.$current_li.find(".id-container").val(),
+            title = this.$current_li.find(".title-container").val(),
+            versetext = "";
+        $.getJSON(path, {
+            "action" : "get_ltext_verses",
+            "id" : id,
+        }, (verses) => {
+            $.each(verses, (idx, verse) => versetext += "\n\n" + verse.verse);
+            $("#list_editor .content").val(versetext.trim());
+            $("#list_editor .title").val(title);
+        });
+        this.PrintEditOrAdderBox();
+    };
+
+    /**
+     *
+     * Hakee alkion muokkauksessa muuttuneet  parametrit
+     *
+     */
+    this.GetEditParams = function(){
+        return  {
+             "cols" : this.GetParams(),
+             "id" : this.$current_li.find(".id-container").val(),
+            }
+    };
+
+
+
+    /**
+     *
+     * Tallentaa lisätyn kolehtikohteen sekä mahdollisen tavoitteen
+     *
+     */
+    this.GetAddedParams = function(){
+        return this.GetParams();
+    };
+
+
+    /**
+     *
+     * Hakee muokatut / lisätyt arvot editori-ikkunasta
+     *
+     */
+    this.GetParams = function(){
+        var selector = "#list_editor .edit_container .",
+            params = {},
+            split_pattern = /\n{2,}/;
+        vals = this.keys.map((key) => $(selector + key).val());
+        $.each(this.keys,(idx,el)=>params[el] = vals[idx]);
+        params.content = params.content.trim().split(split_pattern);
+        return params;
+    };
+
+
+    /**
+     *
+     * Lisää uuden alkion listaan.
+     *
+     *
+     */
+    this.AddEntry = function(){
+        this.OpenBox();
+        this.PrintEditOrAdderBox();
+        this.AddSaveButton(this.SaveAdded);
+    };
+
+    /**
+     *
+     * Hakee alkion poistoa varten tarvittavat listatyyppikohtaiset parametrit
+     *
+     * @param $li se listan alkio, jota ollaan poistamassa.
+     *
+     */
+    this.GetRemoveParams = function($li){
+        var params =  {
+            "action" : "remove_liturcial_text",
+            "target_id" : $li.find(".target_id").val()
+        };
+        return params;
+    }
+    
 };
 
 

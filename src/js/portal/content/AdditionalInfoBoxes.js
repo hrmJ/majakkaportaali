@@ -8,7 +8,6 @@ Portal.AdditionalInfoBoxes = function(){
     
         this.LoadData = function(){
             var season = Portal.Servicelist.GetCurrentSeason();
-            console.log(season.startdate);
             $.getJSON(apath, 
                 {
                     "action":this.action,
@@ -25,11 +24,8 @@ Portal.AdditionalInfoBoxes = function(){
          *
          */
         this.PrintList = function(data){
-            console.log("DATAA" + this.list_id);
-            console.log(data);
             $(this.list_id).html("");
             $.each(data, this.PrintRow.bind(this));
-            console.log(this.list_id);
         };
 
         /**
@@ -145,7 +141,6 @@ Portal.AdditionalInfoBoxes = function(){
          *
          */
         this.ProcessDataRow = function(row){
-            console.log(row);
             var commentator = (row.commentator ? ` (${row.commentator})` : '');
                 raw_date = $.datepicker.parseDate("yy-mm-dd", row.comment_time.replace(/ .*/g,'')),
                 event_date =  $.datepicker.formatDate('dd.mm', raw_date),

@@ -115,6 +115,32 @@ CREATE TABLE versedata (
 
 
 --
+-- 
+-- Liturgiset tekstit 
+--
+
+CREATE TABLE ltextdata (
+  id int(10) unsigned NOT NULL AUTO_INCREMENT,
+  title varchar(300) UNIQUE,
+  PRIMARY KEY (id)
+) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
+
+
+--
+-- Liturgiset tekstit pilkottuna "säkeistöiksi"
+--
+
+CREATE TABLE ltextversedata (
+  id int(10) unsigned NOT NULL AUTO_INCREMENT,
+  ltext_id int(10) unsigned NOT NULL,
+  verse varchar(999) DEFAULT NULL,
+  PRIMARY KEY (id),
+  KEY `ltext_index` (`ltext_id`),
+  FOREIGN KEY (`ltext_id`) REFERENCES `ltextdata` (`id`) ON DELETE CASCADE
+) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
+
+
+--
 -- Table structure for table `liturgicalsongs`
 --
 
