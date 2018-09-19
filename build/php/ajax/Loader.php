@@ -117,7 +117,13 @@ switch($params["action"]){
         break;
     case "get_ltext_verses":
         $songlist = new Songlist($database, 0, $m);
-        echo json_encode($songlist->FetchLtextById($params["id"]));
+        $bythis = (isset($params["id"]) ? $params["id"] : $params["title"]);
+        if(isset($params["id"])){
+            echo json_encode($songlist->FetchLtext($params["id"]));
+        }
+        elseif(isset($params["title"])){
+            echo json_encode($songlist->FetchLtext(false, $params["title"]));
+        }
         break;
     case "mlist_Events":
         $com= new Community($database);
@@ -227,6 +233,14 @@ switch($params["action"]){
             $structure->SetAsServiceSpecific($params["service_id"], false);
         }
         echo json_encode($structure->LoadSlide($params["id"], "songsegments"));
+        break;
+    case "get_liturgicalslide":
+        $structure = new Structure($database, $m);
+        if($params["service_id"] != 0){
+            //tarkoituksella != eikä !==
+            $structure->SetAsServiceSpecific($params["service_id"], false);
+        }
+        echo json_encode($structure->LoadSlide($params["id"], "liturgicalsegments"));
         break;
     case "get_bibleslide":
         $structure = new Structure($database, $m);

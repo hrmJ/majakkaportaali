@@ -7,7 +7,7 @@
 var GeneralStructure = function(){
 
     var adder;
-    var slot_types = [ "infoslide", "songslide", "bibleslide"];
+    var slot_types = [ "infoslide", "songslide", "bibleslide", "liturgicalslide"];
     var sortable_slot_list = undefined;
     var service_id = 0;
 
@@ -96,6 +96,7 @@ var GeneralStructure = function(){
               <ul>
                   <li id="songslide_launcher">Laulu</li>
                   <li id="bibleslide_launcher">Raamatunkohta</li>
+                  <li id="liturgicalslide_launcher">Liturginen teksti</li>
                   <li id="infoslide_launcher">Muu</li>
               </ul>
           </div>`);

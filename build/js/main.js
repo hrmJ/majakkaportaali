@@ -321,7 +321,12 @@ var Utilities = function(){
      */
     function BlurContent(){
         $(".blurcover").remove();
-        $("<div class='blurcover'></div>").css({height:$("body").height(),width:$("body").width()}).prependTo($("body"));
+        $("<div class='blurcover'></div>")
+            .css({
+                    height:$("body").height()*5,
+                    width:$("body").width()
+                })
+            .prependTo($("body"));
     }
 
     /**
@@ -632,7 +637,7 @@ Portal.LoginForm = function(){
      */
     function AddRoleSelect(){
         var path = Utilities.GetAjaxPath("Loader.php");
-        $.getJSON(path, { "action" : "get_list_of_responsibilities" },
+        return $.getJSON(path, { "action" : "get_list_of_responsibilities" },
             (d) => {
                 $("#login_resp_sel").append((d.map((resp) => `<option>${resp}</option>`)));
                 $("#login_resp_sel").selectmenu();
@@ -666,7 +671,7 @@ Portal.LoginForm = function(){
         if($("body").hasClass("loginpage")){
             $.getJSON(path, {"action" : "test_is_logged"}, (user) => {
                 if(user !== "Ei kirjauduttu"){
-                    ShowLoginOptions();
+                    $.when(AddRoleSelect()).done(() => ShowLoginOptions());
                 }
             });
         }
@@ -3589,7 +3594,8 @@ Portal.Servicelist = function(){
         list_of_services = undefined,
         manageable_lists = {},
         current_data_list,
-        infoboxes = {};
+        infoboxes = {},
+        deactivate_role = false;
 
     /**
      *
@@ -3928,12 +3934,15 @@ Portal.Servicelist = function(){
                             infoboxes.smallgroups = new Portal.AdditionalInfoBoxes.SmallGroupInfoBox();
                             infoboxes.comments = new Portal.AdditionalInfoBoxes.CommentInfoBox();
                             $.each(infoboxes, (key, obj) => obj.LoadData());
-                        if(window.location.href.indexOf("role")>0){
+                        if(window.location.href.indexOf("role")>0 && !deactivate_role){
                             //Jos määritetty url:ssa, että suodatetaan vastuun mukaan
                             role = window.location.href.replace(/.*role=([^&]+).*/,"$1");
                             list_of_services.SetFilteredBy(role);
                             list_of_services.FilterServices();
                             $(".menu-header").text(role);
+                            //Varmistetaan, ettei lataa filtteröityä listaa
+                            //esim. hallintaoperaation jälkeen
+                            deactivate_role = true;
                         }
                     });
                 }));
@@ -5574,7 +5583,7 @@ Portal.ManageableLists.ListFactory.LiturgicalTexts = function(){
 var GeneralStructure = function(){
 
     var adder;
-    var slot_types = [ "infoslide", "songslide", "bibleslide"];
+    var slot_types = [ "infoslide", "songslide", "bibleslide", "liturgicalslide"];
     var sortable_slot_list = undefined;
     var service_id = 0;
 
@@ -5663,6 +5672,7 @@ var GeneralStructure = function(){
               <ul>
                   <li id="songslide_launcher">Laulu</li>
                   <li id="bibleslide_launcher">Raamatunkohta</li>
+                  <li id="liturgicalslide_launcher">Liturginen teksti</li>
                   <li id="infoslide_launcher">Muu</li>
               </ul>
           </div>`);
@@ -5878,6 +5888,102 @@ GeneralStructure.SlotFactory = GeneralStructure.SlotFactory || {};
  * Yksittäisen diasisällön lisäävä olio.
  *
  */
+GeneralStructure.SlotFactory.liturgicalslide = function(){
+
+    this.slideclass = ".liturgicalslide";
+    this.segment_type = "liturgicalsegment";
+
+    /**
+     *
+     * Lisää ajax-ladatun datan slottiin
+     *
+     * @param data dian tiedot ajax-responssina 
+     *
+     **/
+    this.FillInData = function(data){
+        console.log(data);
+        $.when(this.AddTextSelect()).done(()=>{
+            this.$lightbox.find(".picked_text").val(data.text_title);
+            this.$lightbox.find(".picked_text").selectmenu("refresh");
+            this.PrintTextPreview();
+        });
+        
+        var self = this;
+    };
+
+    /**
+     * Lisätään select-elementti, joka sisältää mahdolliset liturgiset tekstit
+     *
+     */
+    this.AddTextSelect = function(){
+        var path = Utilities.GetAjaxPath("Loader.php"),
+            $sel = $("<select class='picked_text'><option>Valitse teksti</option></select>");
+        this.$lightbox.find(".liturgical_text_select").html("");
+        return $.getJSON(path, {"action": "mlist_LiturgicalTexts"}, 
+            (texts) => {
+                console.log(texts);
+                $sel
+                    .append(texts.map((text)=>`<option>${text.title}</option>`))
+                    .appendTo(this.$lightbox.find(".liturgical_text_select"))
+                    .selectmenu()
+                $sel.on("selectmenuchange", this.PrintTextPreview.bind(this))
+            });
+    };
+
+    /**
+     *
+     * Näyttää esikatselun valitusta tekstistä
+     *
+     */
+    this.PrintTextPreview = function(){
+        var path = Utilities.GetAjaxPath("Loader.php");
+        $.getJSON(path,
+            {
+                "action" : "get_ltext_verses",
+                "title" : this.$lightbox.find(".picked_text").val()
+            }, (verses) => {
+                this.$lightbox.find(".text_preview")
+                    .html("")
+                    .append(verses.map((v) => `<p>${v.verse}</p>`));
+                this.$lightbox.find(".text_preview").show();
+            });
+    };
+
+
+    /**
+     *
+     * Kerää diaan liittyvän informaation tallentamista tai esikatselua
+     * varten
+     *
+     **/
+    this.SetSlideParams = function(){
+        this.slide_params = {
+            text_title: this.$lightbox.find(".picked_text").val(),
+        }
+        return this;
+    };
+
+    /**
+     *
+     * Alustaa toiminnallisuuden
+     *
+     */
+    this.Initialize = function(){
+        this.AddTextSelect();
+        this.$lightbox.find(".text_preview").hide();
+    }
+
+};
+
+
+GeneralStructure.SlotFactory = GeneralStructure.SlotFactory || {};
+
+
+/**
+ *
+ * Yksittäisen diasisällön lisäävä olio.
+ *
+ */
 GeneralStructure.SlotFactory.infoslide = function(){
     this.slideclass = ".infoslide";
     this.segment_type = "infosegment";
@@ -6008,6 +6114,7 @@ GeneralStructure.SlotFactory = function(){
     SlotFactory.infoslide = GeneralStructure.SlotFactory.infoslide;
     SlotFactory.songslide = GeneralStructure.SlotFactory.songslide;
     SlotFactory.bibleslide = GeneralStructure.SlotFactory.bibleslide;
+    SlotFactory.liturgicalslide = GeneralStructure.SlotFactory.liturgicalslide;
 
 
     return {
@@ -6582,7 +6689,7 @@ GeneralStructure.DataLoading = function(){
                 id: this.slide_id,
                 params: this.slide_params
             };
-            console.log(this.slide_params);
+            console.log(params);
             $.post("php/ajax/Saver.php", params,function(){
                 self.SetSlotParams();
                 if(!self.id){

@@ -14,7 +14,8 @@ Portal.Servicelist = function(){
         list_of_services = undefined,
         manageable_lists = {},
         current_data_list,
-        infoboxes = {};
+        infoboxes = {},
+        deactivate_role = false;
 
     /**
      *
@@ -353,12 +354,15 @@ Portal.Servicelist = function(){
                             infoboxes.smallgroups = new Portal.AdditionalInfoBoxes.SmallGroupInfoBox();
                             infoboxes.comments = new Portal.AdditionalInfoBoxes.CommentInfoBox();
                             $.each(infoboxes, (key, obj) => obj.LoadData());
-                        if(window.location.href.indexOf("role")>0){
+                        if(window.location.href.indexOf("role")>0 && !deactivate_role){
                             //Jos määritetty url:ssa, että suodatetaan vastuun mukaan
                             role = window.location.href.replace(/.*role=([^&]+).*/,"$1");
                             list_of_services.SetFilteredBy(role);
                             list_of_services.FilterServices();
                             $(".menu-header").text(role);
+                            //Varmistetaan, ettei lataa filtteröityä listaa
+                            //esim. hallintaoperaation jälkeen
+                            deactivate_role = true;
                         }
                     });
                 }));

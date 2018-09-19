@@ -229,6 +229,8 @@ class Structure{
      */
     public function FormatSlotType($name){
         switch($name){
+            case "liturgicalsegment":
+                return "Liturginen teksti";
             case "infosegment":
                 return "Infodia";
             case "songsegment":
@@ -256,6 +258,11 @@ class Structure{
                     "subgenheader",
                     "imgname",
                     "imgposition"
+                ];
+                break;
+            case "liturgicalsegments":
+                $params = [
+                    "text_title" 
                 ];
                 break;
             case "songsegments":

@@ -131,7 +131,12 @@ var Utilities = function(){
      */
     function BlurContent(){
         $(".blurcover").remove();
-        $("<div class='blurcover'></div>").css({height:$("body").height(),width:$("body").width()}).prependTo($("body"));
+        $("<div class='blurcover'></div>")
+            .css({
+                    height:$("body").height()*5,
+                    width:$("body").width()
+                })
+            .prependTo($("body"));
     }
 
     /**

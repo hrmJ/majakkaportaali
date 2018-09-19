@@ -242,6 +242,18 @@ CREATE TABLE infosegments (
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
 
+
+--
+-- 
+
+CREATE TABLE liturgicalsegments (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `text_title` varchar(9999) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
+
+
+
 --
 -- Table structure for table headers
 -- Nämä  ovat diaesitykseen mahdollisesit tulostettavia 

@@ -69,7 +69,7 @@ Portal.LoginForm = function(){
      */
     function AddRoleSelect(){
         var path = Utilities.GetAjaxPath("Loader.php");
-        $.getJSON(path, { "action" : "get_list_of_responsibilities" },
+        return $.getJSON(path, { "action" : "get_list_of_responsibilities" },
             (d) => {
                 $("#login_resp_sel").append((d.map((resp) => `<option>${resp}</option>`)));
                 $("#login_resp_sel").selectmenu();
@@ -103,7 +103,7 @@ Portal.LoginForm = function(){
         if($("body").hasClass("loginpage")){
             $.getJSON(path, {"action" : "test_is_logged"}, (user) => {
                 if(user !== "Ei kirjauduttu"){
-                    ShowLoginOptions();
+                    $.when(AddRoleSelect()).done(() => ShowLoginOptions());
                 }
             });
         }

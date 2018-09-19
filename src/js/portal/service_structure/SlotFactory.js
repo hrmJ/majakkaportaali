@@ -76,6 +76,7 @@ GeneralStructure.SlotFactory = function(){
     SlotFactory.infoslide = GeneralStructure.SlotFactory.infoslide;
     SlotFactory.songslide = GeneralStructure.SlotFactory.songslide;
     SlotFactory.bibleslide = GeneralStructure.SlotFactory.bibleslide;
+    SlotFactory.liturgicalslide = GeneralStructure.SlotFactory.liturgicalslide;
 
 
     return {

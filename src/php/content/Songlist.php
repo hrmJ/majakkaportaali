@@ -233,7 +233,10 @@ class Songlist{
      * @param $id tekstin id
      *
      */
-    public function FetchLtextById($id){
+    public function FetchLtext($id, $title=null){
+        if($title){
+            $id = $this->con->get("ltextdata", "id", ["title" => $title]);
+        }
         $text = $this->con->select("ltextversedata",
             "verse",
             ["ltext_id" => $id],

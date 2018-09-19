@@ -96,6 +96,7 @@ gulp.task("js",function(){
                    "js/portal/service_structure/GeneralStructure",
                    "js/portal/service_structure/songslide",
                    "js/portal/service_structure/bibleslide",
+                   "js/portal/service_structure/liturgicalslide",
                    "js/portal/service_structure/infoslide",
                    "js/portal/service_structure/SlotFactory",
                    "js/portal/service_structure/LightBox",
