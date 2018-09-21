@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Yhden messun laulut ja niiden syöttäminen
+ * Raamattudiat
  *
  */
 
@@ -14,7 +14,7 @@ use PDO;
 
 /**
  *
- * Yhtä diaesityksen elementtiä esittävä olio
+ * Yhtä diaesityksen raamattudiaelementtiä esittävä olio
  *
  * @param $render_array renderöitävät arvot sisällään pitävä taulukko
  *

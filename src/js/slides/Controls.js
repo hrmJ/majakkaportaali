@@ -7,6 +7,7 @@ var Slides = Slides || {};
  */
 Slides.Controls = function(){
 
+    var current_service = undefined;
 
 
     /**
@@ -87,7 +88,11 @@ Slides.Controls = function(){
         $("#service-data-iframe").on("load", function() {
             this.contentWindow.Portal.Service.SetServiceId(id);
             this.contentWindow.Portal.Service.Initialize();
+            this.contentWindow.Portal.Service.SetControlledByPresentation(
+                Slides.Presentation.GetCurrentPresentation()
+            );
             this.contentWindow.Utilities.HideUpperMenu();
+            current_service = this.contentWindow.Portal.Service;
         });
         $("#service-data-iframe").attr("src","../service.php");
     }
@@ -127,6 +132,15 @@ Slides.Controls = function(){
 
     /**
      *
+     * Hakee käytettäväksi aktiivisen messun yksityiskohdat Portal.Service-oliona
+     *
+     */
+    function GetCurrentService(){
+        return current_service;
+    }
+
+    /**
+     *
      * Alustaa hallintaelementit käyttöön
      *
      *
@@ -146,6 +160,7 @@ Slides.Controls = function(){
     
 
         Initialize,
+        GetCurrentService
     
     }
 

@@ -106,14 +106,17 @@ Portal.PercentBar = function(){
      */
     function UpdateStyles(){
         var pres = Slides.Presentation.GetCurrentPresentation(),
-            $pbsection = pres.d.find(".percent_bar:eq(0)").parents("section"),
-            cl = $pbsection.attr("class").split(" ")[1],
-            rule = pres.styles.GetRule("." + cl + " p"),
-            col = rule.cssText.replace(/.*color: ([^;]+).*/, "$1");
+            $pbarticle = pres.d.find(".percent_bar:eq(0)");
+       if($pbarticle.length) {
+            var $pbsection = $pbarticle.parents("section"),
+                cl = $pbsection.attr("class").split(" ")[1],
+                rule = pres.styles.GetRule("." + cl + " p"),
+                col = rule.cssText.replace(/.*color: ([^;]+).*/, "$1");
 
-        $.each(all_bars, function(idx, bar){
-            bar.SetBarColor(col);
-        });
+            $.each(all_bars, function(idx, bar){
+                bar.SetBarColor(col);
+            });
+       }
     
     }
 

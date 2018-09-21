@@ -2368,6 +2368,28 @@ Portal.Service = function(){
     service_date = {};
     //Ota messun id simppelisti url:sta
     service_id = window.location.href.replace(/.*service_id=(\d+).*/,"$1")*1;
+    controlling_presentation = undefined;
+
+
+    /**
+     *
+     * Merkitse, että näkymä ladattu diaesityksen hallintapaneelin kautta
+     *
+     * @param pres Presentation-olio, joka avannut messun muokkausikkunan
+     *
+     */
+    function SetControlledByPresentation(pres){
+        controlling_presentation = pres;
+    }
+
+    /**
+     *
+     * 
+     *
+     */
+    function GetControlledByPresentation(){
+        return controlling_presentation;
+    }
 
     /**
      *
@@ -2431,14 +2453,43 @@ Portal.Service = function(){
 
     /**
      *
-     * Lisää tallenna-painikkeet kunkin täbin alareunaan
+     * Suorittaa tietojen tallentamisen jälkeiset toimenpiteet, minimissään ilmoittaa tallennuksesta
      *
      * @param response ajax-vastaus
      *
      **/
     TabFactory.prototype.AfterSavedChanges = function(response){
         this.MonitorChanges();
-        var msg = new Utilities.Message("Muutokset tallennettu", this.$div);
+        var msg = new Utilities.Message("Muutokset tallennettu", this.$div),
+            pres_position = {};
+        if(controlling_presentation){
+            //Päivitetään esityksen tiedot muutosten jälkeen
+            //TODO: vapaavalintaiseksi?
+            pres_position = {
+                sec_idx : controlling_presentation.$section.index(),
+                slide_idx: controlling_presentation.$slide.index()
+            };
+            $.when(controlling_presentation.SetContent()).done(()=>{
+                var new_msg = new Utilities.Message("Diaesitys päivitetty", this.$div),
+                    $sec = undefined,
+                    $slide = undefined;
+                if(controlling_presentation.d.find("section").length >= pres_position.sec_idx){
+                    $sec = controlling_presentation.d.find("section:eq(" + pres_position.sec_idx + ")");
+                    if($sec.find("arcticle").length >= pres_position.slide_idx){
+                        $slide = $sec.find("article:eq(" + pres_position.slide_idx + ")");
+                        if($slide.length){
+                            controlling_presentation.Activate($slide);
+                        }
+                        else{
+                            controlling_presentation.Activate($sec.find("article:eq(0)"));
+                        }
+                    }
+                }
+                new_msg.Show(2000);
+                console.log(pres_position);
+                //controlling_presentation.Activate(pres_position);
+            });
+        }
         msg.Show(2000);
     };
 
@@ -2628,7 +2679,9 @@ Portal.Service = function(){
         GetServiceId,
         TabFactory,
         SetServiceId,
-        GetCurrentTab
+        GetCurrentTab,
+        SetControlledByPresentation,
+        GetControlledByPresentation
     };
 
 }();
@@ -5901,7 +5954,9 @@ GeneralStructure.SlotFactory.liturgicalslide = function(){
      *
      **/
     this.FillInData = function(data){
-        console.log(data);
+        if(data.use_as_header*1){
+            this.$lightbox.find(".use_as_header").get(0).checked = true;
+        }
         $.when(this.AddTextSelect()).done(()=>{
             this.$lightbox.find(".picked_text").val(data.text_title);
             this.$lightbox.find(".picked_text").selectmenu("refresh");
@@ -5959,6 +6014,7 @@ GeneralStructure.SlotFactory.liturgicalslide = function(){
     this.SetSlideParams = function(){
         this.slide_params = {
             text_title: this.$lightbox.find(".picked_text").val(),
+            use_as_header: this.$lightbox.find(".use_as_header").is(":checked") ? 1 : 0,
         }
         return this;
     };
@@ -7852,14 +7908,17 @@ Portal.PercentBar = function(){
      */
     function UpdateStyles(){
         var pres = Slides.Presentation.GetCurrentPresentation(),
-            $pbsection = pres.d.find(".percent_bar:eq(0)").parents("section"),
-            cl = $pbsection.attr("class").split(" ")[1],
-            rule = pres.styles.GetRule("." + cl + " p"),
-            col = rule.cssText.replace(/.*color: ([^;]+).*/, "$1");
+            $pbarticle = pres.d.find(".percent_bar:eq(0)");
+       if($pbarticle.length) {
+            var $pbsection = $pbarticle.parents("section"),
+                cl = $pbsection.attr("class").split(" ")[1],
+                rule = pres.styles.GetRule("." + cl + " p"),
+                col = rule.cssText.replace(/.*color: ([^;]+).*/, "$1");
 
-        $.each(all_bars, function(idx, bar){
-            bar.SetBarColor(col);
-        });
+            $.each(all_bars, function(idx, bar){
+                bar.SetBarColor(col);
+            });
+       }
     
     }
 
@@ -10432,13 +10491,14 @@ Slides.Presentation = function(){
             else {
                 this.service_id = $("#service-select").val()*1;
                 //JUST FOR TESTING purposes:
-                this.service_id = 2;
+                //this.service_id = 2;
                 if(!isNaN(this.service_id)){
                     this.view = window.open('content.html','_blank', 'toolbar=0,location=0,menubar=0');
                     $("#launchlink").text("Sulje esitys");
                 }
                 else{
                     alert("Valitse ensin näytettävä messu");
+                    $(".nav_below").hide();
                     abort = true;
                 }
             }
@@ -10465,12 +10525,16 @@ Slides.Presentation = function(){
             this.d = $(this.view.document).contents();
             this.dom = this.view.document;
             //Lataa sisältö ulkoisesta lähteestä
-            $.when(this.LoadSlides()).done( () => {
+            return $.when(this.LoadSlides()).done( () => {
                     this.d = $(this.view.document).contents();
                     this.Activate(this.d.find(".current"));
                     ////Käy diat läpi ja poimi kaikki siellä esiintyvät luokat
                     this.LoadSlideClasses();
                     $.when(this.SetStyles()).done(() => this.LoadControlsAndContent());
+                    // Varmista interaktio muokattavien messutietojen kanssa
+                    if(!Slides.Controls.GetCurrentService().GetControlledByPresentation()){
+                        Slides.Controls.GetCurrentService().SetControlledByPresentation(this);
+                    }
                 });
         };
 
@@ -10483,7 +10547,7 @@ Slides.Presentation = function(){
         this.LoadSlides = function(){
             var path = Utilities.GetAjaxPath("Loader.php");
             return $.get(path, {
-                "service_id":self.service_id,
+                "service_id":this.service_id,
                 "action": "load_slides_to_presentation"
                 }, (html) => this.d.find("main").html(html));
         };
@@ -10845,7 +10909,7 @@ Slides.Presentation = function(){
     
         Initialize,
         GetCurrentPresentation,
-        KeyHandler
+        KeyHandler,
     
     }
 
@@ -10862,6 +10926,7 @@ var Slides = Slides || {};
  */
 Slides.Controls = function(){
 
+    var current_service = undefined;
 
 
     /**
@@ -10942,7 +11007,11 @@ Slides.Controls = function(){
         $("#service-data-iframe").on("load", function() {
             this.contentWindow.Portal.Service.SetServiceId(id);
             this.contentWindow.Portal.Service.Initialize();
+            this.contentWindow.Portal.Service.SetControlledByPresentation(
+                Slides.Presentation.GetCurrentPresentation()
+            );
             this.contentWindow.Utilities.HideUpperMenu();
+            current_service = this.contentWindow.Portal.Service;
         });
         $("#service-data-iframe").attr("src","../service.php");
     }
@@ -10982,6 +11051,15 @@ Slides.Controls = function(){
 
     /**
      *
+     * Hakee käytettäväksi aktiivisen messun yksityiskohdat Portal.Service-oliona
+     *
+     */
+    function GetCurrentService(){
+        return current_service;
+    }
+
+    /**
+     *
      * Alustaa hallintaelementit käyttöön
      *
      *
@@ -11001,6 +11079,7 @@ Slides.Controls = function(){
     
 
         Initialize,
+        GetCurrentService
     
     }
 
@@ -11027,8 +11106,9 @@ Slides.ContentList = function(parent_presentation){
      * perusteella.)
      */
     this.GetContents = function(){
+        var self = this,
+            headingselector = "h1, h2, h3, h4, h5";
         this.headings = [];
-        var self = this;
         this.pres.d.find("section").each(function(){
             var $firstslide = $(this).find("article:eq(0)");
             if($(this).hasClass("addedcontent")){
@@ -11042,19 +11122,20 @@ Slides.ContentList = function(parent_presentation){
                 var identifier = prefix + $firstslide.text().substr(0,10) + "...";
             }
             else{
-                if($(this).hasClass("infocontent")){
-                    //Jos kyseessä infodia, etsi kuvausta ja jos ei löydy, ota
-                    //alimman tason otsikko. Jos ei sitäkään löydy, ota pala tekstiä.
+                if(!$(this).find(headingselector).text()){
+                    //Jos diassa ei ole otsikoita, käytä input-elementtiä
                     if($(this).find("input[type='hidden']").length)
                         var identifier = $(this).find("input[type='hidden']").val();
-                    else if ($(this).find("h3").text()!="")
-                        var identifier = $(this).find("h3").text();
-                    else
+                    //else if ($(this).find("h3").text()!="")
+                    //    var identifier = $(this).find("h3").text();
+                    else{
+                        //..tai jos ei sitäkään, ota dian tekstin alku
                         var identifier = $(this).find("div").text().substr(0, 10) + "...";
+                    }
                 }
                 else{
-                //Muuten ota ensimmäinen otsikkoelementti
-                var identifier = $firstslide.find("h1, h2, h3, h4, h5").text();
+                    //Muuten ota ensimmäinen otsikkoelementti
+                    var identifier = $firstslide.find(headingselector).text();
                 }
             }
             self.headings.push(identifier);
@@ -11103,7 +11184,12 @@ Slides.ContentList = function(parent_presentation){
         //Etsi esityksestä sisällysluettelon id-attribuutin numeron mukainen section-elementti ja siirry sen ensinmmäiseen osioon
         this.pres.Activate(this.pres.d.find("section:eq(" + launcher.attr("id").replace("content_","") + ") article:eq(0)"));
         var self = this;
-        if(this.pres.$section.hasClass("song") || this.pres.$section.hasClass("bibletext")) this.PrintVerses();
+
+        if(this.pres.$section.hasClass("song") || 
+            this.pres.$section.hasClass("bibletext") ||
+            this.pres.$section.hasClass("ltext")) {
+            this.PrintVerses();
+        }
         this.HighlightCurrentContents();
     };
 
@@ -11116,7 +11202,15 @@ Slides.ContentList = function(parent_presentation){
     this.MovePresentationToVerse = function(launcher){
         if(!launcher.find("textarea").length){
             //Etsi esityksestä sisällysluettelon id-attribuutin numeron mukainen section-elementti ja siirry sen ensinmmäiseen osioon
-            var offset = this.pres.$section.hasClass("bibletext") ? 0 : 1;
+            var offset = 1;
+            console.log("WHAAT");
+            if(this.pres.$section.hasClass("bibletext") ||
+                this.pres.$section.hasClass("ltext")){
+                console.log("OFFSET!");
+
+                offset = 0;
+            }
+            
             this.pres.Activate(this.pres.d.find(".current")
                 .removeClass("current")
                 .parent().find("article:eq("+ (launcher.index() + offset) +")")
@@ -11145,7 +11239,13 @@ Slides.ContentList = function(parent_presentation){
             if($hlsection) $hlsection.removeClass("highlight");
             $("#original-content li:not(.drop-target):eq("+this.pres.$section.index()+")").addClass("highlight");
             if(hlindex!=this.pres.$section.index()){
-                if(this.pres.$section.hasClass("song") || this.pres.$section.hasClass("bibletext")) this.PrintVerses();
+                if(this.pres.$section.hasClass("song") ||
+                    this.pres.$section.hasClass("bibletext") ||
+                    this.pres.$section.hasClass("ltext")){
+
+                     this.PrintVerses();
+
+                }
                 else $("#verselist").html("");
             }
         }
@@ -11154,8 +11254,13 @@ Slides.ContentList = function(parent_presentation){
         $hlverse.removeClass("highlight");
         console.log(this.pres.$slide);
         if(this.pres.$slide.attr("class").match("verse")){
-            //Raamatunteksteillä: huomioi, että otsikko ekassa diassa
-            var offset = this.pres.$slide.hasClass("bibleverse") ? 0 : 1;
+            //Raamatunteksteillä + liturgisilla: huomioi, että otsikko ekassa diassa
+            var offset = 1;
+            if(this.pres.$section.hasClass("bibletext") ||
+                this.pres.$section.hasClass("ltext")){
+
+                offset = 0;
+            }
             $("#verselist div:eq("+ (this.pres.$slide.index() - offset) +")").addClass("highlight");
         }
     };
@@ -11166,10 +11271,15 @@ Slides.ContentList = function(parent_presentation){
      *
      */
     this.PrintVerses = function(){
-        var self = this;
+        var self = this,
+            verseslides = ":gt(0)";
+        if(this.pres.$section.hasClass("bibletext") || 
+            this.pres.$section.hasClass("ltext")){
+            //Raamatuntekstit ja liturgiset tekstit: aloita jo ekasta diasta
+
+            verseslides = "";
+        }
         $("#verselist").html("");
-        //Raamatuntekstit: aloita jo ekasta diasta
-        var verseslides = this.pres.$section.hasClass("bibletext") ? "" : ":gt(0)";
         this.pres.$section.find("article" + verseslides  + "").each(function(){
             var $editlink = $("<i class='fa fa-pencil'></i>").click(self.EditVerse.bind(self)),
                 $removelink = $("<i class='fa fa-trash'></i>").click(self.RemoveVerse.bind(self));

@@ -65,13 +65,14 @@ Slides.Presentation = function(){
             else {
                 this.service_id = $("#service-select").val()*1;
                 //JUST FOR TESTING purposes:
-                this.service_id = 2;
+                //this.service_id = 2;
                 if(!isNaN(this.service_id)){
                     this.view = window.open('content.html','_blank', 'toolbar=0,location=0,menubar=0');
                     $("#launchlink").text("Sulje esitys");
                 }
                 else{
                     alert("Valitse ensin näytettävä messu");
+                    $(".nav_below").hide();
                     abort = true;
                 }
             }
@@ -98,12 +99,16 @@ Slides.Presentation = function(){
             this.d = $(this.view.document).contents();
             this.dom = this.view.document;
             //Lataa sisältö ulkoisesta lähteestä
-            $.when(this.LoadSlides()).done( () => {
+            return $.when(this.LoadSlides()).done( () => {
                     this.d = $(this.view.document).contents();
                     this.Activate(this.d.find(".current"));
                     ////Käy diat läpi ja poimi kaikki siellä esiintyvät luokat
                     this.LoadSlideClasses();
                     $.when(this.SetStyles()).done(() => this.LoadControlsAndContent());
+                    // Varmista interaktio muokattavien messutietojen kanssa
+                    if(!Slides.Controls.GetCurrentService().GetControlledByPresentation()){
+                        Slides.Controls.GetCurrentService().SetControlledByPresentation(this);
+                    }
                 });
         };
 
@@ -116,7 +121,7 @@ Slides.Presentation = function(){
         this.LoadSlides = function(){
             var path = Utilities.GetAjaxPath("Loader.php");
             return $.get(path, {
-                "service_id":self.service_id,
+                "service_id":this.service_id,
                 "action": "load_slides_to_presentation"
                 }, (html) => this.d.find("main").html(html));
         };
@@ -478,7 +483,7 @@ Slides.Presentation = function(){
     
         Initialize,
         GetCurrentPresentation,
-        KeyHandler
+        KeyHandler,
     
     }
 

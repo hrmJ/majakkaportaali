@@ -20,6 +20,28 @@ Portal.Service = function(){
     service_date = {};
     //Ota messun id simppelisti url:sta
     service_id = window.location.href.replace(/.*service_id=(\d+).*/,"$1")*1;
+    controlling_presentation = undefined;
+
+
+    /**
+     *
+     * Merkitse, että näkymä ladattu diaesityksen hallintapaneelin kautta
+     *
+     * @param pres Presentation-olio, joka avannut messun muokkausikkunan
+     *
+     */
+    function SetControlledByPresentation(pres){
+        controlling_presentation = pres;
+    }
+
+    /**
+     *
+     * 
+     *
+     */
+    function GetControlledByPresentation(){
+        return controlling_presentation;
+    }
 
     /**
      *
@@ -83,14 +105,43 @@ Portal.Service = function(){
 
     /**
      *
-     * Lisää tallenna-painikkeet kunkin täbin alareunaan
+     * Suorittaa tietojen tallentamisen jälkeiset toimenpiteet, minimissään ilmoittaa tallennuksesta
      *
      * @param response ajax-vastaus
      *
      **/
     TabFactory.prototype.AfterSavedChanges = function(response){
         this.MonitorChanges();
-        var msg = new Utilities.Message("Muutokset tallennettu", this.$div);
+        var msg = new Utilities.Message("Muutokset tallennettu", this.$div),
+            pres_position = {};
+        if(controlling_presentation){
+            //Päivitetään esityksen tiedot muutosten jälkeen
+            //TODO: vapaavalintaiseksi?
+            pres_position = {
+                sec_idx : controlling_presentation.$section.index(),
+                slide_idx: controlling_presentation.$slide.index()
+            };
+            $.when(controlling_presentation.SetContent()).done(()=>{
+                var new_msg = new Utilities.Message("Diaesitys päivitetty", this.$div),
+                    $sec = undefined,
+                    $slide = undefined;
+                if(controlling_presentation.d.find("section").length >= pres_position.sec_idx){
+                    $sec = controlling_presentation.d.find("section:eq(" + pres_position.sec_idx + ")");
+                    if($sec.find("arcticle").length >= pres_position.slide_idx){
+                        $slide = $sec.find("article:eq(" + pres_position.slide_idx + ")");
+                        if($slide.length){
+                            controlling_presentation.Activate($slide);
+                        }
+                        else{
+                            controlling_presentation.Activate($sec.find("article:eq(0)"));
+                        }
+                    }
+                }
+                new_msg.Show(2000);
+                console.log(pres_position);
+                //controlling_presentation.Activate(pres_position);
+            });
+        }
         msg.Show(2000);
     };
 
@@ -280,7 +331,9 @@ Portal.Service = function(){
         GetServiceId,
         TabFactory,
         SetServiceId,
-        GetCurrentTab
+        GetCurrentTab,
+        SetControlledByPresentation,
+        GetControlledByPresentation
     };
 
 }();

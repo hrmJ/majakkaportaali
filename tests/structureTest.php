@@ -205,7 +205,7 @@ class StructureTest extends TestCase{
     public function testLoadSlideSegments()
     {
         $struct = new Structure($this->con, $this->m, $this->biblecon);
-        $struct->SetAsServiceSpecific(2);
+        $struct->SetAsServiceSpecific(87);
         $struct->LoadSlidesForPresentation();
         echo $struct->slotstring;
     }

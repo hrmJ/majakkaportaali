@@ -140,20 +140,6 @@ CREATE TABLE ltextversedata (
 ) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
 
 
---
--- Table structure for table `liturgicalsongs`
---
-
-CREATE TABLE liturgicalsongs (
-  id int(10) unsigned NOT NULL AUTO_INCREMENT,
-  title varchar(300) DEFAULT NULL,
-  titleseparator varchar(300) DEFAULT NULL,
-  role varchar(300) DEFAULT NULL,
-  composer varchar(300) DEFAULT NULL,
-  lyrics varchar(300) DEFAULT NULL,
-  verses text DEFAULT NULL,
-  PRIMARY KEY (id)
-) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
 
 
 --
@@ -249,6 +235,7 @@ CREATE TABLE infosegments (
 CREATE TABLE liturgicalsegments (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `text_title` varchar(9999) DEFAULT NULL,
+  `use_as_header` boolean default false,
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
 

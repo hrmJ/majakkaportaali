@@ -17,8 +17,9 @@ Slides.ContentList = function(parent_presentation){
      * perusteella.)
      */
     this.GetContents = function(){
+        var self = this,
+            headingselector = "h1, h2, h3, h4, h5";
         this.headings = [];
-        var self = this;
         this.pres.d.find("section").each(function(){
             var $firstslide = $(this).find("article:eq(0)");
             if($(this).hasClass("addedcontent")){
@@ -32,19 +33,20 @@ Slides.ContentList = function(parent_presentation){
                 var identifier = prefix + $firstslide.text().substr(0,10) + "...";
             }
             else{
-                if($(this).hasClass("infocontent")){
-                    //Jos kyseessä infodia, etsi kuvausta ja jos ei löydy, ota
-                    //alimman tason otsikko. Jos ei sitäkään löydy, ota pala tekstiä.
+                if(!$(this).find(headingselector).text()){
+                    //Jos diassa ei ole otsikoita, käytä input-elementtiä
                     if($(this).find("input[type='hidden']").length)
                         var identifier = $(this).find("input[type='hidden']").val();
-                    else if ($(this).find("h3").text()!="")
-                        var identifier = $(this).find("h3").text();
-                    else
+                    //else if ($(this).find("h3").text()!="")
+                    //    var identifier = $(this).find("h3").text();
+                    else{
+                        //..tai jos ei sitäkään, ota dian tekstin alku
                         var identifier = $(this).find("div").text().substr(0, 10) + "...";
+                    }
                 }
                 else{
-                //Muuten ota ensimmäinen otsikkoelementti
-                var identifier = $firstslide.find("h1, h2, h3, h4, h5").text();
+                    //Muuten ota ensimmäinen otsikkoelementti
+                    var identifier = $firstslide.find(headingselector).text();
                 }
             }
             self.headings.push(identifier);
@@ -93,7 +95,12 @@ Slides.ContentList = function(parent_presentation){
         //Etsi esityksestä sisällysluettelon id-attribuutin numeron mukainen section-elementti ja siirry sen ensinmmäiseen osioon
         this.pres.Activate(this.pres.d.find("section:eq(" + launcher.attr("id").replace("content_","") + ") article:eq(0)"));
         var self = this;
-        if(this.pres.$section.hasClass("song") || this.pres.$section.hasClass("bibletext")) this.PrintVerses();
+
+        if(this.pres.$section.hasClass("song") || 
+            this.pres.$section.hasClass("bibletext") ||
+            this.pres.$section.hasClass("ltext")) {
+            this.PrintVerses();
+        }
         this.HighlightCurrentContents();
     };
 
@@ -106,7 +113,15 @@ Slides.ContentList = function(parent_presentation){
     this.MovePresentationToVerse = function(launcher){
         if(!launcher.find("textarea").length){
             //Etsi esityksestä sisällysluettelon id-attribuutin numeron mukainen section-elementti ja siirry sen ensinmmäiseen osioon
-            var offset = this.pres.$section.hasClass("bibletext") ? 0 : 1;
+            var offset = 1;
+            console.log("WHAAT");
+            if(this.pres.$section.hasClass("bibletext") ||
+                this.pres.$section.hasClass("ltext")){
+                console.log("OFFSET!");
+
+                offset = 0;
+            }
+            
             this.pres.Activate(this.pres.d.find(".current")
                 .removeClass("current")
                 .parent().find("article:eq("+ (launcher.index() + offset) +")")
@@ -135,7 +150,13 @@ Slides.ContentList = function(parent_presentation){
             if($hlsection) $hlsection.removeClass("highlight");
             $("#original-content li:not(.drop-target):eq("+this.pres.$section.index()+")").addClass("highlight");
             if(hlindex!=this.pres.$section.index()){
-                if(this.pres.$section.hasClass("song") || this.pres.$section.hasClass("bibletext")) this.PrintVerses();
+                if(this.pres.$section.hasClass("song") ||
+                    this.pres.$section.hasClass("bibletext") ||
+                    this.pres.$section.hasClass("ltext")){
+
+                     this.PrintVerses();
+
+                }
                 else $("#verselist").html("");
             }
         }
@@ -144,8 +165,13 @@ Slides.ContentList = function(parent_presentation){
         $hlverse.removeClass("highlight");
         console.log(this.pres.$slide);
         if(this.pres.$slide.attr("class").match("verse")){
-            //Raamatunteksteillä: huomioi, että otsikko ekassa diassa
-            var offset = this.pres.$slide.hasClass("bibleverse") ? 0 : 1;
+            //Raamatunteksteillä + liturgisilla: huomioi, että otsikko ekassa diassa
+            var offset = 1;
+            if(this.pres.$section.hasClass("bibletext") ||
+                this.pres.$section.hasClass("ltext")){
+
+                offset = 0;
+            }
             $("#verselist div:eq("+ (this.pres.$slide.index() - offset) +")").addClass("highlight");
         }
     };
@@ -156,10 +182,15 @@ Slides.ContentList = function(parent_presentation){
      *
      */
     this.PrintVerses = function(){
-        var self = this;
+        var self = this,
+            verseslides = ":gt(0)";
+        if(this.pres.$section.hasClass("bibletext") || 
+            this.pres.$section.hasClass("ltext")){
+            //Raamatuntekstit ja liturgiset tekstit: aloita jo ekasta diasta
+
+            verseslides = "";
+        }
         $("#verselist").html("");
-        //Raamatuntekstit: aloita jo ekasta diasta
-        var verseslides = this.pres.$section.hasClass("bibletext") ? "" : ":gt(0)";
         this.pres.$section.find("article" + verseslides  + "").each(function(){
             var $editlink = $("<i class='fa fa-pencil'></i>").click(self.EditVerse.bind(self)),
                 $removelink = $("<i class='fa fa-trash'></i>").click(self.RemoveVerse.bind(self));

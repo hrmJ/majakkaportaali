@@ -6,6 +6,7 @@ namespace Portal\content;
 use Portal\slides\Slide;
 use Portal\slides\Song;
 use Portal\slides\BibleSegment;
+use Portal\slides\Ltext;
 use Portal\slides\Infoslide;
 use Portal\slides\SlideStyle;
 use Medoo\Medoo;
@@ -262,7 +263,8 @@ class Structure{
                 break;
             case "liturgicalsegments":
                 $params = [
-                    "text_title" 
+                    "text_title" ,
+                    "use_as_header"
                 ];
                 break;
             case "songsegments":
@@ -450,6 +452,9 @@ class Structure{
                 case "biblesegment":
                     $this->AddBibleSegment($slot, $key);
                     break;
+                case "liturgicalsegment":
+                    $this->AddLiturgicalSegment($slot, $key);
+                    break;
             }
         } 
 
@@ -487,6 +492,25 @@ class Structure{
         return $this;
     }
 
+
+    /**
+     *
+     * Lisää esitykseen liturgisen tekstisegmentin, esim. uskontunnustuksen.
+     *
+     * @param Array $slot segmentin yleistiedot
+     * @param Array $slide_idx segmentin järjestysnumero
+     *
+     */
+    public function AddLiturgicalSegment($slot, $slide_idx){
+        $songlist = new Songlist($this->con, $this->service_id);
+        $details = $this->con->get("liturgicalsegments", 
+            ["use_as_header", "text_title"], 
+            ["id" => $slot["content_id"]]);
+        $details["verses"] = $songlist->FetchLtext(null, $details["text_title"]);
+        $this->AddSlide(new Ltext($this->template_engine, $details, $slot["slot_name"]), 
+            $slot["addedclass"], $slot["header_id"], $slide_idx);
+        return $this;
+    }
 
 
     /**
