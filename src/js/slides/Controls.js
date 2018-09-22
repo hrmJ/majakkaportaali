@@ -94,7 +94,7 @@ Slides.Controls = function(){
             this.contentWindow.Utilities.HideUpperMenu();
             current_service = this.contentWindow.Portal.Service;
         });
-        $("#service-data-iframe").attr("src","../service.php?tab=Details");
+        $("#service-data-iframe").attr("src","../service.php?service_id=" + id + "&tab=Details");
     }
 
 

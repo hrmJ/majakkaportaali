@@ -327,7 +327,7 @@ var SongLists = function(){
             checkbox = "",
             $li = undefined,
             $cb = undefined;
-        if(!no_checkbox){
+        if(!not_service_specific){
             // Jos messukohtainen laulun muokkaus
             var slot = Portal.SongSlots.GetCurrentSlot(),
                 used_verses = slot.$div.find(".verses").val().split(",").map((d) => d*1),
@@ -425,7 +425,7 @@ var SongLists = function(){
                 //uuden id:n mukaiseksi
                 $(idselector).val(saved_id*1);
             }
-            SetLyrics(saved_id*1, $target_el)
+            SetLyrics(saved_id*1, $target_el);
             Portal.SongSlots.GetCurrentSlot().CheckLyrics();
             LoadSongLists();
             $("#songdetails .song_authors").show();

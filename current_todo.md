@@ -2,8 +2,8 @@
 Portaali
 --------
 
-- [ ] "Ei sanoja" -laatikko ruksattavaksi
-- [ ] Markdown-renderöinti esim. infodioihin 
+- [ ] Linkkien ulkoasu ym. esim laulunmuokkausikkunassa
+- [x] "Ei sanoja" -laatikko ruksattavaksi
 - [x] Liturgiset omaksi segmenttityypikseen (Uskontunnustus, synnintunnustukset...)
 
 Bugit
@@ -15,13 +15,14 @@ Bugit
 Diat
 ----
 
+- [ ] Blank screen
+- [ ] Esityksen avaaminen sen sulkemisen jälkeen
 - [ ] Älä näytä messujen valitsimessa menneitä messuja tai siirrä ne viimeiseksi oman otsikkonsa alle...
 - [ ] Raamattusegmenttien ylätunniste?
 - [ ] Kysymysikoni, joka kertoo tarkemmin esim. siitä, missä kohtaa messua
       alkulaulu ja mitä sen jälkeen yms.
 - [ ] Ajastin lisättäväksi sisällöksi
 - [ ] Mahdollisuus toteuttaa diojenvälinen siirtymä feidaamalla
-- [ ] Blank screen
 - [ ] säkeistöjen muokkaamisen poistaminen raamatunkohdista?
 - [x] säkeistöjen ym. tekstin muuttaminen lennosta
 - [x] Ylimääräinen Tallenna-nappi lauluissa, kun service.php iframessa
@@ -29,6 +30,7 @@ Diat
 Kaukaisemmat
 ------------
 
+- [ ] Markdown-renderöinti esim. infodioihin 
 - [/] Raamatun kirjojen nimien suomennokset
 - [ ] Kun lisätään laulu diakäyttöliittmästä, ota huomioon eri versiot
 - [ ] Mahdollisuus  näyttää laulun nimen sijasta laulun rooli

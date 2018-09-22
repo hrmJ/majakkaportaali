@@ -176,6 +176,9 @@ Portal.Service = function(){
      *
      */
     function GetServiceId(){
+        if(!service_id){
+            console.log("NO service id! Might be bad, you know...");
+        }
         return service_id;
     }
 
@@ -270,12 +273,16 @@ Portal.Service = function(){
      */
     function SetDate(){
         var path = Utilities.GetAjaxPath("Loader.php"),
-            raw_date = undefined;
+            raw_date = undefined,
+            service_id = GetServiceId();
+        console.log("HEYHOO");
+        console.log(service_id);
         return $.getJSON(path, {
             "action" : "get_service_date",
-            "id" : GetServiceId()
+            "id" : service_id
             }, 
             (d) => {
+                console.log("date is: "  + d);
                 raw_date = $.datepicker.parseDate("yy-mm-dd", d);
                 service_date = {
                     dbformat: d,

@@ -67,7 +67,10 @@ Portal.Service.TabFactory.Songs = function(){
             nolyr = [];
         $(".songslot").each(function(){
             var title = $(this).find(".songinput").val();
-            if($(this).hasClass("no_lyrics") && nolyr.indexOf(title) == -1){
+            if($(this).hasClass("no_lyrics") && 
+                nolyr.indexOf(title) == -1 &&
+                $(this).find(".is_instrumental").val() == "no"
+            ){
                 msg.Add(title);
                 nolyr.push(title);
             }
@@ -103,6 +106,7 @@ Portal.Service.TabFactory.Songs = function(){
                     song_title: $(slot).find(".songinput").val() || '',
                     song_id: $(slot).find(".song_id").val() || null,
                     verses: $(slot).find(".verses").val() || null,
+                    is_instrumental: $(slot).find(".is_instrumental").val() || "no",
                     songtype: $(cont).find(".cont_name").text(),
                     tag: $(cont).find(".restriction_val").val(),
                 });

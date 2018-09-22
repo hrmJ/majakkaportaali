@@ -26,12 +26,16 @@ class Song extends Slide{
      * @param Object $m Mustache template-moottori
      * @param Array $details laulun säkeistöt ja metatiedot
      * @param String $picked_verses pilkuin erotettu lista säkeistöstä, jotka valittu mukaan
+     * @param String $is_instrumental 'yes' tai 'no' riippuen siitä, onko esitysbiisi vai laulettava
+     * @param String $song_title laulun otsikko: tarvitaan siltä varalta, ettei sanoja, mutta otsikko
      *
      */
-    public function __construct($m, $details, $picked_verses){
+    public function __construct($m, $details, $picked_verses, $is_instrumental, $song_title){
         parent::__construct($m, $details);
         $this->template_engine;
         $this->picked_verses = ($picked_verses ? explode(",", $picked_verses) : "");
+        $this->is_instrumental = $is_instrumental;
+        $this->song_title = $song_title;
         $this->template = $this->template_engine->loadTemplate('song'); 
     }
 
@@ -39,10 +43,15 @@ class Song extends Slide{
      * Lisää html-esitykseen varsinaiset dian yksityiskohdat: säkeistöt, otsikkodia, yms.
      */
     public function SetDetails(){
-        $this->SetTitle($this->details["title"])
-            ->SetComposer($this->details["composer"])
-            ->SetLyrics($this->details["lyrics"])
-            ->SetVerses($this->details["verses"]);
+        if($this->is_instrumental == "yes"){
+            $this->SetTitle($this->song_title . " (ei yhteislaulu)");
+        }
+        else{
+            $this->SetTitle($this->details["title"])
+                ->SetComposer($this->details["composer"])
+                ->SetLyrics($this->details["lyrics"])
+                ->SetVerses($this->details["verses"]);
+        }
         return $this;
     }
 

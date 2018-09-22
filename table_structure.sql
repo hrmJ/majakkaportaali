@@ -77,6 +77,7 @@ CREATE TABLE servicesongs (
   service_id int(10) unsigned NOT NULL,
   song_title varchar(200) DEFAULT '',
   verses varchar(200) DEFAULT '',
+  is_instrumental varchar(10) DEFAULT 'no',
   song_id int(19),
   songtype varchar(100) NOT NULL,
   position int(19), -- kuinka mones samantyyppinen

@@ -230,6 +230,7 @@ class Service{
                     "service_id" => $this->id,
                     "song_title" => $entry["song_title"],
                     "verses" => $entry["verses"],
+                    "is_instrumental" => $entry["is_instrumental"],
                     "song_id" => $entry["song_id"],
                     "songtype" => $entry["songtype"]
                 ]

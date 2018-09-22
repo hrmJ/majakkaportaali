@@ -173,7 +173,8 @@ Portal.SongSlots = function(){
                     slot_data.multisong_position, 
                     self,
                     slot_data.song_id,
-                    slot_data.verses
+                    slot_data.verses,
+                    slot_data.is_instrumental,
                     );
                 slot.Create().AttachEvents();
                 if(!self.restrictedto){
@@ -292,7 +293,7 @@ Portal.SongSlots = function(){
      * @param picked_id valitun laulun id (jos joku laulu jo valittu)
      *
      **/
-    var SongSlot = function(title, position, cont, picked_id, verses){
+    var SongSlot = function(title, position, cont, picked_id, verses, is_instrumental){
 
         var self = this;
         this.title = title;
@@ -305,6 +306,7 @@ Portal.SongSlots = function(){
         this.newsongtext = "";
         this.is_service_specific = true;
         this.verses = verses || '';
+        this.is_instrumental = is_instrumental || 'no';
 
         /**
          *
@@ -314,6 +316,24 @@ Portal.SongSlots = function(){
         this.SetNotServiceSpecific = function(){
             this.is_service_specific = false;
         }
+
+
+        /**
+         *
+         * Merkitsee laulu instrumentaaliseksi (ei lisätä sanoja)
+         *
+         */
+        this.MarkNoWords = function(){
+            var $cb = $("#songdetails [name='no_lyrics_cb']");
+            if($cb.is(":checked")){
+                this.$div.find(".is_instrumental").val("yes");
+            }
+            else{
+                this.$div.find(".is_instrumental").val("no");
+            }
+            Portal.Service.GetCurrentTab("Songs").MonitorChanges();
+        };
+
 
         /**
          *
@@ -349,6 +369,7 @@ Portal.SongSlots = function(){
                     <input type="text" class="songinput" value="${this.title}"> 
                     <input type="hidden" class="song_id" value="${this.picked_id}"> 
                     <input type="hidden" class="verses" value="${this.verses}"> 
+                    <input type="hidden" class="is_instrumental" value="${this.is_instrumental}"> 
                 </div>
                 </li>`);
 
@@ -545,6 +566,11 @@ Portal.SongSlots = function(){
             $("#songdetails").slideDown();
             //Varmista, että uusien sanojen tallennuksen jälkeen pystytään viittaamaan
 
+            if(this.is_service_specific){
+                $("#songdetails .edit_instructions").show();
+                $("#songdetails .edit_instructions h4").click(Portal.Menus.InitializeFoldMenu);
+            }
+
             //Varmista, että versiot päivitetään 
             //asettamalla callback
             SongLists.SetEditedLyricsCallback(function(){
@@ -570,7 +596,11 @@ Portal.SongSlots = function(){
                     no_lyrics : [
                         $(`<li class='new_version_li'>
                         Lisää lauluun sanat</li>`)
-                            .click(self.AddNewVersion.bind(self))
+                            .click(self.AddNewVersion.bind(self)),
+
+                        $(`<li class='nolyrics_li'> 
+                            <input name='no_lyrics_cb' type="checkbox"></input>
+                            Ei sanoja tähän lauluun (esitysbiisi tms.)</li>`).click(self.MarkNoWords.bind(self))
                     ],
                     has_lyrics: [
                         $(`<li class='edit_words_li'>Muokkaa sanoja</li>`)
@@ -591,7 +621,10 @@ Portal.SongSlots = function(){
             $("#songdetails .edit_icon").unbind("click").click(this.EditMeta.bind(this));
 
             if(lyrics_status == "no_lyrics"){
-                $("#songdetails .song_authors").hide();
+                $("#songdetails .song_authors, #songdetails .edit_instructions").hide();
+                if(this.$div.find(".is_instrumental").val() == "yes"){
+                    $("#songdetails [name='no_lyrics_cb']").get(0).checked = true;
+                }
             }
         }
 

@@ -575,6 +575,9 @@ h3 {
         height: auto; }
         .loginpage main .nav_options ul li {
           max-width: 22em; }
+        .loginpage main .logincontent {
+          z-index: 0;
+          height: 100%; }
         .loginpage main h1 {
           font-family: "Gloria Hallelujah", cursive;
           font-size: 6em;

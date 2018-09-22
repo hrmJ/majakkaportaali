@@ -1366,7 +1366,8 @@ Portal.SongSlots = function(){
                     slot_data.multisong_position, 
                     self,
                     slot_data.song_id,
-                    slot_data.verses
+                    slot_data.verses,
+                    slot_data.is_instrumental,
                     );
                 slot.Create().AttachEvents();
                 if(!self.restrictedto){
@@ -1485,7 +1486,7 @@ Portal.SongSlots = function(){
      * @param picked_id valitun laulun id (jos joku laulu jo valittu)
      *
      **/
-    var SongSlot = function(title, position, cont, picked_id, verses){
+    var SongSlot = function(title, position, cont, picked_id, verses, is_instrumental){
 
         var self = this;
         this.title = title;
@@ -1498,6 +1499,7 @@ Portal.SongSlots = function(){
         this.newsongtext = "";
         this.is_service_specific = true;
         this.verses = verses || '';
+        this.is_instrumental = is_instrumental || 'no';
 
         /**
          *
@@ -1507,6 +1509,24 @@ Portal.SongSlots = function(){
         this.SetNotServiceSpecific = function(){
             this.is_service_specific = false;
         }
+
+
+        /**
+         *
+         * Merkitsee laulu instrumentaaliseksi (ei lisätä sanoja)
+         *
+         */
+        this.MarkNoWords = function(){
+            var $cb = $("#songdetails [name='no_lyrics_cb']");
+            if($cb.is(":checked")){
+                this.$div.find(".is_instrumental").val("yes");
+            }
+            else{
+                this.$div.find(".is_instrumental").val("no");
+            }
+            Portal.Service.GetCurrentTab("Songs").MonitorChanges();
+        };
+
 
         /**
          *
@@ -1542,6 +1562,7 @@ Portal.SongSlots = function(){
                     <input type="text" class="songinput" value="${this.title}"> 
                     <input type="hidden" class="song_id" value="${this.picked_id}"> 
                     <input type="hidden" class="verses" value="${this.verses}"> 
+                    <input type="hidden" class="is_instrumental" value="${this.is_instrumental}"> 
                 </div>
                 </li>`);
 
@@ -1738,6 +1759,11 @@ Portal.SongSlots = function(){
             $("#songdetails").slideDown();
             //Varmista, että uusien sanojen tallennuksen jälkeen pystytään viittaamaan
 
+            if(this.is_service_specific){
+                $("#songdetails .edit_instructions").show();
+                $("#songdetails .edit_instructions h4").click(Portal.Menus.InitializeFoldMenu);
+            }
+
             //Varmista, että versiot päivitetään 
             //asettamalla callback
             SongLists.SetEditedLyricsCallback(function(){
@@ -1763,7 +1789,11 @@ Portal.SongSlots = function(){
                     no_lyrics : [
                         $(`<li class='new_version_li'>
                         Lisää lauluun sanat</li>`)
-                            .click(self.AddNewVersion.bind(self))
+                            .click(self.AddNewVersion.bind(self)),
+
+                        $(`<li class='nolyrics_li'> 
+                            <input name='no_lyrics_cb' type="checkbox"></input>
+                            Ei sanoja tähän lauluun (esitysbiisi tms.)</li>`).click(self.MarkNoWords.bind(self))
                     ],
                     has_lyrics: [
                         $(`<li class='edit_words_li'>Muokkaa sanoja</li>`)
@@ -1784,7 +1814,10 @@ Portal.SongSlots = function(){
             $("#songdetails .edit_icon").unbind("click").click(this.EditMeta.bind(this));
 
             if(lyrics_status == "no_lyrics"){
-                $("#songdetails .song_authors").hide();
+                $("#songdetails .song_authors, #songdetails .edit_instructions").hide();
+                if(this.$div.find(".is_instrumental").val() == "yes"){
+                    $("#songdetails [name='no_lyrics_cb']").get(0).checked = true;
+                }
             }
         }
 
@@ -2345,7 +2378,7 @@ var SongLists = function(){
             checkbox = "",
             $li = undefined,
             $cb = undefined;
-        if(!no_checkbox){
+        if(!not_service_specific){
             // Jos messukohtainen laulun muokkaus
             var slot = Portal.SongSlots.GetCurrentSlot(),
                 used_verses = slot.$div.find(".verses").val().split(",").map((d) => d*1),
@@ -2443,7 +2476,7 @@ var SongLists = function(){
                 //uuden id:n mukaiseksi
                 $(idselector).val(saved_id*1);
             }
-            SetLyrics(saved_id*1, $target_el)
+            SetLyrics(saved_id*1, $target_el);
             Portal.SongSlots.GetCurrentSlot().CheckLyrics();
             LoadSongLists();
             $("#songdetails .song_authors").show();
@@ -2654,6 +2687,9 @@ Portal.Service = function(){
      *
      */
     function GetServiceId(){
+        if(!service_id){
+            console.log("NO service id! Might be bad, you know...");
+        }
         return service_id;
     }
 
@@ -2748,12 +2784,16 @@ Portal.Service = function(){
      */
     function SetDate(){
         var path = Utilities.GetAjaxPath("Loader.php"),
-            raw_date = undefined;
+            raw_date = undefined,
+            service_id = GetServiceId();
+        console.log("HEYHOO");
+        console.log(service_id);
         return $.getJSON(path, {
             "action" : "get_service_date",
-            "id" : GetServiceId()
+            "id" : service_id
             }, 
             (d) => {
+                console.log("date is: "  + d);
                 raw_date = $.datepicker.parseDate("yy-mm-dd", d);
                 service_date = {
                     dbformat: d,
@@ -3334,7 +3374,10 @@ Portal.Service.TabFactory.Songs = function(){
             nolyr = [];
         $(".songslot").each(function(){
             var title = $(this).find(".songinput").val();
-            if($(this).hasClass("no_lyrics") && nolyr.indexOf(title) == -1){
+            if($(this).hasClass("no_lyrics") && 
+                nolyr.indexOf(title) == -1 &&
+                $(this).find(".is_instrumental").val() == "no"
+            ){
                 msg.Add(title);
                 nolyr.push(title);
             }
@@ -3370,6 +3413,7 @@ Portal.Service.TabFactory.Songs = function(){
                     song_title: $(slot).find(".songinput").val() || '',
                     song_id: $(slot).find(".song_id").val() || null,
                     verses: $(slot).find(".verses").val() || null,
+                    is_instrumental: $(slot).find(".is_instrumental").val() || "no",
                     songtype: $(cont).find(".cont_name").text(),
                     tag: $(cont).find(".restriction_val").val(),
                 });
@@ -11167,7 +11211,7 @@ Slides.Controls = function(){
             this.contentWindow.Utilities.HideUpperMenu();
             current_service = this.contentWindow.Portal.Service;
         });
-        $("#service-data-iframe").attr("src","../service.php?tab=Details");
+        $("#service-data-iframe").attr("src","../service.php?service_id=" + id + "&tab=Details");
     }
 
 
