@@ -145,10 +145,87 @@ Portal.LoginForm = function(){
             });
     }
 
-    function ShowInfoSlideAdder(){
-        $("#add_info section").fadeIn();
+    /**
+     *
+     * Näytetään pikavalikko, jossa voi lisätä infodian ja piilotetaan näytöltä muut elementit
+     *
+     * @param ev klikkaustapahtuma
+     *
+     */
+    function ShowInfoSlideAdder(ev){
+        var list = new Portal.Servicelist.List(),
+            tagname =  $(ev.target).get(0).tagName;
+        if(["TEXTAREA", "INPUT"].indexOf(tagname) > -1){
+            ev.stopPropagation();
+            return 0;
+        }
+        if(!$("#add_info section").is(":visible")){
+            $(".nav_options li:not(#add_info), .li_label").hide();
+            $.when(Portal.Servicelist.SetSeasonByCurrentDate()).done(() => {
+                $.when(list.PrintSelectableServiceList()).done(() => {
+                    $("#add_info .selected_services")
+                        .html("")
+                        .append(list.$selectable_list);
+                });
+            });
+            $("#add_info section").fadeIn();
+            $("#add_info").addClass("nohover").removeClass("limit_width");
+        }
+        //$(".logincontent").height($(window).height()*2);
     }
 
+    /**
+     *
+     * Piilottaa infodian lisäävän pikavalikon 
+     *
+     */
+    function HideInfoSlideAdder(){
+        $(".nav_options li:not(#add_info), .li_label").show();
+        $("#add_info").removeClass("nohover").addClass("limit_width");
+        $("#add_info section").fadeOut()
+    
+    }
+
+    /**
+     *
+     * Tallentaa pikavalikon kautta syötetyn infodian
+     *
+     */
+    function SaveInfoSlide(){
+        var service_ids = [],
+            params = undefined,
+            path = Utilities.GetAjaxPath("Saver.php"),
+            msg = new Utilities.Message("", $(".logincontent"));
+        $("#add_info [type='checkbox']").each(function(){
+            if($(this).is(":checked")){
+                service_ids.push($(this).val());
+            }
+        });
+        if(!service_ids.length){
+            alert("Valitse ainakin yksi messu, jossa infoa näytetään!")
+            return 0;
+        }
+        params = {
+            action: "save_added_Infos",
+            params: {
+                segment: {
+                    header: $("#add_info .header").val(),
+                    maintext: $("#add_info .maintext").val()
+                },
+                content_id: "",
+                service_ids: service_ids
+            }
+        };
+        $.post(path, params, (d) => {
+            console.log(d);
+            HideInfoSlideAdder();
+            msg
+                .Add("Voit muokata ja tarkentaa infoa pääsivun Hallitse-valikosta.")
+                .SetTitle("Kiitos! Info tallennettu onnistuneesti.")
+                .Show(5000);
+        });
+        console.log(params);
+    }
 
     /**
      *
@@ -165,6 +242,9 @@ Portal.LoginForm = function(){
             AddRoleSelect();
         }
         $("#add_info").click(ShowInfoSlideAdder);
+        $("#save_info_add").click(SaveInfoSlide);
+        $("#cancel_info_add").click(HideInfoSlideAdder);
+        $("#add_info h4").click(Portal.Menus.InitializeFoldMenu);
     }
 
 

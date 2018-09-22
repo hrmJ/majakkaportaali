@@ -52,11 +52,10 @@
             <div id='navigation_options' class='hidden nav_options'>
 
                 <ul>
-                    <li class='nextservicelink' id="Songs">Seuraavan messun laulut</li>
-                    <li class='nextservicelink' id="People">Seuraavan messun vastuuhenkilöt</li>
-                    <li id="main">Pääsivu (messujen lista)</li>
-                    <li><select id="login_resp_sel"><option>Valitse rooli</option></select></li>
-                    <li id="add_info">Lisää ilmoitusdia
+                    <li class='nextservicelink limit_width' id="Songs">Seuraavan messun laulut</li>
+                    <li class='nextservicelink limit_width' id="People">Seuraavan messun vastuuhenkilöt</li>
+                    <li class='limit_width' id="main">Pääsivu (messujen lista)</li>
+                    <li class='limit_width' id="add_info"><span class="li_label">Lisää ilmoitusdia</span>
                         <section class="hidden">
                                 <div class='label-parent some-margin'>
                                     <div>Otsikko</div>
@@ -69,7 +68,14 @@
                                 <h4 class='closed'>Messut, joissa infoa näytetään</h4>
                                 <div class='label-parent some-margin hidden selected_services'>
                                 </div>
+                                <div>
+                                   <button id="save_info_add">Tallenna</button> 
+                                   <button id="cancel_info_add">Peruuta</button> 
+                                </div>
                         </section>
+                    </li>
+                    <li class='limit_width'>
+                        <select id="login_resp_sel"><option>Valitse rooli</option></select>
                     </li>
                 </ul>
 

@@ -159,9 +159,12 @@ Portal.Menus = function(){
      *
      * Luo uuden taittomenun
      *
+     * @ev tapahtuma; pyritään siihen, että vain avaustapahtuma mahdollinen
+     * foldmenun klikkauskohteelle
      *
      */
-    function InitializeFoldMenu(){
+    function InitializeFoldMenu(ev){
+        ev.stopPropagation();
         //Avaa tai sulje tarkemmat fonttien muokkaussäätimet ym
         $(this).next().slideToggle(); 
         $(this).toggleClass("opened");

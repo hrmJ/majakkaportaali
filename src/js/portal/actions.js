@@ -23,6 +23,6 @@ $(function(){
         //Ehkä filtteröitynä?
     }
     else if ($("body").hasClass("loginpage")){
-        $("main").width($(window).width());
+        //$("main").width($(window).width());
     }
 });
