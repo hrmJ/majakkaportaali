@@ -76,6 +76,7 @@ CREATE TABLE servicesongs (
   id bigint unsigned NOT NULL AUTO_INCREMENT,
   service_id int(10) unsigned NOT NULL,
   song_title varchar(200) DEFAULT '',
+  verses varchar(200) DEFAULT '',
   song_id int(19),
   songtype varchar(100) NOT NULL,
   position int(19), -- kuinka mones samantyyppinen

@@ -322,10 +322,18 @@ var SongLists = function(){
      * @param $checkbox jätetäänkö  säkeistöjen viereiset valintalaatikot tulostamatta
      *
      */
-        function SetLyrics(id, $target_el, no_checkbox){
+    function SetLyrics(id, $target_el, no_checkbox){
         var split_pattern = /\n{2,}/,
-            checkbox = (no_checkbox ? 
-                "" : "<div><input type='checkbox' checked='yes'></input></div>");
+            checkbox = "",
+            $li = undefined,
+            $cb = undefined;
+        if(!no_checkbox){
+            // Jos messukohtainen laulun muokkaus
+            var slot = Portal.SongSlots.GetCurrentSlot(),
+                used_verses = slot.$div.find(".verses").val().split(",").map((d) => d*1),
+                checkbox = "<div><input type='checkbox'></input></div>";
+        }
+        console.log(used_verses);
         $target_el.html("");
         return $.getJSON("php/ajax/Loader.php",{
             action: "fetch_lyrics",
@@ -334,13 +342,25 @@ var SongLists = function(){
             $.each(verses, function(idx, verse){
                 var text = verse.verse.replace(/\n/g,"<br>\n");
                 if (text){
-                    $target_el.append(
-                        `<li>
-                            ${checkbox}
-                            <div>${text}</div>
-                        </li>`
-                    );
-                }
+                    $li  =  $(`<li><div>${text}</div></li>`);
+                    if(checkbox){
+                        //Lisää säkiestöjen valintaan liittyvä toiminnallisuus
+                        $cb = $(checkbox)
+                            .click(slot.MarkUsedVerses.bind(slot))
+                            .prependTo($li);
+                        $cb.find("input").get(0).checked = true;
+                        if(used_verses[0]){
+                            //Jos tehty jotakin valintoja säkeistöjen suhteen
+                            if(used_verses.indexOf(idx+1) > -1 ){
+                                $cb.find("input").get(0).checked = true;
+                            }
+                            else{
+                                $cb.find("input").get(0).checked = false;
+                            }
+                        }
+                    }
+                    $target_el.append($li);
+               }
             });
             if(edited_lyrics_callback)
                 edited_lyrics_callback();

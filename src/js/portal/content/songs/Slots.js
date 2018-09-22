@@ -172,7 +172,9 @@ Portal.SongSlots = function(){
                 var slot = new SongSlot(slot_data.song_title,
                     slot_data.multisong_position, 
                     self,
-                    slot_data.song_id);
+                    slot_data.song_id,
+                    slot_data.verses
+                    );
                 slot.Create().AttachEvents();
                 if(!self.restrictedto){
                     slot.CheckLyrics();
@@ -290,7 +292,7 @@ Portal.SongSlots = function(){
      * @param picked_id valitun laulun id (jos joku laulu jo valittu)
      *
      **/
-    var SongSlot = function(title, position, cont, picked_id){
+    var SongSlot = function(title, position, cont, picked_id, verses){
 
         var self = this;
         this.title = title;
@@ -302,6 +304,7 @@ Portal.SongSlots = function(){
         this.$lyrics = undefined;
         this.newsongtext = "";
         this.is_service_specific = true;
+        this.verses = verses || '';
 
         /**
          *
@@ -310,6 +313,24 @@ Portal.SongSlots = function(){
          */
         this.SetNotServiceSpecific = function(){
             this.is_service_specific = false;
+        }
+
+        /**
+         *
+         * Merkitsee, mitkä säkeistöt kappaleesta halutaan messussa
+         * laulaa. Oletuksena kaikki, mutta poistamalla
+         * ruksin säkeistön edestä voidaan myös jättää säkeistöjä pois.
+         *
+         */
+        this.MarkUsedVerses = function(){
+            var used_verses = [];
+            $("#songdetails .lyrics input[type='checkbox']").each(function(){
+               if( $(this).is(":checked")){
+                   used_verses.push($(this).parents("li:eq(0)").index()+1);
+               }
+            });
+            this.$div.find(".verses").val(used_verses.join(","));
+            Portal.Service.GetCurrentTab("Songs").MonitorChanges();
         }
 
         /**
@@ -327,6 +348,7 @@ Portal.SongSlots = function(){
                     <span  class='slot_number hidden'>${this.position}</span>
                     <input type="text" class="songinput" value="${this.title}"> 
                     <input type="hidden" class="song_id" value="${this.picked_id}"> 
+                    <input type="hidden" class="verses" value="${this.verses}"> 
                 </div>
                 </li>`);
 

@@ -24,12 +24,14 @@ class Song extends Slide{
     /**
      *
      * @param Object $m Mustache template-moottori
-     * @param Array $details Dian tiedot: teksti, laulun nimi, kuvien läsnäolo tms.
+     * @param Array $details laulun säkeistöt ja metatiedot
+     * @param String $picked_verses pilkuin erotettu lista säkeistöstä, jotka valittu mukaan
      *
      */
-    public function __construct($m, $details){
+    public function __construct($m, $details, $picked_verses){
         parent::__construct($m, $details);
         $this->template_engine;
+        $this->picked_verses = ($picked_verses ? explode(",", $picked_verses) : "");
         $this->template = $this->template_engine->loadTemplate('song'); 
     }
 
@@ -85,10 +87,13 @@ class Song extends Slide{
      */
     public function SetVerses($verses){
         $output = "";
-        foreach($verses as $verse){
+        foreach($verses as $idx => $verse){
             if(trim($verse)){
-                $tpl = $this->template_engine->loadTemplate("verse");
-                $output .= "{$tpl->render(["text" => str_replace("\n","<br>\n",$verse)])}\n";
+                if($this->picked_verses == "" or in_array($idx+1, $this->picked_verses)){
+                    //Ota säkeistö mukaan vain jos valittu
+                    $tpl = $this->template_engine->loadTemplate("verse");
+                    $output .= "{$tpl->render(["text" => str_replace("\n","<br>\n",$verse)])}\n";
+                }
             }
         }
         $this->Set("verses",trim($output));

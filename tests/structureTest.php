@@ -194,7 +194,7 @@ class StructureTest extends TestCase{
      */
     public function testSongSlideObject()
     {
-        $slide = new Song($this->m, []);
+        $slide = new Song($this->m, [], "");
         $this->assertinstanceof(Slide::class, $slide);
     }
 

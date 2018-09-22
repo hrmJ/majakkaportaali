@@ -474,7 +474,7 @@ class Structure{
     public function AddSongSegment($slot, $slide_idx){
         $songlist = new Songlist($this->con, $this->service_id);
         $songs_of_this_type = $this->con->select("servicesongs",
-            ["song_title", "song_id", "songtype"],
+            ["song_title", "song_id", "songtype", "verses"],
             [
                 "service_id" => $this->service_id,
                 "songtype" => $slot["slot_name"],
@@ -486,7 +486,7 @@ class Structure{
                 ["title", "composer", "lyrics", "version_description"],
                 ["id" => $song["song_id"]]);
             $songdata["verses"] = $songlist->FetchLyricsById($song["song_id"], true);;
-            $this->AddSlide(new Song($this->template_engine, $songdata), 
+            $this->AddSlide(new Song($this->template_engine, $songdata, $song["verses"]), 
                 $slot["addedclass"], $slot["header_id"], $slide_idx + $song_idx);
         }
         return $this;

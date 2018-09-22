@@ -102,6 +102,7 @@ Portal.Service.TabFactory.Songs = function(){
                 data.push({
                     song_title: $(slot).find(".songinput").val() || '',
                     song_id: $(slot).find(".song_id").val() || null,
+                    verses: $(slot).find(".verses").val() || null,
                     songtype: $(cont).find(".cont_name").text(),
                     tag: $(cont).find(".restriction_val").val(),
                 });

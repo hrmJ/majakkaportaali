@@ -1365,7 +1365,9 @@ Portal.SongSlots = function(){
                 var slot = new SongSlot(slot_data.song_title,
                     slot_data.multisong_position, 
                     self,
-                    slot_data.song_id);
+                    slot_data.song_id,
+                    slot_data.verses
+                    );
                 slot.Create().AttachEvents();
                 if(!self.restrictedto){
                     slot.CheckLyrics();
@@ -1483,7 +1485,7 @@ Portal.SongSlots = function(){
      * @param picked_id valitun laulun id (jos joku laulu jo valittu)
      *
      **/
-    var SongSlot = function(title, position, cont, picked_id){
+    var SongSlot = function(title, position, cont, picked_id, verses){
 
         var self = this;
         this.title = title;
@@ -1495,6 +1497,7 @@ Portal.SongSlots = function(){
         this.$lyrics = undefined;
         this.newsongtext = "";
         this.is_service_specific = true;
+        this.verses = verses || '';
 
         /**
          *
@@ -1503,6 +1506,24 @@ Portal.SongSlots = function(){
          */
         this.SetNotServiceSpecific = function(){
             this.is_service_specific = false;
+        }
+
+        /**
+         *
+         * Merkitsee, mitkä säkeistöt kappaleesta halutaan messussa
+         * laulaa. Oletuksena kaikki, mutta poistamalla
+         * ruksin säkeistön edestä voidaan myös jättää säkeistöjä pois.
+         *
+         */
+        this.MarkUsedVerses = function(){
+            var used_verses = [];
+            $("#songdetails .lyrics input[type='checkbox']").each(function(){
+               if( $(this).is(":checked")){
+                   used_verses.push($(this).parents("li:eq(0)").index()+1);
+               }
+            });
+            this.$div.find(".verses").val(used_verses.join(","));
+            Portal.Service.GetCurrentTab("Songs").MonitorChanges();
         }
 
         /**
@@ -1520,6 +1541,7 @@ Portal.SongSlots = function(){
                     <span  class='slot_number hidden'>${this.position}</span>
                     <input type="text" class="songinput" value="${this.title}"> 
                     <input type="hidden" class="song_id" value="${this.picked_id}"> 
+                    <input type="hidden" class="verses" value="${this.verses}"> 
                 </div>
                 </li>`);
 
@@ -2318,10 +2340,18 @@ var SongLists = function(){
      * @param $checkbox jätetäänkö  säkeistöjen viereiset valintalaatikot tulostamatta
      *
      */
-        function SetLyrics(id, $target_el, no_checkbox){
+    function SetLyrics(id, $target_el, no_checkbox){
         var split_pattern = /\n{2,}/,
-            checkbox = (no_checkbox ? 
-                "" : "<div><input type='checkbox' checked='yes'></input></div>");
+            checkbox = "",
+            $li = undefined,
+            $cb = undefined;
+        if(!no_checkbox){
+            // Jos messukohtainen laulun muokkaus
+            var slot = Portal.SongSlots.GetCurrentSlot(),
+                used_verses = slot.$div.find(".verses").val().split(",").map((d) => d*1),
+                checkbox = "<div><input type='checkbox'></input></div>";
+        }
+        console.log(used_verses);
         $target_el.html("");
         return $.getJSON("php/ajax/Loader.php",{
             action: "fetch_lyrics",
@@ -2330,13 +2360,25 @@ var SongLists = function(){
             $.each(verses, function(idx, verse){
                 var text = verse.verse.replace(/\n/g,"<br>\n");
                 if (text){
-                    $target_el.append(
-                        `<li>
-                            ${checkbox}
-                            <div>${text}</div>
-                        </li>`
-                    );
-                }
+                    $li  =  $(`<li><div>${text}</div></li>`);
+                    if(checkbox){
+                        //Lisää säkiestöjen valintaan liittyvä toiminnallisuus
+                        $cb = $(checkbox)
+                            .click(slot.MarkUsedVerses.bind(slot))
+                            .prependTo($li);
+                        $cb.find("input").get(0).checked = true;
+                        if(used_verses[0]){
+                            //Jos tehty jotakin valintoja säkeistöjen suhteen
+                            if(used_verses.indexOf(idx+1) > -1 ){
+                                $cb.find("input").get(0).checked = true;
+                            }
+                            else{
+                                $cb.find("input").get(0).checked = false;
+                            }
+                        }
+                    }
+                    $target_el.append($li);
+               }
             });
             if(edited_lyrics_callback)
                 edited_lyrics_callback();
@@ -3327,6 +3369,7 @@ Portal.Service.TabFactory.Songs = function(){
                 data.push({
                     song_title: $(slot).find(".songinput").val() || '',
                     song_id: $(slot).find(".song_id").val() || null,
+                    verses: $(slot).find(".verses").val() || null,
                     songtype: $(cont).find(".cont_name").text(),
                     tag: $(cont).find(".restriction_val").val(),
                 });
