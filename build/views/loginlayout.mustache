@@ -55,8 +55,22 @@
                     <li class='nextservicelink' id="Songs">Seuraavan messun laulut</li>
                     <li class='nextservicelink' id="People">Seuraavan messun vastuuhenkilöt</li>
                     <li id="main">Pääsivu (messujen lista)</li>
-                    <li id="add_info">Lisää ilmoitusdia</li>
                     <li><select id="login_resp_sel"><option>Valitse rooli</option></select></li>
+                    <li id="add_info">Lisää ilmoitusdia
+                        <section class="hidden">
+                                <div class='label-parent some-margin'>
+                                    <div>Otsikko</div>
+                                    <input class='header'></input>
+                                </div>
+                                <div class='label-parent some-margin'>
+                                    <div>Tarkemmat tiedot</div>
+                                    <textarea class='maintext' placeholder='Tapahtuman kuvaus, paikka ja aika ym.'></textarea>
+                                </div>
+                                <h4 class='closed'>Messut, joissa infoa näytetään</h4>
+                                <div class='label-parent some-margin hidden selected_services'>
+                                </div>
+                        </section>
+                    </li>
                 </ul>
 
             </div>

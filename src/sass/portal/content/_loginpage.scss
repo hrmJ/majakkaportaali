@@ -123,3 +123,21 @@
     border:0;
 }
 
+#add_info{
+    position: relative;
+    section{
+        position: absolute;
+        z-index:10;
+        top:-22em;
+        left:20px;
+        background: lighten($navbg, 60%);
+        padding:1em;
+        width:190%;
+        border-radius:9px;
+        color:$navbg;
+        @include shadow;
+        textarea{
+            height:12em;
+        }
+    }
+}

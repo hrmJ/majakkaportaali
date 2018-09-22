@@ -79,8 +79,8 @@ Portal.ManageableLists.ListFactory.Infos = function(){
         this.EditEntry = function(){
             var selector = "#list_editor .edit_container",
                 keys = ["header", "imgposition", "maintext"],
-                oldval = undefined,
-                service_ids = this.$current_li.find(".services-container").val().split(";");
+                oldval = undefined;
+                
             //Header_id-attribuutin asettaminen valitsee automaattisesti oikean ylätunnisteen listasta
             this.header_id = this.$current_li.find(".header_id-container").val();
             this.PrintEditOrAdderBox(this.addhtml);
@@ -88,14 +88,6 @@ Portal.ManageableLists.ListFactory.Infos = function(){
             $.when(this.imageloader_added).done(() => {
                 oldval = this.$current_li.find(".imgname-container").val();
                 $(".slide-img .img-select").val(oldval);
-            });
-            //Messujen valinta kun tietokannasta haku valmis
-            $.when(this.servicelist_added).done(() => {
-                $.each(service_ids, (idx, service_id) => {
-                    if($(`.service_for_info[value='${service_id}']`).length){
-                        $(`.service_for_info[value='${service_id}']`).get(0).checked = true;
-                    }
-                });
             });
             //Muut arvot: otsikko, kuvan paikka, teksti
             $.each(keys, (idx, key) => {
@@ -143,17 +135,20 @@ Portal.ManageableLists.ListFactory.Infos = function(){
          *
          */
         this.PrintSelectableServiceList = function(services){
-            var $ul = $("<ul></ul>");
-            $ul.append(
-                services.map((s)=> {
-                    return `<li>
-                        <input type='checkbox' class='service_for_info' value='${s.id}'></input>
-                        ${s.servicedate}
-                    </li>`;
-                })
-            );
-            $("#list_editor .selected_services").html("").append($ul);
-        }
+            var list = new Portal.Servicelist.List(),
+                service_ids = this.$current_li.find(".services-container").val().split(";");
+            //Messujen valinta kun tietokannasta haku valmis
+            $.when(list.PrintSelectableServiceList()).done(() => {
+                $("#list_editor .selected_services")
+                    .html("")
+                    .append(list.$selectable_list);
+                $.each(service_ids, (idx, service_id) => {
+                    if($(`.service_for_info[value='${service_id}']`).length){
+                        $(`.service_for_info[value='${service_id}']`).get(0).checked = true;
+                    }
+                });
+            });
+        };
 
 
         /**

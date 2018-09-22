@@ -222,6 +222,27 @@ Portal.Servicelist = function(){
                 console.log(debugdata);
             });
         };
+
+
+        /**
+         *
+         * Lataa  listan messuista ja näiden viereen valintalaatikot 
+         *
+         */
+        this.PrintSelectableServiceList = function(){
+            this.$selectable_list  = $("<ul></ul>");
+            return this.LoadServices((services) => {
+                this.$selectable_list.append(
+                    services.map((s)=> {
+                        return `<li>
+                            <input type='checkbox' class='service_for_info' value='${s.id}'></input>
+                            ${s.servicedate}
+                        </li>`;
+                    })
+                );
+            });
+        }
+
     }
 
 
@@ -332,6 +353,7 @@ Portal.Servicelist = function(){
             });
         });
     }
+
 
 
 

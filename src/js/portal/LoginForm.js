@@ -145,6 +145,10 @@ Portal.LoginForm = function(){
             });
     }
 
+    function ShowInfoSlideAdder(){
+        $("#add_info section").fadeIn();
+    }
+
 
     /**
      *
@@ -160,6 +164,7 @@ Portal.LoginForm = function(){
         if($("body").hasClass("loginpage")){
             AddRoleSelect();
         }
+        $("#add_info").click(ShowInfoSlideAdder);
     }
 
 

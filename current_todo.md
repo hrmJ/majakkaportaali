@@ -3,8 +3,7 @@ Portaali
 --------
 
 - [ ] "Ei sanoja" -laatikko ruksattavaksi
-- [ ] Materiaalit-osio
-- [ ] Rukousaiheita-infolaatikko
+- [ ] Markdown-renderöinti esim. infodioihin 
 - [x] Liturgiset omaksi segmenttityypikseen (Uskontunnustus, synnintunnustukset...)
 
 Bugit
@@ -42,6 +41,8 @@ Kaukaisemmat
 - [ ] Rivinvaihdot laulujen säkeistöjen esikatselussa
 - [ ] Injectable data tietokannasta? niin että kuvaukset myös saatavilla
 - [ ] gulpin kautta yhdisteltävät pilkotut html-tiedostot
+- [ ] Materiaalit-osio
+- [ ] Rukousaiheita-infolaatikko
 
 
 Dubious

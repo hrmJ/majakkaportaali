@@ -613,6 +613,24 @@ h3 {
   height: 100vh;
   border: 0; }
 
+#add_info {
+  position: relative; }
+  #add_info section {
+    position: absolute;
+    z-index: 10;
+    top: -22em;
+    left: 20px;
+    background: #bfbfbf;
+    padding: 1em;
+    width: 190%;
+    border-radius: 9px;
+    color: #262626;
+    -moz-box-shadow: 2px 2px 8px 4px #5f5f5f;
+    -webkit-box-shadow: 2px 2px 8px 4px #5f5f5f;
+    box-shadow: 2px 2px 8px 4px #5f5f5f; }
+    #add_info section textarea {
+      height: 12em; }
+
 .lyrics {
   padding: 0;
   margin-left: 0; }
