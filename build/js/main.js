@@ -2406,8 +2406,10 @@ Portal.Service = function(){
      *
      **/
     TabFactory.prototype.AddSaveButton = function(){
+        console.log("ADDING SB!");
         var self = this;
         if(!this.$div.find("button.save_tab_data").length){
+            console.log(this);
             var $but = $("<button class='save_tab_data'>Tallenna</button>")
                 .click(this.SaveTabData.bind(this))
                 .hide();
@@ -2443,6 +2445,7 @@ Portal.Service = function(){
             //Jos muutoksia, näytä tallenna-painike ja muutosindikaattorit
             this.$div.find(".save_tab_data").show();
             $tabheader.text($tabheader.text().replace(" *","") + " *");
+            console.log(this.GetTabData());
         }
         else{
             //Ei muutoksia, piilota tallenna-painike ja muutosindikaattorit
@@ -3013,10 +3016,12 @@ Portal.Service.TabFactory.Details = function(){
                     service_id: Portal.Service.GetServiceId(),
                 },
             ];
+        console.log(BibleModule.GetAllPickers());
         $.each(this.bible_segments, function(idx, seg){
             $.each(seg.picker_pairs, function(pair_idx, picker_pair){
                 var start = picker_pair.startpicker.GetAddress(),
                     end = picker_pair.endpicker.GetAddress();
+                console.log(end);
                 if(!picker_pair.is_removed){
                     data.push({
                         type: "bible",
@@ -7783,6 +7788,7 @@ var BibleModule = function(){
     }
 
     function ClearPickers (){
+        console.log("cleared the bible pickers");
         $.each(all_pickers,(idx,o)=>delete o);
         all_pickers.splice(0);
     }
@@ -11006,14 +11012,14 @@ Slides.Controls = function(){
         var id = $(this).val();
         $("#service-data-iframe").on("load", function() {
             this.contentWindow.Portal.Service.SetServiceId(id);
-            this.contentWindow.Portal.Service.Initialize();
+            //this.contentWindow.Portal.Service.Initialize();
             this.contentWindow.Portal.Service.SetControlledByPresentation(
                 Slides.Presentation.GetCurrentPresentation()
             );
             this.contentWindow.Utilities.HideUpperMenu();
             current_service = this.contentWindow.Portal.Service;
         });
-        $("#service-data-iframe").attr("src","../service.php");
+        $("#service-data-iframe").attr("src","../service.php?tab=Details");
     }
 
 

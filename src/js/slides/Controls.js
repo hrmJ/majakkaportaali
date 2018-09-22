@@ -87,14 +87,14 @@ Slides.Controls = function(){
         var id = $(this).val();
         $("#service-data-iframe").on("load", function() {
             this.contentWindow.Portal.Service.SetServiceId(id);
-            this.contentWindow.Portal.Service.Initialize();
+            //this.contentWindow.Portal.Service.Initialize();
             this.contentWindow.Portal.Service.SetControlledByPresentation(
                 Slides.Presentation.GetCurrentPresentation()
             );
             this.contentWindow.Utilities.HideUpperMenu();
             current_service = this.contentWindow.Portal.Service;
         });
-        $("#service-data-iframe").attr("src","../service.php");
+        $("#service-data-iframe").attr("src","../service.php?tab=Details");
     }
 
 

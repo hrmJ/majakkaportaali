@@ -58,8 +58,10 @@ Portal.Service = function(){
      *
      **/
     TabFactory.prototype.AddSaveButton = function(){
+        console.log("ADDING SB!");
         var self = this;
         if(!this.$div.find("button.save_tab_data").length){
+            console.log(this);
             var $but = $("<button class='save_tab_data'>Tallenna</button>")
                 .click(this.SaveTabData.bind(this))
                 .hide();
@@ -95,6 +97,7 @@ Portal.Service = function(){
             //Jos muutoksia, näytä tallenna-painike ja muutosindikaattorit
             this.$div.find(".save_tab_data").show();
             $tabheader.text($tabheader.text().replace(" *","") + " *");
+            console.log(this.GetTabData());
         }
         else{
             //Ei muutoksia, piilota tallenna-painike ja muutosindikaattorit

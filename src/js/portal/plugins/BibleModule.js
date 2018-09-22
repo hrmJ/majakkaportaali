@@ -656,6 +656,7 @@ var BibleModule = function(){
     }
 
     function ClearPickers (){
+        console.log("cleared the bible pickers");
         $.each(all_pickers,(idx,o)=>delete o);
         all_pickers.splice(0);
     }

@@ -241,10 +241,12 @@ Portal.Service.TabFactory.Details = function(){
                     service_id: Portal.Service.GetServiceId(),
                 },
             ];
+        console.log(BibleModule.GetAllPickers());
         $.each(this.bible_segments, function(idx, seg){
             $.each(seg.picker_pairs, function(pair_idx, picker_pair){
                 var start = picker_pair.startpicker.GetAddress(),
                     end = picker_pair.endpicker.GetAddress();
+                console.log(end);
                 if(!picker_pair.is_removed){
                     data.push({
                         type: "bible",
