@@ -170,8 +170,10 @@ var Utilities = function(){
      *
      */
     function Preview($div, filename){
-        console.log("PGview");
-        if( filename.indexOf("Ei kuvaa") > -1 ){ 
+        if(!filename){
+            $div.find(".preview img").remove();
+        }
+        else if( filename.indexOf("Ei kuvaa") > -1 ){ 
             $div.find(".preview img").remove();
         }
         else{

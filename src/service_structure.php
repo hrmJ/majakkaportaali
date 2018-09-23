@@ -9,6 +9,7 @@ require '../vendor/autoload.php';
 
 use Medoo\Medoo;
 use Portal\content\Structure;
+use Portal\LoginController;
 
 $config = parse_ini_file("../config.ini");
 $database = new Medoo([
@@ -23,6 +24,7 @@ $database = new Medoo([
 $m = new Mustache_Engine(array(
     'loader' => new Mustache_Loader_FilesystemLoader(__DIR__ . '/views')
     ));
+$login_controller = new LoginController($database, $config["salt"]);
 
 $struct = new Structure($database, $m);
 
@@ -35,7 +37,8 @@ $page_content = [
     "byline" => "<h2>Messupohjan asetukset</h2>",
     "bodyclass" => "service_structure",
     "nav" => $nav->render(),
-    "slide_models" => $slide_models->render()
+    "slide_models" => $slide_models->render(),
+    "login_ready" => $login_controller->TestWhoIsLoggedIn(),
     ];
 
 echo $layout->render($page_content);

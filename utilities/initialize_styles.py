@@ -72,7 +72,9 @@ bodyvals = collections.OrderedDict([
     ("overflow" , "hidden"),
     ("font-size" , "1em"),
     ("background" , "none"),
-    ("background-size" , "100%"),
+    ("background-size" , "cover"),
+    #("background-size" , "100%"),
+    ("background-repeat" , "no-repeat"),
     ("align-items" , "center"),
     ("justify-content" , "flex-start"),
     ("border" , "0em solid black")

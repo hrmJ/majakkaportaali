@@ -108,6 +108,7 @@ gulp.task("js",function(){
                    "js/portal/service_structure/DragAndDrop",
                    "js/portal/plugins/BibleModule",
                    "js/portal/plugins/PercentBar",
+                   "js/portal/plugins/Credits",
                    "js/portal/actions",
 
                    "js/slides/plugins/jquery.waituntilexists",

@@ -93,7 +93,8 @@ Slides.Widgets.StyleWidgets.BackgroundChanger = function(parent_presentation){
         $.each(rules_to_edit,function(idx,rule){
             rule.style.background = bg;
             //This might be kind of a hack:
-            rule.style.backgroundSize = "100%";
+            rule.style.backgroundSize = "cover";
+            rule.style.backgroundRepeat = "no-repeat";
         });
     };
 

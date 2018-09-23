@@ -13,6 +13,11 @@ article{
 }
 
 
+.credits_list{
+    list-style-type:none;
+    padding-left:0px;
+}
+
 @mixin img_restrictions{
 
     img{

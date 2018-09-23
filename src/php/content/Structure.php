@@ -715,6 +715,15 @@ class Structure{
                     $value .= "<input type='hidden' class='denominator' value='{$balance["goal"]}'></input>";
                     $value .= "</div>";
                     break;
+                case "Kaikki vastuut":
+                    $resps = $this->con->query("SELECT CONCAT(responsibility, ': ', responsible)
+                        FROM responsibilities 
+                        WHERE service_id = :id AND responsible != :notthis",
+                        ["id"=>$this->service_id, "notthis" => ''])->fetchAll(PDO::FETCH_COLUMN, 0);
+                    $value = "<p><ul class='credits_list'>";
+                    $value .= implode("\n",array_map(function($m) { return "<li>{$m}</li>"; }, $resps));
+                    $value .= "</ul></p>";
+                    break;
                 default:
                     //JOs ei määritelty mitään spesifimpää, etsi vastuut-taulusta
                     $value = $this->con->query("SELECT responsible FROM responsibilities 

@@ -194,7 +194,7 @@ class StructureTest extends TestCase{
      */
     public function testSongSlideObject()
     {
-        $slide = new Song($this->m, [], "");
+        $slide = new Song($this->m, [], "", "", "");
         $this->assertinstanceof(Slide::class, $slide);
     }
 
@@ -206,7 +206,7 @@ class StructureTest extends TestCase{
     {
         $struct = new Structure($this->con, $this->m, $this->biblecon);
         $struct->SetAsServiceSpecific(87);
-        $struct->LoadSlidesForPresentation();
+        $struct->LoadSlidesForPresentation()->InjectData();
         echo $struct->slotstring;
     }
 

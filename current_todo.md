@@ -2,6 +2,7 @@
 Portaali
 --------
 
+- [ ] Service.php:hen mahdollisuus kirjoittaa urliksi service_id=next
 - [ ] Linkkien ulkoasu ym. esim laulunmuokkausikkunassa
 - [x] "Ei sanoja" -laatikko ruksattavaksi
 - [x] Liturgiset omaksi segmenttityypikseen (Uskontunnustus, synnintunnustukset...)
@@ -16,6 +17,7 @@ Diat
 ----
 
 - [ ] Blank screen
+- [ ] Kirjautumismahdollisuus tai vähintään linkki kirjautumissivulle
 - [ ] Esityksen avaaminen sen sulkemisen jälkeen
 - [ ] Älä näytä messujen valitsimessa menneitä messuja tai siirrä ne viimeiseksi oman otsikkonsa alle...
 - [ ] Raamattusegmenttien ylätunniste?

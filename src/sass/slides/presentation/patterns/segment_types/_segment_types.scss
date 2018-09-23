@@ -15,7 +15,9 @@ body{
         margin-top:0;
         margin-left:0;
         background:none;
-        background-size:100%;
+        //background-size:100%;
+        background-size:cover;
+        background-repeat:no-repeat;
         border:0em solid black;
         border-radius:0px;
         font-family: $roboto;

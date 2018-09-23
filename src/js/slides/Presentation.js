@@ -217,6 +217,7 @@ Slides.Presentation = function(){
             // Lopuksi muita ladattavia plugineja
             Portal.PercentBar.InitializePercentBars(this.d);
             Portal.PercentBar.UpdateStyles();
+            Portal.Credits.InitializeCredits(this.d);
 
             this.SetControlActions();
 
@@ -334,11 +335,19 @@ Slides.Presentation = function(){
                     !$(this).find("img").length && 
                     !$(this).hasClass("percent_bar") &&
                     !$(this).hasClass("denominator") &&
-                    !$(this).hasClass("numerator")
+                    !$(this).hasClass("numerator") &&
+                    !$(this).find(".credits_list").length 
                 ){
                     $(this).hide();
                 } 
-            })
+            });
+            //Hack to preserve credit lists inside p tags
+            this.d.find(".credits_list").each(function(){
+                if(!$(this).parents("p").length){
+                    $(this).wrap("<p></p>");
+                }
+            });
+            //
             var $header = this.$section.find("header");
             if($header.length){ 
                 //Muokkaa sisällön marginaalia ylhäältä kattamaan ylätunniste ja lisä vielä 5px väliä

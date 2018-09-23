@@ -39,6 +39,9 @@ GeneralStructure.InjectableData = function(){
                         $.each(data,function(idx,el){ 
                             $select.append("<option>" + el + "</option>")
                         });
+                        if(identifier == "responsibilities"){
+                            $select.append("<option>" + "Kaikki vastuut" + "</option>")
+                        }
                         self.InsertInjectableData($select);
                     });
             });

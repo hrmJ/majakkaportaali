@@ -35,11 +35,6 @@ GeneralStructure.LightBox = function(){
                         });
                 })
                 .appendTo($buttons);
-            if(this.slideclass==".infoslide"){
-                $("<button>Esikatsele</button>")
-                    .click(self.PreviewSlide.bind(self))
-                    .appendTo($buttons)
-            };
             this.$lightbox.append($buttons);
             this.$container.append(this.$lightbox);
             this.InitializeInjectableData();
