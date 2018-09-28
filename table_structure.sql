@@ -10,6 +10,7 @@ CREATE TABLE `seasons` (
   `startdate` date DEFAULT NULL,
   `enddate` date DEFAULT NULL,
   `theme` varchar(100) DEFAULT NULL,
+  `name` varchar(200) DEFAULT NULL,
   `comments` text, `name` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE utf8_general_ci;
