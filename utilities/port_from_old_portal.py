@@ -12,6 +12,7 @@ class SqlSource:
         self.ReadSource()
         self.new_sql = ""
         self.odetails = {}
+        self.service_ids = []
 
     def ReadSource(self):
         with open(sys.argv[1], "r") as f:
@@ -29,7 +30,6 @@ class SqlSource:
             block = re.sub(table_name[0], table_name[1], block)
             if delete:
                 block  = self.RemoveColFromBlock(block, delete)
-                print(block.splitlines()[0])
             for col in cols:
                 for old_name, new_name in col.items():
                     block = re.sub(old_name, new_name, block)
@@ -67,18 +67,21 @@ class SqlSource:
                 break
             newblock = re.sub("\([^\)]+\)", newblock, lines[0])
             for line in lines[1:]:
-                if not "Saarnateksti" in line and "responsibilities" in newblock:
+                if not ("Saarnateksti" in line and "responsibilities" in newblock) \
+                and not "INSERT INTO" in line:
                     if line[-1] == ";":
                         line = line[:-1]
                     line = re.sub("^\(","",line)
                     line = re.sub("\),?$","",line)
+                    line = line.replace(r"\'","")
                     f = StringIO(line)
                     reader = csv.reader(f, skipinitialspace=True, quotechar="'")
                     for cols in reader:
                         cols.pop(del_idx)
                         newcols = cols
-                        newcols = [col if col else "NULL" for col in cols]
-                        newblock += "\n(" + ", ".join(["'" + col + "'" if col != "NULL" and re.search("[a-öA-Ö-]",col) else col for col in newcols]) + "),"
+                        newcols = [col if col.strip() else "NULL" for col in cols]
+                        if not("responsibilities" in newblock and newcols[1] not in self.service_ids):
+                            newblock += "\n(" + ", ".join(["'" + col + "'" if col != "NULL" and re.search("[a-öA-Ö-]",col) else col for col in newcols]) + "),"
             newblock = newblock[:-1] + ";"
         return newblock
 
@@ -96,6 +99,7 @@ class SqlSource:
             f = StringIO(line)
             reader = csv.reader(f, skipinitialspace=True, quotechar="'")
             for cols in reader:
+                self.service_ids.append(cols[0])
                 if cols[4] != "NULL":
                     if cols[4] not in self.odetails:
                         self.odetails[cols[4]] = {}
@@ -111,7 +115,7 @@ class SqlSource:
         """
         Tulostaa kolehtien tiedot
         """
-        targetblock = "INSERT INTO offering_targets (name) VALUES"
+        targetblock = "INSERT INTO offering_targets (id, name) VALUES"
         goalblock = "INSERT INTO offering_goals (id, target_id, name, amount) VALUES"
         collectedblock = "INSERT INTO collected_offerings (target_id, service_id, amount) VALUES"
         target_id = 0;
@@ -130,6 +134,22 @@ class SqlSource:
         self.new_sql += "\n\n{}\n\n{}\n\n{}\n\n".format(targetblock, goalblock, collectedblock)
 
 sql = SqlSource()
+sql.new_sql ="""
+
+DELETE FROM seasons;
+DELETE FROM services;
+DELETE FROM offering_targets;
+DELETE FROM offering_goals;
+DELETE FROM collected_offerings;
+DELETE FROM responsibilities;
+DELETE FROM songdata;
+DELETE FROM versedata;
+DELETE FROM comments;
+DELETE FROM servicesongs;
+
+
+"""
+
 sql.GetServiceTableData()
 sql.GetOfferingData()
 sql.GetTableData(["comments","comments"],[{"messu_id": "service_id"}])
@@ -144,13 +164,12 @@ sql.GetTableData(["kaudet","seasons"],[
     )
 sql.GetTableData(["laulut","servicesongs"],[
     {"messu_id": "service_id"},
-    {"nimi": "sont_title"},
+    {"nimi": "song_title"},
     {"tyyppi": "songtype"},
     ],
     delete=["songlink"]
     )
 sql.GetTableData(["songs","songdata"],[
-    {"tyyppi": "songtype"},
     ],
     delete=["filename","added","sav","san"]
     )
@@ -165,20 +184,6 @@ sql.GetTableData(["vastuut","responsibilities"],[
     ],
     delete = ["kommentit"]
     )
+sql.new_sql = sql.new_sql.replace("responsibilityllinen","responsible")
 sql.Output()
 
-
-#sql.GetTableData(["seasons","seasons"], [
-#    {"alkupvm": "startdate"}, 
-#    {"loppupvm": "enddate"},
-#    {"nimi":"name"},
-#    {"tyyppi":"type"}, 
-#    {"teema":"theme"},
-#    {"kommentit":"comments"}
-#    ])
-
-
-#INSERT INTO "messut" [{"pvm": "servicedate"}, {"teema":"theme"}, "kolehtikohde", "kolehtitavoite", "kolehtia_keratty"] VALUES
-#INSERT INTO `messut` (`id`, `pvm`, `teema`, `info`, `kolehtikohde`, `kolehtitavoite`, `kolehtia_keratty`) VALUES
-#
-#`kolehtitavoitteet` (`id`, `kohde`, `tavoite`, `kuvaus`, `tavoitemaara`, `kuva`) VALUES
