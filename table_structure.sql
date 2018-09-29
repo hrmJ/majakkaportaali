@@ -27,7 +27,7 @@ CREATE TABLE `services` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `servicedate` date DEFAULT NULL,
   `theme` varchar(200) DEFAULT NULL,
-  `info` varchar(9999) DEFAULT NULL,
+  --`info` varchar(9999) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
