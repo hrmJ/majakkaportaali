@@ -10170,7 +10170,7 @@ Slides.Presentation = function () {
    *
    */
 
-  Presentation = function Presentation() {
+  var Presentation = function Presentation() {
     this.d = undefined;
     this.dom = undefined;
     this.looptime = 7500;

@@ -25,7 +25,7 @@ Slides.Presentation = function(){
      * @param Array loopedslides taulukko luuppauksen kohteena olevista dioista
      *
      */
-    Presentation = function(){
+    var Presentation = function(){
         this.d = undefined;
         this.dom = undefined;
 
