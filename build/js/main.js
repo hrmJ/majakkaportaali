@@ -10173,6 +10173,7 @@ Slides.Presentation = function () {
   var Presentation = function Presentation() {
     this.d = undefined;
     this.dom = undefined;
+    this.styles = undefined;
     this.looptime = 7500;
     this.loop_is_on = false;
     this.loop_id = undefined;
@@ -10899,6 +10900,7 @@ Slides.ContentList = function (parent_presentation) {
 
 
   this.PrintContentList = function () {
+    console.log("AÖLSKDÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖ LKJLKJLKJ");
     $("#original-content").html("");
     var $toc = $("<ul></ul>").prependTo("#original-content"),
         self = this,
@@ -11114,7 +11116,9 @@ Slides.ContentList = function (parent_presentation) {
   this.DragAndDropContent = function () {
     var self = this; //Luodaan mahdollisuus muuttaa järjestystä raahaamalla
 
-    $(".contentlist li:not(.drop-target)").on("dragstart", function () {
+    $(".contentlist li:not(.drop-target)").on("dragstart", function (event) {
+      //FireFox tarvitsee seuraavan, jotta dd toimisi:
+      event.originalEvent.dataTransfer.setData('text/plain', 'anything');
       $(".contentlist li").addClass("drop-hide"); //currently_dragged_no = $(this).find(".slot-number").text() * 1;
 
       $(this).removeClass("drop-hide");

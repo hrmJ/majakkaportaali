@@ -65,6 +65,12 @@ Nyt majakkaportaalin pitäisi näkyä, kun menet isäntäkoneella osoitteeksi es
 
 Jos sivua ei näy, tsekkaa nginx-logi (`/var/log/nginx/majakkaportaali.test-error.log`)
 
+
+# Satunnaisia huomioita
+
+Diaesityksissä: poista esim. firefoxissa olevat sylesheettejä muokkaavat pluginit (kuten tridactyl, vimperator tms) käytöstä!
+
+
 # Ohjeita kehittäjille
 
 ## JS-dokumentaatio

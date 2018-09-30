@@ -28,6 +28,7 @@ Slides.Presentation = function(){
     var Presentation = function(){
         this.d = undefined;
         this.dom = undefined;
+        this.styles = undefined;
 
         this.looptime = 7500;
         this.loop_is_on = false;
