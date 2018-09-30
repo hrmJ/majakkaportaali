@@ -172,7 +172,7 @@ nav{
     background:white;
     //transition: 4s;
     width:100%;
-    height:300vh; // Parempi ratkaisu?
+    min-height:300vh; // Parempi ratkaisu?
     //padding:1em 0em 0em 2em;
     z-index:3;
     > div {

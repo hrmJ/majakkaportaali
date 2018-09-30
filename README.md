@@ -50,6 +50,10 @@ Aja siellä skriptit seuraavassa järjestyksessä
     sh setup_mysql.sh
     sh setup_server.sh
 
+Vaihda pois root-käyttäjästä (luo uusi käyttäjä, jos tarvitsee) ja aja vielä
+
+    sh setup_composer.sh
+
 ## Portaaliin pääsy isäntäkoneelta
 
 1.  Ota  talteen kontin ip-osoite ajamalla `sudo lxc-info -n majakkaportaali`

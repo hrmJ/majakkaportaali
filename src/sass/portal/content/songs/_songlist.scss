@@ -15,3 +15,10 @@
         @include pointer;
     }
 }
+
+.songlist_song_container{
+    & > .lyrics{
+        margin-left:0.5em;
+    }
+}
+

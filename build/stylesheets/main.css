@@ -216,7 +216,7 @@ nav {
   left: 0;
   background: white;
   width: 100%;
-  height: 300vh;
+  min-height: 300vh;
   z-index: 3; }
   .covermenu > div {
     padding: 1em 0em 0em 2em; }
@@ -767,6 +767,9 @@ li.songtags {
   color: #8d8d8d; }
   .songlist_subcat:hover {
     cursor: pointer; }
+
+.songlist_song_container > .lyrics {
+  margin-left: 0.5em; }
 
 .manageable_list ul {
   padding-left: 0; }
