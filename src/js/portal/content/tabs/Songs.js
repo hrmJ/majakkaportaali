@@ -13,6 +13,7 @@ Portal.Service.TabFactory.Songs = function(){
      *
      */
     this.Initialize = function(){
+        console.log("Initialized the songs tab");
         Portal.SongSlots.LoadSongsToSlots(this);
         SongLists.Initialize();
         $("#prepared_for_insertion")

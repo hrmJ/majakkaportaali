@@ -59,7 +59,6 @@ Portal.SongSlots = function(){
             song_id: this.picked_id,
         }, 
             function(data){
-                console.log(data);
                 response($.ui.autocomplete.filter(
                         data, Utilities.extractLast( request.term ) ) );
             }
@@ -556,7 +555,6 @@ Portal.SongSlots = function(){
             SetCurrentSlot(this);
 
             $("#songdetails").find(".version_cont, .lyrics").html("");
-            console.log(this.picked_id);
             SongLists.SetLyrics(this.picked_id, $("#songdetails .lyrics"));
             SongLists.SetSongMeta();
 

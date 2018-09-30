@@ -43,9 +43,7 @@ if($params["action"] == "login"){
 }
 else{
     //Suoritetaan varsinaisia toimintoja
-    echo "I'M ALMOST THERE";
     $login_controller->TestIsLoggedIn();
-    echo "I'M HERE";
 
     $struct = new Structure($database, $m);
     $com = new Community($database);

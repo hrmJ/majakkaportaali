@@ -185,5 +185,10 @@ sql.GetTableData(["vastuut","responsibilities"],[
     delete = ["kommentit"]
     )
 sql.new_sql = sql.new_sql.replace("responsibilityllinen","responsible")
+sql.new_sql += """
+
+UPDATE comments SET reply_to = 0 WHERE reply_to is NULL;
+
+"""
 sql.Output()
 

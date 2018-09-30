@@ -58,10 +58,8 @@ Portal.Service = function(){
      *
      **/
     TabFactory.prototype.AddSaveButton = function(){
-        console.log("ADDING SB!");
         var self = this;
         if(!this.$div.find("button.save_tab_data").length){
-            console.log(this);
             var $but = $("<button class='save_tab_data'>Tallenna</button>")
                 .click(this.SaveTabData.bind(this))
                 .hide();
@@ -97,7 +95,6 @@ Portal.Service = function(){
             //Jos muutoksia, näytä tallenna-painike ja muutosindikaattorit
             this.$div.find(".save_tab_data").show();
             $tabheader.text($tabheader.text().replace(" *","") + " *");
-            console.log(this.GetTabData());
         }
         else{
             //Ei muutoksia, piilota tallenna-painike ja muutosindikaattorit
@@ -141,7 +138,6 @@ Portal.Service = function(){
                     }
                 }
                 new_msg.Show(2000);
-                console.log(pres_position);
                 //controlling_presentation.Activate(pres_position);
             });
         }
@@ -164,6 +160,7 @@ Portal.Service = function(){
         tab = new TabFactory[constr]();
         tab.tab_type = constr;
         tab.$div = $div;
+        tab.initialized_by_event = false;
         TabObjects[constr] = tab;
         return tab;
     };
@@ -206,6 +203,7 @@ Portal.Service = function(){
         var title =  $(ui.newTab[0]).text();
         active_tab = TabObjects[tab_titles[title]];
         active_tab.Initialize();
+        active_tab.initialized_by_event = true;
     }
 
 
@@ -218,7 +216,6 @@ Portal.Service = function(){
      *
      */
     function SetActiveTabByIndex(idx){
-        console.log("id is " + idx);
         var id =  $("#tabs > div:eq(" + idx + ")").attr("id");
         active_tab = TabObjects[id];
     }
@@ -275,14 +272,12 @@ Portal.Service = function(){
         var path = Utilities.GetAjaxPath("Loader.php"),
             raw_date = undefined,
             service_id = GetServiceId();
-        console.log("HEYHOO");
         console.log(service_id);
         return $.getJSON(path, {
             "action" : "get_service_date",
             "id" : service_id
             }, 
             (d) => {
-                console.log("date is: "  + d);
                 raw_date = $.datepicker.parseDate("yy-mm-dd", d);
                 service_date = {
                     dbformat: d,
@@ -326,7 +321,9 @@ Portal.Service = function(){
 
         $("#prepared_for_insertion").hide();
         SetActiveTabByIndex(tab_idx);
-        active_tab.Initialize();
+        if(!active_tab.initialized_by_event){
+            active_tab.Initialize();
+        }
 
         Comments.LoadComments();
         Comments.CreateThemeSelect();

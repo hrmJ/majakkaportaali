@@ -25,11 +25,6 @@ class LoginController{
         $this->salt = $salt;
     }
 
-    public function IsLoggedIn(){
-    
-    
-    }
-
 
     /**
      *

@@ -333,7 +333,6 @@ var SongLists = function(){
                 used_verses = slot.$div.find(".verses").val().split(",").map((d) => d*1),
                 checkbox = "<div><input type='checkbox'></input></div>";
         }
-        console.log(used_verses);
         $target_el.html("");
         return $.getJSON("php/ajax/Loader.php",{
             action: "fetch_lyrics",
@@ -388,7 +387,6 @@ var SongLists = function(){
         $("#songdetails .data_as_text").text("");
 
         return $.getJSON("php/ajax/Loader.php",params,(meta) => {
-            console.log(meta.tags);
             tags = meta.tags.join(", ");
             current_slot.tags = tags;
             $("#songdetails").find(".lyricsby .data_as_text").text(meta.lyrics);
@@ -414,12 +412,14 @@ var SongLists = function(){
      */
     function SaveEditedLyrics(id, newtext, $target_el, idselector){
         var split_pattern = /\n{2,}/,
-            verses = newtext.trim().split(split_pattern);
-        $.get("php/ajax/Saver.php",{
+            verses = newtext.trim().split(split_pattern),
+            path = Utilities.GetAjaxPath("Saver.php");
+        $.post(path,{
             action: "save_edited_lyrics",
             song_id: id,
             newtext: verses
         }, function(saved_id){
+            console.log(saved_id);
             if (idselector){
                 //Jos halutaan muuttaa jonkin elementin arvoa
                 //uuden id:n mukaiseksi

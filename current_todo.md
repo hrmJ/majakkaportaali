@@ -10,6 +10,7 @@ Portaali
 Bugit
 -----
 
+- [ ] Muokattu laulujen sanoja ja painettu tallenna --> laulu katoaa!
 - [ ] messuspesifi rakenne: järjestys muuttuu kun tallentanut muutoksia?
     - hard to reproduce...
 
