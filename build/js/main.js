@@ -33,7 +33,8 @@ $.widget("custom.select_withtext", $.ui.selectmenu, {
     });
 
     if (item.label == "Jokin muu") {
-      self = this, thisitem = item;
+      var self = this,
+          thisitem = item;
       $input.autocomplete({
         source: Portal.SongSlots.LoadSongTitles,
         minLength: 2,
@@ -352,6 +353,7 @@ var Utilities = function () {
 
 
   function Preview($div, filename) {
+    //LÖÖÖÖ
     if (!filename) {
       $div.find(".preview img").remove();
     } else if (filename.indexOf("Ei kuvaa") > -1) {
@@ -555,6 +557,851 @@ var Utilities = function () {
     getDaysBetweenDates: getDaysBetweenDates,
     split: split,
     extractLast: extractLast
+  };
+}();
+"use strict";
+
+/**
+ *
+ * Moduuli, jonka avaulla valitaan raamatunkohtia tietokannasta
+ *
+ */
+var BibleModule = function () {
+  var all_pickers = [];
+  /**
+   *
+   * Liittää raamatunosoitteiden poimijan käyytäjän määrittelemään elementtiin
+   *
+   * @param $parent_el jquery-representaatio elementistä, jonka sisälle syötetään
+   * @param title Raamatunkohdan otsikko / rooli
+   *
+   */
+
+  function AttachAddressPicker($parent_el, title) {
+    var title = title || "";
+    ClearPickers();
+    all_pickers.push(new PickerContainer(title));
+    all_pickers[all_pickers.length - 1].AttachTo($parent_el);
+    return all_pickers[all_pickers.length - 1];
+  }
+  /**
+   *
+   * (Mahdollisesti) usean jaeparin muodostama kokonaisuus
+   *
+   * @param title Raamatunkohdan otsikko / rooli
+   *
+   */
+
+
+  var PickerContainer = function PickerContainer(title) {
+    this.title = title;
+    this.callback = undefined;
+    this.picker_pairs = [];
+    this.$supercont = $("<div class='bible_address_container'>");
+    this.$header = $("<div class='bible_address_header closed'>\n                            <div class='address_name'>\n                                ".concat(title, "\n                            </div>\n                            <div class='address_information'>\n                                <span class='visible_address'></span>\n                                <input type='hidden' class='saved_address'></input>\n                            </div>\n                        </div>"));
+    this.$cont = $("<div class='address_pickers'>\n                        </div>");
+    /**
+     *
+     * Asettaa funktion tarkkailemaan valitsimissa tapahtuvia muutoksia
+     *
+     * @param callback asetettava funktio
+     *
+     */
+
+    this.SetCallBack = function (callback) {
+      this.callback = callback;
+    };
+    /**
+     *
+     * Liittää mukaan tapahtumat
+     *
+     */
+
+
+    this.Initialize = function () {
+      this.$header.click(this.ShowPickers.bind(this));
+      this.AddPickerPair();
+    };
+    /**
+     *
+     * Liittää osaksi DOMia
+     *
+     * @param $parent_el elementti, johon valitsin liitetään
+     *
+     */
+
+
+    this.AttachTo = function ($parent_el) {
+      this.$supercont.appendTo($parent_el);
+      this.$header.appendTo(this.$supercont);
+      this.$cont.insertAfter(this.$header);
+      this.$addmore_link = $("<i class='fa fa-plus add_picker_pair'></i>").click(this.AddPickerPair.bind(this));
+      this.$addmore_link_cont = $("<div class='add_picker_pair'></div>").append(this.$addmore_link).appendTo(this.$cont).hide();
+
+      if (this.$cont.find(".fa-pencil").is(":visible")) {
+        this.$addmore_link_cont.show();
+      }
+    };
+    /**
+     *
+     * Näyttää raamatunkohtien valitsimet.
+     *
+     */
+
+
+    this.ShowPickers = function () {
+      var self = this;
+      this.$cont.slideToggle(function () {
+        self.$header.toggleClass("opened").toggleClass("closed");
+      });
+    };
+    /**
+     *
+     * Lisää uuden alku- + loppujaeparin
+     *
+     */
+
+
+    this.AddPickerPair = function () {
+      var picker = new PickerPair();
+      picker.Initialize(this.$cont);
+
+      if (this.callback) {
+        picker.SetCallBack(this.callback);
+      }
+
+      if (this.$addmore_link_cont) {
+        this.$addmore_link_cont.insertAfter(picker.$cont).hide();
+      }
+
+      this.picker_pairs.push(picker); //this.$addmore_link_cont.after(picker.$controls);
+    };
+  };
+  /**
+   *
+   * Alku- ja loppujakeen valitsimen muodostama kokonaisuus
+   *
+   *
+   */
+
+
+  var PickerPair = function PickerPair() {
+    this.callback = undefined;
+    this.$status = $("<div class='bible_address_status'><span class='status_text'></span></div>");
+    this.startpicker = new StartAddressPicker();
+    this.endpicker = new EndAddressPicker();
+    this.is_removed = false;
+
+    this.Initialize = function ($parent_el) {
+      this.$cont = $("<div class='pickerpair'></div>").appendTo($parent_el);
+      this.$confirm_link = $("<a href='javascript:void(0);'>Valmis</a>").click(this.Confirm.bind(this));
+      ;
+
+      if (!this.is_single) {
+        this.$edit_link = $("<i class='fa fa-pencil addr_edit_link'></i>").click(this.Edit.bind(this)).appendTo(this.$status);
+        this.$prev_link = $("<i class='fa fa-eye'></i>").click(this.Preview.bind(this)).appendTo(this.$status);
+        this.$remove_link = $("<i class='fa fa-trash'></i>").click(this.Remove.bind(this)).appendTo(this.$status);
+      }
+
+      this.startpicker.AttachTo(this.$cont).AddPickerEvents();
+      this.endpicker.AddPickerEvents();
+      this.endpicker.$picker.insertAfter(this.startpicker.$picker).hide();
+      this.startpicker.$picker.find(".verse").change(this.AttachEndPicker.bind(this));
+      this.$controls = $("<div class='pickerpair_controls'></div>").append(this.$confirm_link).insertAfter(this.endpicker.$picker);
+      this.$status.insertBefore(this.startpicker.$picker);
+    };
+    /**
+     *
+     * Muokkaa kerran jo vahvistettua
+     *
+     */
+
+
+    this.Edit = function () {
+      this.startpicker.$picker.find("[value='" + this.startpicker.testament + "']").prop({
+        "checked": true
+      });
+      this.$status.hide();
+      this.startpicker.$picker.show();
+      this.endpicker.$picker.show();
+      this.$confirm_link.show();
+      this.$cont.addClass("pickerpair");
+      this.startpicker.$picker.find(".between-verse-selectors").show();
+    };
+    /**
+     *
+     * Poista jaeparin, jos ei viimeinen
+     *
+     */
+
+
+    this.Remove = function () {
+      var amount = this.$cont.parents(".address_pickers").find(".status_text").length,
+          $par_el = this.startpicker.$picker.parents(".address_pickers");
+
+      if (amount > 1) {
+        this.$cont.remove();
+        this.UpdateHeader($par_el);
+        this.is_removed = true;
+        this.callback();
+      }
+    };
+    /**
+     *
+     * Näytä esikatseluikkuna
+     *
+     */
+
+
+    this.Preview = function () {
+      var _this = this;
+
+      var path = Utilities.GetAjaxPath("Loader.php"),
+          msg = undefined;
+      $.getJSON(path, {
+        "action": "load_verse_content",
+        "testament": this.startpicker.testament,
+        "startverse": [this.startpicker.book, this.startpicker.chapter, this.startpicker.verse],
+        "endverse": [this.endpicker.book, this.endpicker.chapter, this.endpicker.verse]
+      }, function (verses) {
+        msg = new Utilities.Message(verses.join(" "), _this.$cont);
+        msg.SetTitle(_this.GetHumanReadableAddress());
+        msg.AddCloseButton();
+        msg.Show(120000);
+      });
+    };
+    /**
+     *
+     * Asettaa funktion tarkkailemaan valitsimissa tapahtuvia muutoksia
+     *
+     * @param callback asetettava funktio
+     *
+     */
+
+
+    this.SetCallBack = function (callback) {
+      this.callback = callback;
+    };
+    /**
+     *
+     * Tekee jaeparista yksittäisen, jolloin ei yritetä luoda
+     * mahdollisuutta useilla jaepareille
+     *
+     * @param callback asetettava funktio
+     *
+     */
+
+
+    this.SetAsSingle = function () {
+      this.is_single = true;
+      return this;
+    };
+    /**
+     *
+     * Päivittää koko valitsimen otsikon
+     *
+     * @param $par_el jaevalitsimien yläpuolinen elementti jquery-oliona
+     *
+     */
+
+
+    this.UpdateHeader = function ($par_el) {
+      var $par_el = $par_el || this.startpicker.$picker.parents(".address_pickers"),
+          address_string = "",
+          $all_addresses = $par_el.find(".status_text");
+      console.log($all_addresses);
+      $all_addresses.each(function () {
+        if (address_string) {
+          address_string += "; ";
+        }
+
+        address_string += $(this).text();
+      });
+      $par_el.prev().find(".address_information").text(address_string);
+    };
+    /**
+     *
+     * Vahvistaa valitun raamatunkohdan
+     *
+     * @param ev funktion laukaissut tapahtuma
+     * @param no_callback jos tosi, yleensä laukaistavaa callback-funktiota ei kutsutakaan
+     *
+     */
+
+
+    this.Confirm = function (ev, no_callback) {
+      if (!this.is_single) {
+        var addr = this.GetHumanReadableAddress();
+        this.startpicker.$picker.hide();
+        this.endpicker.$picker.hide();
+        this.$status.find(".status_text").text(addr);
+        this.$cont.removeClass("pickerpair");
+        this.startpicker.$picker.parents(".bible_address_container:eq(0)").find(".add_picker_pair").show();
+        this.UpdateHeader();
+        this.$confirm_link.hide();
+        this.$status.show();
+      }
+
+      if (this.callback && !no_callback) {
+        this.callback();
+      }
+    };
+    /**
+     *
+     * Muodostaa helposti luettavissa olevan merkkijonon osoitteesta.
+     *
+     */
+
+
+    this.GetHumanReadableAddress = function () {
+      var start = this.startpicker.GetAddress(),
+          end = this.endpicker.GetAddress(),
+          addr = start.book + ' ' + start.chapter;
+
+      if (start.book !== end.book) {
+        addr += ":" + start.verse + " - " + end.book + " " + end.chapter + ": " + end.verse;
+      } else if (start.chapter == end.chapter && start.verse == end.verse) {
+        addr += ":" + start.verse;
+      } else if (start.chapter == end.chapter) {
+        addr += ":" + start.verse + " - " + end.verse;
+      } else if (start.chapter !== end.chapter) {
+        addr += ":" + start.verse + " - " + end.chapter + ": " + end.verse;
+      }
+
+      return addr;
+    };
+    /**
+     *
+     * Liittää loppujakeen valitsimen.
+     *
+     */
+
+
+    this.AttachEndPicker = function () {
+      var self = this;
+      $.each([".book", ".chapter", ".verse"], function (idx, type) {
+        self.endpicker.$picker.find(type).html(self.startpicker.$picker.find(type).html());
+      });
+      this.endpicker.SetAddress(this.startpicker.GetAddress(), this.startpicker.testament);
+      this.startpicker.$picker.find(".between-verse-selectors").slideDown("slow");
+      this.endpicker.$picker.show();
+      this.$controls.show(); //};
+    };
+  };
+  /**
+   *
+   * Raamatunkohtien valitsin
+   *
+   */
+
+
+  var BibleAddressPicker = function BibleAddressPicker() {
+    this.testament = "";
+    this.book = "";
+    this.chapter = "";
+    this.verse = "";
+    this.$picker = $("<div class='bible_address_picker'> \n                    <div class=\"verseselector startverse\">\n                        <div class=\"selector-wrapper\">\n                            <div>\n                                <select class=\"book\">\n                                    <option>Kirja</option>\n                                </select>\n                            </div>\n                            <div>\n                                <select class=\"chapter\">\n                                    <option>Luku</option>\n                                </select>\n                            </div>\n                            <div>\n                                <select class=\"verse\">\n                                    <option>Jae</option>\n                                </select>\n                                <div class=\"versepreview\"></div>\n                            </div>\n                        </div>\n                </div>\n            </div>");
+    /**
+     *
+     * Liittää valitsimen DOMiin
+     *
+     * @param $parent_el jquery-representaatio elementistä, jonka sisälle syötetään
+     *
+     */
+
+    this.AttachTo = function ($parent_el) {
+      this.$picker.find("[value='ot'],[value='nt']").prop({
+        "checked": false
+      });
+      $parent_el.append(this.$picker);
+      return this;
+    };
+    /**
+     *
+     * Palauttaa tämänhetkisen osoitteen muodossa {book:..,chapter:...,verse:...}
+     *
+     */
+
+
+    this.GetAddress = function () {
+      var address = {};
+      self = this;
+      $.each(["book", "chapter", "verse"], function (idx, type) {
+        address[type] = self[type];
+      });
+      return address;
+    };
+    /**
+     *
+     * Asettaa osoitteen valmiiksi määritellyn olion perusteella
+     *
+     * @param address osoite muodossa {book:..,chapter:...,verse:...}
+     * @param testament nt tai ot
+     *
+     */
+
+
+    this.SetAddress = function (address, testament) {
+      var self = this,
+          booknames = undefined,
+          chapters = undefined,
+          verses = undefined;
+      self.testament = testament;
+      self.book = address.book;
+      self.chapter = address.chapter;
+      self.verse = address.verse;
+
+      if (this.$picker.find(".book").length < 2) {
+        //Jos ei valmiiksi ladattuja kirjojen, kappaleiden ym. nimiä
+        return $.when($.when(self.GetBookNames()).done(function () {
+          $.when(self.GetChapters()).done(function () {
+            $.when(self.GetVerses()).done(function () {
+              $.each(Object.keys(address), function (idx, type) {
+                self.$picker.find("." + type).val(address[type]);
+              });
+            });
+          });
+        }));
+      } else {
+        $.each(Object.keys(address), function (idx, type) {
+          self.$picker.find("." + type).val(address[type]);
+          self[type] = address[type];
+        });
+      }
+
+      return this;
+    };
+    /**
+     *
+     * Lisää tapahtumat valitsimeen
+     *
+     */
+
+
+    this.AddPickerEvents = function () {
+      this.$picker.find("[name='testament']").click(this.GetBookNames.bind(this));
+      this.$picker.find(".book").change(this.GetChapters.bind(this));
+      this.$picker.find(".chapter").change(this.GetVerses.bind(this));
+      this.$picker.find(".verse").change(this.PreviewVerse.bind(this));
+      return this;
+    };
+    /**
+     *
+     * Lataa Raamatun kirjojen nimet tietokannasta (joko ut tai vt)
+     *
+     * @param event tapahtuma
+     *
+     */
+
+
+    this.GetBookNames = function (event) {
+      var path = Utilities.GetAjaxPath("Loader.php");
+
+      if (event) {
+        //Jos ajettu valintatapahtuman seurauksena eikä automaattisesti
+        this.testament = this.$picker.find("[name='testament']:checked").val();
+        this.book = '';
+        this.verse = '';
+
+        if (this.type == "start") {
+          this.$picker.parents(".pickerpair").find(".between-verse-selectors, .bible_address_picker:eq(1)").hide();
+        }
+      }
+
+      return $.getJSON(path, {
+        "action": "load_booknames",
+        "testament": this.testament
+      }, this.SetBookNames.bind(this));
+    };
+    /**
+     *
+     * Lataa yhden raamatun kirjan luvut
+     *
+     * @param event tapahtuma
+     *
+     */
+
+
+    this.GetChapters = function (event) {
+      var path = Utilities.GetAjaxPath("Loader.php");
+
+      if (event) {
+        this.book = this.$picker.find(".book").val();
+        this.verse = '';
+      }
+
+      return $.getJSON(path, {
+        "action": "load_chapters",
+        "testament": this.testament,
+        "book": this.book
+      }, this.SetChapters.bind(this));
+    };
+    /**
+     *
+     * Lataa yhden raamatun kirjan luvun jakeet
+     *
+     * @param event tapahtuma
+     *
+     */
+
+
+    this.GetVerses = function (event) {
+      var path = Utilities.GetAjaxPath("Loader.php");
+
+      if (event) {
+        this.chapter = this.$picker.find(".chapter").val();
+      }
+
+      return $.getJSON(path, {
+        "action": "load_verses",
+        "testament": this.testament,
+        "book": this.book,
+        "chapter": this.chapter
+      }, this.SetVerses.bind(this));
+    };
+    /**
+     *
+     * Liittää Raamatun kirjojen nimet valitsimiin
+     *
+     * @param data taulukko kirjojen nimistä
+     * 
+     */
+
+
+    this.SetBookNames = function (data) {
+      var self = this;
+      this.$picker.find(".book, .chapter, .verse").find("option:gt(0)").remove(); //ES2015 testi: TODO muista yhteensopiva versio
+
+      $(data.map(function (bookname) {
+        return "<option>".concat(bookname, "</option>");
+      }).join("\n")).appendTo(self.$picker.find(".book"));
+    };
+    /**
+     *
+     * Liittää kirjan lukujen numerot valitsimeen
+     *
+     * @param data taulukko lukujen numeroista
+     * 
+     */
+
+
+    this.SetChapters = function (data) {
+      var self = this;
+      this.$picker.find(".chapter, .verse").find("option:gt(0)").remove(); //ES2015 testi: TODO muista yhteensopiva versio
+
+      $(data.map(function (ch) {
+        return "<option>".concat(ch * 1, "</option>");
+      }).join("\n")).appendTo(self.$picker.find(".chapter"));
+    };
+    /**
+     *
+     * Liittää luvun jakeiden numerot valitsimeen
+     *
+     * @param data taulukko jakeiden numeroista
+     * 
+     */
+
+
+    this.SetVerses = function (data) {
+      var self = this;
+      this.$picker.find(".verse").find("option:gt(0)").remove(); //ES2015 testi: TODO muista yhteensopiva versio
+
+      $(data.map(function (verseno) {
+        return "<option>".concat(verseno * 1, "</option>");
+      }).join("\n")).appendTo(self.$picker.find(".verse"));
+    };
+    /**
+     *
+     * Näyttää esikatselunäkymän jakeesta
+     * 
+     */
+
+
+    this.PreviewVerse = function () {
+      var self = this,
+          path = Utilities.GetAjaxPath("Loader.php");
+      this.verse = this.$picker.find(".verse").val();
+      $.getJSON(path, {
+        "action": "load_verse_content",
+        "testament": this.testament,
+        "startverse": [this.book, this.chapter, this.verse],
+        "endverse": null
+      }, function (verse) {
+        self.$picker.find(".versepreview").text(verse[0]).fadeIn().click(function () {
+          $(this).fadeOut();
+        });
+        setTimeout(function (x) {
+          return self.$picker.find(".versepreview").fadeOut();
+        }, 4000);
+      });
+    };
+  };
+  /**
+   *
+   * Valitsin sille jakeelle, josta asti valitaan. Perii BibleAddressPicker:stä.
+   *
+   */
+
+
+  var StartAddressPicker = function StartAddressPicker() {
+    this.type = "start";
+    BibleAddressPicker.call(this);
+    $("<div class='testament_select'>\n            <div><input type=\"radio\" name=\"testament\" value=\"ot\">Vanha testamentti</input></div>\n            <div><input type=\"radio\" name=\"testament\" value=\"nt\">Uusi testamentti</input></div>\n        </div>").prependTo(this.$picker);
+    $("<div>\n        <div class=\"arrow_box between-verse-selectors\">Mihin asti?</div>\n        </div>").appendTo(this.$picker);
+  };
+
+  StartAddressPicker.prototype = Object.create(BibleAddressPicker.prototype);
+  /**
+   *
+   * Valitsin sille jakeelle, johon asti valitaan. Perii BibleAddressPicker:stä.
+   *
+   */
+
+  var EndAddressPicker = function EndAddressPicker() {
+    this.type = "end";
+    BibleAddressPicker.call(this);
+    $("<div class='after-verse-selectors'></div>").appendTo(this.$picker);
+  };
+
+  EndAddressPicker.prototype = Object.create(BibleAddressPicker.prototype);
+
+  function GetAllPickers() {
+    return all_pickers;
+  }
+
+  function ClearPickers() {
+    console.log("cleared the bible pickers");
+    $.each(all_pickers, function (idx, o) {
+      o = undefined;
+    });
+    all_pickers.splice(0);
+    all_pickers = [];
+  }
+
+  return {
+    AttachAddressPicker: AttachAddressPicker,
+    PickerPair: PickerPair,
+    GetAllPickers: GetAllPickers,
+    ClearPickers: ClearPickers
+  };
+}();
+"use strict";
+
+Portal = Portal || {};
+/**
+ *
+ * Simppeli moduuli prosenttipalkkien näyttämiseen
+ *
+ */
+
+Portal.PercentBar = function () {
+  var all_bars = [];
+  /**
+   *
+   * Luokka, joka edustaa prosenttipalkkeja
+   *
+   * @param $parent_el div, joka sisältää palkin arvot
+   *
+   */
+
+  var PercentBar = function PercentBar($parent_el) {
+    this.numerator = $parent_el.find(".numerator").val();
+    this.denominator = $parent_el.find(".denominator").val();
+    this.$parent_el = $parent_el;
+    /**
+     *
+     * Tulostaa prosenttipalkin
+     *
+     */
+
+    this.PrintBar = function () {
+      var width = this.numerator / this.denominator * 100,
+          $numerator = $("<div class='numerator'></div>").css({
+        "width": width + "%"
+      }),
+          $denominator = $("<div class='denominator'></div>"),
+          $bar_parent = $("<div class='pcbar_parent'><div class='amounts'></div></div>");
+      this.$parent_el.find("div.demonimator").remove();
+      $denominator.append($numerator).prependTo($bar_parent);
+      $bar_parent.appendTo(this.$parent_el);
+    };
+    /**
+     *
+     * Lisää palkin sisälle numerot
+     *
+     */
+
+
+    this.AddNumbersAsText = function () {
+      this.$parent_el.find(".amounts").append("\n                    <div>".concat(this.numerator, " \u20AC</div>\n                    <div>").concat(this.denominator, " \u20AC</div>\n                    "));
+    };
+    /**
+     *
+     * Valitsee palkin värin
+     *
+     * @param col uusi väri
+     *
+     */
+
+
+    this.SetBarColor = function (col) {
+      this.$parent_el.find(".pcbar_parent").css({
+        "color": col
+      });
+      this.$parent_el.find(".pcbar_parent div.denominator").css({
+        "border": "1px solid " + col
+      });
+      this.$parent_el.find(".pcbar_parent div.numerator").css({
+        "background": col
+      });
+    };
+  };
+  /**
+   *
+   * @param d DOM, josta etsitään 
+   * @param d barcolor minkä värisiä palkkeja
+   *
+   */
+
+
+  function InitializePercentBars(d, barcolor) {
+    d.find(".percent_bar").each(function () {
+      var bar = new PercentBar($(this));
+      bar.PrintBar();
+      bar.SetBarColor(barcolor);
+      bar.AddNumbersAsText();
+      all_bars.push(bar);
+    });
+    console.log("Initialized the percent bars");
+  }
+  /**
+   *
+   * Hae kaikki käytöss olevat prosenttipalkit
+   *
+   */
+
+
+  function GetBars() {
+    return all_bars;
+  }
+  /**
+   *
+   * Päivittää prosenttipalkkien tyylit oikean värisiksi yms.
+   *
+   * TODO: jos useita prosenttipalkkeja samassa esityksessä
+   *
+   */
+
+
+  function UpdateStyles() {
+    var pres = Slides.Presentation.GetCurrentPresentation(),
+        $pbarticle = pres.d.find(".percent_bar:eq(0)");
+
+    if ($pbarticle.length) {
+      var $pbsection = $pbarticle.parents("section"),
+          cl = $pbsection.attr("class").split(" ")[1],
+          rule = pres.styles.GetRule("." + cl + " p"),
+          col = rule.cssText.replace(/.*color: ([^;]+).*/, "$1");
+      $.each(all_bars, function (idx, bar) {
+        bar.SetBarColor(col);
+      });
+    }
+  }
+
+  return {
+    InitializePercentBars: InitializePercentBars,
+    GetBars: GetBars,
+    UpdateStyles: UpdateStyles
+  };
+}();
+"use strict";
+
+Portal = Portal || {};
+/**
+ *
+ * Simppeli moduuli listan näyttämiseen lopputekstimäisesti
+ * TODO: jquery-plugin
+ * TODO: intervallin säätö
+ * TODO: animaation voi valita
+ *
+ */
+
+Portal.Credits = function () {
+  var all_lists = [],
+      play_interval = 2100;
+  /**
+   *
+   * Luokka, joka edustaa lopputekstimäisiä listoja
+   *
+   * @param $ul lista, jota pyöritetään (jquery-olio ul:stä)
+   *
+   */
+
+  var CreditList = function CreditList($ul) {
+    this.$ul = $ul;
+    this.current_idx = 0;
+    /**
+     *
+     * Käynnistää krediittien pyörityksen
+     * TODO: randomisti?
+     *
+     */
+
+    this.Play = function () {
+      var _this = this;
+
+      setInterval(function () {
+        _this.$ul.find("li").hide();
+
+        _this.$ul.find("li:eq(" + _this.current_idx + ")").fadeIn();
+
+        if (_this.current_idx + 1 < _this.$ul.find("li").length) {
+          _this.current_idx++;
+        } else {
+          _this.current_idx = 0;
+        }
+      }, play_interval);
+    };
+    /**
+     *
+     * Valitsee palkin värin
+     *
+     * @param col uusi väri
+     *
+     */
+
+
+    this.SetBarColor = function (col) {
+      this.$parent_el.find(".pcbar_parent").css({
+        "color": col
+      });
+      this.$parent_el.find(".pcbar_parent div.denominator").css({
+        "border": "1px solid " + col
+      });
+      this.$parent_el.find(".pcbar_parent div.numerator").css({
+        "background": col
+      });
+    };
+  };
+  /**
+   *
+   * @param d DOM, josta etsitään 
+   *
+   */
+
+
+  function InitializeCredits(d) {
+    d.find(".credits_list").each(function () {
+      var creditlist = new CreditList($(this));
+      creditlist.Play();
+      all_lists.push(creditlist);
+    });
+    console.log("This is how many: " + all_lists.length);
+    console.log("Initialized the credit lists");
+  }
+
+  return {
+    InitializeCredits: InitializeCredits
   };
 }();
 "use strict";
@@ -837,8 +1684,9 @@ var Portal = Portal || {};
  **/
 
 Portal.Menus = function () {
-  var menus = {};
-  sidemenu = undefined, initialized = false;
+  var menus = {},
+      sidemenu = undefined,
+      initialized = false;
   /**
    *
    * Yksinkertainen sivumenu mobiiliin
@@ -1102,7 +1950,7 @@ var Comments = function () {
 
 
   function SaveComment() {
-    $container = $(this).parent().parent().parent();
+    var $container = $(this).parent().parent().parent();
     var theme = "";
     var replyto = 0;
     var id = $container.parent().attr("id");
@@ -1154,7 +2002,8 @@ var Comments = function () {
 
 
   function CreateThemeSelect() {
-    $.getJSON("php/ajax/Loader.php", {
+    var path = Utilities.GetAjaxPath("Loader.php");
+    $.getJSON(path, {
       action: "get_list_of_responsibilities"
     }, function (data) {
       var $sel = $(".commentdetails select");
@@ -1761,8 +2610,8 @@ Portal.SongSlots = function () {
       var $li = $(ev.target).parents("li"),
           path = Utilities.GetAjaxPath("Saver.php"),
           loadpath = Utilities.GetAjaxPath("Loader.php"),
-          meta_type = $li.attr("class");
-      new_val = $li.find(".data_as_input input").val();
+          meta_type = $li.attr("class"),
+          new_val = $li.find(".data_as_input input").val();
 
       if (meta_type == "songtags") {
         //Pilkuilla erotettu multiautocomplete tägeille
@@ -2022,8 +2871,8 @@ var SongLists = function () {
 
 
     this.SetSongs = function (songs, $launcher, self) {
-      var self = this;
-      $ul = $("<ul></ul>").appendTo($launcher);
+      var self = this,
+          $ul = $("<ul></ul>").appendTo($launcher);
       $.each(songs, function (idx, el) {
         $ul.append(self.GetVersionLink(el));
       });
@@ -2268,11 +3117,14 @@ var SongLists = function () {
 
     if (!not_service_specific) {
       // Jos messukohtainen laulun muokkaus
-      var slot = Portal.SongSlots.GetCurrentSlot(),
-          used_verses = slot.$div.find(".verses").val().split(",").map(function (d) {
-        return d * 1;
-      }),
-          checkbox = "<div><input type='checkbox'></input></div>";
+      var slot = Portal.SongSlots.GetCurrentSlot();
+
+      if (slot && !$("#songlist").is(":visible")) {
+        var used_verses = slot.$div.find(".verses").val().split(",").map(function (d) {
+          return d * 1;
+        }),
+            checkbox = "<div><input type='checkbox'></input></div>";
+      }
     }
 
     $target_el.html("");
@@ -2403,18 +3255,18 @@ Portal = Portal || {};
 
 Portal.Service = function () {
   //Kukin välilehti tallennetaan tähän
-  TabObjects = {};
-  active_tab = undefined;
-  tab_titles = {
+  var TabObjects = {},
+      active_tab = undefined,
+      tab_titles = {
     "Yleistiedot": "Details",
     "Vastuunkantajat": "People",
     "Laulut": "Songs",
     "Messun rakenne": "Structure"
-  };
-  service_date = {}; //Ota messun id simppelisti url:sta
-
-  service_id = window.location.href.replace(/.*service_id=(\d+).*/, "$1") * 1;
-  controlling_presentation = undefined;
+  },
+      service_date = {},
+      //Ota messun id simppelisti url:sta
+  service_id = window.location.href.replace(/.*service_id=(\d+).*/, "$1") * 1,
+      controlling_presentation = undefined;
   /**
    *
    * Merkitse, että näkymä ladattu diaesityksen hallintapaneelin kautta
@@ -2656,6 +3508,7 @@ Portal.Service = function () {
           active_tab.Initialize();
           Comments.LoadComments();
           Comments.CreateThemeSelect();
+          SetDate();
         });
         $sel.val(GetServiceId());
         $sel.selectmenu("refresh");
@@ -2674,7 +3527,6 @@ Portal.Service = function () {
     var path = Utilities.GetAjaxPath("Loader.php"),
         raw_date = undefined,
         service_id = GetServiceId();
-    console.log(service_id);
     return $.getJSON(path, {
       "action": "get_service_date",
       "id": service_id
@@ -2705,7 +3557,9 @@ Portal.Service = function () {
 
 
   function Initialize() {
-    var tab_name_raw, tab_name;
+    var tab_name_raw,
+        tab_name,
+        tab_idx = 0;
     console.log("Initializing the service view...");
     $("#tabs").tabs({
       activate: SetActiveTabByEvent
@@ -2799,9 +3653,10 @@ Portal.Service.TabFactory.People = function () {
 
 
   this.GetResponsibles = function (callback) {
-    $.getJSON("php/ajax/Loader.php", {
+    var path = Utilities.GetAjaxPath("Loader.php");
+    $.getJSON(path, {
       action: "get_responsibles",
-      service_id: service_id
+      service_id: Portal.Service.GetServiceId()
     }, callback.bind(this));
   };
   /**
@@ -2826,13 +3681,14 @@ Portal.Service.TabFactory.People = function () {
 "use strict";
 
 /**
+ *
  * Messun tiedot -välilehti. Yksittäisen messun aihe, raamatunkohdat
  * ja muu yleisen tason (ei ihmisiä koskeva )info, tämän muokkaus ym.
  *
- **/
+ */
 Portal.Service.TabFactory.Details = function () {
   this.action = "save_details";
-  initialized = {
+  var initialized = {
     theme: false,
     offerings: false,
     bible: false
@@ -2864,7 +3720,7 @@ Portal.Service.TabFactory.Details = function () {
   this.GetTheme = function (callback) {
     return $.get("php/ajax/Loader.php", {
       action: "get_service_theme",
-      service_id: service_id
+      service_id: Portal.Service.GetServiceId()
     }, callback.bind(this));
   };
   /**
@@ -3013,7 +3869,7 @@ Portal.Service.TabFactory.Details = function () {
           return 0;
         }
 
-        for (i = 1; i < data[seg.title].length; i++) {
+        for (var i = 1; i < data[seg.title].length; i++) {
           seg.AddPickerPair();
         }
 
@@ -3439,8 +4295,8 @@ Portal.ManageableLists = function () {
 
 
   ListFactory.prototype.RemoveEntry = function (e) {
-    var path = Utilities.GetAjaxPath("Saver.php");
-    $li = $(e.target).parent();
+    var path = Utilities.GetAjaxPath("Saver.php"),
+        $li = $(e.target).parent();
     $.when($.post(path, this.GetRemoveParams($li), this.LoadList.bind(this))).done(function () {
       return Portal.Servicelist.Initialize(true);
     });
@@ -3479,7 +4335,7 @@ Portal = Portal || {};
 Portal.AdditionalInfoBoxes = function () {
   var apath = Utilities.GetAjaxPath("Loader.php");
 
-  AdditionalInfoBox = function AdditionalInfoBox() {
+  var AdditionalInfoBox = function AdditionalInfoBox() {
     this.LoadData = function () {
       var season = Portal.Servicelist.GetCurrentSeason();
       $.getJSON(apath, {
@@ -3543,7 +4399,7 @@ Portal.AdditionalInfoBoxes = function () {
    */
 
 
-  EventInfoBox = function EventInfoBox() {
+  var EventInfoBox = function EventInfoBox() {
     this.action = "future_events";
     this.list_id = "#eventlist";
     AdditionalInfoBox.call(this);
@@ -3556,8 +4412,8 @@ Portal.AdditionalInfoBoxes = function () {
      */
 
     this.ProcessDataRow = function (row) {
-      raw_date = $.datepicker.parseDate("yy-mm-dd", row.event_date);
-      event_date = $.datepicker.formatDate('dd.mm', raw_date);
+      var raw_date = $.datepicker.parseDate("yy-mm-dd", row.event_date),
+          event_date = $.datepicker.formatDate('dd.mm', raw_date);
       return $("<li>\n                    <div><strong>".concat(event_date, ":</strong></div>\n                    <div class='item_header'>").concat(row.name, "</div>\n                    <input type='hidden' value='").concat(row.place_and_time + ". " + row.description, "'></input>\n                </li>"));
     };
   };
@@ -3569,7 +4425,7 @@ Portal.AdditionalInfoBoxes = function () {
    *
    */
 
-  SmallGroupInfoBox = function SmallGroupInfoBox() {
+  var SmallGroupInfoBox = function SmallGroupInfoBox() {
     this.action = "mlist_Smallgroups";
     this.list_id = "#smallgrouplist";
     AdditionalInfoBox.call(this);
@@ -3593,7 +4449,7 @@ Portal.AdditionalInfoBoxes = function () {
    *
    */
 
-  CommentInfoBox = function CommentInfoBox() {
+  var CommentInfoBox = function CommentInfoBox() {
     this.action = "load_latest_comments";
     this.list_id = "#commentlist";
     AdditionalInfoBox.call(this);
@@ -3606,8 +4462,10 @@ Portal.AdditionalInfoBoxes = function () {
      */
 
     this.ProcessDataRow = function (row) {
-      var commentator = row.commentator ? " (".concat(row.commentator, ")") : '';
-      raw_date = $.datepicker.parseDate("yy-mm-dd", row.comment_time.replace(/ .*/g, '')), event_date = $.datepicker.formatDate('dd.mm', raw_date), meta = "<div><strong>".concat(event_date, "</strong></div>");
+      var commentator = row.commentator ? " (".concat(row.commentator, ")") : '',
+          raw_date = $.datepicker.parseDate("yy-mm-dd", row.comment_time.replace(/ .*/g, '')),
+          event_date = $.datepicker.formatDate('dd.mm', raw_date),
+          meta = "<div><strong>".concat(event_date, "</strong></div>");
       return $("<li>\n                    ".concat(meta, "\n                    <div>").concat(row.content, " ").concat(commentator, "</div>\n                    <input type='hidden' class='comid' value='").concat(row.service_id, "'></input>\n                    </li>"));
     };
     /**
@@ -3790,7 +4648,7 @@ Portal.Servicelist = function () {
       }
 
       $.each(data, function (idx, service) {
-        thismonth = service.servicedate.replace(/\d+\.(\d+)\.\d+/g, "$1") * 1;
+        var thismonth = service.servicedate.replace(/\d+\.(\d+)\.\d+/g, "$1") * 1;
 
         if (thismonth != prevmonth) {
           prevmonth = thismonth;
@@ -6217,8 +7075,8 @@ GeneralStructure.Images = function () {
 
 
     source.prototype.CreateListOfImages = function (data) {
-      var self = this;
-      $sel = $("<select class='img-select'>\n                        <option>Ei kuvaa</option>\n                      </select>");
+      var self = this,
+          $sel = $("<select class='img-select'>\n                        <option>Ei kuvaa</option>\n                      </select>");
       $sel.on("change", function () {
         Utilities.Preview($(this).parents(".with-preview"), $(this).val());
       });
@@ -6422,15 +7280,15 @@ GeneralStructure.DataLoading = function () {
     source.prototype.SaveParams = function (callback) {
       callback = callback || function () {};
 
-      var self = this;
-      params = {
+      var self = this,
+          params = {
         action: "save_slide",
         table: this.segment_type + "s",
         id: this.slide_id,
         params: this.slide_params
-      };
-      console.log(params);
-      $.post("php/ajax/Saver.php", params, function () {
+      },
+          path = Utilities.GetAjaxPath("Saver.php");
+      $.post(path, params, function () {
         self.SetSlotParams();
 
         if (!self.id) {
@@ -6473,11 +7331,12 @@ GeneralStructure.DataLoading = function () {
 
 
     source.prototype.UpdateSlot = function (callback) {
-      params = {
+      var params = {
         params: this.slot_params,
         id: this.id,
         action: "save_slot"
-      };
+      },
+          path = Utilities.GetAjaxPath("Saver.php");
 
       if (this.service_id) {
         //Tarkistetaan, onko kyseessä messukohtainen dia
@@ -6485,7 +7344,7 @@ GeneralStructure.DataLoading = function () {
         params.service_id = this.service_id;
       }
 
-      $.post("php/ajax/Saver.php", params, callback.bind(this));
+      $.post(path, params, callback.bind(this));
     };
     /**
      *
@@ -6499,10 +7358,11 @@ GeneralStructure.DataLoading = function () {
 
 
     source.prototype.AddNewSlot = function (callback) {
-      params = {
+      var params = {
         action: "add_new_slot",
         params: this.slot_params
-      };
+      },
+          path = Utilities.GetAjaxPath("Loader.php");
 
       if (this.service_id) {
         //Tarkistetaan, onko kyseessä messukohtainen dia
@@ -6512,7 +7372,7 @@ GeneralStructure.DataLoading = function () {
       //vasta sitten jatketaan
 
 
-      $.getJSON("php/ajax/Loader.php", {
+      $.getJSON(path, {
         action: "check_last_index_of_segment_type",
         segment_type: this.segment_type
       }, function (max_id) {
@@ -6796,225 +7656,6 @@ GeneralStructure.DragAndDrop = function () {
 
   return {
     SortableList: SortableList
-  };
-}();
-"use strict";
-
-Portal = Portal || {};
-/**
- *
- * Simppeli moduuli prosenttipalkkien näyttämiseen
- *
- */
-
-Portal.PercentBar = function () {
-  var all_bars = [];
-  /**
-   *
-   * Luokka, joka edustaa prosenttipalkkeja
-   *
-   * @param $parent_el div, joka sisältää palkin arvot
-   *
-   */
-
-  var PercentBar = function PercentBar($parent_el) {
-    this.numerator = $parent_el.find(".numerator").val();
-    this.denominator = $parent_el.find(".denominator").val();
-    this.$parent_el = $parent_el;
-    /**
-     *
-     * Tulostaa prosenttipalkin
-     *
-     */
-
-    this.PrintBar = function () {
-      var width = this.numerator / this.denominator * 100,
-          $numerator = $("<div class='numerator'></div>").css({
-        "width": width + "%"
-      }),
-          $denominator = $("<div class='denominator'></div>"),
-          $bar_parent = $("<div class='pcbar_parent'><div class='amounts'></div></div>");
-      this.$parent_el.find("div.demonimator").remove();
-      $denominator.append($numerator).prependTo($bar_parent);
-      $bar_parent.appendTo(this.$parent_el);
-    };
-    /**
-     *
-     * Lisää palkin sisälle numerot
-     *
-     */
-
-
-    this.AddNumbersAsText = function () {
-      this.$parent_el.find(".amounts").append("\n                    <div>".concat(this.numerator, " \u20AC</div>\n                    <div>").concat(this.denominator, " \u20AC</div>\n                    "));
-    };
-    /**
-     *
-     * Valitsee palkin värin
-     *
-     * @param col uusi väri
-     *
-     */
-
-
-    this.SetBarColor = function (col) {
-      this.$parent_el.find(".pcbar_parent").css({
-        "color": col
-      });
-      this.$parent_el.find(".pcbar_parent div.denominator").css({
-        "border": "1px solid " + col
-      });
-      this.$parent_el.find(".pcbar_parent div.numerator").css({
-        "background": col
-      });
-    };
-  };
-  /**
-   *
-   * @param d DOM, josta etsitään 
-   * @param d barcolor minkä värisiä palkkeja
-   *
-   */
-
-
-  function InitializePercentBars(d, barcolor) {
-    d.find(".percent_bar").each(function () {
-      var bar = new PercentBar($(this));
-      bar.PrintBar();
-      bar.SetBarColor(barcolor);
-      bar.AddNumbersAsText();
-      all_bars.push(bar);
-    });
-    console.log("Initialized the percent bars");
-  }
-  /**
-   *
-   * Hae kaikki käytöss olevat prosenttipalkit
-   *
-   */
-
-
-  function GetBars() {
-    return all_bars;
-  }
-  /**
-   *
-   * Päivittää prosenttipalkkien tyylit oikean värisiksi yms.
-   *
-   * TODO: jos useita prosenttipalkkeja samassa esityksessä
-   *
-   */
-
-
-  function UpdateStyles() {
-    var pres = Slides.Presentation.GetCurrentPresentation(),
-        $pbarticle = pres.d.find(".percent_bar:eq(0)");
-
-    if ($pbarticle.length) {
-      var $pbsection = $pbarticle.parents("section"),
-          cl = $pbsection.attr("class").split(" ")[1],
-          rule = pres.styles.GetRule("." + cl + " p"),
-          col = rule.cssText.replace(/.*color: ([^;]+).*/, "$1");
-      $.each(all_bars, function (idx, bar) {
-        bar.SetBarColor(col);
-      });
-    }
-  }
-
-  return {
-    InitializePercentBars: InitializePercentBars,
-    GetBars: GetBars,
-    UpdateStyles: UpdateStyles
-  };
-}();
-"use strict";
-
-Portal = Portal || {};
-/**
- *
- * Simppeli moduuli listan näyttämiseen lopputekstimäisesti
- * TODO: jquery-plugin
- * TODO: intervallin säätö
- * TODO: animaation voi valita
- *
- */
-
-Portal.Credits = function () {
-  var all_lists = [],
-      play_interval = 2100;
-  /**
-   *
-   * Luokka, joka edustaa lopputekstimäisiä listoja
-   *
-   * @param $ul lista, jota pyöritetään (jquery-olio ul:stä)
-   *
-   */
-
-  var CreditList = function CreditList($ul) {
-    this.$ul = $ul;
-    this.current_idx = 0;
-    /**
-     *
-     * Käynnistää krediittien pyörityksen
-     * TODO: randomisti?
-     *
-     */
-
-    this.Play = function () {
-      var _this = this;
-
-      setInterval(function () {
-        _this.$ul.find("li").hide();
-
-        _this.$ul.find("li:eq(" + _this.current_idx + ")").fadeIn();
-
-        if (_this.current_idx + 1 < _this.$ul.find("li").length) {
-          _this.current_idx++;
-        } else {
-          _this.current_idx = 0;
-        }
-      }, play_interval);
-    };
-    /**
-     *
-     * Valitsee palkin värin
-     *
-     * @param col uusi väri
-     *
-     */
-
-
-    this.SetBarColor = function (col) {
-      this.$parent_el.find(".pcbar_parent").css({
-        "color": col
-      });
-      this.$parent_el.find(".pcbar_parent div.denominator").css({
-        "border": "1px solid " + col
-      });
-      this.$parent_el.find(".pcbar_parent div.numerator").css({
-        "background": col
-      });
-    };
-  };
-  /**
-   *
-   * @param d DOM, josta etsitään 
-   *
-   */
-
-
-  function InitializeCredits(d) {
-    d.find(".credits_list").each(function () {
-      var creditlist = new CreditList($(this));
-      creditlist.Play();
-      all_lists.push(creditlist);
-    });
-    console.log("This is how many: " + all_lists.length);
-    console.log("Initialized the credit lists");
-  }
-
-  return {
-    InitializeCredits: InitializeCredits
   };
 }();
 "use strict";
@@ -9938,7 +10579,8 @@ Slides.Presentation = function () {
           $target = undefined;
       this.loop_id = setInterval(function () {
         if (byclass) {
-          sections = _this5.d.find("section" + byclass);
+          var sections = _this5.d.find("section" + byclass);
+
           $.each(sections, function (idx, t) {
             if ($(t).html() == _this5.$section.html()) {
               active_idx = idx;
@@ -10173,6 +10815,7 @@ Slides = Slides || {};
 
 Slides.ContentList = function (parent_presentation) {
   this.pres = parent_presentation;
+  var currently_dragged_no = undefined;
   /**
    * Hakee listan sisällöstä (esitysikkunan sisällön 
    * perusteella.)
@@ -10223,8 +10866,10 @@ Slides.ContentList = function (parent_presentation) {
   this.PrintContentList = function () {
     $("#original-content").html("");
     var $toc = $("<ul></ul>").prependTo("#original-content"),
-        self = this;
-    info_classname = "event_info_at_beginning", number_of_infos = this.pres.d.find("section." + info_classname).length, $li = undefined; //Hae kaikki esityksessä olevat osiot ja tee niistä sisällysluettelo
+        self = this,
+        info_classname = "event_info_at_beginning",
+        number_of_infos = this.pres.d.find("section." + info_classname).length,
+        $li = undefined; //Hae kaikki esityksessä olevat osiot ja tee niistä sisällysluettelo
 
     $.each(this.headings, function (idx, heading) {
       $li = $("<li draggable='true'></li>").text(heading).appendTo($toc).attr({
@@ -10477,7 +11122,7 @@ Slides.ContentList = function (parent_presentation) {
 
       self.pres.d.find("main").html(""); //Lataa vanha sisältö uudelleen uudessa järjestyksessä
 
-      for (i = 0; i < Object.keys(segments_by_new_order).length; i++) {
+      for (var i = 0; i < Object.keys(segments_by_new_order).length; i++) {
         self.pres.d.find("main").append(segments_by_new_order[i]);
       }
 
@@ -10503,7 +11148,7 @@ Slides.Widgets = function () {
    * @param object loaded_content valmis ajax-ladattu sisältö
    *
    */
-  Widget = function Widget(parent_presentation) {
+  var Widget = function Widget(parent_presentation) {
     this.pres = parent_presentation;
     this.$loaded_content = undefined;
   };
@@ -10515,7 +11160,7 @@ Slides.Widgets = function () {
    */
 
 
-  ContentAdder = function ContentAdder(parent_presentation) {
+  var ContentAdder = function ContentAdder(parent_presentation) {
     Widget.call(this, parent_presentation);
     /**
      * Avaa näkyville tyyppikohtaisen sisällön lisäysvalikon
@@ -10595,7 +11240,7 @@ Slides.Widgets = function () {
    *
    */
 
-  LayoutWidget = function LayoutWidget(parent_presentation) {
+  var LayoutWidget = function LayoutWidget(parent_presentation) {
     ContentAdder.call(this, parent_presentation);
     this.pres = parent_presentation;
     this.defaults = {}; //jos luokalla on oma InitializeEvents-metodinsa, käynnistä se.
@@ -10670,8 +11315,8 @@ Slides.Widgets.ContentAdders.BibleContentAdder = function (parent_presentation) 
 
   this.Initialize = function () {
     this.pickerpair = new BibleModule.PickerPair();
-    this.pickerpair.Initialize($("#biblepicker"));
     this.pickerpair.SetAsSingle().SetCallBack(this.LoadContent.bind(this));
+    this.pickerpair.Initialize($("#biblepicker"));
     $(".biblecontentadder .addtoprescontrols").hide().insertAfter("#biblepicker");
     $(".biblecontentadder .pickerpair_controls").show();
   };
@@ -10931,7 +11576,8 @@ Slides.Styles.Controller = function () {
     this.GetOriginalStyles = function () {
       //TODO: explorerissa pelkkä rules
       this.rules = {};
-      var self = this; //Yhdistä alkuperäiset tyylit ja tietokanasta ladatut muokatut tyylit
+      var self = this,
+          rule = undefined; //Yhdistä alkuperäiset tyylit ja tietokanasta ladatut muokatut tyylit
 
       for (var key in this.pres.dom.styleSheets[0].cssRules) {
         this.rules[key] = this.pres.dom.styleSheets[0].cssRules[key];
@@ -10943,7 +11589,7 @@ Slides.Styles.Controller = function () {
 
       this.rule_indexes = {}; // Etsi tämän jälkeen näitä vastaavat cssRules-taulukon indeksit 
 
-      for (rule_idx in this.rules) {
+      for (var rule_idx in this.rules) {
         if (!isNaN(rule_idx * 1)) {
           rule = this.rules[rule_idx];
 
@@ -11061,7 +11707,7 @@ Slides.Styles.Controller = function () {
       } //Poista lopuksi säännöt, joita ei oikeasti ole, mutta joita silti yritetty hakea
 
 
-      real_rules = [];
+      var real_rules = [];
       $.each(rules_to_edit, function (idx, rule) {
         if (rule !== undefined) real_rules.push(rule);
       });
@@ -11228,8 +11874,8 @@ Slides.Styles.FontControllers = function () {
      */
 
     this.GetAdjuster = function () {
-      var self = this;
-      $adjuster = $("<div class='slider adjuster " + self.css_property + "'></div>");
+      var self = this,
+          $adjuster = $("<div class='slider adjuster " + self.css_property + "'></div>");
       $adjuster.slider(self.slider_options);
       return $adjuster;
     };
@@ -11255,9 +11901,9 @@ Slides.Styles.FontControllers = function () {
      */
 
     this.GetAdjuster = function () {
-      var self = this;
-      $adjuster = $("<div class='" + self.css_property + "'></div>");
-      var $colorinput = $("<input type='text' class='" + self.css_property + "-changer  adjuster spectrum'>");
+      var self = this,
+          $adjuster = $("<div class='" + self.css_property + "'></div>"),
+          $colorinput = $("<input type='text' class='" + self.css_property + "-changer  adjuster spectrum'>");
       $colorinput.appendTo($adjuster);
       $adjuster.find(".spectrum").spectrum({
         showAlpha: true
@@ -11290,10 +11936,10 @@ Slides.Styles.FontControllers = function () {
      */
 
     this.GetAdjuster = function () {
-      var self = this;
-      $adjuster = $("<div class='" + self.css_property + "'></div>");
-      var values = this.$parent_el.find(".values").length ? this.$parent_el.find(".values").val().split(",") : false;
-      var $select = $("<select class='adjuster select " + self.css_property + "'>").appendTo($adjuster);
+      var self = this,
+          $adjuster = $("<div class='" + self.css_property + "'></div>"),
+          values = this.$parent_el.find(".values").length ? this.$parent_el.find(".values").val().split(",") : false,
+          $select = $("<select class='adjuster select " + self.css_property + "'>").appendTo($adjuster);
       $.each(this.$parent_el.find(".options").val().split(","), function (idx, option) {
         var $option = $("<option>" + option + "</option>"); //Jos asetettu erikseen option-elementin arvot
 
@@ -11612,8 +12258,8 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function (parent_presentation) {
    */
 
   this.UpdateStyleSheets = function () {
-    var self = this;
-    path = Utilities.GetAjaxPath("Loader.php"); //Tallenna ennestäään olemassa olleiden tyylien nimet
+    var self = this,
+        path = Utilities.GetAjaxPath("Loader.php"); //Tallenna ennestäään olemassa olleiden tyylien nimet
 
     self.oldsheets = []; //Tyhjennä olemassaoleva sisältö
 
@@ -11660,8 +12306,8 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function (parent_presentation) {
   this.Save = function () {
     var self = this,
         current_sheet = this.$select.val(),
-        path = Utilities.GetAjaxPath("Loader.php");
-    real_classes = this.pres.classes.map(function (cl) {
+        path = Utilities.GetAjaxPath("Loader.php"),
+        real_classes = this.pres.classes.map(function (cl) {
       return cl.substr(0, 1) == "." ? cl : "." + cl;
     });
     $.getJSON(path, {
@@ -11674,13 +12320,13 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function (parent_presentation) {
       //vastaavat valittua tyylitiedostoa
       var all_rows = [];
 
-      for (rule_idx in self.pres.styles.rules) {
-        rule = self.pres.styles.rules[rule_idx];
+      for (var rule_idx in self.pres.styles.rules) {
+        var rule = self.pres.styles.rules[rule_idx];
 
         if (rule.selectorText) {
           if (rule.selectorText.indexOf(".") == 0) {
             //Tutki niitä css-sääntöjä, joista on erikseen määritelty luokka
-            attributes = rule.cssText.replace(rule.selectorText, "").replace(/\s*[{}]\s*/g, "").split(";"); //Ota talteen luokan nimi ja mahdollinen tägin nimi
+            var attributes = rule.cssText.replace(rule.selectorText, "").replace(/\s*[{}]\s*/g, "").split(";"); //Ota talteen luokan nimi ja mahdollinen tägin nimi
 
             var selector_units = rule.selectorText.match("(\.[a-öA-Ö]+) +([a-öA-Ö0-9]+)");
 
@@ -11773,7 +12419,7 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function (parent_presentation) {
     }, function () {
       self.pres.styles.GetOriginalStyles();
       Slides.Styles.Controller.UpdateControllers(self.pres);
-      msg = new Utilities.Message("".concat(sheetname, "-tyylipohja ladattu."), $(".layoutloader"));
+      var msg = new Utilities.Message("".concat(sheetname, "-tyylipohja ladattu."), $(".layoutloader"));
       msg.Show(3000);
     });
   };

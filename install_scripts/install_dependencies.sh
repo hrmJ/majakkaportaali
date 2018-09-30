@@ -13,4 +13,5 @@ cd /opt/majakkaportaali
 npm install gulp-cli -g
 npm install --save-dev
 npm install --save-dev gulp-babel @babel/core @babel/preset-env
+npm install --save-dev babel-preset-es2015-without-strict
 

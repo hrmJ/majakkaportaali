@@ -34,8 +34,8 @@ GeneralStructure.Images = function(){
          *
          **/
         source.prototype.CreateListOfImages = function(data){
-            var self = this;
-            $sel = $(`<select class='img-select'>
+            var self = this,
+                $sel = $(`<select class='img-select'>
                         <option>Ei kuvaa</option>
                       </select>`);
             $sel.on("change",function(){ 

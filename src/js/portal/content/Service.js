@@ -9,18 +9,18 @@ Portal = Portal || {};
 Portal.Service = function(){
 
     //Kukin välilehti tallennetaan tähän
-    TabObjects = {};
-    active_tab = undefined;
-    tab_titles = { 
-        "Yleistiedot":"Details",
-        "Vastuunkantajat":"People",
-        "Laulut":"Songs",
-        "Messun rakenne":"Structure"
-    };
-    service_date = {};
-    //Ota messun id simppelisti url:sta
-    service_id = window.location.href.replace(/.*service_id=(\d+).*/,"$1")*1;
-    controlling_presentation = undefined;
+    var TabObjects = {},
+        active_tab = undefined,
+        tab_titles = { 
+            "Yleistiedot":"Details",
+            "Vastuunkantajat":"People",
+            "Laulut":"Songs",
+            "Messun rakenne":"Structure"
+        },
+        service_date = {},
+        //Ota messun id simppelisti url:sta
+        service_id = window.location.href.replace(/.*service_id=(\d+).*/,"$1")*1,
+        controlling_presentation = undefined;
 
 
     /**
@@ -254,6 +254,7 @@ Portal.Service = function(){
                         active_tab.Initialize();
                         Comments.LoadComments();
                         Comments.CreateThemeSelect();
+                        SetDate();
                     });
                     $sel.val(GetServiceId());
                     $sel.selectmenu("refresh");
@@ -272,7 +273,6 @@ Portal.Service = function(){
         var path = Utilities.GetAjaxPath("Loader.php"),
             raw_date = undefined,
             service_id = GetServiceId();
-        console.log(service_id);
         return $.getJSON(path, {
             "action" : "get_service_date",
             "id" : service_id
@@ -302,7 +302,7 @@ Portal.Service = function(){
      *
      **/
     function Initialize(){
-        var tab_name_raw, tab_name;
+        var tab_name_raw, tab_name, tab_idx = 0;
         console.log("Initializing the service view...");
         $("#tabs").tabs({ activate: SetActiveTabByEvent});
         $("#tabs > div").each(function(){

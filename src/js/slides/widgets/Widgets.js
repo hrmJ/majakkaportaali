@@ -14,7 +14,7 @@ Slides.Widgets = function(){
      * @param object loaded_content valmis ajax-ladattu sisältö
      *
      */
-    Widget = function(parent_presentation){
+    var Widget = function(parent_presentation){
         this.pres = parent_presentation;
         this.$loaded_content = undefined;
     };
@@ -26,7 +26,7 @@ Slides.Widgets = function(){
      * @param Presentation parent_presentation Esitys, johon widgetit liitetään.
      *
      */
-    ContentAdder = function(parent_presentation){
+    var ContentAdder = function(parent_presentation){
 
         Widget.call(this, parent_presentation);
 
@@ -104,7 +104,7 @@ Slides.Widgets = function(){
      * @param Presentation parent_presentation Esitys, johon widgetit liitetään.
      *
      */
-    LayoutWidget = function(parent_presentation){
+    var LayoutWidget = function(parent_presentation){
         ContentAdder.call(this, parent_presentation);
         this.pres = parent_presentation;
         this.defaults = {};

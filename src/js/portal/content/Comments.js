@@ -60,7 +60,7 @@ var Comments = function(){
      *
      */
     function SaveComment(){
-        $container = $(this).parent().parent().parent();
+        var $container = $(this).parent().parent().parent();
         var theme = "";
         var replyto = 0;
         var id = $container.parent().attr("id");
@@ -107,7 +107,8 @@ var Comments = function(){
      *
      **/
     function CreateThemeSelect(){
-        $.getJSON("php/ajax/Loader.php", {
+        var path = Utilities.GetAjaxPath("Loader.php");
+        $.getJSON(path, {
             action: "get_list_of_responsibilities",
             },
             function(data){

@@ -170,6 +170,7 @@ var Utilities = function(){
      *
      */
     function Preview($div, filename){
+    //LÖÖÖÖ
         if(!filename){
             $div.find(".preview img").remove();
         }

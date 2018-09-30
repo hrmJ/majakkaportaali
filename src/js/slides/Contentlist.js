@@ -11,6 +11,7 @@ Slides = Slides || {};
 Slides.ContentList = function(parent_presentation){
 
     this.pres = parent_presentation;
+    var currently_dragged_no = undefined;
 
     /**
      * Hakee listan sisällöstä (esitysikkunan sisällön 
@@ -60,7 +61,7 @@ Slides.ContentList = function(parent_presentation){
     this.PrintContentList = function(){
         $("#original-content").html("");
         var $toc = $("<ul></ul>").prependTo("#original-content"),
-            self = this
+            self = this,
             info_classname = "event_info_at_beginning",
             number_of_infos = this.pres.d.find("section." + info_classname).length,
             $li = undefined;
@@ -331,7 +332,7 @@ Slides.ContentList = function(parent_presentation){
                 //Tyhjennä vanha sisältö
                 self.pres.d.find("main").html("");
                 //Lataa vanha sisältö uudelleen uudessa järjestyksessä
-                for(i=0;i<Object.keys(segments_by_new_order).length;i++){
+                for(var i=0;i<Object.keys(segments_by_new_order).length;i++){
                     self.pres.d.find("main").append(segments_by_new_order[i]);
                 }
                 self.pres.Activate(self.pres.d.find(".current"));

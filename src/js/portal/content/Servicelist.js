@@ -157,7 +157,7 @@ Portal.Servicelist = function(){
                     );
             }
             $.each(data,function(idx, service){
-                thismonth = service.servicedate.replace(/\d+\.(\d+)\.\d+/g,"$1") * 1 ;
+                var thismonth = service.servicedate.replace(/\d+\.(\d+)\.\d+/g,"$1") * 1 ;
                 if (thismonth != prevmonth){
                     prevmonth = thismonth;
                     $("#servicelist").append(`<li class='monthname'>${MonthName(thismonth)}</li>`);

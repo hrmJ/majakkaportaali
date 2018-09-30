@@ -1,12 +1,13 @@
 /**
+ *
  * Messun tiedot -välilehti. Yksittäisen messun aihe, raamatunkohdat
  * ja muu yleisen tason (ei ihmisiä koskeva )info, tämän muokkaus ym.
  *
- **/
+ */
 Portal.Service.TabFactory.Details = function(){
 
     this.action = "save_details";
-    initialized = {
+    var initialized = {
         theme : false,
         offerings : false,
         bible : false,
@@ -38,7 +39,7 @@ Portal.Service.TabFactory.Details = function(){
     this.GetTheme = function(callback){
         return $.get("php/ajax/Loader.php",{
             action: "get_service_theme",
-            service_id: service_id
+            service_id: Portal.Service.GetServiceId()
             }, callback.bind(this));
     };
 
@@ -187,7 +188,7 @@ Portal.Service.TabFactory.Details = function(){
                         //Jos ei tallennettua dataa
                         return 0;
                     }
-                    for(i=1;i<data[seg.title].length;i++){
+                    for(var i=1;i<data[seg.title].length;i++){
                         seg.AddPickerPair();
                     }
                     $.each(seg.picker_pairs, function(pair_idx, picker_pair){

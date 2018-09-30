@@ -48,15 +48,15 @@ GeneralStructure.DataLoading = function(){
          */
         source.prototype.SaveParams = function(callback){
             callback = callback || function(){};
-            var self = this;
-            params = {
-                action: "save_slide",
-                table: this.segment_type + "s",
-                id: this.slide_id,
-                params: this.slide_params
-            };
-            console.log(params);
-            $.post("php/ajax/Saver.php", params,function(){
+            var self = this,
+                params = {
+                    action: "save_slide",
+                    table: this.segment_type + "s",
+                    id: this.slide_id,
+                    params: this.slide_params
+                },
+                path = Utilities.GetAjaxPath("Saver.php");
+            $.post(path, params,function(){
                 self.SetSlotParams();
                 if(!self.id){
                     self.AddNewSlot(callback);
@@ -100,17 +100,18 @@ GeneralStructure.DataLoading = function(){
          *
          */
         source.prototype.UpdateSlot = function(callback){
-            params = {
+            var params = {
                 params: this.slot_params,
                 id: this.id,
                 action: "save_slot"
-            };
+            },
+            path = Utilities.GetAjaxPath("Saver.php");
             if(this.service_id){
                 //Tarkistetaan, onko kyseessä messukohtainen dia
                 params.params.service_id = this.service_id;
                 params.service_id = this.service_id;
             }
-            $.post("php/ajax/Saver.php", params, callback.bind(this));
+            $.post(path, params, callback.bind(this));
         };
 
         /**
@@ -123,10 +124,11 @@ GeneralStructure.DataLoading = function(){
          *
          */
         source.prototype.AddNewSlot = function(callback){
-            params = {
+            var params = {
                 action: "add_new_slot",
                 params: this.slot_params
-            };
+                },
+                path = Utilities.GetAjaxPath("Loader.php");
             if(this.service_id){
                 //Tarkistetaan, onko kyseessä messukohtainen dia
                 params.params.service_id = this.service_id;
@@ -134,7 +136,7 @@ GeneralStructure.DataLoading = function(){
             }
             //Haetaan tietokannasta viimeisimmän tämän tyypin diasisällön id ja
             //vasta sitten jatketaan
-            $.getJSON("php/ajax/Loader.php",
+            $.getJSON(path,
                 {
                     action : "check_last_index_of_segment_type",
                     segment_type: this.segment_type

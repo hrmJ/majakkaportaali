@@ -67,8 +67,8 @@ var SongLists = function(){
          *
          **/
         this.SetSongs = function(songs, $launcher, self){
-            var self = this;
-            $ul = $("<ul></ul>").appendTo($launcher);
+            var self = this,
+                $ul = $("<ul></ul>").appendTo($launcher);
             $.each(songs, function(idx, el){
                 $ul.append(self.GetVersionLink(el));
             });
@@ -329,9 +329,11 @@ var SongLists = function(){
             $cb = undefined;
         if(!not_service_specific){
             // Jos messukohtainen laulun muokkaus
-            var slot = Portal.SongSlots.GetCurrentSlot(),
-                used_verses = slot.$div.find(".verses").val().split(",").map((d) => d*1),
-                checkbox = "<div><input type='checkbox'></input></div>";
+            var slot = Portal.SongSlots.GetCurrentSlot();
+            if(slot &&  !$("#songlist").is(":visible")){
+                var used_verses = slot.$div.find(".verses").val().split(",").map((d) => d*1),
+                    checkbox = "<div><input type='checkbox'></input></div>";
+            }
         }
         $target_el.html("");
         return $.getJSON("php/ajax/Loader.php",{

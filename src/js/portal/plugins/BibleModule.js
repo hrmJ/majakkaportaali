@@ -3,10 +3,10 @@
  *
  * Moduuli, jonka avaulla valitaan raamatunkohtia tietokannasta
  *
- **/
-var BibleModule = function(){
+ */
+var BibleModule = function() {
 
-    all_pickers = [];
+    var all_pickers = [];
 
     /**
      *
@@ -142,15 +142,17 @@ var BibleModule = function(){
         this.Initialize = function($parent_el){
             this.$cont = $("<div class='pickerpair'></div>").appendTo($parent_el);
             this.$confirm_link = $("<a href='javascript:void(0);'>Valmis</a>").click(this.Confirm.bind(this));;
-            this.$edit_link = $("<i class='fa fa-pencil addr_edit_link'></i>")
-                .click(this.Edit.bind(this))
-                .appendTo(this.$status);
-            this.$prev_link = $("<i class='fa fa-eye'></i>")
-                .click(this.Preview.bind(this))
-                .appendTo(this.$status);
-            this.$remove_link = $("<i class='fa fa-trash'></i>")
-                .click(this.Remove.bind(this))
-                .appendTo(this.$status);
+            if(!this.is_single){
+                this.$edit_link = $("<i class='fa fa-pencil addr_edit_link'></i>")
+                    .click(this.Edit.bind(this))
+                    .appendTo(this.$status);
+                this.$prev_link = $("<i class='fa fa-eye'></i>")
+                    .click(this.Preview.bind(this))
+                    .appendTo(this.$status);
+                this.$remove_link = $("<i class='fa fa-trash'></i>")
+                    .click(this.Remove.bind(this))
+                    .appendTo(this.$status);
+            }
             this.startpicker.AttachTo(this.$cont).AddPickerEvents();
             this.endpicker.AddPickerEvents();
             this.endpicker.$picker
@@ -423,7 +425,7 @@ var BibleModule = function(){
          *
          */
         this.SetAddress = function(address, testament){
-            var self = this
+            var self = this,
                 booknames = undefined,
                 chapters = undefined,
                 verses = undefined;
@@ -657,8 +659,11 @@ var BibleModule = function(){
 
     function ClearPickers (){
         console.log("cleared the bible pickers");
-        $.each(all_pickers,(idx,o)=>delete o);
+        $.each(all_pickers, function(idx,o){
+            o = undefined;
+        });
         all_pickers.splice(0);
+        all_pickers = [];
     }
 
 

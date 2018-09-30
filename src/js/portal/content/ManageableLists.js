@@ -159,7 +159,7 @@ Portal.ManageableLists = function(){
      *
      */
     ListFactory.prototype.RemoveEntry = function(e){
-        var path = Utilities.GetAjaxPath("Saver.php");
+        var path = Utilities.GetAjaxPath("Saver.php"),
             $li = $(e.target).parent();
         $.when($.post(path,
             this.GetRemoveParams($li),

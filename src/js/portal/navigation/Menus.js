@@ -7,7 +7,7 @@ var Portal = Portal || {};
  **/
 Portal.Menus = function(){
 
-    var menus = {}
+    var menus = {},
         sidemenu = undefined,
         initialized = false;
 

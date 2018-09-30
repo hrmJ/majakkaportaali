@@ -21,7 +21,7 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function(parent_presentation){
      *
      */
     this.UpdateStyleSheets = function(){
-        var self = this;
+        var self = this,
             path = Utilities.GetAjaxPath("Loader.php");
         //Tallenna ennestäään olemassa olleiden tyylien nimet
         self.oldsheets = [];
@@ -61,7 +61,7 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function(parent_presentation){
     this.Save = function(){
         var self = this,
             current_sheet = this.$select.val(),
-            path = Utilities.GetAjaxPath("Loader.php");
+            path = Utilities.GetAjaxPath("Loader.php"),
             real_classes = this.pres.classes.map((cl) => (cl.substr(0,1) == "." ? cl : "." + cl));
 
         $.getJSON(path,
@@ -76,12 +76,12 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function(parent_presentation){
             //Käy tyylit läpi yksitellen ja poimi ne, jotka
             //vastaavat valittua tyylitiedostoa
             var all_rows = [];
-            for(rule_idx in self.pres.styles.rules){
-                    rule = self.pres.styles.rules[rule_idx];
+            for(var rule_idx in self.pres.styles.rules){
+                    var rule = self.pres.styles.rules[rule_idx];
                     if(rule.selectorText){
                         if(rule.selectorText.indexOf(".")==0){
                             //Tutki niitä css-sääntöjä, joista on erikseen määritelty luokka
-                            attributes = rule.cssText.replace(rule.selectorText,"").replace(/\s*[{}]\s*/g,"").split(";");
+                            var attributes = rule.cssText.replace(rule.selectorText,"").replace(/\s*[{}]\s*/g,"").split(";");
                             //Ota talteen luokan nimi ja mahdollinen tägin nimi
                             var selector_units = rule.selectorText.match("(\.[a-öA-Ö]+) +([a-öA-Ö0-9]+)");
                             if(!selector_units){
@@ -173,7 +173,7 @@ Slides.Widgets.StyleWidgets.LayoutLoader = function(parent_presentation){
             function(){
                 self.pres.styles.GetOriginalStyles();
                 Slides.Styles.Controller.UpdateControllers(self.pres);
-                msg = new Utilities.Message(`${sheetname}-tyylipohja ladattu.`, $(".layoutloader"));
+                var msg = new Utilities.Message(`${sheetname}-tyylipohja ladattu.`, $(".layoutloader"));
                 msg.Show(3000);
             });
     };

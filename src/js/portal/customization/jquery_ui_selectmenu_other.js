@@ -33,8 +33,8 @@
                     }
                 });
              if(item.label=="Jokin muu"){
-                    self = this,
-                    thisitem = item;
+                    var self = this,
+                        thisitem = item;
 
                 $input.autocomplete( {
                     source: Portal.SongSlots.LoadSongTitles,

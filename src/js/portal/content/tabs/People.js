@@ -54,9 +54,10 @@ Portal.Service.TabFactory.People = function(){
      *
      **/
     this.GetResponsibles = function(callback){
-        $.getJSON("php/ajax/Loader.php",{
+        var path = Utilities.GetAjaxPath("Loader.php");
+        $.getJSON(path,{
             action: "get_responsibles",
-            service_id: service_id
+            service_id: Portal.Service.GetServiceId()
             }, callback.bind(this));
     };
 

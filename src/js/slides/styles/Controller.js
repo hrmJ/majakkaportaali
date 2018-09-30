@@ -24,7 +24,8 @@ Slides.Styles.Controller = function(){
         this.GetOriginalStyles = function(){
             //TODO: explorerissa pelkkä rules
             this.rules = {};
-            var self = this;
+            var self = this,
+                rule = undefined;
             //Yhdistä alkuperäiset tyylit ja tietokanasta ladatut muokatut tyylit
             for(var key in this.pres.dom.styleSheets[0].cssRules){
                 this.rules[key] = this.pres.dom.styleSheets[0].cssRules[key];
@@ -34,7 +35,7 @@ Slides.Styles.Controller = function(){
             }
             this.rule_indexes = {};
             // Etsi tämän jälkeen näitä vastaavat cssRules-taulukon indeksit 
-            for(rule_idx in this.rules){
+            for(var rule_idx in this.rules){
                 if(!isNaN(rule_idx*1)){
                     rule = this.rules[rule_idx];
                     if(rule.selectorText){
@@ -155,7 +156,7 @@ Slides.Styles.Controller = function(){
                 }
             }
             //Poista lopuksi säännöt, joita ei oikeasti ole, mutta joita silti yritetty hakea
-            real_rules = [];
+            var real_rules = [];
             $.each(rules_to_edit,function(idx,rule){   
                 if(rule!==undefined) real_rules.push(rule)
             })

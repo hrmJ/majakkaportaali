@@ -4,7 +4,7 @@ Portal.AdditionalInfoBoxes = function(){
 
     var apath = Utilities.GetAjaxPath("Loader.php");
 
-    AdditionalInfoBox = function(){
+    var AdditionalInfoBox = function(){
     
         this.LoadData = function(){
             var season = Portal.Servicelist.GetCurrentSeason();
@@ -68,7 +68,7 @@ Portal.AdditionalInfoBoxes = function(){
      * Infolaatikko tapahtumista
      *
      */
-    EventInfoBox = function(){
+    var EventInfoBox = function(){
         this.action = "future_events";
         this.list_id = "#eventlist";
         AdditionalInfoBox.call(this);
@@ -81,8 +81,8 @@ Portal.AdditionalInfoBoxes = function(){
          *
          */
         this.ProcessDataRow = function(row){
-                raw_date = $.datepicker.parseDate("yy-mm-dd", row.event_date);
-                event_date =  $.datepicker.formatDate('dd.mm', raw_date);
+                var raw_date = $.datepicker.parseDate("yy-mm-dd", row.event_date),
+                    event_date =  $.datepicker.formatDate('dd.mm', raw_date);
                 return $(`<li>
                     <div><strong>${event_date}:</strong></div>
                     <div class='item_header'>${row.name}</div>
@@ -99,7 +99,7 @@ Portal.AdditionalInfoBoxes = function(){
      * Infolaatikko pienryhmistä
      *
      */
-    SmallGroupInfoBox = function(){
+    var SmallGroupInfoBox = function(){
         this.action = "mlist_Smallgroups";
         this.list_id = "#smallgrouplist";
         AdditionalInfoBox.call(this);
@@ -128,7 +128,7 @@ Portal.AdditionalInfoBoxes = function(){
      * Infolaatikko kommenteista
      *
      */
-    CommentInfoBox = function(){
+    var CommentInfoBox = function(){
         this.action = "load_latest_comments";
         this.list_id = "#commentlist";
         AdditionalInfoBox.call(this);
@@ -141,7 +141,7 @@ Portal.AdditionalInfoBoxes = function(){
          *
          */
         this.ProcessDataRow = function(row){
-            var commentator = (row.commentator ? ` (${row.commentator})` : '');
+            var commentator = (row.commentator ? ` (${row.commentator})` : ''),
                 raw_date = $.datepicker.parseDate("yy-mm-dd", row.comment_time.replace(/ .*/g,'')),
                 event_date =  $.datepicker.formatDate('dd.mm', raw_date),
                 meta = `<div><strong>${event_date}</strong></div>`;

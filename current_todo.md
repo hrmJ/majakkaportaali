@@ -10,6 +10,7 @@ Portaali
 Bugit
 -----
 
+- [ ] Kun tallentaa messuspesifin rakenteen ekan elementin (muokkaamatta), se kahdentuu
 - [ ] messuspesifi rakenne: järjestys muuttuu kun tallentanut muutoksia?
     - hard to reproduce...
 - [x] Muokattu laulujen sanoja ja painettu tallenna --> laulu katoaa!

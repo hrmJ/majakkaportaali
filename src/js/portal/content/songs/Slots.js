@@ -639,7 +639,7 @@ Portal.SongSlots = function(){
             var $li = $(ev.target).parents("li"),
                 path = Utilities.GetAjaxPath("Saver.php"),
                 loadpath = Utilities.GetAjaxPath("Loader.php"),
-                meta_type = $li.attr("class");
+                meta_type = $li.attr("class"),
                 new_val = $li.find(".data_as_input input").val();
 
             if(meta_type == "songtags"){

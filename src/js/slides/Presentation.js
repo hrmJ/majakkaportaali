@@ -418,7 +418,7 @@ Slides.Presentation = function(){
 
             this.loop_id = setInterval(() => {
                 if(byclass){
-                    sections = this.d.find("section" + byclass);
+                    var sections = this.d.find("section" + byclass);
                     $.each(sections,(idx, t) => {
                         if($(t).html() == this.$section.html()){
                             active_idx = idx;

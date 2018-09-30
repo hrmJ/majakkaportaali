@@ -37,6 +37,7 @@ Slides.Widgets.ContentAdders.ImageAdder = function(parent_presentation){
         $("#imgadder_pick_local").on("change", () => {
             reader.onload = function (e) {
                 var filename = $("#imgadder_pick_local").val().replace(/.*(\/|\\)([^.]+.\w+)/,"$2");
+                alert("MLKL");
                 self.$loaded_content = $(`<section class="infocontent Teksti" style="display: flex;">
                     <article class="">
                         <input type="hidden" value="${filename}">

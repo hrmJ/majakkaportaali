@@ -25,8 +25,8 @@ Slides.Widgets.ContentAdders.BibleContentAdder = function(parent_presentation){
      */
     this.Initialize = function(){
         this.pickerpair = new BibleModule.PickerPair();
-        this.pickerpair.Initialize($("#biblepicker"));
         this.pickerpair.SetAsSingle().SetCallBack(this.LoadContent.bind(this));
+        this.pickerpair.Initialize($("#biblepicker"));
         $(".biblecontentadder .addtoprescontrols").hide().insertAfter("#biblepicker");
         $(".biblecontentadder .pickerpair_controls").show();
     };

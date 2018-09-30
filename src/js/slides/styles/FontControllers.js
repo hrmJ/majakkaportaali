@@ -87,8 +87,8 @@ Slides.Styles.FontControllers = function(){
          * tapauksissa tämä on jquery-ui:n slider-plugin.
          */
         this.GetAdjuster = function(){
-            var self = this;
-            $adjuster = $("<div class='slider adjuster " + self.css_property + "'></div>");
+            var self = this,
+                $adjuster = $("<div class='slider adjuster " + self.css_property + "'></div>");
             $adjuster.slider(self.slider_options);
             return $adjuster;
         
@@ -117,9 +117,9 @@ Slides.Styles.FontControllers = function(){
          * @return object jquery-esitys <div>-elementistä, jonka sisällä varsinainen säädin on
          */
         this.GetAdjuster = function(){
-            var self = this;
-            $adjuster = $("<div class='"  + self.css_property +  "'></div>");
-            var $colorinput = $("<input type='text' class='"  + self.css_property + "-changer  adjuster spectrum'>");
+            var self = this,
+                $adjuster = $("<div class='"  + self.css_property +  "'></div>"),
+                $colorinput = $("<input type='text' class='"  + self.css_property + "-changer  adjuster spectrum'>");
             $colorinput.appendTo($adjuster);
             $adjuster.find(".spectrum")
             .spectrum({ showAlpha:true })
@@ -154,10 +154,10 @@ Slides.Styles.FontControllers = function(){
          * @return object jquery-esitys <div>-elementistä, jonka sisällä varsinainen säädin on
          */
         this.GetAdjuster = function(){
-            var self = this;
-            $adjuster = $("<div class='"  + self.css_property +  "'></div>");
-            var values = (this.$parent_el.find(".values").length ? this.$parent_el.find(".values").val().split(",") : false);
-            var $select = $("<select class='adjuster select " + self.css_property + "'>").appendTo($adjuster);
+            var self = this,
+                $adjuster = $("<div class='"  + self.css_property +  "'></div>"),
+                values = (this.$parent_el.find(".values").length ? this.$parent_el.find(".values").val().split(",") : false),
+                $select = $("<select class='adjuster select " + self.css_property + "'>").appendTo($adjuster);
             $.each(this.$parent_el.find(".options").val().split(","),function(idx,option){
                 var $option = $("<option>" + option + "</option>");
                 //Jos asetettu erikseen option-elementin arvot
