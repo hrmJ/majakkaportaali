@@ -8,7 +8,7 @@ var
     sass = require('gulp-ruby-sass'),
     es = require('event-stream'),
     autoprefixer = require('gulp-autoprefixer'),
-
+    babel = require('gulp-babel');
     //development mode?
     devBuild = (process.env.NODE_ENV !== 'production'),
 
@@ -144,7 +144,12 @@ gulp.task("js",function(){
         jsfiles[idx] = jsprefix + jsfiles[idx] + ".js";
     }
 
-    var jsbuild = gulp.src(jsfiles).pipe(deporder()).pipe(concat('main.js'));
+    var jsbuild = gulp.src(jsfiles)
+        .pipe(deporder())
+        .pipe(babel({
+                    presets: ['@babel/env']
+                }))
+        .pipe(concat('main.js'));
     return jsbuild.pipe(gulp.dest(folder.build + 'js/'));
 });
 

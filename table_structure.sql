@@ -10,7 +10,6 @@ CREATE TABLE `seasons` (
   `startdate` date DEFAULT NULL,
   `enddate` date DEFAULT NULL,
   `theme` varchar(100) DEFAULT NULL,
-  `name` varchar(200) DEFAULT NULL,
   `comments` text, `name` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE utf8_general_ci;
@@ -27,7 +26,6 @@ CREATE TABLE `services` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `servicedate` date DEFAULT NULL,
   `theme` varchar(200) DEFAULT NULL,
-  --`info` varchar(9999) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -211,7 +209,7 @@ CREATE TABLE songsegments (
   `songdescription` TEXT DEFAULT NULL,
   `restrictedto` TEXT DEFAULT NULL,
   `singlename` varchar(100) DEFAULT NULL,
-  `is_multi` boolean DEFAULT false
+  `is_multi` boolean DEFAULT false,
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
 

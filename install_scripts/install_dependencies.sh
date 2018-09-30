@@ -12,4 +12,5 @@ gem install sass
 cd /opt/majakkaportaali
 npm install gulp-cli -g
 npm install --save-dev
+npm install --save-dev gulp-babel @babel/core @babel/preset-env
 

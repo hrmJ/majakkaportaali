@@ -136,7 +136,11 @@ Portal.ManageableLists.ListFactory.Infos = function(){
          */
         this.PrintSelectableServiceList = function(services){
             var list = new Portal.Servicelist.List(),
+                service_ids = [];
+            console.log(service_ids);
+            if(this.$current_li){
                 service_ids = this.$current_li.find(".services-container").val().split(";");
+            }
             //Messujen valinta kun tietokannasta haku valmis
             $.when(list.PrintSelectableServiceList()).done(() => {
                 $("#list_editor .selected_services")
