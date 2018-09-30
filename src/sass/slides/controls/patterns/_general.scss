@@ -6,3 +6,11 @@
     background:$blurcolor;
     z-index:1;
 }
+
+li.bs_active{
+    background:#ff6f6f;
+    color:black;
+    a{
+        color:black;
+    }
+}

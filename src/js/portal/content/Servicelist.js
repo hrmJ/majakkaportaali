@@ -398,6 +398,7 @@ Portal.Servicelist = function(){
             Portal.Menus.GetSideMenu().Close();
         });
         $("#structure_launcher").click(() => window.location="service_structure.php");
+        $("#slideshow_launcher").click(() => window.location="/slides");
         //Vastuukohtainen suodattaminen
         $(".covermenu-target_managelist").each(function(){
             var list = Portal.ManageableLists.ListFactory.make($(this));

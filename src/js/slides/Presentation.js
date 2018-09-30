@@ -243,8 +243,41 @@ Slides.Presentation = function(){
                                 this.LoopSlides(".event_info_at_beginning");
                             }
                         });
+            $("#bslink").click(this.ToggleBlackScreen.bind(this));
+            $("#nextlink").click(this.Next.bind(this));
+            $("#prevlink").click(this.Prev.bind(this));
             $(".nav_slider").hide();
         }
+
+
+        /**
+         *
+         * Peittää esitys näytön mustalla laatikolla
+         *
+         * @param ev klikkaustapahtuma
+         *
+         */
+        this.ToggleBlackScreen = function(ev){
+            var $bs = $("<div class='blankscreen'></div>");
+            $bs.css({
+                "width": "200%",
+                "height": "200%",
+                "position": "absolute",
+                "z-index": "999999",
+                "background": "#000000",
+                "top": "-10px",
+                "left": "-10px",
+            });
+            if(!this.d.find(".blankscreen").length){
+                this.d.find("body").prepend($bs);
+                $(ev.target).parent().addClass("bs_active");
+            }
+            else{
+                this.d.find(".blankscreen").remove();
+                $(ev.target).parent().removeClass("bs_active");
+            }
+        }
+
 
         /**
          *
@@ -336,7 +369,8 @@ Slides.Presentation = function(){
                     !$(this).hasClass("percent_bar") &&
                     !$(this).hasClass("denominator") &&
                     !$(this).hasClass("numerator") &&
-                    !$(this).find(".credits_list").length 
+                    !$(this).find(".credits_list").length &&
+                    !$(this).hasClass("blankscreen")
                 ){
                     $(this).hide();
                 } 

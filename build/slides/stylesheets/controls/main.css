@@ -251,6 +251,12 @@ label {
   background: rgba(77, 77, 77, 0.8);
   z-index: 1; }
 
+li.bs_active {
+  background: #ff6f6f;
+  color: black; }
+  li.bs_active a {
+    color: black; }
+
 .side-menu-left .biblecontentadder .contentadder-open {
   padding-bottom: 1em; }
 .side-menu-left .versepreview {
