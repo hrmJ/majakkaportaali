@@ -1,0 +1,17 @@
+.songlist_song_container{
+    list-style-type:none;
+
+    & + & {
+        margin-top:0.4em;
+    }
+
+}
+
+.songlist_subcat{
+
+    color: darken($datarowbg, 30%);
+
+    &:hover{
+        @include pointer;
+    }
+}

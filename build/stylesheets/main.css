@@ -441,7 +441,7 @@ h3 {
     .editable_data_list li div:first-child {
       display: inline-block;
       word-wrap: break-word;
-      width: 5em;
+      width: 8em;
       margin-right: 1em;
       margin-bottom: 0.2em; }
 
@@ -679,6 +679,21 @@ h3 {
   margin-right: 0.5em;
   color: red; }
 
+.action_li {
+  padding-left: 0px; }
+  .action_li li {
+    list-style-type: none;
+    text-decoration: underline;
+    color: #8d8d8d;
+    border-radius: 7px;
+    padding: 0.3em; }
+    .action_li li + .action_li li {
+      margin-top: 0.4em; }
+    .action_li li:hover {
+      cursor: pointer;
+      background: #737373;
+      color: #ffffff; }
+
 .no_indicator:before {
   font-family: FontAwesome;
   content: "\f00d";
@@ -742,6 +757,16 @@ li.songtags {
   .lyrics_handle .fa {
     font-size: 1.2em;
     margin-right: 1em; }
+
+.songlist_song_container {
+  list-style-type: none; }
+  .songlist_song_container + .songlist_song_container {
+    margin-top: 0.4em; }
+
+.songlist_subcat {
+  color: #8d8d8d; }
+  .songlist_subcat:hover {
+    cursor: pointer; }
 
 .manageable_list ul {
   padding-left: 0; }

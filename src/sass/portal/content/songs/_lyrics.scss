@@ -58,6 +58,27 @@
 
 }
 
+.action_li{
+    padding-left:0px;
+    li {
+        list-style-type:none;
+        text-decoration: underline;
+        color: darken($datarowbg, 30%);
+        border-radius:7px;
+        padding:0.3em;
+
+        & + & {
+            margin-top:0.4em;
+        }
+
+        &:hover{
+            @include pointer;
+            background: lighten($navbg, 30%);
+            color:#ffffff;
+        }
+    }
+}
+
 
 .no_indicator{
 
