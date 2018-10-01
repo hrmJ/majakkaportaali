@@ -35,7 +35,6 @@ Kaukaisemmat
 ------------
 
 - [ ] Markdown-renderöinti esim. infodioihin 
-- [/] Raamatun kirjojen nimien suomennokset
 - [ ] Kun lisätään laulu diakäyttöliittmästä, ota huomioon eri versiot
 - [ ] Mahdollisuus  näyttää laulun nimen sijasta laulun rooli
 - [ ] Kun lisätään sisältöä diakäyttöliittmästä, anna mahdollisuus valita dialuokka
@@ -49,6 +48,7 @@ Kaukaisemmat
 - [ ] gulpin kautta yhdisteltävät pilkotut html-tiedostot
 - [ ] Materiaalit-osio
 - [ ] Rukousaiheita-infolaatikko
+- [x] Raamatun kirjojen nimien suomennokset
 
 
 Dubious

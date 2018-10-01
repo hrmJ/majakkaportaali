@@ -10969,10 +10969,8 @@ Slides.ContentList = function (parent_presentation) {
     if (!launcher.find("textarea").length) {
       //Etsi esityksestä sisällysluettelon id-attribuutin numeron mukainen section-elementti ja siirry sen ensinmmäiseen osioon
       var offset = 1;
-      console.log("WHAAT");
 
       if (this.pres.$section.hasClass("bibletext") || this.pres.$section.hasClass("ltext")) {
-        console.log("OFFSET!");
         offset = 0;
       }
 
@@ -11005,6 +11003,7 @@ Slides.ContentList = function (parent_presentation) {
 
       if (hlindex != this.pres.$section.index()) {
         if (this.pres.$section.hasClass("song") || this.pres.$section.hasClass("bibletext") || this.pres.$section.hasClass("ltext")) {
+          console.log("printinnn");
           this.PrintVerses();
         } else $("#verselist").html("");
       }
@@ -11046,7 +11045,8 @@ Slides.ContentList = function (parent_presentation) {
     this.pres.$section.find("article" + verseslides + "").each(function () {
       var $editlink = $("<i class='fa fa-pencil'></i>").click(self.EditVerse.bind(self)),
           $removelink = $("<i class='fa fa-trash'></i>").click(self.RemoveVerse.bind(self));
-      $("<div></div>").text($(this).text()).appendTo("#verselist").click(function () {
+      console.log($(this).text());
+      $("<div></div>").html($(this).text().replace(/\n+/g, "<br>\n")).appendTo("#verselist").click(function () {
         self.MovePresentationToVerse($(this));
       }).append($editlink).append($removelink);
     });
@@ -11102,8 +11102,8 @@ Slides.ContentList = function (parent_presentation) {
 
   this.SaveVerseEdit = function (ev) {
     var $target = $(ev.target).parents("div:eq(0)"),
-        text = $target.find("textarea").val(),
-        html = "<p>" + text.replace(/\n/g, "<br>") + "</p>",
+        text = $target.find("textarea").val().replace(/\n/g, "<br>\n"),
+        html = "<p>" + text + "</p>",
         $editlink = $("<i class='fa fa-pencil'></i>").click(this.EditVerse.bind(this)),
         verseindex = $target.index();
     ev.stopPropagation();
