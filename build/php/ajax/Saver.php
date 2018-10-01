@@ -29,17 +29,22 @@ $database = new Medoo([
     'charset' => 'utf8'
 ]);
 
+
 $m = new Mustache_Engine(array(
     'loader' => new Mustache_Loader_FilesystemLoader('../../views')
     ));
 
 $login_controller = new LoginController($database, $config["salt"]);
 
+
 //DEV: Käytä joko get- tai post-dataa riippuen kutsujasta
 //$params = (isset($_GET["action"]) ? $_GET : $_POST);
 $params = $_POST;
 if($params["action"] == "login"){
     echo $login_controller->TryLogin($params["username"], $params["password"]);
+}
+else if($params["action"] == "logout"){
+    $login_controller->Logout();
 }
 else{
     //Suoritetaan varsinaisia toimintoja

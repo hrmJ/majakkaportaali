@@ -25,4 +25,14 @@ $(function(){
     else if ($("body").hasClass("loginpage")){
         //$("main").width($(window).width());
     }
+
+    if($("#logout_launcher").length){
+        //Uloskirjautuminen
+        $("#logout_launcher").click( () => {
+            var path = Utilities.GetAjaxPath("Saver.php");
+            $.post(path, { action: "logout" }, () => {
+                window.location = "index.php";
+            });
+        });
+    }
 });

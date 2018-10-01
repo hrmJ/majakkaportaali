@@ -32,7 +32,7 @@ Portal.LoginForm = function(){
                     iframe_callback();
                 }
                 else{
-                    ShowLoginOptions();
+                    $.when(AddRoleSelect()).done(() => ShowLoginOptions());
                 }
             }
         
@@ -71,6 +71,8 @@ Portal.LoginForm = function(){
         var path = Utilities.GetAjaxPath("Loader.php");
         return $.getJSON(path, { "action" : "get_list_of_responsibilities" },
             (d) => {
+                console.log("MOO");
+                console.log(d);
                 $("#login_resp_sel").append((d.map((resp) => `<option>${resp}</option>`)));
                 $("#login_resp_sel").selectmenu();
                 $("#login_resp_sel").on("selectmenuchange", function(){
@@ -127,7 +129,7 @@ Portal.LoginForm = function(){
      */
     function GetNextService(ev){
         var path = Utilities.GetAjaxPath("Loader.php"),
-            msg = undefined;
+            msg = undefined,
             $launcher = $(ev.target);
         $.getJSON(path, {
             "action": "get_next_service",
@@ -238,9 +240,6 @@ Portal.LoginForm = function(){
         TestIsLogged();
         $("#main").click(() => window.location="main.php");
         $(".nextservicelink").click(GetNextService);
-        if($("body").hasClass("loginpage")){
-            AddRoleSelect();
-        }
         $("#add_info").click(ShowInfoSlideAdder);
         $("#save_info_add").click(SaveInfoSlide);
         $("#cancel_info_add").click(HideInfoSlideAdder);

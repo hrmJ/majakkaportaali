@@ -61,6 +61,7 @@ class LoginController{
      */
     public function Logout(){
             unset($_SESSION["IsLoggedIn"]);
+            var_dump($_SESSION);
     }
 
     /**

@@ -1435,7 +1435,9 @@ Portal.LoginForm = function () {
         if (iframe_callback) {
           iframe_callback();
         } else {
-          ShowLoginOptions();
+          $.when(AddRoleSelect()).done(function () {
+            return ShowLoginOptions();
+          });
         }
       }
     });
@@ -1477,6 +1479,8 @@ Portal.LoginForm = function () {
     return $.getJSON(path, {
       "action": "get_list_of_responsibilities"
     }, function (d) {
+      console.log("MOO");
+      console.log(d);
       $("#login_resp_sel").append(d.map(function (resp) {
         return "<option>".concat(resp, "</option>");
       }));
@@ -1542,8 +1546,8 @@ Portal.LoginForm = function () {
 
   function GetNextService(ev) {
     var path = Utilities.GetAjaxPath("Loader.php"),
-        msg = undefined;
-    $launcher = $(ev.target);
+        msg = undefined,
+        $launcher = $(ev.target);
     $.getJSON(path, {
       "action": "get_next_service"
     }, function (service_id) {
@@ -1658,11 +1662,6 @@ Portal.LoginForm = function () {
       return window.location = "main.php";
     });
     $(".nextservicelink").click(GetNextService);
-
-    if ($("body").hasClass("loginpage")) {
-      AddRoleSelect();
-    }
-
     $("#add_info").click(ShowInfoSlideAdder);
     $("#save_info_add").click(SaveInfoSlide);
     $("#cancel_info_add").click(HideInfoSlideAdder);
@@ -7682,6 +7681,18 @@ $(function () {
     //Kaikkien messujen lista
     GeneralStructure.Initialize(".structural-element-add"); //Ehkä filtteröitynä?
   } else if ($("body").hasClass("loginpage")) {//$("main").width($(window).width());
+  }
+
+  if ($("#logout_launcher").length) {
+    //Uloskirjautuminen
+    $("#logout_launcher").click(function () {
+      var path = Utilities.GetAjaxPath("Saver.php");
+      $.post(path, {
+        action: "logout"
+      }, function () {
+        window.location = "index.php";
+      });
+    });
   }
 });
 "use strict";
