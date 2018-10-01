@@ -3,6 +3,21 @@ import sys
 import csv
 from io import StringIO
 
+def ParseBibleAddress(source):
+    matches = re.search(r"([a-ö0-9]+)\.?\s+(\d+)\s?:\s?(\d+)\s?-\s?(\d+)", source, re.IGNORECASE)
+    if matches:
+        return {
+            "startbook": matches.group(1),
+            "endbook": matches.group(1),
+            "startchapter": matches.group(2),
+            "endchapter": matches.group(2),
+            "startverse": matches.group(3),
+            "endverse": matches.group(4),
+        }
+    return None
+
+
+
 class SqlSource:
     """
     sql-dumppi, jota muokataan
@@ -13,6 +28,7 @@ class SqlSource:
         self.new_sql = ""
         self.odetails = {}
         self.service_ids = []
+        self.bible_sql = ""
 
     def ReadSource(self):
         with open(sys.argv[1], "r") as f:
@@ -82,6 +98,31 @@ class SqlSource:
                         newcols = [col if col.strip() else "NULL" for col in cols]
                         if not("responsibilities" in newblock and newcols[1] not in self.service_ids):
                             newblock += "\n(" + ", ".join(["'" + col + "'" if col != "NULL" and re.search("[a-öA-Ö-]",col) else col for col in newcols]) + "),"
+                elif "Saarnateksti" in line:
+                    line = re.sub("^\(","",line)
+                    line = re.sub("\),?$","",line)
+                    line = line.replace(r"\'","")
+                    f = StringIO(line)
+                    reader = csv.reader(f, skipinitialspace=True, quotechar="'")
+                    for cols in reader:
+                        if cols[3].strip():
+                            addr = ParseBibleAddress(cols[3].strip())
+                            if addr:
+                                testament = "ot" if addr["startbook"] in ["Ps", "Ps."] else "nt"
+                                self.bible_sql += """
+                                INSERT INTO serviceverses 
+                                    (service_id, testament, startbook, endbook, startchapter, endchapter, startverse, endverse, segment_name)
+                                    VALUES
+                                    ({}, '{}', '{}', '{}', {}, {}, {}, {}, 'Evankeliumi');
+                                    """.format(cols[1], 
+                                            testament, 
+                                            addr["startbook"], 
+                                            addr["endbook"], 
+                                            addr["startchapter"],
+                                            addr["endchapter"],
+                                            addr["startverse"],
+                                            addr["endverse"]
+                                            )
             newblock = newblock[:-1] + ";"
         return newblock
 
@@ -132,6 +173,7 @@ class SqlSource:
         goalblock = goalblock[:-1] + ";"
         collectedblock = collectedblock[:-1] + ";"
         self.new_sql += "\n\n{}\n\n{}\n\n{}\n\n".format(targetblock, goalblock, collectedblock)
+
 
 sql = SqlSource()
 sql.new_sql ="""
@@ -190,5 +232,9 @@ sql.new_sql += """
 UPDATE comments SET reply_to = 0 WHERE reply_to is NULL;
 
 """
+
+sql.new_sql += "\n\n" + sql.bible_sql + "\n\n"
+
+
 sql.Output()
 

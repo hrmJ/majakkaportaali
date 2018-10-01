@@ -179,12 +179,12 @@ class BibleLoader{
      */
     public function GetHumanReadableAddress($start, $end){
         $testament = preg_replace("/verses_(..)_fi/", "$1", $this->testament);
-        $start[0] = $this->finnish_booknames[$testament][
-            array_search($start[0], $this->english_booknames[$testament])
-            ];
-        $end[0] = $this->finnish_booknames[$testament][
-            array_search($end[0], $this->english_booknames[$testament])
-            ];
+        //$start[0] = $this->finnish_booknames[$testament][
+        //    array_search($start[0], $this->english_booknames[$testament])
+        //    ];
+        //$end[0] = $this->finnish_booknames[$testament][
+        //    array_search($end[0], $this->english_booknames[$testament])
+        //    ];
         $addr = $start[0] . ' ' . $start[1];
         if($start[0] !== $end[0]){
             $addr .= ":" . $start[2] . " - " . $end[0] . " " . $end[1] . ": " . $end[2];
