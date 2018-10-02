@@ -562,10 +562,12 @@ h3 {
       .loginpage main .login-details > div:nth-child(2), .loginpage main .login-details > div:nth-child(3) {
         margin-top: 1em; }
       .loginpage main .login-details > div:nth-child(3) {
-        flex-basis: 70%; }
+        flex-basis: 70%;
+        margin-left: 1.2em; }
         @media only screen and (min-width: 920px) {
           .loginpage main .login-details > div:nth-child(3) {
-            flex-basis: auto; } }
+            flex-basis: auto;
+            margin-left: auto; } }
     .loginpage main .logincontent {
       z-index: 0;
       display: flex;
