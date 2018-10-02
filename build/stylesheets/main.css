@@ -556,10 +556,16 @@ h3 {
       flex-flow: row wrap;
       justify-content: center;
       align-items: flex-end; }
-      .loginpage main .login-details > div {
-        min-width: 10em; }
+      .loginpage main .login-details > div:not(.button_container) {
+        min-width: 10em;
+        margin-right: 3em; }
       .loginpage main .login-details > div:nth-child(2), .loginpage main .login-details > div:nth-child(3) {
         margin-top: 1em; }
+      .loginpage main .login-details > div:nth-child(3) {
+        flex-basis: 70%; }
+        @media only screen and (min-width: 920px) {
+          .loginpage main .login-details > div:nth-child(3) {
+            flex-basis: auto; } }
     .loginpage main .logincontent {
       z-index: 0;
       display: flex;
