@@ -6342,7 +6342,7 @@ var GeneralStructure = function () {
   function InitializeNewslotMenu(selector) {
     $(selector).html("");
     var $header = $("<h4 class='closed'>Syötä uusi messuelementti</h4>").click(Portal.Menus.InitializeFoldMenu);
-    var $menu = $("\n          <div class=\"hidden\">\n              <ul>\n                  <li id=\"songslide_launcher\">Laulu</li>\n                  <li id=\"bibleslide_launcher\">Raamatunkohta</li>\n                  <li id=\"liturgicalslide_launcher\">Liturginen teksti</li>\n                  <li id=\"infoslide_launcher\">Muu</li>\n              </ul>\n          </div>");
+    var $menu = $("\n          <div class=\"hidden\">\n              <ul class=\"action_li newslide_links\">\n                  <li id=\"songslide_launcher\">Laulu</li>\n                  <li id=\"bibleslide_launcher\">Raamatunkohta</li>\n                  <li id=\"liturgicalslide_launcher\">Liturginen teksti</li>\n                  <li id=\"infoslide_launcher\">Muu</li>\n              </ul>\n          </div>");
     $header.appendTo(selector);
     $menu.appendTo(selector);
     $menu.find("li").click(function () {

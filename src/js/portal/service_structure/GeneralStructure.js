@@ -93,7 +93,7 @@ var GeneralStructure = function(){
             .click(Portal.Menus.InitializeFoldMenu);
          var $menu = $(`
           <div class="hidden">
-              <ul>
+              <ul class="action_li newslide_links">
                   <li id="songslide_launcher">Laulu</li>
                   <li id="bibleslide_launcher">Raamatunkohta</li>
                   <li id="liturgicalslide_launcher">Liturginen teksti</li>

@@ -535,6 +535,9 @@ h3 {
   .text_preview {
     margin-left: 1em;
     max-width: 25em; } }
+div ul.newslide_links {
+  padding-left: 1em; }
+
 .loginpage {
   background: white; }
   .loginpage h1 {
