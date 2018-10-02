@@ -3363,7 +3363,7 @@ Portal.Service = function () {
     var _this = this;
 
     this.MonitorChanges();
-    var msg = new Utilities.Message("Muutokset tallennettu", this.$div),
+    var msg = new Utilities.Message("Muutokset tallennettu", $("section.comments:eq(0)")),
         pres_position = {};
 
     if (controlling_presentation) {

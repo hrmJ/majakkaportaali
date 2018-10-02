@@ -18,7 +18,6 @@ Bugit
 Diat
 ----
 
-- [ ] Blank screen
 - [ ] Kirjautumismahdollisuus tai vähintään linkki kirjautumissivulle
 - [ ] Esityksen avaaminen sen sulkemisen jälkeen
 - [ ] Älä näytä messujen valitsimessa menneitä messuja tai siirrä ne viimeiseksi oman otsikkonsa alle...
@@ -28,6 +27,7 @@ Diat
 - [ ] Ajastin lisättäväksi sisällöksi
 - [ ] Mahdollisuus toteuttaa diojenvälinen siirtymä feidaamalla
 - [ ] säkeistöjen muokkaamisen poistaminen raamatunkohdista?
+- [x] Blank screen
 - [x] säkeistöjen ym. tekstin muuttaminen lennosta
 - [x] Ylimääräinen Tallenna-nappi lauluissa, kun service.php iframessa
 
