@@ -75,7 +75,7 @@ Portal.ManageableLists.ListFactory.Smallgroups = function(){
                 checked = this.$current_li.find(".is_active-container").val()*1;
             this.PrintEditOrAdderBox(this.addhtml);
             $.each(this.keys, (idx, key) => {
-                oldval = this.$current_li.find("." + key + "-container").val();
+                var oldval = this.$current_li.find("." + key + "-container").val();
                 $(selector + key).val(oldval);
             });
             if(checked){
@@ -105,8 +105,8 @@ Portal.ManageableLists.ListFactory.Smallgroups = function(){
         this.GetParams = function(){
             var selector = "#list_editor .edit_container .",
                 params = {},
-                is_active = $(selector + "is_active").is(":checked");
-            vals = this.keys.map((key) => $(selector + key).val());
+                is_active = $(selector + "is_active").is(":checked"),
+                vals = this.keys.map((key) => $(selector + key).val());
             $.each(this.keys,(idx,el)=>params[el] = vals[idx]);
             params.is_active = (is_active ? 1 : 0);
             return params;

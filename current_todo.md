@@ -10,6 +10,7 @@ Portaali
 Bugit
 -----
 
+- [ ] Kun muokkaa laululistan kautta sanoja, printtaa sanat useaan kertaan
 - [ ] Kun tallentaa messuspesifin rakenteen ekan elementin (muokkaamatta), se kahdentuu
 - [ ] messuspesifi rakenne: järjestys muuttuu kun tallentanut muutoksia?
     - hard to reproduce...

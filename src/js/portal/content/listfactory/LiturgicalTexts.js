@@ -119,8 +119,8 @@ Portal.ManageableLists.ListFactory.LiturgicalTexts = function(){
     this.GetParams = function(){
         var selector = "#list_editor .edit_container .",
             params = {},
-            split_pattern = /\n{2,}/;
-        vals = this.keys.map((key) => $(selector + key).val());
+            split_pattern = /\n{2,}/,
+            vals = this.keys.map((key) => $(selector + key).val());
         $.each(this.keys,(idx,el)=>params[el] = vals[idx]);
         params.content = params.content.trim().split(split_pattern);
         return params;

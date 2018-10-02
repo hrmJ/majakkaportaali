@@ -68,8 +68,8 @@ Portal.ManageableLists.ListFactory.Events = function(){
         this.GetParams = function(){
             var selector = "#list_editor .edit_container .",
                 params = {},
-                ev_date = $(selector + "event_date").datepicker("getDate");
-            vals = this.keys.map((key) => $(selector + key).val());
+                ev_date = $(selector + "event_date").datepicker("getDate"),
+                vals = this.keys.map((key) => $(selector + key).val());
             $.each(this.keys,(idx,el)=>params[el] = vals[idx]);
             params.event_date = $.datepicker.formatDate('yy-mm-dd', ev_date);
             console.log(params)
@@ -109,8 +109,7 @@ Portal.ManageableLists.ListFactory.Events = function(){
             var selector = "#list_editor .edit_container .";
             this.PrintEditOrAdderBox(this.addhtml);
             $.each(this.keys, (idx, key) => {
-                oldval = this.$current_li.find("." + key + "-container").val();
-                console.log(oldval);
+                var oldval = this.$current_li.find("." + key + "-container").val();
                 $(selector + key).val(oldval);
                 if(key == "event_date"){
                     oldval = $.datepicker.parseDate("yy-mm-dd", oldval);

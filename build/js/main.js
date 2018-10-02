@@ -5229,8 +5229,8 @@ Portal.ManageableLists.ListFactory.Events = function () {
   this.GetParams = function () {
     var selector = "#list_editor .edit_container .",
         params = {},
-        ev_date = $(selector + "event_date").datepicker("getDate");
-    vals = this.keys.map(function (key) {
+        ev_date = $(selector + "event_date").datepicker("getDate"),
+        vals = this.keys.map(function (key) {
       return $(selector + key).val();
     });
     $.each(this.keys, function (idx, el) {
@@ -5276,8 +5276,8 @@ Portal.ManageableLists.ListFactory.Events = function () {
     var selector = "#list_editor .edit_container .";
     this.PrintEditOrAdderBox(this.addhtml);
     $.each(this.keys, function (idx, key) {
-      oldval = _this.$current_li.find("." + key + "-container").val();
-      console.log(oldval);
+      var oldval = _this.$current_li.find("." + key + "-container").val();
+
       $(selector + key).val(oldval);
 
       if (key == "event_date") {
@@ -6010,7 +6010,8 @@ Portal.ManageableLists.ListFactory.Smallgroups = function () {
         checked = this.$current_li.find(".is_active-container").val() * 1;
     this.PrintEditOrAdderBox(this.addhtml);
     $.each(this.keys, function (idx, key) {
-      oldval = _this.$current_li.find("." + key + "-container").val();
+      var oldval = _this.$current_li.find("." + key + "-container").val();
+
       $(selector + key).val(oldval);
     });
 
@@ -6041,8 +6042,8 @@ Portal.ManageableLists.ListFactory.Smallgroups = function () {
   this.GetParams = function () {
     var selector = "#list_editor .edit_container .",
         params = {},
-        is_active = $(selector + "is_active").is(":checked");
-    vals = this.keys.map(function (key) {
+        is_active = $(selector + "is_active").is(":checked"),
+        vals = this.keys.map(function (key) {
       return $(selector + key).val();
     });
     $.each(this.keys, function (idx, el) {
@@ -6205,8 +6206,8 @@ Portal.ManageableLists.ListFactory.LiturgicalTexts = function () {
   this.GetParams = function () {
     var selector = "#list_editor .edit_container .",
         params = {},
-        split_pattern = /\n{2,}/;
-    vals = this.keys.map(function (key) {
+        split_pattern = /\n{2,}/,
+        vals = this.keys.map(function (key) {
       return $(selector + key).val();
     });
     $.each(this.keys, function (idx, el) {
