@@ -62,7 +62,7 @@ class Ltext extends Slide{
                 }
             }
             $tpl = $this->template_engine->loadTemplate($tplname);
-            $params["text"] = $verse;
+            $params["text"] = str_replace("\n","<br>\n",$verse);
             $output .= $tpl->render($params) . "\n";
         }
 
