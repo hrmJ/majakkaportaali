@@ -34,16 +34,13 @@ Slides.ContentList = function(parent_presentation){
                 var identifier = prefix + $firstslide.text().substr(0,10) + "...";
             }
             else{
-                if(!$(this).find(headingselector).text()){
-                    //Jos diassa ei ole otsikoita, käytä input-elementtiä
-                    if($(this).find("input[type='hidden']").length)
-                        var identifier = $(this).find("input[type='hidden']").val();
-                    //else if ($(this).find("h3").text()!="")
-                    //    var identifier = $(this).find("h3").text();
-                    else{
-                        //..tai jos ei sitäkään, ota dian tekstin alku
-                        var identifier = $(this).find("div").text().substr(0, 10) + "...";
-                    }
+                if($(this).find("input[type='hidden']").length){
+                    //Etsi ensin input-elementtiä, jossa olisi dian nimi
+                    var identifier = $(this).find("input[type='hidden']").val();
+                }
+                else if(!$(this).find(headingselector).text()){
+                    //..ota dian tekstin alku, jos ei ole otsikkoakaan
+                    var identifier = $(this).find("div").text().substr(0, 10) + "...";
                 }
                 else{
                     //Muuten ota ensimmäinen otsikkoelementti

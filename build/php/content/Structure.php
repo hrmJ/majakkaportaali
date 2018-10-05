@@ -9,6 +9,7 @@ use Portal\slides\BibleSegment;
 use Portal\slides\Ltext;
 use Portal\slides\Infoslide;
 use Portal\slides\SlideStyle;
+use Portal\utilities;
 use Medoo\Medoo;
 use PDO;
 
@@ -680,6 +681,7 @@ class Structure{
      **/
     function InjectThisPieceOfData($matches){
         $com = new Community($this->con);
+        $df = new utilities\DateFormatter();
         if (!array_key_exists($matches[1], $this->injectables)){
             //Jos ei vielä haettu tietokannasta tätä informaatiota
             switch($matches[1]){
@@ -687,7 +689,8 @@ class Structure{
                     $value = $this->con->get("services", "theme", ["id" => $this->service_id]);
                     break;
                 case "Messun päivämäärä":
-                    $value = $this->con->get("services", "servicedate", ["id" => $this->service_id]);
+                    $pvm = $this->con->get("services", "servicedate", ["id" => $this->service_id]);
+                    $value = $df->SetDate($pvm)->FormatDate();
                     break;
                 case "Kolehtikohteen kuvaus":
                     $goal_id = $com->GetCurrentOfferingGoal($this->service_id);

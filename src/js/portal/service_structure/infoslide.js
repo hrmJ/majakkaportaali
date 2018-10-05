@@ -48,8 +48,8 @@ GeneralStructure.SlotFactory.infoslide = function(){
                 maintext:maintext,
                 id: this.slide_id,
                 header:this.$lightbox.find(".slide-header").val(),
-                genheader: this.$lightbox.find("[type='checkbox']").get(0).checked ? "Majakkamessu" : "",
-                subgenheader: this.$lightbox.find("[type='checkbox']").get(0).checked ? "Messun aihe" : "",
+                genheader: this.$lightbox.find("[value='show-upper-header']").get(0).checked ? "Majakkamessu {{Messun päivämäärä}}" : "",
+                subgenheader: this.$lightbox.find("[value='show-upper-header']").get(0).checked ? "{{Messun aihe}}" : "",
                 imgname:this.$lightbox.find(".slide_img .img-select").val() || "" ,
                 imgposition:this.$lightbox.find(".slide_img .img-pos-select").val()
         }
