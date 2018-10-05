@@ -413,7 +413,7 @@ h3 {
   color: white;
   font-family: "Amatic SC", cursive; }
 
-.fa-pencil, .fa-eye, .fa-trash {
+.fa-pencil, .fa-eye, .fa-trash, .fa-plus {
   cursor: pointer; }
 
 .my-lightbox input[type='text'] {

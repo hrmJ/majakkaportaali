@@ -11004,16 +11004,19 @@ Slides.ContentList = function (parent_presentation) {
 
       if (hlindex != this.pres.$section.index()) {
         if (this.pres.$section.hasClass("song") || this.pres.$section.hasClass("bibletext") || this.pres.$section.hasClass("ltext")) {
-          console.log("printinnn");
           this.PrintVerses();
         } else $("#verselist").html("");
-      }
+      } //Skrollaa keskellä scrollTo-pluginilla
+
+
+      $("#original-content").scrollTo(".highlight", 100, {
+        offset: -$("#original-content").height() / 2
+      });
     } //Säkeistöjen ym. korostaminen
 
 
     var $hlverse = $("#verselist .highlight:eq(0)");
     $hlverse.removeClass("highlight");
-    console.log(this.pres.$slide);
 
     if (this.pres.$slide.attr("class").match("verse")) {
       //Raamatunteksteillä + liturgisilla: huomioi, että otsikko ekassa diassa
@@ -11024,6 +11027,9 @@ Slides.ContentList = function (parent_presentation) {
       }
 
       $("#verselist div:eq(" + (this.pres.$slide.index() - offset) + ")").addClass("highlight");
+      $("#verselist").scrollTo(".highlight", 100, {
+        offset: -$("#verselist").height() / 2
+      });
     }
   };
   /**
