@@ -56,7 +56,6 @@ Slides.ContentList = function(parent_presentation){
      * Tulostaa (tai päivittää) listan sisällöistä navigointia varten
      */
     this.PrintContentList = function(){
-        console.log("AÖLSKDÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖÖ LKJLKJLKJ");
         $("#original-content").html("");
         var $toc = $("<ul></ul>").prependTo("#original-content"),
             self = this,
@@ -166,8 +165,9 @@ Slides.ContentList = function(parent_presentation){
                 this.pres.$section.hasClass("ltext")){
                 offset = 0;
             }
+            console.log(offset);
             $("#verselist div:eq("+ (this.pres.$slide.index() - offset) +")").addClass("highlight");
-            $("#verselist").scrollTo(".highlight",100, {offset:-$("#verselist").height()/2});
+            $("#verselist").scrollTo(".highlight",100, {"offset":-$("#verselist").height()/2});
         }
     };
 
@@ -189,7 +189,6 @@ Slides.ContentList = function(parent_presentation){
         this.pres.$section.find("article" + verseslides  + "").each(function(){
             var $editlink = $("<i class='fa fa-pencil'></i>").click(self.EditVerse.bind(self)),
                 $removelink = $("<i class='fa fa-trash'></i>").click(self.RemoveVerse.bind(self));
-            console.log($(this).text());
             $("<div></div>")
             .html($(this).text().replace(/\n+/g,"<br>\n"))
             .appendTo("#verselist")
