@@ -492,7 +492,8 @@ class Structure{
                     $songdata, 
                     $song["verses"], 
                     $song["is_instrumental"],
-                    $song["song_title"]
+                    $song["song_title"],
+                    $slot["slot_name"]
                 ), 
                 $slot["addedclass"], 
                 $slot["header_id"],

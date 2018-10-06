@@ -28,14 +28,16 @@ class Song extends Slide{
      * @param String $picked_verses pilkuin erotettu lista säkeistöstä, jotka valittu mukaan
      * @param String $is_instrumental 'yes' tai 'no' riippuen siitä, onko esitysbiisi vai laulettava
      * @param String $song_title laulun otsikko: tarvitaan siltä varalta, ettei sanoja, mutta otsikko
+     * @param String $segment_name laulunslotin nimi
      *
      */
-    public function __construct($m, $details, $picked_verses, $is_instrumental, $song_title){
+    public function __construct($m, $details, $picked_verses, $is_instrumental, $song_title, $segment_name = ""){
         parent::__construct($m, $details);
         $this->template_engine;
         $this->picked_verses = ($picked_verses ? explode(",", $picked_verses) : "");
         $this->is_instrumental = $is_instrumental;
         $this->song_title = $song_title;
+        $this->segment_name = $segment_name;
         $this->template = $this->template_engine->loadTemplate('song'); 
     }
 
@@ -49,11 +51,28 @@ class Song extends Slide{
         else{
             $this->SetTitle($this->details["title"])
                 ->SetComposer($this->details["composer"])
+                ->SetSegmentName($this->details["composer"])
                 ->SetLyrics($this->details["lyrics"])
                 ->SetVerses($this->details["verses"]);
         }
         return $this;
     }
+
+
+    /**
+     * Asettaa segmentin nimin
+     *
+     */
+    public function SetSegmentName(){
+        if($this->segment_name){
+            $this->Set("segment_name","{$this->segment_name}: {$this->song_title}");
+        }
+        else{
+            $this->Set("segment_name",$this->$song_title);
+        }
+        return $this;
+    }
+
 
 
     /**

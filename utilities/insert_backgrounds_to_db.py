@@ -11,8 +11,8 @@ engine.execute("DELETE FROM backgrounds");
 
 Session = db.sessionmaker(bind=engine)
 session = Session()
-for filename in glob.glob("../src/assets/images/*.jpg"):
+for filename in glob.glob("../build/assets/images/*.jpg"):
     session.add(db.backgrounds(filename[filename.rfind("/")+1:],"") )
-for filename in glob.glob("../src/assets/images/*.png"):
+for filename in glob.glob("../build/assets/images/*.png"):
     session.add(db.backgrounds(filename[filename.rfind("/")+1:],"") )
 session.commit()
