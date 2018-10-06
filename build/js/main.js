@@ -3360,40 +3360,12 @@ Portal.Service = function () {
 
 
   TabFactory.prototype.AfterSavedChanges = function (response) {
-    var _this = this;
-
     this.MonitorChanges();
     var msg = new Utilities.Message("Muutokset tallennettu", $("section.comments:eq(0)")),
         pres_position = {};
 
     if (controlling_presentation) {
-      //Päivitetään esityksen tiedot muutosten jälkeen
-      //TODO: vapaavalintaiseksi?
-      pres_position = {
-        sec_idx: controlling_presentation.$section.index(),
-        slide_idx: controlling_presentation.$slide.index()
-      };
-      $.when(controlling_presentation.SetContent()).done(function () {
-        var new_msg = new Utilities.Message("Diaesitys päivitetty", _this.$div),
-            $sec = undefined,
-            $slide = undefined;
-
-        if (controlling_presentation.d.find("section").length >= pres_position.sec_idx) {
-          $sec = controlling_presentation.d.find("section:eq(" + pres_position.sec_idx + ")");
-
-          if ($sec.find("arcticle").length >= pres_position.slide_idx) {
-            $slide = $sec.find("article:eq(" + pres_position.slide_idx + ")");
-
-            if ($slide.length) {
-              controlling_presentation.Activate($slide);
-            } else {
-              controlling_presentation.Activate($sec.find("article:eq(0)"));
-            }
-          }
-        }
-
-        new_msg.Show(2000); //controlling_presentation.Activate(pres_position);
-      });
+      controlling_presentation.Update();
     }
 
     msg.Show(2000);
@@ -3961,9 +3933,14 @@ Portal.Service.TabFactory.Structure = function () {
 
 
   this.SetStructure = function (html) {
+    var pres = Portal.Service.GetControlledByPresentation();
     $("#service_specific_structure").html(html);
     GeneralStructure.SetServiceid(Portal.Service.GetServiceId());
     GeneralStructure.Initialize(".structural-element-add");
+
+    if (pres) {
+      GeneralStructure.SetControlledByPresentation(pres);
+    }
   };
   /**
    *
@@ -6255,10 +6232,22 @@ Portal.ManageableLists.ListFactory.LiturgicalTexts = function () {
  *
  **/
 var GeneralStructure = function () {
-  var adder;
-  var slot_types = ["infoslide", "songslide", "bibleslide", "liturgicalslide"];
-  var sortable_slot_list = undefined;
-  var service_id = 0;
+  var adder,
+      slot_types = ["infoslide", "songslide", "bibleslide", "liturgicalslide"],
+      sortable_slot_list = undefined,
+      service_id = 0,
+      controlling_presentation = undefined;
+  /**
+   *
+   * Merkitse, että näkymä ladattu diaesityksen hallintapaneelin kautta
+   *
+   * @param pres Presentation-olio, joka avannut messun muokkausikkunan
+   *
+   */
+
+  function SetControlledByPresentation(pres) {
+    controlling_presentation = pres;
+  }
   /**
    *
    * Tekee rakenteesta messukohtaisen asettamalla messun id:n parametriksi
@@ -6266,6 +6255,7 @@ var GeneralStructure = function () {
    * @param id messun id
    *
    **/
+
 
   function SetServiceid(id) {
     service_id = id;
@@ -6280,7 +6270,11 @@ var GeneralStructure = function () {
 
 
   function ReloadSlots(data) {
-    console.log(data);
+    if (controlling_presentation) {
+      //Päivitä diaesitys, jos muokattu sitä kautta
+      controlling_presentation.Update();
+    }
+
     $(".structural-slots").load("php/ajax/Loader.php", {
       "action": "load_slots",
       "service_id": service_id
@@ -6402,7 +6396,8 @@ var GeneralStructure = function () {
     Initialize: Initialize,
     ReloadSlots: ReloadSlots,
     SaveSlotOrder: SaveSlotOrder,
-    SetServiceid: SetServiceid
+    SetServiceid: SetServiceid,
+    SetControlledByPresentation: SetControlledByPresentation
   };
 }();
 "use strict";
@@ -10179,6 +10174,7 @@ Slides.Presentation = function () {
    * @param integer loop_id luupattavan intervallin id, jota tarvitaan pysäyttämistä varten
    * @param boolean loop_is_on onko diojen luuppaus päällä
    * @param Array loopedslides taulukko luuppauksen kohteena olevista dioista
+   * @param boolean  fade_is_on toteutetaanko diasiirtymä feidaten
    *
    */
 
@@ -10186,6 +10182,9 @@ Slides.Presentation = function () {
     this.d = undefined;
     this.dom = undefined;
     this.styles = undefined;
+    this.$controller_window = $("main");
+    this.fade_is_on = false;
+    this.fadetime = 500;
     this.looptime = 7500;
     this.loop_is_on = false;
     this.loop_id = undefined;
@@ -10412,10 +10411,35 @@ Slides.Presentation = function () {
           _this4.LoopSlides(".event_info_at_beginning");
         }
       });
+      $("#anim_settings_block").slider({
+        min: 0,
+        max: 10000,
+        step: 250,
+        value: this.fadetime,
+        slide: function slide(ev, ui) {
+          _this4.fadetime = ui.value;
+          $(".fade_slider .indicator").text(" (" + ui.value / 1000 + " s) ");
+        }
+      });
       $("#bslink").click(this.ToggleBlackScreen.bind(this));
+      $("#animatelink").click(this.ToggleFadeOn.bind(this));
       $("#nextlink").click(this.Next.bind(this));
       $("#prevlink").click(this.Prev.bind(this));
-      $(".nav_slider").hide();
+      $(".nav_slider, .fade_slider").hide();
+    };
+    /**
+     *
+     * Määrittää sen, tehdäänkö häivitystä siirryttäessä uuteen diaan
+     *
+     * @param ev klikkaustapahtuma
+     *
+     */
+
+
+    this.ToggleFadeOn = function (ev) {
+      this.fade_is_on = this.fade_is_on ? false : true;
+      $(ev.target).parent().toggleClass("bs_active");
+      $(".fade_slider").toggle();
     };
     /**
      *
@@ -10522,7 +10546,13 @@ Slides.Presentation = function () {
       //jqueryn hide-metodin pitäisi säilyttää alkuperäiset arvot. Tämän vuoksi määritellään erikseen
       //display: flex;
 
-      this.$slide.show().css({
+      if (!this.fade_is_on) {
+        this.$slide.show();
+      } else {
+        this.$slide.fadeIn(this.fadetime);
+      }
+
+      this.$slide.css({
         "display": "flex"
       });
     };
@@ -10648,6 +10678,43 @@ Slides.Presentation = function () {
           _this5.controls.contentlist.HighlightCurrentContents();
         }
       }, this.looptime);
+    };
+    /**
+     *
+     * Päivittää esityksen sisällön esimerkiksi sen jälkeen, kun näytettävän messun tietoja
+     * tai rakennetta muutettu
+     *
+     */
+
+
+    this.Update = function () {
+      var _this6 = this;
+
+      var pres_position = {
+        sec_idx: this.$section.index(),
+        slide_idx: this.$slide.index()
+      };
+      return $.when(this.SetContent()).done(function () {
+        var new_msg = new Utilities.Message("Diaesitys päivitetty", _this6.$controller_window),
+            $sec = undefined,
+            $slide = undefined;
+
+        if (_this6.d.find("section").length >= pres_position.sec_idx) {
+          $sec = _this6.d.find("section:eq(" + pres_position.sec_idx + ")");
+
+          if ($sec.find("arcticle").length >= pres_position.slide_idx) {
+            $slide = $sec.find("article:eq(" + pres_position.slide_idx + ")");
+
+            if ($slide.length) {
+              _this6.Activate($slide);
+            } else {
+              _this6.Activate($sec.find("article:eq(0)"));
+            }
+          }
+        }
+
+        new_msg.Show(2000); //this.Activate(pres_position);
+      });
     };
   };
   /**

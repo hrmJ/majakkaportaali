@@ -24,9 +24,13 @@ Portal.Service.TabFactory.Structure = function(){
      *
      **/
     this.SetStructure = function(html){
+        var pres = Portal.Service.GetControlledByPresentation();
         $("#service_specific_structure").html(html);
         GeneralStructure.SetServiceid(Portal.Service.GetServiceId());
         GeneralStructure.Initialize(".structural-element-add");
+        if(pres){
+            GeneralStructure.SetControlledByPresentation(pres);
+        }
     };
 
 

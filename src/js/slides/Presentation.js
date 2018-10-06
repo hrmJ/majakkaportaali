@@ -23,12 +23,16 @@ Slides.Presentation = function(){
      * @param integer loop_id luupattavan intervallin id, jota tarvitaan pysäyttämistä varten
      * @param boolean loop_is_on onko diojen luuppaus päällä
      * @param Array loopedslides taulukko luuppauksen kohteena olevista dioista
+     * @param boolean  fade_is_on toteutetaanko diasiirtymä feidaten
      *
      */
     var Presentation = function(){
         this.d = undefined;
         this.dom = undefined;
         this.styles = undefined;
+        this.$controller_window = $("main");
+        this.fade_is_on = false;
+        this.fadetime = 500;
 
         this.looptime = 7500;
         this.loop_is_on = false;
@@ -244,10 +248,35 @@ Slides.Presentation = function(){
                                 this.LoopSlides(".event_info_at_beginning");
                             }
                         });
+            $("#anim_settings_block")
+                .slider({
+                            min: 0,
+                            max: 10000,
+                            step: 250,
+                            value: this.fadetime,
+                            slide: (ev, ui) => {
+                                this.fadetime = ui.value;
+                                $(".fade_slider .indicator").text(" (" + ui.value/1000 + " s) ");
+                            }
+                        });
             $("#bslink").click(this.ToggleBlackScreen.bind(this));
+            $("#animatelink").click(this.ToggleFadeOn.bind(this));
             $("#nextlink").click(this.Next.bind(this));
             $("#prevlink").click(this.Prev.bind(this));
-            $(".nav_slider").hide();
+            $(".nav_slider, .fade_slider").hide();
+        }
+
+        /**
+         *
+         * Määrittää sen, tehdäänkö häivitystä siirryttäessä uuteen diaan
+         *
+         * @param ev klikkaustapahtuma
+         *
+         */
+        this.ToggleFadeOn = function(ev){
+            this.fade_is_on = this.fade_is_on ? false : true;
+            $(ev.target).parent().toggleClass("bs_active");
+            $(".fade_slider").toggle();
         }
 
 
@@ -351,7 +380,13 @@ Slides.Presentation = function(){
             //Hieman häkkäilyn makua, mutta display-attribuutti jäi jostain syystä block-arvoon, vaikka
             //jqueryn hide-metodin pitäisi säilyttää alkuperäiset arvot. Tämän vuoksi määritellään erikseen
             //display: flex;
-            this.$slide.show().css({"display":"flex"});
+            if(!this.fade_is_on){
+                this.$slide.show();
+            }
+            else{
+                this.$slide.fadeIn(this.fadetime);
+            }
+            this.$slide.css({"display":"flex"})
         };
 
 
@@ -472,6 +507,40 @@ Slides.Presentation = function(){
                 }
             }, this.looptime);
         };
+
+
+        /**
+         *
+         * Päivittää esityksen sisällön esimerkiksi sen jälkeen, kun näytettävän messun tietoja
+         * tai rakennetta muutettu
+         *
+         */
+        this.Update = function(){
+            var pres_position = {
+                sec_idx : this.$section.index(),
+                slide_idx: this.$slide.index()
+            };
+            return $.when(this.SetContent()).done(()=>{
+                var new_msg = new Utilities.Message("Diaesitys päivitetty", this.$controller_window),
+                    $sec = undefined,
+                    $slide = undefined;
+                if(this.d.find("section").length >= pres_position.sec_idx){
+                    $sec = this.d.find("section:eq(" + pres_position.sec_idx + ")");
+                    if($sec.find("arcticle").length >= pres_position.slide_idx){
+                        $slide = $sec.find("article:eq(" + pres_position.slide_idx + ")");
+                        if($slide.length){
+                            this.Activate($slide);
+                        }
+                        else{
+                            this.Activate($sec.find("article:eq(0)"));
+                        }
+                    }
+                }
+                new_msg.Show(2000);
+                //this.Activate(pres_position);
+            });
+        
+        }
 
     };
 

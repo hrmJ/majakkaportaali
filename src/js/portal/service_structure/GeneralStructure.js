@@ -6,11 +6,22 @@
  **/
 var GeneralStructure = function(){
 
-    var adder;
-    var slot_types = [ "infoslide", "songslide", "bibleslide", "liturgicalslide"];
-    var sortable_slot_list = undefined;
-    var service_id = 0;
+    var adder,
+        slot_types = [ "infoslide", "songslide", "bibleslide", "liturgicalslide"],
+        sortable_slot_list = undefined,
+        service_id = 0,
+        controlling_presentation = undefined;
 
+    /**
+     *
+     * Merkitse, että näkymä ladattu diaesityksen hallintapaneelin kautta
+     *
+     * @param pres Presentation-olio, joka avannut messun muokkausikkunan
+     *
+     */
+    function SetControlledByPresentation(pres){
+        controlling_presentation = pres;
+    }
 
     /**
      *
@@ -32,7 +43,10 @@ var GeneralStructure = function(){
      *
      **/
     function ReloadSlots(data){
-        console.log(data);
+        if(controlling_presentation){
+            //Päivitä diaesitys, jos muokattu sitä kautta
+            controlling_presentation.Update();
+        }
         $(".structural-slots").load("php/ajax/Loader.php",
             {
                 "action":"load_slots",
@@ -168,6 +182,7 @@ var GeneralStructure = function(){
          ReloadSlots,
          SaveSlotOrder,
          SetServiceid,
+         SetControlledByPresentation
     }
     
 

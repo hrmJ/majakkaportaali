@@ -115,31 +115,7 @@ Portal.Service = function(){
         var msg = new Utilities.Message("Muutokset tallennettu", $("section.comments:eq(0)")),
             pres_position = {};
         if(controlling_presentation){
-            //Päivitetään esityksen tiedot muutosten jälkeen
-            //TODO: vapaavalintaiseksi?
-            pres_position = {
-                sec_idx : controlling_presentation.$section.index(),
-                slide_idx: controlling_presentation.$slide.index()
-            };
-            $.when(controlling_presentation.SetContent()).done(()=>{
-                var new_msg = new Utilities.Message("Diaesitys päivitetty", this.$div),
-                    $sec = undefined,
-                    $slide = undefined;
-                if(controlling_presentation.d.find("section").length >= pres_position.sec_idx){
-                    $sec = controlling_presentation.d.find("section:eq(" + pres_position.sec_idx + ")");
-                    if($sec.find("arcticle").length >= pres_position.slide_idx){
-                        $slide = $sec.find("article:eq(" + pres_position.slide_idx + ")");
-                        if($slide.length){
-                            controlling_presentation.Activate($slide);
-                        }
-                        else{
-                            controlling_presentation.Activate($sec.find("article:eq(0)"));
-                        }
-                    }
-                }
-                new_msg.Show(2000);
-                //controlling_presentation.Activate(pres_position);
-            });
+            controlling_presentation.Update();
         }
         msg.Show(2000);
     };

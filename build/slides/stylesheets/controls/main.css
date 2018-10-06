@@ -75,6 +75,18 @@ nav {
     text-decoration: none;
     font-size: 0.9em; }
 
+.fade_slider {
+  margin-left: 1em;
+  display: inline-flex;
+  color: white;
+  font-size: 0.8em; }
+  .fade_slider > div:last-child {
+    margin-left: 1em;
+    width: 9em; }
+  .fade_slider .indicator {
+    width: 3.5em;
+    margin-left: 0.4em; }
+
 .nav_slider {
   margin-right: 1em;
   display: inline-flex;
