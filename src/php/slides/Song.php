@@ -44,17 +44,22 @@ class Song extends Slide{
     }
 
     /**
+     *
      * Lisää html-esitykseen varsinaiset dian yksityiskohdat: säkeistöt, otsikkodia, yms.
+     *
      */
     public function SetDetails(){
         if($this->is_instrumental == "yes"){
             $this->SetTitle($this->song_title . " (ei yhteislaulu)");
         }
         else{
-            $this->SetTitle($this->segment_name_is_title ? $this->segment_name : $this->details["title"])
-                ->SetComposer("Säv. " . $this->details["composer"])
+            $title = $this->segment_name_is_title ? $this->segment_name : $this->details["title"];
+            $composer = $this->details["composer"] ? "Säv. " . $this->details["composer"] : "";
+            $lyrics = $this->details["lyrics"] ? "San. " . $this->details["lyrics"] : "";
+            $this->SetTitle($title)
+                ->SetComposer($composer)
+                ->SetLyrics($lyrics)
                 ->SetSegmentName($this->details["composer"])
-                ->SetLyrics("San. " . $this->details["lyrics"])
                 ->SetVerses($this->details["verses"]);
         }
         return $this;
