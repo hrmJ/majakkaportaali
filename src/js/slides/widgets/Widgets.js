@@ -46,7 +46,11 @@ Slides.Widgets = function(){
          *
          */
         this.GiveContainer = function(){
-            return $("<section class='" + this.addedclass + "'></section>");
+            var newclass = this.addedclas;
+            if (this.addedclass2){
+                newclass += " " + this.addedclass2;
+            }
+            return $("<section class='" + newclass + "'></section>");
         };
 
         /**

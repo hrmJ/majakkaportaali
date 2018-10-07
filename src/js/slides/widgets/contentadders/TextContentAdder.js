@@ -16,7 +16,7 @@ Slides.Widgets.ContentAdders.TextContentAdder = function(parent_presentation){
     Slides.Widgets.ContentAdder.call(this, parent_presentation);
 
     this.adderclass = ".textcontentadder";
-    this.addedclass = "addedcontent";
+    this.addedclass = "Teksti";
 
     /**
      * Luo tekstidia käyttäjän antaman inputin pohjalta

@@ -11327,7 +11327,13 @@ Slides.Widgets = function () {
 
 
     this.GiveContainer = function () {
-      return $("<section class='" + this.addedclass + "'></section>");
+      var newclass = this.addedclas;
+
+      if (this.addedclass2) {
+        newclass += " " + this.addedclass2;
+      }
+
+      return $("<section class='" + newclass + "'></section>");
     };
     /**
      * Tulosta paikat, joihin widgetillä luodun sisällön voi esityksessä syöttää 
@@ -11421,7 +11427,7 @@ Slides.Widgets.ContentAdders = Slides.Widgets.ContentAdders || {};
 Slides.Widgets.ContentAdders.TextContentAdder = function (parent_presentation) {
   Slides.Widgets.ContentAdder.call(this, parent_presentation);
   this.adderclass = ".textcontentadder";
-  this.addedclass = "addedcontent";
+  this.addedclass = "Teksti";
   /**
    * Luo tekstidia käyttäjän antaman inputin pohjalta
    */
@@ -11451,6 +11457,7 @@ Slides.Widgets.ContentAdders.BibleContentAdder = function (parent_presentation) 
   Slides.Widgets.ContentAdder.call(this, parent_presentation);
   this.adderclass = ".biblecontentadder";
   this.addedclass = "bibletext";
+  this.addedclass2 = "Raamattudia";
   this.address = {
     "start": {},
     "end": {}
@@ -11477,7 +11484,7 @@ Slides.Widgets.ContentAdders.BibleContentAdder = function (parent_presentation) 
 
   this.CreateContent = function () {
     var address = this.pickerpair.GetHumanReadableAddress(),
-        $section = $("<section class=\"bibletext Teksti\">\n                            <article class=\"bibleverse\">\n                                <h2>".concat(address, "</h2>\n                                <p>").concat(this.verses[0], "</p>\n                            </article>\n                        </section>"));
+        $section = $("<section class=\"bibletext Raamattudia\">\n                            <article class=\"bibleverse\">\n                                <h2>".concat(address, "</h2>\n                                <p>").concat(this.verses[0], "</p>\n                            </article>\n                        </section>"));
 
     if (this.verses.length > 1) {
       $section.append(this.verses.slice(1).map(function (verse) {

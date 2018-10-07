@@ -16,6 +16,7 @@ Slides.Widgets.ContentAdders.BibleContentAdder = function(parent_presentation){
 
     this.adderclass = ".biblecontentadder";
     this.addedclass = "bibletext";
+    this.addedclass2 = "Raamattudia";
     this.address =  {"start":{},"end":{}};
 
     /**
@@ -38,7 +39,7 @@ Slides.Widgets.ContentAdders.BibleContentAdder = function(parent_presentation){
      */
     this.CreateContent = function(){
         var address = this.pickerpair.GetHumanReadableAddress(),
-            $section = $(`<section class="bibletext Teksti">
+            $section = $(`<section class="bibletext Raamattudia">
                             <article class="bibleverse">
                                 <h2>${address}</h2>
                                 <p>${this.verses[0]}</p>
