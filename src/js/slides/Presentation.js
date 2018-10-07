@@ -24,6 +24,7 @@ Slides.Presentation = function(){
      * @param boolean loop_is_on onko diojen luuppaus päällä
      * @param Array loopedslides taulukko luuppauksen kohteena olevista dioista
      * @param boolean  fade_is_on toteutetaanko diasiirtymä feidaten
+     * @param boolean  initial_load_ready tallentaa teidon siitä, onko käyttöliittymä ladattu
      *
      */
     var Presentation = function(){
@@ -50,6 +51,9 @@ Slides.Presentation = function(){
             "header":"ylätunniste",
             "aside":"sivutunniste",
         };
+
+        this.initial_load_ready = false;
+
         self = this;
 
 
@@ -182,49 +186,56 @@ Slides.Presentation = function(){
             this.styles = new Slides.Styles.Controller.StyleController(this);
             this.styles.GetOriginalStyles();
 
-            //Tähän controls-attribuuttiin on listattu kaikki 
-            //sisältöä / ulkoasua tuottavat tai muokkaavat widgetit
-            this.controls = {
-                contentlist: new Slides.ContentList(this),
-                textcontentadder: new Slides.Widgets.ContentAdders.TextContentAdder(this),
-                biblecontentadder: new Slides.Widgets.ContentAdders.BibleContentAdder(this),
-                songcontentadder: new Slides.Widgets.ContentAdders.SongContentAdder(this),
-                imageadder: new Slides.Widgets.ContentAdders.ImageAdder(this),
-                youtubeadder: new Slides.Widgets.ContentAdders.YoutubeAdder(this),
+            if(!this.initial_load_ready){
+
+                //Tähän controls-attribuuttiin on listattu kaikki 
+                //sisältöä / ulkoasua tuottavat tai muokkaavat widgetit
+                this.controls = {
+                    contentlist: new Slides.ContentList(this),
+                    textcontentadder: new Slides.Widgets.ContentAdders.TextContentAdder(this),
+                    biblecontentadder: new Slides.Widgets.ContentAdders.BibleContentAdder(this),
+                    songcontentadder: new Slides.Widgets.ContentAdders.SongContentAdder(this),
+                    imageadder: new Slides.Widgets.ContentAdders.ImageAdder(this),
+                    youtubeadder: new Slides.Widgets.ContentAdders.YoutubeAdder(this),
+                }
+                this.controls.biblecontentadder.Initialize();
+                this.controls.imageadder.Initialize();
+
+                //Lataa sisältö ja päivitä tieto tällä hetkellä aktiivisena olevasta segmentistä
+                this.controls.contentlist.GetContents().PrintContentList().HighlightCurrentContents();
+                var self = this;
+                $("#songsearch").autocomplete(this.controls.songcontentadder.autocomp);
+                $("#songsearch").on("change paste keyup",function(){self.controls.songcontentadder.CreateContent()});
+                this.UpdateSegmentListForLayoutEditing();
+
+                //Lisää vielä tyylienmuokkauswidgetit (nämä on lisättävä vasta segmenttilistan päivityksen jälkeen)
+
+                this.controls.backgroundchanger = new Slides.Widgets.StyleWidgets.BackgroundChanger(this);
+                this.controls.backgroundchanger.LoadLocalBackgrounds();
+                this.controls.backgroundchanger.InitializeEvents();
+        
+                this.controls.fontchanger = new Slides.Widgets.StyleWidgets.FontChanger(this);
+                this.controls.fontchanger.CreateFontControllers();
+                Slides.Styles.Controller.UpdateControllers(this);
+
+                this.controls.positionchanger = new Slides.Widgets.StyleWidgets.PositionChanger(this);
+                this.controls.positionchanger.CreateControllers();
+
+                this.controls.layoutloader = new Slides.Widgets.StyleWidgets.LayoutLoader(this);
+                this.controls.layoutloader.UpdateStyleSheets();
+                this.controls.layoutloader.InitializeEvents();
+
+
+                this.SetControlActions();
+                //Merkitse, että peruskäyttöliittymä ladattu, jottei päivitettäessä
+                //sisältöä tehtäisi tätä uudestaan
             }
-            this.controls.biblecontentadder.Initialize();
-            this.controls.imageadder.Initialize();
-
-            //Lataa sisältö ja päivitä tieto tällä hetkellä aktiivisena olevasta segmentistä
-            this.controls.contentlist.GetContents().PrintContentList().HighlightCurrentContents();
-            var self = this;
-            $("#songsearch").autocomplete(this.controls.songcontentadder.autocomp);
-            $("#songsearch").on("change paste keyup",function(){self.controls.songcontentadder.CreateContent()});
-            this.UpdateSegmentListForLayoutEditing();
-
-            //Lisää vielä tyylienmuokkauswidgetit (nämä on lisättävä vasta segmenttilistan päivityksen jälkeen)
-
-            this.controls.backgroundchanger = new Slides.Widgets.StyleWidgets.BackgroundChanger(this);
-            this.controls.backgroundchanger.LoadLocalBackgrounds();
-            this.controls.backgroundchanger.InitializeEvents();
-    
-            this.controls.fontchanger = new Slides.Widgets.StyleWidgets.FontChanger(this);
-            this.controls.fontchanger.CreateFontControllers();
-            Slides.Styles.Controller.UpdateControllers(this);
-
-            this.controls.positionchanger = new Slides.Widgets.StyleWidgets.PositionChanger(this);
-            this.controls.positionchanger.CreateControllers();
-
-            this.controls.layoutloader = new Slides.Widgets.StyleWidgets.LayoutLoader(this);
-            this.controls.layoutloader.UpdateStyleSheets();
-            this.controls.layoutloader.InitializeEvents();
 
             // Lopuksi muita ladattavia plugineja
             Portal.PercentBar.InitializePercentBars(this.d);
             Portal.PercentBar.UpdateStyles();
             Portal.Credits.InitializeCredits(this.d);
-
-            this.SetControlActions();
+            this.initial_load_ready = true;
 
         };
 
@@ -537,6 +548,7 @@ Slides.Presentation = function(){
                     }
                 }
                 new_msg.Show(2000);
+                this.controls.contentlist.GetContents().PrintContentList().HighlightCurrentContents();
                 //this.Activate(pres_position);
             });
         
