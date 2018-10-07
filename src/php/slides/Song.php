@@ -52,9 +52,9 @@ class Song extends Slide{
         }
         else{
             $this->SetTitle($this->segment_name_is_title ? $this->segment_name : $this->details["title"])
-                ->SetComposer($this->details["composer"])
+                ->SetComposer("Säv. " . $this->details["composer"])
                 ->SetSegmentName($this->details["composer"])
-                ->SetLyrics($this->details["lyrics"])
+                ->SetLyrics("San. " . $this->details["lyrics"])
                 ->SetVerses($this->details["verses"]);
         }
         return $this;
