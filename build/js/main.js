@@ -10367,6 +10367,7 @@ Slides.Presentation = function () {
       //Tähän styles-attribuuttiin on tallennettu esityksen alkuperäiset ja muokatut tyylit
       this.styles = new Slides.Styles.Controller.StyleController(this);
       this.styles.GetOriginalStyles();
+      console.log("What????");
 
       if (!this.initial_load_ready) {
         //Tähän controls-attribuuttiin on listattu kaikki 
@@ -10403,6 +10404,12 @@ Slides.Presentation = function () {
         this.controls.layoutloader.InitializeEvents();
         this.SetControlActions(); //Merkitse, että peruskäyttöliittymä ladattu, jottei päivitettäessä
         //sisältöä tehtäisi tätä uudestaan
+      } else if (this.controls) {
+        if (this.controls.contentlist) {
+          //Lataa  kuitenkin sulkemisen jälkeen sisältö
+          console.log("Heheeheheeyyyyy!!");
+          this.controls.contentlist.GetContents().PrintContentList().HighlightCurrentContents();
+        }
       } // Lopuksi muita ladattavia plugineja
 
 
