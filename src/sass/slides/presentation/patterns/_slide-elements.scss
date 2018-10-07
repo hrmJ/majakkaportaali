@@ -12,6 +12,14 @@ article{
     display:block;
 }
 
+.song .byline p {
+    font-size:0.9em;
+
+}
+
+.song .byline p  + p {
+    margin-top:1em;
+}
 
 .credits_list{
     list-style-type:none;
