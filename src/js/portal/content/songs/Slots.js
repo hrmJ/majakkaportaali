@@ -540,6 +540,10 @@ Portal.SongSlots = function(){
          *
          */
         this.CheckDetails = function(){
+            //HACK: replace with a more robust
+            $("#songdetails .closer_div a").click(() => {
+                SongLists.SetEditedLyricsCallback(undefined);
+            })
             //Käytä oletuksena ensimmäistä versiota ko. laulusta
             var self = this;
             this.picked_id = this.picked_id || this.song_ids[0];
@@ -555,30 +559,34 @@ Portal.SongSlots = function(){
             SetCurrentSlot(this);
 
             $("#songdetails").find(".version_cont, .lyrics").html("");
-            SongLists.SetLyrics(this.picked_id, $("#songdetails .lyrics"));
-            SongLists.SetSongMeta();
+            $.when(
+                SongLists.SetLyrics(this.picked_id, $("#songdetails .lyrics"))
+            ).done(()=>{
+            
+                SongLists.SetSongMeta();
+                this.PrintEditActions();
+                $("#songdetails").find("h3").text(this.title);
+                $("#songdetails").find(".song_id").val(this.picked_id);
+                $("#songdetails").slideDown();
+                //Varmista, että uusien sanojen tallennuksen jälkeen pystytään viittaamaan
 
-            this.PrintEditActions();
-            $("#songdetails").find("h3").text(this.title);
-            $("#songdetails").find(".song_id").val(this.picked_id);
-            $("#songdetails").slideDown();
-            //Varmista, että uusien sanojen tallennuksen jälkeen pystytään viittaamaan
-
-            if(this.is_service_specific){
-                $("#songdetails .edit_instructions").show();
-                $("#songdetails .edit_instructions h4").click(Portal.Menus.InitializeFoldMenu);
-            }
-
-            //Varmista, että versiot päivitetään 
-            //asettamalla callback
-            SongLists.SetEditedLyricsCallback(function(){
-                var input_id_val = $("#songdetails .lyrics_id").val();
-                self.picked_id = input_id_val || self.picked_id;
-                if(self.is_service_specific){
-                    $.when(self.RefreshVersions(
-                        self.LoadVersionPicker.bind(self)
-                    )).done(self.PrintEditActions.bind(self));
+                if(this.is_service_specific){
+                    $("#songdetails .edit_instructions").show();
+                    $("#songdetails .edit_instructions h4").click(Portal.Menus.InitializeFoldMenu);
                 }
+
+                //Varmista, että versiot päivitetään 
+                //asettamalla callback
+                SongLists.SetEditedLyricsCallback(() => {
+                    var input_id_val = $("#songdetails .lyrics_id").val();
+                    this.picked_id = input_id_val || this.picked_id;
+                    if(this.is_service_specific){
+                        $.when(this.RefreshVersions(
+                            this.LoadVersionPicker.bind(this)
+                        )).done(this.PrintEditActions.bind(this));
+                    }
+                });
+            
             });
         };
 
@@ -594,25 +602,25 @@ Portal.SongSlots = function(){
                     no_lyrics : [
                         $(`<li class='new_version_li'>
                         Lisää lauluun sanat</li>`)
-                            .click(self.AddNewVersion.bind(self)),
+                            .click(this.AddNewVersion.bind(this)),
 
                         $(`<li class='nolyrics_li'> 
                             <input name='no_lyrics_cb' type="checkbox"></input>
-                            Ei sanoja tähän lauluun (esitysbiisi tms.)</li>`).click(self.MarkNoWords.bind(self))
+                            Ei sanoja tähän lauluun (esitysbiisi tms.)</li>`).click(this.MarkNoWords.bind(this))
                     ],
                     has_lyrics: [
                         $(`<li class='edit_words_li'>Muokkaa sanoja</li>`)
-                            .click(self.EditWords.bind(self)),
+                            .click(this.EditWords.bind(this)),
                         $(`<li class='new_version_li'>
                         Lisää uusi laulu tai versio samalla nimellä </li>`)
-                            .click(self.AddNewVersion.bind(self))
+                            .click(this.AddNewVersion.bind(this))
                     ]
                 };
             if(!this.is_service_specific){
                 lyrics_status = "has_lyrics";
             }
             $("#songdetails_actions").html("");
-            $.each(edit_actions[lyrics_status],function(idx, $el){
+            $.each(edit_actions[lyrics_status],(idx, $el) => {
                 $("#songdetails_actions").append($el);
             });
 
