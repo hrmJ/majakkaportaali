@@ -10579,6 +10579,38 @@ Slides.Presentation = function () {
       this.$slide.css({
         "display": "flex"
       });
+      this.FixOverFlow();
+    };
+    /**
+     *
+     * Varmista, että sisältö mahtuu ruudulle
+     *
+     */
+
+
+    this.FixOverFlow = function () {
+      //Varmista, että kaikki leipäteksti mahtuu ruudulle
+      this.$slide.find("h1,h2,h3,p").each(function (idx, el) {
+        var $el = $(el),
+            height_needed = $el.get(0).scrollHeight,
+            height_available = $el.innerHeight(),
+            i = 0,
+            oldsize = undefined;
+
+        while (height_available < height_needed) {
+          oldsize = $(el).css("font-size");
+          $el.css({
+            "font-size": oldsize.replace("px", "") * 1 - 2 + "px"
+          });
+          height_needed = $el.get(0).scrollHeight;
+          height_available = $el.innerHeight();
+          i++;
+
+          if (i > 20) {
+            break;
+          }
+        }
+      });
     };
     /**
      *

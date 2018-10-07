@@ -397,9 +397,37 @@ Slides.Presentation = function(){
             else{
                 this.$slide.fadeIn(this.fadetime);
             }
-            this.$slide.css({"display":"flex"})
+            this.$slide.css({"display":"flex"});
+            this.FixOverFlow();
         };
 
+
+        /**
+         *
+         * Varmista, että sisältö mahtuu ruudulle
+         *
+         */
+        this.FixOverFlow = function(){
+        
+                //Varmista, että kaikki leipäteksti mahtuu ruudulle
+                this.$slide.find("h1,h2,h3,p").each((idx, el)=>{
+                    var $el = $(el),
+                        height_needed = $el.get(0).scrollHeight,
+                        height_available = $el.innerHeight(),
+                        i = 0,
+                        oldsize = undefined;
+                    while(height_available < height_needed ){
+                        oldsize = $(el).css("font-size");
+                        $el.css({"font-size": (oldsize.replace("px","")*1-2) + "px"});
+                        height_needed = $el.get(0).scrollHeight;
+                        height_available = $el.innerHeight();
+                        i++;
+                        if(i>20){
+                            break;
+                        }
+                    }
+                });
+        };
 
         /**
          *
@@ -441,6 +469,7 @@ Slides.Presentation = function(){
                 this.$section.find("article").css({"margin-left":
                     $aside.css("width").replace("px","")*1 + 5 + "px"});
             }
+
         };
 
         /**
@@ -602,6 +631,7 @@ Slides.Presentation = function(){
         current_presentation = current_presentation || new Presentation();
         current_presentation.ToggleOpen();
     }
+
 
 
     return {
