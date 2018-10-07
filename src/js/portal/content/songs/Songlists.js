@@ -137,7 +137,9 @@ var SongLists = function(){
          */
         this.ShowSongVersions = function($li){
             var self = this,
-                title = $li.find(".song_title").text();
+                title = $li.find(".song_title").text(),
+                $actionli = undefined,
+                $ul = undefined;
             $.getJSON("php/ajax/Loader.php",{
                     action:  "check_song_title",
                     service_id: Portal.Service.GetServiceId(),
