@@ -32,7 +32,7 @@ class Song extends Slide{
      * @param boolean $segment_name_is_title käytetäänkö otsikkona laulun nimen sijaan segmentin nimeä
      *
      */
-    public function __construct($m, $details, $picked_verses, $is_instrumental, $song_title, $segment_name = "", $segment_name_is_title){
+    public function __construct($m, $details, $picked_verses, $is_instrumental, $song_title, $segment_name = "", $segment_name_is_title=false){
         parent::__construct($m, $details);
         $this->template_engine;
         $this->picked_verses = ($picked_verses ? explode(",", $picked_verses) : "");

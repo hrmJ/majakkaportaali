@@ -410,7 +410,7 @@ Slides.Presentation = function(){
         this.FixOverFlow = function(){
         
                 //Varmista, että kaikki leipäteksti mahtuu ruudulle
-                this.$slide.find("h1,h2,h3,p").each((idx, el)=>{
+                var fixer = (idx, el)=>{
                     var $el = $(el),
                         height_needed = $el.get(0).scrollHeight,
                         height_available = $el.innerHeight(),
@@ -426,7 +426,9 @@ Slides.Presentation = function(){
                             break;
                         }
                     }
-                });
+                };
+                this.$slide.find("p").each(fixer);
+                this.$slide.find("h1,h2,h3,h4").each(fixer);
         };
 
         /**

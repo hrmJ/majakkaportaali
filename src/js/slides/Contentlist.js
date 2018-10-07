@@ -11,6 +11,7 @@ Slides = Slides || {};
 Slides.ContentList = function(parent_presentation){
 
     this.pres = parent_presentation;
+    this.info_classname = "event_info_at_beginning";
     var currently_dragged_no = undefined;
 
     /**
@@ -22,7 +23,11 @@ Slides.ContentList = function(parent_presentation){
             headingselector = "h1, h2, h3, h4, h5";
         this.headings = [];
         this.pres.d.find("section").each(function(){
-            var $firstslide = $(this).find("article:eq(0)");
+            var $firstslide = $(this).find("article:eq(0)"),
+                isinfo = false;
+            if($(this).hasClass(self.info_classname)){
+                isinfo = true;
+            }
             if($(this).hasClass("addedcontent")){
                 //Jos kyseessä spontaanisti lisätty sisältö, luo kuvaava selitysteksti
                 var prefix = "";
@@ -47,7 +52,7 @@ Slides.ContentList = function(parent_presentation){
                     var identifier = $firstslide.find(headingselector).text();
                 }
             }
-            self.headings.push(identifier);
+            self.headings.push({"isinfo": isinfo, "identifier":identifier});
         })
         return this;
     };
@@ -59,19 +64,17 @@ Slides.ContentList = function(parent_presentation){
         $("#original-content").html("");
         var $toc = $("<ul></ul>").prependTo("#original-content"),
             self = this,
-            info_classname = "event_info_at_beginning",
-            number_of_infos = this.pres.d.find("section." + info_classname).length,
+            number_of_infos = this.pres.d.find("section." + self.info_classname).length,
             $li = undefined;
         //Hae kaikki esityksessä olevat osiot ja tee niistä sisällysluettelo
         $.each(this.headings,function(idx, heading){
             $li = $("<li draggable='true'></li>")
-            .text(heading)
+            .text(heading.identifier)
             .appendTo($toc)
             .attr({"id":"content_" + idx})
             .click(function(){self.MovePresentationToSection($(this));});
-            if(idx < number_of_infos){
+            if(heading.isinfo){
                 $li.addClass("info");
-                //Lisätään merkki viimeisestä infodiasta
             }
         });
         //Lisää raahaamisjärjestelyä varten sisällysluettelon li-elementtien väliin tyhjät li-elementit

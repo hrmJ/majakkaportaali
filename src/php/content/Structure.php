@@ -426,6 +426,21 @@ class Structure{
 
     }
 
+    /**
+     *
+     * Luo lyhyen ohjedian esityksen käynnistämisestä.
+     *
+     *
+     */
+    public function AddInstructionSlide(){
+        #Luo ohjedia ensimmäiseksi
+        $instruction = "Tämä on diaesityksen mallidia. Raahaa tämä esitysnäyttöön ja suurenna
+                        koko näytön kokoiseksi. Siirry vasta sen jälkeen muihin dioihin. Tämän mallitekstin koko
+                        saattaa jäädä esitysnäytössä pieneksi, mikä on normaalia.";
+        $details = ["maintext"=>$instruction,"genheader"=>"","header"=>"Diaesityksen ohjeet","imgname"=>"","subgenheader"=>""];
+        $this->AddSlide(new Infoslide($this->template_engine, $details, "Diaesityksen ohje"), ".Teksti", 0, 0);
+    }
+
 
     /**
      *
@@ -433,13 +448,17 @@ class Structure{
      * 
      */
     public function LoadSlidesForPresentation(){
+        $this->AddInstructionSlide();
         $infoslots = $this->GetInfoSlots();
         foreach($infoslots as $key => $slot){
+            $key += 1;
             $slot["addedclass"] .= " event_info_at_beginning";
             $this->AddInfoSegment($slot, $key);
         }
         $slots = $this->GetSlots();
         foreach($slots as $key => $slot){
+            //Koska alkuun syötetään ohjedia, kasvatetaan aina yhdellä
+            $key+=1;
             if(sizeof($infoslots) > 0){
                 //Jos infoja mukana, merkitään ensimmäinen infodia ensimmäiseksi diaksi
                 $key += 99;

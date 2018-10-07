@@ -10590,7 +10590,7 @@ Slides.Presentation = function () {
 
     this.FixOverFlow = function () {
       //Varmista, että kaikki leipäteksti mahtuu ruudulle
-      this.$slide.find("h1,h2,h3,p").each(function (idx, el) {
+      var fixer = function fixer(idx, el) {
         var $el = $(el),
             height_needed = $el.get(0).scrollHeight,
             height_available = $el.innerHeight(),
@@ -10610,7 +10610,10 @@ Slides.Presentation = function () {
             break;
           }
         }
-      });
+      };
+
+      this.$slide.find("p").each(fixer);
+      this.$slide.find("h1,h2,h3,h4").each(fixer);
     };
     /**
      *
@@ -10989,6 +10992,7 @@ Slides = Slides || {};
 
 Slides.ContentList = function (parent_presentation) {
   this.pres = parent_presentation;
+  this.info_classname = "event_info_at_beginning";
   var currently_dragged_no = undefined;
   /**
    * Hakee listan sisällöstä (esitysikkunan sisällön 
@@ -11000,7 +11004,12 @@ Slides.ContentList = function (parent_presentation) {
         headingselector = "h1, h2, h3, h4, h5";
     this.headings = [];
     this.pres.d.find("section").each(function () {
-      var $firstslide = $(this).find("article:eq(0)");
+      var $firstslide = $(this).find("article:eq(0)"),
+          isinfo = false;
+
+      if ($(this).hasClass(self.info_classname)) {
+        isinfo = true;
+      }
 
       if ($(this).hasClass("addedcontent")) {
         //Jos kyseessä spontaanisti lisätty sisältö, luo kuvaava selitysteksti
@@ -11026,7 +11035,10 @@ Slides.ContentList = function (parent_presentation) {
         }
       }
 
-      self.headings.push(identifier);
+      self.headings.push({
+        "isinfo": isinfo,
+        "identifier": identifier
+      });
     });
     return this;
   };
@@ -11039,19 +11051,18 @@ Slides.ContentList = function (parent_presentation) {
     $("#original-content").html("");
     var $toc = $("<ul></ul>").prependTo("#original-content"),
         self = this,
-        info_classname = "event_info_at_beginning",
-        number_of_infos = this.pres.d.find("section." + info_classname).length,
+        number_of_infos = this.pres.d.find("section." + self.info_classname).length,
         $li = undefined; //Hae kaikki esityksessä olevat osiot ja tee niistä sisällysluettelo
 
     $.each(this.headings, function (idx, heading) {
-      $li = $("<li draggable='true'></li>").text(heading).appendTo($toc).attr({
+      $li = $("<li draggable='true'></li>").text(heading.identifier).appendTo($toc).attr({
         "id": "content_" + idx
       }).click(function () {
         self.MovePresentationToSection($(this));
       });
 
-      if (idx < number_of_infos) {
-        $li.addClass("info"); //Lisätään merkki viimeisestä infodiasta
+      if (heading.isinfo) {
+        $li.addClass("info");
       }
     }); //Lisää raahaamisjärjestelyä varten sisällysluettelon li-elementtien väliin tyhjät li-elementit
 
