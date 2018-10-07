@@ -210,6 +210,7 @@ CREATE TABLE songsegments (
   `restrictedto` TEXT DEFAULT NULL,
   `singlename` varchar(100) DEFAULT NULL,
   `is_multi` boolean DEFAULT false,
+  `segment_name_is_title` boolean DEFAULT false,
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
 

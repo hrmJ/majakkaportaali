@@ -6430,6 +6430,10 @@ GeneralStructure.SlotFactory.songslide = function () {
       this.$lightbox.find("[value='multisong']").get(0).checked = true;
     }
 
+    if (data.segment_name_is_title * 1) {
+      this.$lightbox.find(".segment_name_is_title").get(0).checked = true;
+    }
+
     this.$lightbox.find(".songdescription").val(data.songdescription);
     this.$lightbox.find("#restrict_to_tags select").val(data.restrictedto).selectmenu("refresh"); //Lisää toiminnallisuus valintalaatikkoihin
 
@@ -6450,6 +6454,7 @@ GeneralStructure.SlotFactory.songslide = function () {
       songdescription: this.$lightbox.find(".songdescription").val(),
       singlename: this.$lightbox.find(".segment-name").val(),
       is_multi: this.$lightbox.find("[value='multisong']").get(0).checked ? 1 : 0,
+      segment_name_is_title: this.$lightbox.find(".segment_name_is_title").get(0).checked ? 1 : 0,
       restrictedto: this.$lightbox.find("#restrict_to_tags select").val()
     };
     return this;

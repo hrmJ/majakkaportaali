@@ -29,15 +29,17 @@ class Song extends Slide{
      * @param String $is_instrumental 'yes' tai 'no' riippuen siitä, onko esitysbiisi vai laulettava
      * @param String $song_title laulun otsikko: tarvitaan siltä varalta, ettei sanoja, mutta otsikko
      * @param String $segment_name laulunslotin nimi
+     * @param boolean $segment_name_is_title käytetäänkö otsikkona laulun nimen sijaan segmentin nimeä
      *
      */
-    public function __construct($m, $details, $picked_verses, $is_instrumental, $song_title, $segment_name = ""){
+    public function __construct($m, $details, $picked_verses, $is_instrumental, $song_title, $segment_name = "", $segment_name_is_title){
         parent::__construct($m, $details);
         $this->template_engine;
         $this->picked_verses = ($picked_verses ? explode(",", $picked_verses) : "");
         $this->is_instrumental = $is_instrumental;
         $this->song_title = $song_title;
         $this->segment_name = $segment_name;
+        $this->segment_name_is_title = $segment_name_is_title;
         $this->template = $this->template_engine->loadTemplate('song'); 
     }
 
@@ -49,7 +51,7 @@ class Song extends Slide{
             $this->SetTitle($this->song_title . " (ei yhteislaulu)");
         }
         else{
-            $this->SetTitle($this->details["title"])
+            $this->SetTitle($this->segment_name_is_title ? $this->segment_name : $this->details["title"])
                 ->SetComposer($this->details["composer"])
                 ->SetSegmentName($this->details["composer"])
                 ->SetLyrics($this->details["lyrics"])

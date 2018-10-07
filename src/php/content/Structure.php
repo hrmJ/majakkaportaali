@@ -273,7 +273,8 @@ class Structure{
                     "songdescription",
                     "restrictedto",
                     "singlename", 
-                    "is_multi"
+                    "is_multi",
+                    "segment_name_is_title",
                 ];
                 break;
         }
@@ -482,6 +483,9 @@ class Structure{
                 'ORDER' => [ 'id' => 'ASC' ]
             ]);
 
+        $segment_name_is_title = $this->con->get("songsegments", "segment_name_is_title",
+            ["id" => $slot["content_id"]]);
+
         foreach($songs_of_this_type as $song_idx => $song){
             $songdata = $this->con->get("songdata",
                 ["title", "composer", "lyrics", "version_description"],
@@ -493,7 +497,8 @@ class Structure{
                     $song["verses"], 
                     $song["is_instrumental"],
                     $song["song_title"],
-                    $slot["slot_name"]
+                    $slot["slot_name"],
+                    $segment_name_is_title
                 ), 
                 $slot["addedclass"], 
                 $slot["header_id"],
