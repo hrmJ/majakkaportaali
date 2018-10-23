@@ -777,7 +777,7 @@ Portal.SongSlots = function(){
                 $.getJSON("php/ajax/Loader.php",{
                         action:  "check_song_title",
                         service_id: Portal.Service.GetServiceId(),
-                        title: title
+                        title: title.trim() // <-- Huom: varmista, ettei hylkää biisin nimeä, jos lopussa väli
                         },
                         self.IndicateLyrics.bind(self)
                         );

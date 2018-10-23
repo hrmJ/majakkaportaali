@@ -2745,7 +2745,8 @@ Portal.SongSlots = function () {
         $.getJSON("php/ajax/Loader.php", {
           action: "check_song_title",
           service_id: Portal.Service.GetServiceId(),
-          title: title
+          title: title.trim() // <-- Huom: varmista, ettei hylkää biisin nimeä, jos lopussa väli
+
         }, self.IndicateLyrics.bind(self));
       }
     };
@@ -4112,7 +4113,7 @@ Portal.Service.TabFactory.Songs = function () {
     this.$div.find(".slotcontainer").each(function (idx, cont) {
       $.each($(cont).find(".songslot"), function (slot_no, slot) {
         data.push({
-          song_title: $(slot).find(".songinput").val() || '',
+          song_title: $(slot).find(".songinput").val().trim() || '',
           song_id: $(slot).find(".song_id").val() || null,
           verses: $(slot).find(".verses").val() || null,
           is_instrumental: $(slot).find(".is_instrumental").val() || "no",
