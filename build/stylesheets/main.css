@@ -58,7 +58,7 @@ main {
   margin-left: auto;
   margin-right: auto;
   background: #ffffff;
-  min-height: 170vh;
+  min-height: 90vh;
   padding-bottom: 3em; }
 
 .innercontent {
@@ -216,8 +216,8 @@ nav {
   left: 0;
   background: white;
   width: 100%;
-  min-height: 300vh;
-  z-index: 3; }
+  z-index: 3;
+  min-height: 95vh; }
   .covermenu > div {
     padding: 1em 0em 0em 2em; }
 

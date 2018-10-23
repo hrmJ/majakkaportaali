@@ -565,6 +565,8 @@ Portal.SongSlots = function(){
             
                 SongLists.SetSongMeta();
                 this.PrintEditActions();
+                //TODO: Piilota ennemmin menu-moduulin kautta?
+                //$(".covermenu").hide()
                 $("#songdetails").find("h3").text(this.title);
                 $("#songdetails").find(".song_id").val(this.picked_id);
                 $("#songdetails").slideDown();

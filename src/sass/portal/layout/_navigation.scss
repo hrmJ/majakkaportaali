@@ -172,13 +172,15 @@ nav{
     background:white;
     //transition: 4s;
     width:100%;
-    min-height:300vh; // Parempi ratkaisu?
+    //min-height:300vh; // Parempi ratkaisu?
     //padding:1em 0em 0em 2em;
     z-index:3;
     > div {
         padding:1em 0em 0em 2em;
     }
+    min-height:95vh;
 }
+
 
 .hanging_menu{
     position:absolute;

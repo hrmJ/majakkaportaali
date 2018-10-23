@@ -1757,6 +1757,7 @@ Portal.Menus = function () {
     this.name = name;
     this.$menu = $("#" + name);
     this.$launcher = $(".covermenu-target_" + this.name);
+    this.original_container_height = undefined;
     /**
      *
      * Alustaa menun toiminnallisuuden
@@ -1768,7 +1769,43 @@ Portal.Menus = function () {
 
       if (this.$launcher.length) {
         this.$launcher.click(this.OpenMenu.bind(this));
+      } //Lisää tapahtuma, joka tarkkailee menun pituutta yms
+
+
+      this.$menu.find("*").click(this.FitInContainer.bind(this));
+    };
+    /**
+     *
+     * Tarkkaile menun korkeutta ja sovita ylemmän tason konttiin
+     *
+     */
+
+
+    this.FitInContainer = function () {
+      var $cont = this.$menu.parents(".container"); // ensin varmista, että menu on tarpeeksi korkea kattamaan kaikki lapsensa
+      //this.$menu.height(this.$menu.get(0).scrollHeight);
+
+      if (this.$menu.is(":visible")) {
+        //Tee vain, jos menu on näkyvissä eli auki
+        var heights = {
+          menu: this.$menu.height(),
+          topmargin: this.$menu.offset().top,
+          container: $cont.height()
+        };
+
+        if (heights.menu + heights.topmargin > heights.container) {
+          //Menu korkeampi kuin sisältö
+          $cont.height(heights.menu + heights.topmargin);
+        }
+
+        if (heights.menu < heights.container - heights.topmargin) {
+          //Sisältö korkeampi kuin menu
+          console.log("TOO low, doo something!"); //this.$menu.height(heights.container - heights.topmargin);
+          //this.$menu.height(heights.container - heights.topmargin);
+        }
       }
+
+      ;
     };
     /**
      *
@@ -1783,9 +1820,20 @@ Portal.Menus = function () {
       //Varmista ensin, että kaikki muut covermenut ovat peitettyinä,
       //koska näitä voi olla kerrallaan näkyvissä vain yksi.
       $(".covermenu").hide();
+      console.log("Hiding....????"); //Tallenna sisällön alkuperäinen korkeus, jotta se voidaan palauttaa
+
+      this.original_container_height = this.$menu.parents(".container").height();
       this.$menu.show(); //Utilities.BlurContent();
 
-      if (sidemenu) sidemenu.Close();
+      if (sidemenu) sidemenu.Close(); //Varmista, että korkeus on oikea suhteessa konttiin
+
+      this.FitInContainer();
+      this.observer = new MutationObserver(this.FitInContainer.bind(this));
+      this.observer.observe(this.$menu.get(0), {
+        attributes: true,
+        childList: true,
+        subtree: true
+      });
     };
     /**
      *
@@ -1796,7 +1844,13 @@ Portal.Menus = function () {
 
 
     this.CloseMenu = function () {
-      this.$menu.hide(); //$(".blurcover").remove();
+      if (this.observer) {
+        this.observer.disconnect();
+      }
+
+      this.$menu.hide(); //Palauta alkuperäinen korkeus kontille
+
+      this.$menu.parents(".container").height(this.original_container_height); //$(".blurcover").remove();
     };
   };
   /**
@@ -2547,7 +2601,9 @@ Portal.SongSlots = function () {
       $.when(SongLists.SetLyrics(this.picked_id, $("#songdetails .lyrics"))).done(function () {
         SongLists.SetSongMeta();
 
-        _this3.PrintEditActions();
+        _this3.PrintEditActions(); //TODO: Piilota ennemmin menu-moduulin kautta?
+        //$(".covermenu").hide()
+
 
         $("#songdetails").find("h3").text(_this3.title);
         $("#songdetails").find(".song_id").val(_this3.picked_id);
