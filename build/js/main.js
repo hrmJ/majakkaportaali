@@ -2607,8 +2607,10 @@ Portal.SongSlots = function () {
 
 
         $("#songdetails").find("h3").text(_this3.title);
-        $("#songdetails").find(".song_id").val(_this3.picked_id);
-        $("#songdetails").slideDown(); //Varmista, että uusien sanojen tallennuksen jälkeen pystytään viittaamaan
+        $("#songdetails").find(".song_id").val(_this3.picked_id); //Sulje laulujen lista, jos käynnistetty sitä kautta
+
+        Portal.Menus.menus.songlist.CloseMenu();
+        Portal.Menus.menus.songdetails.OpenMenu(); //Varmista, että uusien sanojen tallennuksen jälkeen pystytään viittaamaan
 
         if (_this3.is_service_specific) {
           $("#songdetails .edit_instructions").show();

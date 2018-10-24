@@ -569,7 +569,9 @@ Portal.SongSlots = function(){
                 //$(".covermenu").hide()
                 $("#songdetails").find("h3").text(this.title);
                 $("#songdetails").find(".song_id").val(this.picked_id);
-                $("#songdetails").slideDown();
+                //Sulje laulujen lista, jos käynnistetty sitä kautta
+                Portal.Menus.menus.songlist.CloseMenu();
+                Portal.Menus.menus.songdetails.OpenMenu();
                 //Varmista, että uusien sanojen tallennuksen jälkeen pystytään viittaamaan
 
                 if(this.is_service_specific){
