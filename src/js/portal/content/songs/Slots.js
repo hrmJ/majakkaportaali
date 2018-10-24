@@ -544,8 +544,8 @@ Portal.SongSlots = function(){
             $("#songdetails .closer_div a").click(() => {
                 SongLists.SetEditedLyricsCallback(undefined);
             })
-            //Käytä oletuksena ensimmäistä versiota ko. laulusta
             var self = this;
+            //Käytä oletuksena ensimmäistä versiota ko. laulusta
             this.picked_id = this.picked_id || this.song_ids[0];
             //If no $div set, use the original title
             // -- this means we're using a pseudo-songslot

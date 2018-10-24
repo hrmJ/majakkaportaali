@@ -1782,25 +1782,24 @@ Portal.Menus = function () {
 
 
     this.FitInContainer = function () {
-      var $cont = this.$menu.parents(".container"); // ensin varmista, että menu on tarpeeksi korkea kattamaan kaikki lapsensa
+      var $cont = this.$menu.parents("main"); // ensin varmista, että menu on tarpeeksi korkea kattamaan kaikki lapsensa
       //this.$menu.height(this.$menu.get(0).scrollHeight);
 
       if (this.$menu.is(":visible")) {
         //Tee vain, jos menu on näkyvissä eli auki
         var heights = {
           menu: this.$menu.height(),
-          topmargin: this.$menu.offset().top,
           container: $cont.height()
         };
 
-        if (heights.menu + heights.topmargin > heights.container) {
+        if (heights.menu > heights.container) {
           //Menu korkeampi kuin sisältö
-          $cont.height(heights.menu + heights.topmargin);
+          $cont.height(heights.menu);
         }
 
-        if (heights.menu < heights.container - heights.topmargin) {
+        if (heights.menu < heights.container) {
           //Sisältö korkeampi kuin menu
-          console.log("TOO low, doo something!"); //this.$menu.height(heights.container - heights.topmargin);
+          console.log("menu TOO low, do something!"); //this.$menu.height(heights.container - heights.topmargin);
           //this.$menu.height(heights.container - heights.topmargin);
         }
       }
@@ -1822,7 +1821,7 @@ Portal.Menus = function () {
       $(".covermenu").hide();
       console.log("Hiding....????"); //Tallenna sisällön alkuperäinen korkeus, jotta se voidaan palauttaa
 
-      this.original_container_height = this.$menu.parents(".container").height();
+      this.original_container_height = this.$menu.parents("main").height();
       this.$menu.show(); //Utilities.BlurContent();
 
       if (sidemenu) sidemenu.Close(); //Varmista, että korkeus on oikea suhteessa konttiin
@@ -1844,13 +1843,15 @@ Portal.Menus = function () {
 
 
     this.CloseMenu = function () {
+      console.log("Closing the following menu: " + this.name);
+
       if (this.observer) {
         this.observer.disconnect();
       }
 
       this.$menu.hide(); //Palauta alkuperäinen korkeus kontille
 
-      this.$menu.parents(".container").height(this.original_container_height); //$(".blurcover").remove();
+      this.$menu.parents("main").height(this.original_container_height); //console.log(this.$menu.parents("main").height());
     };
   };
   /**
@@ -2582,9 +2583,9 @@ Portal.SongSlots = function () {
       //HACK: replace with a more robust
       $("#songdetails .closer_div a").click(function () {
         SongLists.SetEditedLyricsCallback(undefined);
-      }); //Käytä oletuksena ensimmäistä versiota ko. laulusta
+      });
+      var self = this; //Käytä oletuksena ensimmäistä versiota ko. laulusta
 
-      var self = this;
       this.picked_id = this.picked_id || this.song_ids[0]; //If no $div set, use the original title
       // -- this means we're using a pseudo-songslot
       // launched by e.g.  a songlist
