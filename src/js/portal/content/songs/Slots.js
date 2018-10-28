@@ -416,9 +416,19 @@ Portal.SongSlots = function(){
                     "action" : "get_songs_with_tag",
                     "tag": this.cont.restrictedto
                 }, (songs) => {
-                    var $sel = $("<select class='songinput'></select>");
+                    var $sel = $("<select class='songinput'></select>"),
+                        uniquetitles = [],
+                        uniquesongs = [];
                     //Tallenna tällä hetkellä tägätyt laulut, jotta voidaan tarvittaessa lisätä uusi
                     this.cont.restrictionlist = songs.map((s) => s.id);
+
+                    $.each(songs, (sidx,this_song)=>{
+                        if(uniquetitles.indexOf(this_song.title) == -1){
+                            uniquetitles.push(this_song.title);
+                            uniquesongs.push(this_song);
+                        }
+                    });
+                    songs = uniquesongs;
                     $sel
                         .append("<option value=''>Valitse</option>")
                         .append(songs.map((s) => `<option>${s.title}</option>`))

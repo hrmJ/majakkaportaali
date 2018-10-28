@@ -60,6 +60,36 @@ $con->update("songdata",
     ["title" => "Jumalan karitsa (1.-4. sävelmäsarja)"],
     ["id" => $id]);
 
+//Pyhä ja puhdas
+$id = $con->get("versedata", "song_id", ["verse[~]" => ["yhä ja puhdas vapahtaja"], "id[!]" => [$id1, $id2]]);
+$con->insert("songtags",["song_id" => $id, "tag" => "jumalan karitsa"]);
+
+
+//Pyhä
+
+$id = $con->get("versedata", "song_id", ["verse[~]" => ["olet suuruudessasi yli muiden"], "id[!]" => [$id1, $id2]]);
+$con->insert("songtags",["song_id" => $id, "tag" => "pyhä-hymni"]);
+
+$id = $con->get("versedata", "song_id", ["verse[~]" => ["aamun tullen sinulle"]]);
+$con->insert("songtags",["song_id" => $id, "tag" => "pyhä-hymni"]);
+$con->update("songdata",
+    ["title" => "Virsi 134 (Pyhä, pyhä, pyhä)"],
+    ["id" => $id]);
+
+
+$id = $con->get("versedata", "song_id", ["verse[~]" => ["Kaikki maa on täynnä Hänen kunniaansa."]]);
+$con->insert("songtags",["song_id" => $id, "tag" => "pyhä-hymni"]);
+$con->update("songdata",
+    ["title" => "Pyhä (Tuomasmessusta)"],
+    ["id" => $id]);
+
+$ids = $con->select("songdata", "id", ["title" => ["Pyhä yksi yhteinen"]]);
+$con->insert("songtags",["song_id" => $ids[0], "tag" => "pyhä-hymni"]);
+#foreach($ids as $id){
+#    $con->insert("songtags",["song_id" => $id, "tag" => "pyhä-hymni"]);
+#}
+
+
 //$ids = $con->select("songdata", "id", ["title[~]" => ["UMALAN KAR","umalan kari"]]);
 
 ?>

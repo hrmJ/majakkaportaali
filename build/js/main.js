@@ -2492,11 +2492,20 @@ Portal.SongSlots = function () {
           "action": "get_songs_with_tag",
           "tag": this.cont.restrictedto
         }, function (songs) {
-          var $sel = $("<select class='songinput'></select>"); //Tallenna tällä hetkellä tägätyt laulut, jotta voidaan tarvittaessa lisätä uusi
+          var $sel = $("<select class='songinput'></select>"),
+              uniquetitles = [],
+              uniquesongs = []; //Tallenna tällä hetkellä tägätyt laulut, jotta voidaan tarvittaessa lisätä uusi
 
           _this2.cont.restrictionlist = songs.map(function (s) {
             return s.id;
           });
+          $.each(songs, function (sidx, this_song) {
+            if (uniquetitles.indexOf(this_song.title) == -1) {
+              uniquetitles.push(this_song.title);
+              uniquesongs.push(this_song);
+            }
+          });
+          songs = uniquesongs;
           $sel.append("<option value=''>Valitse</option>").append(songs.map(function (s) {
             return "<option>".concat(s.title, "</option>");
           })).append("<option>Jokin muu</option>").appendTo(_this2.$div.find("div:eq(0)"));
