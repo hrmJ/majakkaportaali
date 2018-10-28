@@ -1797,12 +1797,14 @@ Portal.Menus = function () {
 
         if (heights.menu > heights.container) {
           //Menu korkeampi kuin sisältö
-          $cont.height(heights.menu);
+          $cont.css({
+            "min-height": heights.menu
+          });
         }
 
         if (heights.menu < heights.container) {
           //Sisältö korkeampi kuin menu
-          console.log("menu TOO low, do something!"); //this.$menu.height(heights.container - heights.topmargin);
+          console.log("menu TOO low, do something!"); //this.$menu.css({"padding-bottom":(heights.container - heights.menu) + "px"});
           //this.$menu.height(heights.container - heights.topmargin);
         }
       }
@@ -1868,8 +1870,11 @@ Portal.Menus = function () {
       }
 
       this.$menu.hide(); //Palauta alkuperäinen korkeus kontille
+      //this.$menu.parents("main").height(original_container_height);
 
-      this.$menu.parents("main").height(original_container_height); //console.log(this.$menu.parents("main").height());
+      this.$menu.parents("main").css({
+        "min-height": ""
+      }); //console.log(this.$menu.parents("main").height());
 
       if (this.open_before) {
         //Jos menu avattu päälle, avaa alimmainen
