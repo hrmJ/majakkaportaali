@@ -1685,7 +1685,8 @@ var Portal = Portal || {};
 Portal.Menus = function () {
   var menus = {},
       sidemenu = undefined,
-      initialized = false;
+      initialized = false,
+      original_container_height = undefined;
   /**
    *
    * Yksinkertainen sivumenu mobiiliin
@@ -1757,7 +1758,6 @@ Portal.Menus = function () {
     this.name = name;
     this.$menu = $("#" + name);
     this.$launcher = $(".covermenu-target_" + this.name);
-    this.original_container_height = undefined;
     this.opened = false; //Tallenna tieto siitä, avattiinko menu toisen päälle
 
     this.open_before = undefined;
@@ -1835,7 +1835,10 @@ Portal.Menus = function () {
       $(".covermenu").hide();
       console.log("Hiding....????"); //Tallenna sisällön alkuperäinen korkeus, jotta se voidaan palauttaa
 
-      this.original_container_height = this.$menu.parents("main").height();
+      if (!original_container_height) {
+        original_container_height = this.$menu.parents("main").height();
+      }
+
       this.$menu.show(); //Utilities.BlurContent();
 
       if (sidemenu) sidemenu.Close(); //Varmista, että korkeus on oikea suhteessa konttiin
@@ -1866,7 +1869,7 @@ Portal.Menus = function () {
 
       this.$menu.hide(); //Palauta alkuperäinen korkeus kontille
 
-      this.$menu.parents("main").height(this.original_container_height); //console.log(this.$menu.parents("main").height());
+      this.$menu.parents("main").height(original_container_height); //console.log(this.$menu.parents("main").height());
 
       if (this.open_before) {
         //Jos menu avattu päälle, avaa alimmainen
