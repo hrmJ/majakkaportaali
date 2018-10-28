@@ -1758,6 +1758,9 @@ Portal.Menus = function () {
     this.$menu = $("#" + name);
     this.$launcher = $(".covermenu-target_" + this.name);
     this.original_container_height = undefined;
+    this.opened = false; //Tallenna tieto siitä, avattiinko menu toisen päälle
+
+    this.open_before = undefined;
     /**
      *
      * Alustaa menun toiminnallisuuden
@@ -1816,8 +1819,19 @@ Portal.Menus = function () {
 
 
     this.OpenMenu = function ($launcher) {
+      var _this = this;
+
       //Varmista ensin, että kaikki muut covermenut ovat peitettyinä,
       //koska näitä voi olla kerrallaan näkyvissä vain yksi.
+      //TODO: Test if a menu already open when opening a new one
+      this.open_before = undefined;
+      $.each(menus, function (idx, menu) {
+        if (menu.opened) {
+          _this.open_before = menu;
+          return 0;
+        }
+      });
+      this.opened = true;
       $(".covermenu").hide();
       console.log("Hiding....????"); //Tallenna sisällön alkuperäinen korkeus, jotta se voidaan palauttaa
 
@@ -1843,6 +1857,7 @@ Portal.Menus = function () {
 
 
     this.CloseMenu = function () {
+      this.opened = false;
       console.log("Closing the following menu: " + this.name);
 
       if (this.observer) {
@@ -1852,6 +1867,11 @@ Portal.Menus = function () {
       this.$menu.hide(); //Palauta alkuperäinen korkeus kontille
 
       this.$menu.parents("main").height(this.original_container_height); //console.log(this.$menu.parents("main").height());
+
+      if (this.open_before) {
+        //Jos menu avattu päälle, avaa alimmainen
+        this.open_before.OpenMenu();
+      }
     };
   };
   /**
@@ -1863,7 +1883,7 @@ Portal.Menus = function () {
 
 
   function OpenDropDown() {
-    var _this = this;
+    var _this2 = this;
 
     var $child = $(this).find(".menu-child, .menu-child-upper");
     $child.css({
@@ -1872,7 +1892,7 @@ Portal.Menus = function () {
 
     if ($(this).hasClass("active-menu")) {
       $child.slideUp(function () {
-        return $(_this).removeClass("active-menu");
+        return $(_this2).removeClass("active-menu");
       });
     } else {
       $(this).addClass("active-menu");
@@ -2609,8 +2629,8 @@ Portal.SongSlots = function () {
         $("#songdetails").find("h3").text(_this3.title);
         $("#songdetails").find(".song_id").val(_this3.picked_id); //Sulje laulujen lista, jos käynnistetty sitä kautta
 
-        Portal.Menus.menus.songlist.CloseMenu();
-        Portal.Menus.menus.songdetails.OpenMenu(); //Varmista, että uusien sanojen tallennuksen jälkeen pystytään viittaamaan
+        Portal.Menus.menus.songdetails.OpenMenu();
+        Portal.Menus.menus.songlist.CloseMenu(); //Varmista, että uusien sanojen tallennuksen jälkeen pystytään viittaamaan
 
         if (_this3.is_service_specific) {
           $("#songdetails .edit_instructions").show();

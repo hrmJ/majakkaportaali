@@ -89,6 +89,9 @@ Portal.Menus = function(){
         this.$menu = $("#" + name);
         this.$launcher = $(".covermenu-target_" + this.name);
         this.original_container_height = undefined;
+        this.opened = false;
+        //Tallenna tieto siitä, avattiinko menu toisen päälle
+        this.open_before = undefined;
 
 
         /**
@@ -153,6 +156,17 @@ Portal.Menus = function(){
         this.OpenMenu = function($launcher){
             //Varmista ensin, että kaikki muut covermenut ovat peitettyinä,
             //koska näitä voi olla kerrallaan näkyvissä vain yksi.
+
+            //TODO: Test if a menu already open when opening a new one
+            this.open_before = undefined;
+            $.each(menus, (idx, menu) => {
+                if(menu.opened){
+                    this.open_before = menu;
+                    return 0;
+                }
+            });
+
+            this.opened = true;
             $(".covermenu").hide();
             console.log("Hiding....????");
             //Tallenna sisällön alkuperäinen korkeus, jotta se voidaan palauttaa
@@ -175,6 +189,7 @@ Portal.Menus = function(){
          *
          **/
         this.CloseMenu = function(){
+            this.opened = false;
             console.log("Closing the following menu: " + this.name);
             if(this.observer){
                 this.observer.disconnect();
@@ -183,6 +198,10 @@ Portal.Menus = function(){
             //Palauta alkuperäinen korkeus kontille
             this.$menu.parents("main").height(this.original_container_height);
             //console.log(this.$menu.parents("main").height());
+            if (this.open_before){
+                //Jos menu avattu päälle, avaa alimmainen
+                this.open_before.OpenMenu();
+            }
         }
         
     }
