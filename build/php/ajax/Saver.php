@@ -226,6 +226,10 @@ else{
         case "remove_offering_target":
             $com->RemoveOfferingTarget($params["target_id"]);
             break;
+        case "add_new_tag":
+            $songlist = new Songlist($database, 0, $m);
+            $songlist->AddNewTag($params["id"], $params["tag"]);
+            break;
         case "save_edited_meta":
             $songlist = new Songlist($database, 0, $m);
             if($params["meta_type"] == "songtags"){

@@ -365,8 +365,9 @@ var SongLists = function(){
                     $target_el.append($li);
                }
             });
-            if(edited_lyrics_callback)
+            if(edited_lyrics_callback){
                 edited_lyrics_callback();
+            }
         });
     
     };
@@ -443,6 +444,7 @@ var SongLists = function(){
      *
      */
     function SetEditedLyricsCallback(callback){
+        console.log(callback);
         edited_lyrics_callback = callback;
     }
 

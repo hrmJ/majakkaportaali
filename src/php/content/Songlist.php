@@ -151,7 +151,7 @@ class Songlist{
     public function GetTitlesByTag($tag){
         $songs = $this->con->select("songdata",
             ["[>]songtags" => ["id" => "song_id"]],
-            "songdata.title",
+            ["songdata.title","songdata.id"],
             ["songtags.tag" => $tag]
         );
         $returns = [];
@@ -406,6 +406,24 @@ class Songlist{
         }
         return $returns;
     }
+
+
+
+    /**
+     *
+     * Lisää lauluun uuden tägin
+     *
+     * @param $id laulun id
+     * @param $tag uusi tägi
+     *
+     */
+    public function AddNewTag($id, $tag){
+        $this->con->insert("songtags", [
+            "song_id" => $id,
+            "tag" => $tag
+        ]);
+    }
+
 
 
     /**

@@ -103,8 +103,12 @@ Portal.Service.TabFactory.Songs = function(){
         var data = [];
         this.$div.find(".slotcontainer").each(function(idx, cont){
             $.each($(cont).find(".songslot"), function(slot_no,slot){
+                var title = $(slot).find(".songinput").val();
+                if (title){
+                    title = title.trim();
+                }
                 data.push({
-                    song_title: $(slot).find(".songinput").val().trim() || '',
+                    song_title: title,
                     song_id: $(slot).find(".song_id").val() || null,
                     verses: $(slot).find(".verses").val() || null,
                     is_instrumental: $(slot).find(".is_instrumental").val() || "no",

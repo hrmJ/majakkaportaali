@@ -128,6 +128,7 @@ Portal.SongSlots = function(){
         this.$ul = $("<ul></ul>").appendTo($div.find(".songslots"));
         this.$div = $div;
         this.sortable_slot_list = undefined;
+        this.restrictionlist = [];
 
         /**
          *
@@ -416,9 +417,11 @@ Portal.SongSlots = function(){
                     "tag": this.cont.restrictedto
                 }, (songs) => {
                     var $sel = $("<select class='songinput'></select>");
+                    //Tallenna tällä hetkellä tägätyt laulut, jotta voidaan tarvittaessa lisätä uusi
+                    this.cont.restrictionlist = songs.map((s) => s.id);
                     $sel
                         .append("<option value=''>Valitse</option>")
-                        .append(songs.map((s) => `<option>${s}</option>`))
+                        .append(songs.map((s) => `<option>${s.title}</option>`))
                         .append("<option>Jokin muu</option>")
                         .appendTo(this.$div.find("div:eq(0)"));
                     $sel.select_withtext({
@@ -579,6 +582,7 @@ Portal.SongSlots = function(){
                     $("#songdetails .edit_instructions h4").click(Portal.Menus.InitializeFoldMenu);
                 }
 
+                this.LoadVersionPicker();
                 //Varmista, että versiot päivitetään 
                 //asettamalla callback
                 SongLists.SetEditedLyricsCallback(() => {
@@ -778,13 +782,16 @@ Portal.SongSlots = function(){
                 var self = this,
                     //Jos käynnistetty klikkaamalla autocomplete-listaa (tai selectmenua), käytä sen arvoa
                     title = (item ? item.item.value :  this.$div.find(".songinput:eq(0)").val());
-                $.getJSON("php/ajax/Loader.php",{
-                        action:  "check_song_title",
-                        service_id: Portal.Service.GetServiceId(),
-                        title: title.trim() // <-- Huom: varmista, ettei hylkää biisin nimeä, jos lopussa väli
-                        },
-                        self.IndicateLyrics.bind(self)
-                        );
+                if(title){
+                    title = title.trim();
+                    $.getJSON("php/ajax/Loader.php",{
+                            action:  "check_song_title",
+                            service_id: Portal.Service.GetServiceId(),
+                            title: title.trim() // <-- Huom: varmista, ettei hylkää biisin nimeä, jos lopussa väli
+                            },
+                            self.IndicateLyrics.bind(self)
+                            );
+                }
             }
         };
 
@@ -804,6 +811,7 @@ Portal.SongSlots = function(){
          *
          **/
         this.IndicateLyrics = function(song_ids){
+            var path = Utilities.GetAjaxPath("Saver.php");
             this.song_ids = song_ids;
             this.$div.removeClass("no_indicator");
             if(!this.picked_id){
@@ -823,6 +831,19 @@ Portal.SongSlots = function(){
             }
             else{
                 this.$div.removeClass("no_lyrics").addClass("has_lyrics");
+            }
+
+            if(this.cont.restrictedto){
+                //Jos kyseessä tägein rajattu laululista
+                //varmista, onko syötetty uusi laulu
+                //ja jos uusi, lisää tähän lauluun tägi
+                if(this.cont.restrictionlist.indexOf(song_ids[0]) == -1){
+                    $.post(path,{
+                        "action": "add_new_tag",
+                        "tag": this.cont.restrictedto,
+                        "id": song_ids[0]
+                    }, (d) => this.cont.restrictionlist.push(song_ids[0]));
+                }
             }
 
             if(!this.$div.find(".songinput").val()){

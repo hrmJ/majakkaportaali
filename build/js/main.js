@@ -2226,6 +2226,7 @@ Portal.SongSlots = function () {
     this.$ul = $("<ul></ul>").appendTo($div.find(".songslots"));
     this.$div = $div;
     this.sortable_slot_list = undefined;
+    this.restrictionlist = [];
     /**
      *
      * Asettaa nimen
@@ -2491,9 +2492,13 @@ Portal.SongSlots = function () {
           "action": "get_songs_with_tag",
           "tag": this.cont.restrictedto
         }, function (songs) {
-          var $sel = $("<select class='songinput'></select>");
+          var $sel = $("<select class='songinput'></select>"); //Tallenna tällä hetkellä tägätyt laulut, jotta voidaan tarvittaessa lisätä uusi
+
+          _this2.cont.restrictionlist = songs.map(function (s) {
+            return s.id;
+          });
           $sel.append("<option value=''>Valitse</option>").append(songs.map(function (s) {
-            return "<option>".concat(s, "</option>");
+            return "<option>".concat(s.title, "</option>");
           })).append("<option>Jokin muu</option>").appendTo(_this2.$div.find("div:eq(0)"));
           $sel.select_withtext({
             select: function select() {
@@ -2638,7 +2643,9 @@ Portal.SongSlots = function () {
         if (_this3.is_service_specific) {
           $("#songdetails .edit_instructions").show();
           $("#songdetails .edit_instructions h4").click(Portal.Menus.InitializeFoldMenu);
-        } //Varmista, että versiot päivitetään 
+        }
+
+        _this3.LoadVersionPicker(); //Varmista, että versiot päivitetään 
         //asettamalla callback
 
 
@@ -2824,12 +2831,16 @@ Portal.SongSlots = function () {
         var self = this,
             //Jos käynnistetty klikkaamalla autocomplete-listaa (tai selectmenua), käytä sen arvoa
         title = item ? item.item.value : this.$div.find(".songinput:eq(0)").val();
-        $.getJSON("php/ajax/Loader.php", {
-          action: "check_song_title",
-          service_id: Portal.Service.GetServiceId(),
-          title: title.trim() // <-- Huom: varmista, ettei hylkää biisin nimeä, jos lopussa väli
 
-        }, self.IndicateLyrics.bind(self));
+        if (title) {
+          title = title.trim();
+          $.getJSON("php/ajax/Loader.php", {
+            action: "check_song_title",
+            service_id: Portal.Service.GetServiceId(),
+            title: title.trim() // <-- Huom: varmista, ettei hylkää biisin nimeä, jos lopussa väli
+
+          }, self.IndicateLyrics.bind(self));
+        }
       }
     };
     /**
@@ -2848,6 +2859,9 @@ Portal.SongSlots = function () {
 
 
     this.IndicateLyrics = function (song_ids) {
+      var _this4 = this;
+
+      var path = Utilities.GetAjaxPath("Saver.php");
       this.song_ids = song_ids;
       this.$div.removeClass("no_indicator");
 
@@ -2866,6 +2880,21 @@ Portal.SongSlots = function () {
         this.picked_id = null;
       } else {
         this.$div.removeClass("no_lyrics").addClass("has_lyrics");
+      }
+
+      if (this.cont.restrictedto) {
+        //Jos kyseessä tägein rajattu laululista
+        //varmista, onko syötetty uusi laulu
+        //ja jos uusi, lisää tähän lauluun tägi
+        if (this.cont.restrictionlist.indexOf(song_ids[0]) == -1) {
+          $.post(path, {
+            "action": "add_new_tag",
+            "tag": this.cont.restrictedto,
+            "id": song_ids[0]
+          }, function (d) {
+            return _this4.cont.restrictionlist.push(song_ids[0]);
+          });
+        }
       }
 
       if (!this.$div.find(".songinput").val()) {
@@ -3249,7 +3278,10 @@ var SongLists = function () {
           $target_el.append($li);
         }
       });
-      if (edited_lyrics_callback) edited_lyrics_callback();
+
+      if (edited_lyrics_callback) {
+        edited_lyrics_callback();
+      }
     });
   }
 
@@ -3325,6 +3357,7 @@ var SongLists = function () {
 
 
   function SetEditedLyricsCallback(callback) {
+    console.log(callback);
     edited_lyrics_callback = callback;
   }
 
@@ -4194,8 +4227,14 @@ Portal.Service.TabFactory.Songs = function () {
     var data = [];
     this.$div.find(".slotcontainer").each(function (idx, cont) {
       $.each($(cont).find(".songslot"), function (slot_no, slot) {
+        var title = $(slot).find(".songinput").val();
+
+        if (title) {
+          title = title.trim();
+        }
+
         data.push({
-          song_title: $(slot).find(".songinput").val().trim() || '',
+          song_title: title,
           song_id: $(slot).find(".song_id").val() || null,
           verses: $(slot).find(".verses").val() || null,
           is_instrumental: $(slot).find(".is_instrumental").val() || "no",
