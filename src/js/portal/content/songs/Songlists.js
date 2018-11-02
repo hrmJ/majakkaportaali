@@ -189,6 +189,7 @@ var SongLists = function(){
             $("#prepared_for_insertion").find("h4").text(this.current_song.title);
             $("#prepared_for_insertion").find(".song_id").val(this.current_song.id);
             $("#prepared_for_insertion").show();
+            $("body").scrollTo("#prepared_for_insertion",100);
         };
 
         /**
