@@ -1757,6 +1757,7 @@ Portal.Menus = function () {
   var Covermenu = function Covermenu(name) {
     this.name = name;
     this.last_action = undefined;
+    this.action_before_menu = undefined;
     this.$menu = $("#" + name);
     this.$launcher = $(".covermenu-target_" + this.name);
     this.opened = false; //Tallenna tieto siitä, avattiinko menu toisen päälle
@@ -1887,8 +1888,11 @@ Portal.Menus = function () {
           if (this.open_before.last_action) {
             //Palauta näkymä
             $("body").scrollTo(this.open_before.last_action, 100);
-            console.log("SCrolled to the original link?");
           }
+        }
+      } else {
+        if (this.action_before_menu) {
+          $("body").scrollTo(this.action_before_menu, 100);
         }
       }
     };
@@ -2627,10 +2631,12 @@ Portal.SongSlots = function () {
      *
      * Avaa ikkunan, jossa voi tarkkailla laulun yksityiskohtia ja esim. muokata sanoja
      *
+     * @param ev klikkaustapahtuma
+     *
      */
 
 
-    this.CheckDetails = function () {
+    this.CheckDetails = function (ev) {
       var _this3 = this;
 
       //HACK: replace with a more robust
@@ -2653,8 +2659,12 @@ Portal.SongSlots = function () {
       SetCurrentSlot(this);
       $("#songdetails").find(".version_cont, .lyrics").html("");
       $.when(SongLists.SetLyrics(this.picked_id, $("#songdetails .lyrics"))).done(function () {
-        //Siirrä näkymä ylös
         $("body").scrollTo("#songdetails", 100);
+
+        if (!Portal.Menus.menus.songlist.last_action) {
+          Portal.Menus.menus.songdetails.action_before_menu = $(ev.target);
+        }
+
         SongLists.SetSongMeta();
 
         _this3.PrintEditActions(); //TODO: Piilota ennemmin menu-moduulin kautta?

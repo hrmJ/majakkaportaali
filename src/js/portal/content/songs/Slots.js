@@ -551,8 +551,10 @@ Portal.SongSlots = function(){
          *
          * Avaa ikkunan, jossa voi tarkkailla laulun yksityiskohtia ja esim. muokata sanoja
          *
+         * @param ev klikkaustapahtuma
+         *
          */
-        this.CheckDetails = function(){
+        this.CheckDetails = function(ev){
             //HACK: replace with a more robust
             $("#songdetails .closer_div a").click(() => {
                 SongLists.SetEditedLyricsCallback(undefined);
@@ -576,8 +578,11 @@ Portal.SongSlots = function(){
                 SongLists.SetLyrics(this.picked_id, $("#songdetails .lyrics"))
             ).done(()=>{
             
-                //Siirrä näkymä ylös
                 $("body").scrollTo("#songdetails",100);
+
+                if(!Portal.Menus.menus.songlist.last_action){
+                    Portal.Menus.menus.songdetails.action_before_menu = $(ev.target);
+                }
 
                 SongLists.SetSongMeta();
                 this.PrintEditActions();

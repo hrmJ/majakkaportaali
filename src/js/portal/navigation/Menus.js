@@ -88,6 +88,7 @@ Portal.Menus = function(){
 
         this.name = name;
         this.last_action = undefined;
+        this.action_before_menu = undefined;
         this.$menu = $("#" + name);
         this.$launcher = $(".covermenu-target_" + this.name);
         this.opened = false;
@@ -211,8 +212,12 @@ Portal.Menus = function(){
                     if(this.open_before.last_action){
                         //Palauta näkymä
                         $("body").scrollTo(this.open_before.last_action,100);
-                        console.log("SCrolled to the original link?");
                     }
+                }
+            }
+            else{
+                if(this.action_before_menu){
+                        $("body").scrollTo(this.action_before_menu,100);
                 }
             }
         }
