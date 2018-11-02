@@ -1756,6 +1756,7 @@ Portal.Menus = function () {
 
   var Covermenu = function Covermenu(name) {
     this.name = name;
+    this.last_action = undefined;
     this.$menu = $("#" + name);
     this.$launcher = $(".covermenu-target_" + this.name);
     this.opened = false; //Tallenna tieto siitä, avattiinko menu toisen päälle
@@ -1832,10 +1833,13 @@ Portal.Menus = function () {
           _this.open_before = menu;
           return 0;
         }
+      }); //Tallenna viimeisein klikkaustapahtuma, jotta sen kohteeseen voidaan palata
+
+      this.$menu.find(".fa,li,a").click(function (e) {
+        return _this.last_action = e.target;
       });
       this.opened = true;
-      $(".covermenu").hide();
-      console.log("Hiding....????"); //Tallenna sisällön alkuperäinen korkeus, jotta se voidaan palauttaa
+      $(".covermenu").hide(); //Tallenna sisällön alkuperäinen korkeus, jotta se voidaan palauttaa
 
       if (!original_container_height) {
         original_container_height = this.$menu.parents("main").height();
@@ -1863,7 +1867,6 @@ Portal.Menus = function () {
 
     this.CloseMenu = function () {
       this.opened = false;
-      console.log("Closing the following menu: " + this.name);
 
       if (this.observer) {
         this.observer.disconnect();
@@ -1879,6 +1882,14 @@ Portal.Menus = function () {
       if (this.open_before) {
         //Jos menu avattu päälle, avaa alimmainen
         this.open_before.OpenMenu();
+
+        if (this.open_before.last_action) {
+          if (this.open_before.last_action) {
+            //Palauta näkymä
+            $("body").scrollTo(this.open_before.last_action, 100);
+            console.log("SCrolled to the original link?");
+          }
+        }
       }
     };
   };
@@ -2642,6 +2653,8 @@ Portal.SongSlots = function () {
       SetCurrentSlot(this);
       $("#songdetails").find(".version_cont, .lyrics").html("");
       $.when(SongLists.SetLyrics(this.picked_id, $("#songdetails .lyrics"))).done(function () {
+        //Siirrä näkymä ylös
+        $("body").scrollTo("#songdetails", 100);
         SongLists.SetSongMeta();
 
         _this3.PrintEditActions(); //TODO: Piilota ennemmin menu-moduulin kautta?

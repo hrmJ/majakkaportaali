@@ -576,6 +576,9 @@ Portal.SongSlots = function(){
                 SongLists.SetLyrics(this.picked_id, $("#songdetails .lyrics"))
             ).done(()=>{
             
+                //Siirrä näkymä ylös
+                $("body").scrollTo("#songdetails",100);
+
                 SongLists.SetSongMeta();
                 this.PrintEditActions();
                 //TODO: Piilota ennemmin menu-moduulin kautta?
