@@ -335,7 +335,8 @@ Portal.Service = function(){
         SetServiceId,
         GetCurrentTab,
         SetControlledByPresentation,
-        GetControlledByPresentation
+        GetControlledByPresentation,
+        ConfirmLeavingWithoutSaving
     };
 
 }();

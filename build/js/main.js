@@ -3755,7 +3755,8 @@ Portal.Service = function () {
     SetServiceId: SetServiceId,
     GetCurrentTab: GetCurrentTab,
     SetControlledByPresentation: SetControlledByPresentation,
-    GetControlledByPresentation: GetControlledByPresentation
+    GetControlledByPresentation: GetControlledByPresentation,
+    ConfirmLeavingWithoutSaving: ConfirmLeavingWithoutSaving
   };
 }();
 "use strict";
@@ -4746,7 +4747,7 @@ Portal.Servicelist = function () {
     this.LoadServicesClean = function () {
       this.is_editable = false;
       $(".covermenu").hide();
-      $("#show_main_link").hide();
+      $(".showmainlink_container").hide();
       $(".menu-header").text("Valitse rooli");
       this.LoadServices();
     };
@@ -4784,7 +4785,7 @@ Portal.Servicelist = function () {
       this.is_editable = true;
       var path = Utilities.GetAjaxPath("Loader.php");
       $(".covermenu").hide();
-      $("#show_main_link").show();
+      $(".showmainlink_container").show();
       $.when($.getJSON(path, {
         action: "get_filtered_list_of_services",
         "startdate": current_season.startdate,
@@ -4793,6 +4794,10 @@ Portal.Servicelist = function () {
       }, this.Output.bind(this))).done(function () {
         $(".byline h2").text(_this.filteredby);
         $(".menu-header").text(_this.filteredby);
+        $("input.responsible").on("change paste keyup selectmenuchange", function () {
+          //Lisää vahti, joka varmistaa että muutokset tallennettu.
+          window.addEventListener('beforeunload', Portal.Service.ConfirmLeavingWithoutSaving);
+        });
       });
     };
     /**
@@ -4873,6 +4878,7 @@ Portal.Servicelist = function () {
         var msg = new Utilities.Message("Tiedot tallennettu", $("#savebutton_container"));
         msg.Show(2800);
         console.log(debugdata);
+        window.removeEventListener('beforeunload', Portal.Service.ConfirmLeavingWithoutSaving);
       });
     };
     /**
@@ -5046,7 +5052,7 @@ Portal.Servicelist = function () {
 
     SongLists.Initialize(true);
     $("#savebutton").click(list_of_services.Save.bind(list_of_services));
-    $("#show_main_link").hide();
+    $(".showmainlink_container").hide();
     $("#show_main_link").click(function () {
       list_of_services.LoadServicesClean();
       Portal.Menus.GetSideMenu().Close();
