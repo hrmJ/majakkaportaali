@@ -3476,6 +3476,7 @@ Portal.Service = function () {
 
   function TabFactory() {
     this.tabdata = [];
+    this.pending_changes = false;
   }
   /**
    *
@@ -3518,7 +3519,8 @@ Portal.Service = function () {
 
 
   TabFactory.prototype.MonitorChanges = function () {
-    var $tabheader = $(".".concat(this.tab_type, "_tabheader"));
+    var $tabheader = $(".".concat(this.tab_type, "_tabheader")),
+        pending_changes = false;
 
     if (JSON.stringify(this.tabdata) !== JSON.stringify(this.GetTabData())) {
       //Jos muutoksia, näytä tallenna-painike ja muutosindikaattorit
@@ -3526,12 +3528,23 @@ Portal.Service = function () {
       $tabheader.text($tabheader.text().replace(" *", "") + " *"); //Lisää poistumisen varmistus
 
       window.addEventListener('beforeunload', ConfirmLeavingWithoutSaving);
+      this.pending_changes = true;
     } else {
       //Ei muutoksia, piilota tallenna-painike ja muutosindikaattorit
       $tabheader.text($tabheader.text().replace(" *", ""));
       this.$div.find(".save_tab_data").hide(); //Poista poistumisen varmistus
 
-      window.removeEventListener('beforeunload', ConfirmLeavingWithoutSaving);
+      this.pending_changes = false;
+      $.each(TabObjects, function (idx, thistab) {
+        if (thistab.pending_changes) {
+          pending_changes = true;
+        }
+      });
+
+      if (!pending_changes) {
+        //jos ei muutoksia, poista varoitus
+        window.removeEventListener('beforeunload', ConfirmLeavingWithoutSaving);
+      }
     }
   };
   /**
