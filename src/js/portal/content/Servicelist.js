@@ -15,7 +15,25 @@ Portal.Servicelist = function(){
         manageable_lists = {},
         current_data_list,
         infoboxes = {},
-        deactivate_role = false;
+        deactivate_role = false,
+        askaboutclosing = false;
+
+    /**
+     *
+     * Sulkee vastuukohtaisen näkymän, mutta kysyy tarvittaessa varmistusta
+     *
+     */
+    function CloseFilterView() {
+        var leave = true;
+        if(askaboutclosing){
+            leave = confirm("Et ole tallentanut muutoksia! Palataanko silti päänäkymään?");
+        }
+        if(leave){
+            askaboutclosing = false;
+            list_of_services.LoadServicesClean();
+            Portal.Menus.GetSideMenu().Close();
+        }
+    }
 
     /**
      *
@@ -134,6 +152,7 @@ Portal.Servicelist = function(){
                     $("input.responsible").on("change paste keyup selectmenuchange", () => {
                         //Lisää vahti, joka varmistaa että muutokset tallennettu.
                         window.addEventListener('beforeunload', Portal.Service.ConfirmLeavingWithoutSaving);
+                        askaboutclosing = true;
                     });
                 } );
         };
@@ -207,6 +226,8 @@ Portal.Servicelist = function(){
             var self = this,
                 data = [],
                 path = Utilities.GetAjaxPath("Saver.php");
+
+            askaboutclosing = false;
 
             $("#servicelist").find(".service_link_li").each(
                 function(){
@@ -398,10 +419,7 @@ Portal.Servicelist = function(){
         SongLists.Initialize(true);
         $("#savebutton").click(list_of_services.Save.bind(list_of_services));
         $(".showmainlink_container").hide();
-        $("#show_main_link").click(()=>{
-            list_of_services.LoadServicesClean()
-            Portal.Menus.GetSideMenu().Close();
-        });
+        $("#show_main_link").click(CloseFilterView);
         $("#structure_launcher").click(() => window.location="service_structure.php");
         $("#slideshow_launcher").click(() => window.location="/slides");
         //Vastuukohtainen suodattaminen
