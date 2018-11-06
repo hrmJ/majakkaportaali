@@ -3444,6 +3444,21 @@ Portal.Service = function () {
   }
   /**
    *
+   * Varmistaa käyttäjältä sivulta lähtemisen, jos tallentamattomia tietoja
+   *
+   * @param e tapahtuma
+   *
+   */
+
+
+  function ConfirmLeavingWithoutSaving(e) {
+    // Cancel the event as stated by the standard.
+    e.preventDefault(); // Chrome requires returnValue to be set.
+
+    e.returnValue = '';
+  }
+  /**
+   *
    * 
    *
    */
@@ -3508,11 +3523,15 @@ Portal.Service = function () {
     if (JSON.stringify(this.tabdata) !== JSON.stringify(this.GetTabData())) {
       //Jos muutoksia, näytä tallenna-painike ja muutosindikaattorit
       this.$div.find(".save_tab_data").show();
-      $tabheader.text($tabheader.text().replace(" *", "") + " *");
+      $tabheader.text($tabheader.text().replace(" *", "") + " *"); //Lisää poistumisen varmistus
+
+      window.addEventListener('beforeunload', ConfirmLeavingWithoutSaving);
     } else {
       //Ei muutoksia, piilota tallenna-painike ja muutosindikaattorit
       $tabheader.text($tabheader.text().replace(" *", ""));
-      this.$div.find(".save_tab_data").hide();
+      this.$div.find(".save_tab_data").hide(); //Poista poistumisen varmistus
+
+      window.removeEventListener('beforeunload', ConfirmLeavingWithoutSaving);
     }
   };
   /**
@@ -3726,6 +3745,7 @@ Portal.Service = function () {
     $.when(SetDate()).done(function () {
       return AddServiceList();
     });
+    console.log("Heyyyyy...");
   }
 
   return {

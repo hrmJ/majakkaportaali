@@ -36,6 +36,21 @@ Portal.Service = function(){
 
     /**
      *
+     * Varmistaa käyttäjältä sivulta lähtemisen, jos tallentamattomia tietoja
+     *
+     * @param e tapahtuma
+     *
+     */
+    function ConfirmLeavingWithoutSaving(e){
+          // Cancel the event as stated by the standard.
+          e.preventDefault();
+          // Chrome requires returnValue to be set.
+          e.returnValue = '';
+    }
+
+
+    /**
+     *
      * 
      *
      */
@@ -95,11 +110,15 @@ Portal.Service = function(){
             //Jos muutoksia, näytä tallenna-painike ja muutosindikaattorit
             this.$div.find(".save_tab_data").show();
             $tabheader.text($tabheader.text().replace(" *","") + " *");
+            //Lisää poistumisen varmistus
+            window.addEventListener('beforeunload', ConfirmLeavingWithoutSaving);
         }
         else{
             //Ei muutoksia, piilota tallenna-painike ja muutosindikaattorit
             $tabheader.text($tabheader.text().replace(" *",""));
             this.$div.find(".save_tab_data").hide();
+            //Poista poistumisen varmistus
+            window.removeEventListener('beforeunload', ConfirmLeavingWithoutSaving);
         }
     };
 
@@ -305,7 +324,7 @@ Portal.Service = function(){
         Comments.CreateThemeSelect();
         //Hae messun päivämäärä ja muodosta messujen vaihtamiseen lista
         $.when(SetDate()).done(() => AddServiceList());
-
+        console.log("Heyyyyy...");
     }
 
 
