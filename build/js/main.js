@@ -3727,7 +3727,8 @@ Portal.Service = function () {
   function Initialize() {
     var tab_name_raw,
         tab_name,
-        tab_idx = 0;
+        tab_idx = 1; //huom, käytä oletuksena vastuunkantajat-välilehtieä
+
     console.log("Initializing the service view...");
     $("#tabs").tabs({
       activate: SetActiveTabByEvent
@@ -3737,18 +3738,18 @@ Portal.Service = function () {
     }); //tarkista, onko välilehti asetettu urlissa
 
     tab_name_raw = window.location.href.replace(/.*tab=([a-öA-ö]+).*/, "$1");
-    tab_idx = 0;
     $.each(tab_titles, function (title, id) {
       if (tab_name_raw == id) {
         tab_idx = $("#" + id).index() - 1;
-        $("#tabs").tabs("option", "active", tab_idx);
         return 0;
       }
     });
+    $("#tabs").tabs("option", "active", tab_idx);
     $("#prepared_for_insertion").hide();
     SetActiveTabByIndex(tab_idx);
 
     if (!active_tab.initialized_by_event) {
+      console.log(active_tab);
       active_tab.Initialize();
     }
 
