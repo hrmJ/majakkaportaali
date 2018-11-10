@@ -17,7 +17,6 @@ main {
   overflow: hidden;
   display: flex;
   min-height: 100vh;
-  max-height: 100vh;
   flex-flow: row nowrap;
   align-items: top;
   justify-content: space-between;
