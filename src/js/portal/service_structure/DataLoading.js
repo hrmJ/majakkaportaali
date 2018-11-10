@@ -27,6 +27,7 @@ GeneralStructure.DataLoading = function(){
             this.slot_name = this.$container.find(".slot_name_orig").val();
             this.instruction = this.$container.find(".instruction_orig").val();
             this.$lightbox.find(".segment-name").val(this.slot_name);
+            this.$lightbox.find(".instruction").val(this.instruction);
             if(!new_slot){
                 $.getJSON("php/ajax/Loader.php",
                     {
