@@ -38,7 +38,7 @@ class Structure{
     public $slotstring = "";
     private $service_specific_created = false;
     private $columns = ["slot_name", "slot_type", "slot_number",
-        "content_id", "addedclass", "header_id"];
+        "content_id", "addedclass", "header_id", "instruction"];
 
     /**
      *
@@ -210,6 +210,7 @@ class Structure{
                 "slot_type" => $this->FormatSlotType($slot["slot_type"]),
                 "slot_type_orig" => $slot["slot_type"],
                 "slot_name_orig" => $slot["slot_name"],
+                "instruction_orig" => $slot["instruction"],
                 "slot_id" => $slot["id"],
                 "name" => $name,
             ]);

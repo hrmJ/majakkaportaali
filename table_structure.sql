@@ -273,6 +273,7 @@ CREATE TABLE presentation_structure (
   addedclass varchar(300) DEFAULT NULL,
   header_id int(10) DEFAULT NULL,
   content_id int(10) unsigned NOT NULL,
+  instruction text DEFAULT NULL,
   PRIMARY KEY (id)
 ) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;
 
@@ -291,6 +292,7 @@ CREATE TABLE service_specific_presentation_structure (
   id_in_type_table varchar(300) DEFAULT NULL,
   content_id int(10) unsigned NOT NULL,
   addedclass varchar(300) DEFAULT NULL,
+  instruction text DEFAULT NULL,
   header_id int(10) DEFAULT NULL,
   PRIMARY KEY (id)
 ) DEFAULT CHARSET=utf8  COLLATE utf8_general_ci;

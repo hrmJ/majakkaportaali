@@ -6611,6 +6611,20 @@ var GeneralStructure = function () {
   }
   /**
    *
+   * Lisää kaikille segmenttityypeille yhteisiä tietoja
+   *
+   *
+   */
+
+
+  function AddCommonFields() {
+    var $h2 = $("<h2 class=\"subwindow-opener slide-section-controller\">Ohjeet diann\xE4ytt\xE4j\xE4lle</h2>"),
+        $sec = $("\n                <section class=\"slidemodel-flex-column controller-subwindow\">\n                    <textarea class='instruction' placeholder=\"Tietoja esim. siit\xE4, kannattaako dian j\xE4lkeen n\xE4ytt\xE4\xE4 blank screen\"></textarea>\n                </section>\n            ").hide();
+    $h2.click(Portal.Menus.InitializeFoldMenu);
+    $(".slidemodel").append([$h2, $sec]);
+  }
+  /**
+   *
    * Alusta kaikki messun rakenneosiin liittyvät tapahtumat
    *
    * @param menuselector minne slottien lisäysmenu liitetään
@@ -6619,6 +6633,7 @@ var GeneralStructure = function () {
 
 
   function Initialize(menuselector) {
+    AddCommonFields();
     InitializeNewslotMenu(menuselector);
     InitializeSlotFunctionality();
   }
@@ -7490,6 +7505,7 @@ GeneralStructure.DataLoading = function () {
       this.AddImageLoader();
       this.slot_number = this.$container.find(".slot-number").text() || $(".slot").length + 1;
       this.slot_name = this.$container.find(".slot_name_orig").val();
+      this.instruction = this.$container.find(".instruction_orig").val();
       this.$lightbox.find(".segment-name").val(this.slot_name);
 
       if (!new_slot) {
@@ -7551,7 +7567,8 @@ GeneralStructure.DataLoading = function () {
         "id_in_type_table": null,
         "addedclass": addedclass,
         "header_id": this.header_id,
-        "content_id": this.slide_params.id
+        "content_id": this.slide_params.id,
+        "instruction": this.$lightbox.find(".instruction").val()
       };
       return this;
     };

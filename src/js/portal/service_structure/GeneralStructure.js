@@ -164,6 +164,24 @@ var GeneralStructure = function(){
         sortable_slot_list.Initialize();
     }
 
+
+    /**
+     *
+     * Lisää kaikille segmenttityypeille yhteisiä tietoja
+     *
+     *
+     */
+    function AddCommonFields(){
+        var $h2 = $(`<h2 class="subwindow-opener slide-section-controller">Ohjeet diannäyttäjälle</h2>`),
+            $sec =  $(`
+                <section class="slidemodel-flex-column controller-subwindow">
+                    <textarea class='instruction' placeholder="Tietoja esim. siitä, kannattaako dian jälkeen näyttää blank screen"></textarea>
+                </section>
+            `).hide();
+        $h2.click(Portal.Menus.InitializeFoldMenu);
+        $(".slidemodel").append([$h2, $sec]);
+    }
+
     /**
      *
      * Alusta kaikki messun rakenneosiin liittyvät tapahtumat
@@ -172,6 +190,7 @@ var GeneralStructure = function(){
      *
      **/
     function Initialize(menuselector){
+        AddCommonFields();
         InitializeNewslotMenu(menuselector);
         InitializeSlotFunctionality();
     }

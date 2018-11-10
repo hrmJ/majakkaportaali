@@ -25,6 +25,7 @@ GeneralStructure.DataLoading = function(){
             this.AddImageLoader();
             this.slot_number = this.$container.find(".slot-number").text() || $(".slot").length + 1 ;
             this.slot_name = this.$container.find(".slot_name_orig").val();
+            this.instruction = this.$container.find(".instruction_orig").val();
             this.$lightbox.find(".segment-name").val(this.slot_name);
             if(!new_slot){
                 $.getJSON("php/ajax/Loader.php",
@@ -86,6 +87,7 @@ GeneralStructure.DataLoading = function(){
                 "addedclass" : addedclass,
                 "header_id" : this.header_id,
                 "content_id" : this.slide_params.id,
+                "instruction" : this.$lightbox.find(".instruction").val(),
             };
 
 
