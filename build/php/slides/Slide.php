@@ -79,6 +79,19 @@ class Slide{
         return $this;
     }
 
+
+    /**
+     * Asettaa ohjeet diojen näyttäjää varten
+     * dioja voidaan jaotella esimerkiksi eri messun osien mukaisesti
+     *
+     * @param  string $instr ohjeet
+     */
+    public function SetInstr($instr){
+        $this->Set("instruction", "<input type='hidden' class='slide_instruction' value='$instr'></input>");
+        return $this;
+    }
+
+
     /**
      * Asettaa käyttäjän määrittelemän ylätunnisteen
      *

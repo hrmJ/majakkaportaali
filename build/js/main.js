@@ -11240,13 +11240,30 @@ Slides.ContentList = function (parent_presentation) {
   this.info_classname = "event_info_at_beginning";
   var currently_dragged_no = undefined;
   /**
+   *
+   * Näyttää messusegmenttiin sisällytettyjä ohjeita diannäyttäjälle
+   * siitä, miten tätä segmenttiä pitäisi näyttää yms.
+   *
+   * @param text näytettävä teksti
+   * @param $el  elementti, jonka yhteydessä näytetään
+   *
+   */
+
+  function ShowSlotInstructions(text, $el) {
+    var msg = new Utilities.Message(text, $el);
+    msg.AddCloseButton().Show(999999);
+    console.log("HEYYY!!");
+  }
+  /**
    * Hakee listan sisällöstä (esitysikkunan sisällön 
    * perusteella.)
    */
 
+
   this.GetContents = function () {
     var self = this,
-        headingselector = "h1, h2, h3, h4, h5";
+        headingselector = "h1, h2, h3, h4, h5",
+        instruction = "";
     this.headings = [];
     this.pres.d.find("section").each(function () {
       var $firstslide = $(this).find("article:eq(0)"),
@@ -11268,9 +11285,9 @@ Slides.ContentList = function (parent_presentation) {
 
         var identifier = prefix + $firstslide.text().substr(0, 10) + "...";
       } else {
-        if ($(this).find("input[type='hidden']").length) {
+        if ($(this).find(".slot_name").length) {
           //Etsi ensin input-elementtiä, jossa olisi dian nimi
-          var identifier = $(this).find("input[type='hidden']").val();
+          var identifier = $(this).find(".slot_name").val();
         } else if (!$(this).find(headingselector).text()) {
           //..ota dian tekstin alku, jos ei ole otsikkoakaan
           var identifier = $(this).find("div").text().substr(0, 10) + "...";
@@ -11278,11 +11295,17 @@ Slides.ContentList = function (parent_presentation) {
           //Muuten ota ensimmäinen otsikkoelementti
           var identifier = $firstslide.find(headingselector).text();
         }
+
+        if ($(this).find(".slide_instruction").length) {
+          //JOs diasta olemassa ohjeteksti
+          instruction = $(this).find(".slide_instruction").val();
+        }
       }
 
       self.headings.push({
         "isinfo": isinfo,
-        "identifier": identifier
+        "identifier": identifier,
+        "instruction": instruction
       });
     });
     return this;
@@ -11300,13 +11323,19 @@ Slides.ContentList = function (parent_presentation) {
         $li = undefined; //Hae kaikki esityksessä olevat osiot ja tee niistä sisällysluettelo
 
     $.each(this.headings, function (idx, heading) {
-      $li = $("<li draggable='true'></li>").text(heading.identifier).appendTo($toc).attr({
+      $li = $("<li class='contentlist_item' draggable='true'></li>").append("<div>".concat(heading.identifier, "</div>")).appendTo($toc).attr({
         "id": "content_" + idx
       }).click(function () {
         self.MovePresentationToSection($(this));
       });
 
+      if (heading.instruction) {
+        //Lisää ohjetekstin
+        $("<div><i class='fa fa-question-circle'></i></div>").click(ShowSlotInstructions.bind(null, heading.instruction, $li)).appendTo($li);
+      }
+
       if (heading.isinfo) {
+        $li.find("div:eq(0)").text("Info: " + heading.identifier);
         $li.addClass("info");
       }
     }); //Lisää raahaamisjärjestelyä varten sisällysluettelon li-elementtien väliin tyhjät li-elementit

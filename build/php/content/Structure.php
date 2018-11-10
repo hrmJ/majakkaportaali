@@ -454,6 +454,7 @@ class Structure{
         foreach($infoslots as $key => $slot){
             $key += 1;
             $slot["addedclass"] .= " event_info_at_beginning";
+            $slot["instruction"] = "Infodia, näytetään ennen messua.";
             $this->AddInfoSegment($slot, $key);
         }
         $slots = $this->GetSlots();
@@ -522,7 +523,8 @@ class Structure{
                 ), 
                 $slot["addedclass"], 
                 $slot["header_id"],
-                $slide_idx + $song_idx
+                $slide_idx + $song_idx,
+                $slot["instruction"]
                 );
         }
         return $this;
@@ -544,7 +546,7 @@ class Structure{
             ["id" => $slot["content_id"]]);
         $details["verses"] = $songlist->FetchLtext(null, $details["text_title"]);
         $this->AddSlide(new Ltext($this->template_engine, $details, $slot["slot_name"]), 
-            $slot["addedclass"], $slot["header_id"], $slide_idx);
+            $slot["addedclass"], $slot["header_id"], $slide_idx, $slot["instruction"]);
         return $this;
     }
 
@@ -592,7 +594,7 @@ class Structure{
                 $noheader = true;
             }
             $this->AddSlide(new BibleSegment($this->template_engine, $details, $noheader), 
-                $slot["addedclass"], $slot["header_id"], $slide_idx + $segment_idx);
+                $slot["addedclass"], $slot["header_id"], $slide_idx + $segment_idx, $slot["instruction"]);
         }
 
         $this->slotstring .= "\n</section>\n\n";
@@ -618,7 +620,7 @@ class Structure{
             ["id" => $slot["content_id"]]);
         $this->AddSlide(
             new Infoslide($this->template_engine, $details, $slot["slot_name"]),
-            $slot["addedclass"], $slot["header_id"], $slide_idx);
+            $slot["addedclass"], $slot["header_id"], $slide_idx, $slot["instruction"]);
         return $this;
     }
 
@@ -630,13 +632,15 @@ class Structure{
      * @param Slide $slide Slide-olio, joka representoi lisättävä diaa (laulu, info, raamattu jne.)
      * @param string $addedclass dialle määritelty tyyliluokka
      * @param string $header_id dian ylätunnisteen id
-     * @param Array $slide_idx segmentin järjestysnumero, jotta tiedetään, mikä dia on ensimmäinen
+     * @param integer $slide_idx segmentin järjestysnumero, jotta tiedetään, mikä dia on ensimmäinen
+     * @param string $instr ohjeet diojen näyttäjälle
      *
      */
-    public function AddSlide($slide, $addedclass, $header_id, $slide_idx){
+    public function AddSlide($slide, $addedclass, $header_id, $slide_idx, $instr=""){
         $slide->SetAddedClass($addedclass)
               ->MarkIfFirst($slide_idx)
               ->SetDetails()
+              ->SetInstr($instr)
               ->SetPageHeader($header_id, $this->con);
         $this->slotstring .= "{$slide->Output()}\n\n";
         return $this;
