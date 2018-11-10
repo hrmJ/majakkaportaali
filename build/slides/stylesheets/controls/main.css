@@ -191,7 +191,8 @@ label {
   padding: 2em;
   position: absolute;
   top: 1em;
-  left: 1em; }
+  left: 1em;
+  z-index: 999; }
 
 .boxclose {
   float: right;
