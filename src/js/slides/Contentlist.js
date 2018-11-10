@@ -12,7 +12,8 @@ Slides.ContentList = function(parent_presentation){
 
     this.pres = parent_presentation;
     this.info_classname = "event_info_at_beginning";
-    var currently_dragged_no = undefined;
+    var currently_dragged_no = undefined,
+        current_instruction = undefined;
 
     /**
      *
@@ -24,9 +25,17 @@ Slides.ContentList = function(parent_presentation){
      *
      */
     function ShowSlotInstructions(text, $el){
-        var msg = new Utilities.Message(text, $el);
-        msg.AddCloseButton().Show(999999);
-        console.log("HEYYY!!");
+        current_instruction = new Utilities.Message(text, $el);
+        current_instruction.Show(99999);
+    }
+
+    /**
+     *
+     * Piilottaa messusegmenttiin sisällytettyt ohjeet
+     *
+     */
+    function HideSlotInstructions(){
+        current_instruction.Destroy();
     }
 
     /**
@@ -97,7 +106,8 @@ Slides.ContentList = function(parent_presentation){
             if(heading.instruction){ 
                 //Lisää ohjetekstin
                 $("<div><i class='fa fa-question-circle'></i></div>")
-                    .click(ShowSlotInstructions.bind(null, heading.instruction, $li))
+                    .hover(ShowSlotInstructions.bind(null, heading.instruction, $li),
+                        HideSlotInstructions)
                     .appendTo($li);
             }
             if(heading.isinfo){
