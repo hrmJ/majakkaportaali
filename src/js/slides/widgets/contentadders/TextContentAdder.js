@@ -22,7 +22,13 @@ Slides.Widgets.ContentAdders.TextContentAdder = function(parent_presentation){
      * Luo tekstidia käyttäjän antaman inputin pohjalta
      */
     this.CreateContent = function(){
-        var $content = $("<article class='added-text'></article>").text($(".textcontentadder textarea").val());
+        var text = $(".textcontentadder textarea").val(),
+            $content = $(`
+                <input class='slot_name' type='hidden' value='${text.substr(0,50)}'></input>
+                <article class='added-text'>
+                    ${text}
+                </article>
+                `);
         this.$loaded_content =  this.GiveContainer().append($content);
     };
 

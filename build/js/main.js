@@ -11654,7 +11654,7 @@ Slides.Widgets = function () {
 
 
     this.GiveContainer = function () {
-      var newclass = this.addedclas;
+      var newclass = this.addedclass;
 
       if (this.addedclass2) {
         newclass += " " + this.addedclass2;
@@ -11760,7 +11760,8 @@ Slides.Widgets.ContentAdders.TextContentAdder = function (parent_presentation) {
    */
 
   this.CreateContent = function () {
-    var $content = $("<article class='added-text'></article>").text($(".textcontentadder textarea").val());
+    var text = $(".textcontentadder textarea").val(),
+        $content = $("\n                <input class='slot_name' type='hidden' value='".concat(text.substr(0, 50), "'></input>\n                <article class='added-text'>\n                    ").concat(text, "\n                </article>\n                "));
     this.$loaded_content = this.GiveContainer().append($content);
   };
 };

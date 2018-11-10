@@ -46,7 +46,7 @@ Slides.Widgets = function(){
          *
          */
         this.GiveContainer = function(){
-            var newclass = this.addedclas;
+            var newclass = this.addedclass;
             if (this.addedclass2){
                 newclass += " " + this.addedclass2;
             }
