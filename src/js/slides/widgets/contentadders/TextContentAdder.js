@@ -26,7 +26,9 @@ Slides.Widgets.ContentAdders.TextContentAdder = function(parent_presentation){
             $content = $(`
                 <input class='slot_name' type='hidden' value='${text.substr(0,50)}'></input>
                 <article class='added-text'>
-                    ${text}
+                    <p>
+                        ${text}
+                    </p>
                 </article>
                 `);
         this.$loaded_content =  this.GiveContainer().append($content);

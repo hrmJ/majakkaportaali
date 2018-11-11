@@ -11767,7 +11767,7 @@ Slides.Widgets.ContentAdders.TextContentAdder = function (parent_presentation) {
 
   this.CreateContent = function () {
     var text = $(".textcontentadder textarea").val(),
-        $content = $("\n                <input class='slot_name' type='hidden' value='".concat(text.substr(0, 50), "'></input>\n                <article class='added-text'>\n                    ").concat(text, "\n                </article>\n                "));
+        $content = $("\n                <input class='slot_name' type='hidden' value='".concat(text.substr(0, 50), "'></input>\n                <article class='added-text'>\n                    <p>\n                        ").concat(text, "\n                    </p>\n                </article>\n                "));
     this.$loaded_content = this.GiveContainer().append($content);
   };
 };
