@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "43b999e3d5c433099210c4f14b76129b",
+    "content-hash": "9d5bc717c8db16ec2ac9836fbfc037e1",
     "packages": [
         {
             "name": "catfan/medoo",
@@ -64,6 +64,39 @@
                 "sqlite"
             ],
             "time": "2018-06-14T18:59:08+00:00"
+        },
+        {
+            "name": "gargron/fileupload",
+            "version": "v1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Gargron/fileupload.git",
+                "reference": "c3dff535efe931d08eaf3362950823aab9e8fba3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Gargron/fileupload/zipball/c3dff535efe931d08eaf3362950823aab9e8fba3",
+                "reference": "c3dff535efe931d08eaf3362950823aab9e8fba3",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "FileUpload\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "File uploading library capable of handling large/chunked/multiple file uploads",
+            "time": "2018-10-15T12:05:14+00:00"
         },
         {
             "name": "mustache/mustache",
