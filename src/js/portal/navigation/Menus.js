@@ -139,6 +139,7 @@ Portal.Menus = function(){
                 if(heights.menu < heights.container){
                     //Sisältö korkeampi kuin menu
                     console.log("menu TOO low, do something!");
+                    this.$menu.css({"min-height": heights.container});
                     //this.$menu.css({"padding-bottom":(heights.container - heights.menu) + "px"});
                     //this.$menu.height(heights.container - heights.topmargin);
                 }
@@ -204,6 +205,7 @@ Portal.Menus = function(){
             //Palauta alkuperäinen korkeus kontille
             //this.$menu.parents("main").height(original_container_height);
             this.$menu.parents("main").css({"min-height": ""});
+            this.$menu.css({"min-height": ""});
             //console.log(this.$menu.parents("main").height());
             if (this.open_before){
                 //Jos menu avattu päälle, avaa alimmainen
