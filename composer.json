@@ -14,6 +14,7 @@
 	"require": {
 		"catfan/medoo": "^1.5",
 		"mustache/mustache": "^2.12",
-		"gargron/fileupload": "^1.5"
+		"gargron/fileupload": "^1.5",
+		"michelf/php-markdown": "^1.8"
 	}
 }
