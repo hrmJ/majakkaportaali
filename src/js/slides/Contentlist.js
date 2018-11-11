@@ -206,6 +206,10 @@ Slides.ContentList = function(parent_presentation){
                 this.pres.$section.hasClass("ltext")){
                 offset = 0;
             }
+            if(this.pres.$section.hasClass("song")){
+                offset++;
+            }
+
             console.log(offset);
             $("#verselist div:eq("+ (this.pres.$slide.index() - offset) +")").addClass("highlight");
             $("#verselist").scrollTo(".highlight",100, {"offset":-$("#verselist").height()/2});
