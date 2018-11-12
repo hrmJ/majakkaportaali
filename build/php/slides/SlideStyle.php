@@ -89,7 +89,7 @@ class SlideStyle{
     public function LoadAllStyles($stylesheet="default"){
         //ota talteen tässä stylesheetissä valmiiksi tuetut luokat
         $classnames = $this->LoadSlideClassNames($stylesheet);
-        $text_tags = Array("header", "aside", "article","h1","h2","h3","p","img"); 
+        $text_tags = Array("header", "aside", "article","h1","h2","h3","p","img","ul"); 
         $css_style_blocks = "";
         foreach($classnames as $classname){
             //Ensin muut kuin tägeittäin asetellut tyylit

@@ -47,6 +47,7 @@ Slides.Presentation = function(){
             "h1":"1-otsikko","h2":"2-otsikko",
             "h3":"3-otsikko",
             "p":"leipäteksti",
+            "ul":"lista",
             "img":"kuvat",
             "header":"ylätunniste",
             "aside":"sivutunniste",

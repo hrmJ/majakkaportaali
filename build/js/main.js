@@ -10459,6 +10459,7 @@ Slides.Presentation = function () {
       "h2": "2-otsikko",
       "h3": "3-otsikko",
       "p": "leipäteksti",
+      "ul": "lista",
       "img": "kuvat",
       "header": "ylätunniste",
       "aside": "sivutunniste"
@@ -12168,7 +12169,7 @@ Slides.Styles.Controller = function () {
           $.each(classes.concat(["body"]), function (idx, segment_type) {
             //Lisää kaikki eri segmenttityypit muokattavien sääntöjen listalle
             //Huomaa tyhjä 'tekstitaso' joka tarkoittaa tapauksia kuten ".song fontFamily" (tämä sen takia, että kaikki säätimet päivittyisivät niin kuin pitää)
-            $.each(["", "h1", "h2", "h3", "p", "img"], function (l_idx, lev) {
+            $.each(["", "h1", "h2", "h3", "p", "img", "ul"], function (l_idx, lev) {
               //Lisää kaikki tekstitasot muokattavien sääntöjen listalle
               var selector = (segment_type != "body" ? "." : "") + segment_type + " " + lev;
               rules_to_edit.push(self.GetRule(selector.trim()));
