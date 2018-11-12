@@ -43,7 +43,7 @@ session = Session()
 
 
 layout_tags = ["article","section"]
-text_tags = ["h1","h2","h3","p","img","header", "aside"]
+text_tags = ["h1","h2","h3","p","img","ul", "header", "aside"]
 
 #Arvot, jotka ovat joka tägille ja tekstitasolle oletuksena samat
 common_vals = {"font-family"   : "'Roboto', sans-serif",
@@ -95,6 +95,7 @@ for classname in default_classes:
     session.add(Style(classname,"h2","font-size","1.5em","default"))
     session.add(Style(classname,"h3","font-size","1.17em","default"))
     session.add(Style(classname,"p","font-size","1em","default"))
+    session.add(Style(classname,"ul","font-size","1em","default"))
     session.add(Style(classname,"aside","font-size","0.8em","default"))
     session.add(Style(classname,"header","font-size","0.8em","default"))
     for attr, val in common_vals.items():
