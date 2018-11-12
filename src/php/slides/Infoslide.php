@@ -4,6 +4,7 @@
 namespace Portal\slides;
 
 use Medoo\Medoo;
+use Michelf\Markdown;
 use PDO;
 
 
@@ -27,6 +28,8 @@ class Infoslide extends Slide{
         $this->template_engine;
         $this->segment_name = $slot_name;
         $this->template = $this->template_engine->loadTemplate('infoslide'); 
+        #Markdown conversion:
+        $this->details["maintext"] =  Markdown::defaultTransform($this->details["maintext"]);
     }
 
 
