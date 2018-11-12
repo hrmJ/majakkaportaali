@@ -11445,17 +11445,17 @@ Slides.ContentList = function (parent_presentation) {
 
     if (this.pres.$slide.attr("class").match("verse")) {
       //Raamatunteksteillä + liturgisilla: huomioi, että otsikko ekassa diassa
+      //hmm..?
       var offset = 1;
 
-      if (this.pres.$section.hasClass("bibletext") || this.pres.$section.hasClass("ltext")) {
+      if (this.pres.$section.hasClass("bibletext")) {
         offset = 0;
       }
 
       if (this.pres.$section.hasClass("song")) {
-        offset++;
+        offset = 2;
       }
 
-      console.log(offset);
       $("#verselist div:eq(" + (this.pres.$slide.index() - offset) + ")").addClass("highlight");
       $("#verselist").scrollTo(".highlight", 100, {
         "offset": -$("#verselist").height() / 2
