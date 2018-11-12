@@ -40,7 +40,7 @@ Slides.Widgets.ContentAdders.ImageAdder = function(parent_presentation){
                 alert("MLKL");
                 self.$loaded_content = $(`<section class="infocontent Teksti" style="display: flex;">
                     <article class="">
-                        <input type="hidden" value="${filename}">
+                        <input type="hidden" class="slot_name" value="${filename}">
                         <div class="img-wholescreen">
                             <img src=${e.target.result}>
                         </div>

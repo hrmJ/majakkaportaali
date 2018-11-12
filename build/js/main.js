@@ -12003,7 +12003,7 @@ Slides.Widgets.ContentAdders.ImageAdder = function (parent_presentation) {
       reader.onload = function (e) {
         var filename = $("#imgadder_pick_local").val().replace(/.*(\/|\\)([^.]+.\w+)/, "$2");
         alert("MLKL");
-        self.$loaded_content = $("<section class=\"infocontent Teksti\" style=\"display: flex;\">\n                    <article class=\"\">\n                        <input type=\"hidden\" value=\"".concat(filename, "\">\n                        <div class=\"img-wholescreen\">\n                            <img src=").concat(e.target.result, ">\n                        </div>\n                    </article>\n                </section>"));
+        self.$loaded_content = $("<section class=\"infocontent Teksti\" style=\"display: flex;\">\n                    <article class=\"\">\n                        <input type=\"hidden\" class=\"slot_name\" value=\"".concat(filename, "\">\n                        <div class=\"img-wholescreen\">\n                            <img src=").concat(e.target.result, ">\n                        </div>\n                    </article>\n                </section>"));
       };
 
       reader.readAsDataURL($("#imgadder_pick_local").get(0).files[0]);
