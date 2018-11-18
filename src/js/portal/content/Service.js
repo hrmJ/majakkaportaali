@@ -1,11 +1,11 @@
-/**
- *
- * Yksittäisen messun / palveluksen toiminnot
- *
- **/
 
 Portal = Portal || {};
 
+/**
+ *
+ * TEst..
+ *
+ */
 Portal.Service = function(){
 
     //Kukin välilehti tallennetaan tähän

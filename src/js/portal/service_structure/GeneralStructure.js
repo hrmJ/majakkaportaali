@@ -172,14 +172,18 @@ var GeneralStructure = function(){
      *
      */
     function AddCommonFields(){
-        var $h2 = $(`<h2 class="subwindow-opener slide-section-controller">Ohjeet diannäyttäjälle</h2>`),
+        var $h2 = $(`<h2 class="subwindow-opener slide-section-controller instruction_h2">Ohjeet diannäyttäjälle</h2>`),
             $sec =  $(`
-                <section class="slidemodel-flex-column controller-subwindow">
+                <section class="slidemodel-flex-column controller-subwindow instruction_sec">
                     <textarea class='instruction' placeholder="Tietoja esim. siitä, kannattaako dian jälkeen näyttää blank screen"></textarea>
                 </section>
             `).hide();
         $h2.click(Portal.Menus.InitializeFoldMenu);
-        $(".slidemodel").append([$h2, $sec]);
+        if(!$(".instruction").length){ 
+            console.log("SE pituus on: " + $(".instruction").length);
+            $(".slidemodel").append([$h2, $sec]);;
+        }
+        //$(".instruction_h2, .instruction_sec").remove();
     }
 
     /**

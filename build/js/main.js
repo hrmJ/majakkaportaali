@@ -3416,12 +3416,12 @@ var SongLists = function () {
 }();
 "use strict";
 
+Portal = Portal || {};
 /**
  *
- * Yksittäisen messun / palveluksen toiminnot
+ * TEst..
  *
- **/
-Portal = Portal || {};
+ */
 
 Portal.Service = function () {
   //Kukin välilehti tallennetaan tähän
@@ -6624,10 +6624,16 @@ var GeneralStructure = function () {
 
 
   function AddCommonFields() {
-    var $h2 = $("<h2 class=\"subwindow-opener slide-section-controller\">Ohjeet diann\xE4ytt\xE4j\xE4lle</h2>"),
-        $sec = $("\n                <section class=\"slidemodel-flex-column controller-subwindow\">\n                    <textarea class='instruction' placeholder=\"Tietoja esim. siit\xE4, kannattaako dian j\xE4lkeen n\xE4ytt\xE4\xE4 blank screen\"></textarea>\n                </section>\n            ").hide();
+    var $h2 = $("<h2 class=\"subwindow-opener slide-section-controller instruction_h2\">Ohjeet diann\xE4ytt\xE4j\xE4lle</h2>"),
+        $sec = $("\n                <section class=\"slidemodel-flex-column controller-subwindow instruction_sec\">\n                    <textarea class='instruction' placeholder=\"Tietoja esim. siit\xE4, kannattaako dian j\xE4lkeen n\xE4ytt\xE4\xE4 blank screen\"></textarea>\n                </section>\n            ").hide();
     $h2.click(Portal.Menus.InitializeFoldMenu);
-    $(".slidemodel").append([$h2, $sec]);
+
+    if (!$(".instruction").length) {
+      console.log("SE pituus on: " + $(".instruction").length);
+      $(".slidemodel").append([$h2, $sec]);
+      ;
+    } //$(".instruction_h2, .instruction_sec").remove();
+
   }
   /**
    *

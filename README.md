@@ -76,8 +76,10 @@ Diaesityksissä: poista esim. firefoxissa olevat sylesheettejä muokkaavat plugi
 ## JS-dokumentaatio
 
 - Asenna (sudo-valtuuksin) [documentation.js](https://github.com/documentationjs/documentation) node-moduulina: `npm install -g documentation`
+
+<!--
 - Päivitä dokumentaatio ajamalla projektin juuressa `documentation readme src/js/site/** --section "Javascript API"
-`
+-->
 
 ## Muuta
 

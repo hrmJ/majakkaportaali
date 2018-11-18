@@ -1,12 +1,7 @@
 {
-  "name": "lhportal",
-  "version": "1.0.0",
+  "name": "Majakkaportaali",
+  "version": "2.0.0",
   "description": "Project for organizing church service volunteers",
-  "dependencies": {
-    "nightmare": "^2.10.0",
-    "nightwatch": "^0.9.15",
-    "simple-line-icons": "^2.4.1"
-  },
   "devDependencies": {
     "@babel/core": "^7.1.2",
     "@babel/preset-env": "^7.1.0",
@@ -30,7 +25,7 @@
     "url": ""
   },
   "author": "Juho Härme",
-  "license": "ISC",
+  "license": "GPL",
   "bugs": {
     "url": ""
   },
