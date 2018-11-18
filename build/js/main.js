@@ -10733,6 +10733,8 @@ Slides.Presentation = function () {
 
 
     this.ToggleBlackScreen = function (ev) {
+      var _this5 = this;
+
       var $bs = $("<div class='blankscreen'></div>");
       $bs.css({
         "width": "200%",
@@ -10741,15 +10743,31 @@ Slides.Presentation = function () {
         "z-index": "999999",
         "background": "#000000",
         "top": "-10px",
-        "left": "-10px"
+        "left": "-10px",
+        "display": "none"
       });
 
       if (!this.d.find(".blankscreen").length) {
         this.d.find("body").prepend($bs);
-        $(ev.target).parent().addClass("bs_active");
+        $(ev.target).parent().addClass("bs_active"); //Animointi
+
+        if (!this.fade_is_on) {
+          $bs.show();
+        } else {
+          $bs.fadeIn(this.fadetime);
+        }
       } else {
-        this.d.find(".blankscreen").remove();
-        $(ev.target).parent().removeClass("bs_active");
+        //Animointi
+        if (this.fade_is_on) {
+          this.d.find(".blankscreen").fadeOut(this.fadetime, function () {
+            _this5.d.find(".blankscreen").remove();
+
+            $(ev.target).parent().removeClass("bs_active");
+          });
+        } else {
+          this.d.find(".blankscreen").remove();
+          $(ev.target).parent().removeClass("bs_active");
+        }
       }
     };
     /**
@@ -10968,16 +10986,16 @@ Slides.Presentation = function () {
 
 
     this.LoopSlides = function (byclass, byno) {
-      var _this5 = this;
+      var _this6 = this;
 
       var active_idx = undefined,
           $target = undefined;
       this.loop_id = setInterval(function () {
         if (byclass) {
-          var sections = _this5.d.find("section" + byclass);
+          var sections = _this6.d.find("section" + byclass);
 
           $.each(sections, function (idx, t) {
-            if ($(t).html() == _this5.$section.html()) {
+            if ($(t).html() == _this6.$section.html()) {
               active_idx = idx;
             }
           });
@@ -10990,9 +11008,9 @@ Slides.Presentation = function () {
             $target = $($(sections[0]).find("article:eq(0)"));
           }
 
-          _this5.Activate($target);
+          _this6.Activate($target);
 
-          _this5.controls.contentlist.HighlightCurrentContents();
+          _this6.controls.contentlist.HighlightCurrentContents();
         }
       }, this.looptime);
     };
@@ -11005,34 +11023,34 @@ Slides.Presentation = function () {
 
 
     this.Update = function () {
-      var _this6 = this;
+      var _this7 = this;
 
       var pres_position = {
         sec_idx: this.$section.index(),
         slide_idx: this.$slide.index()
       };
       return $.when(this.SetContent()).done(function () {
-        var new_msg = new Utilities.Message("Diaesitys päivitetty", _this6.$controller_window),
+        var new_msg = new Utilities.Message("Diaesitys päivitetty", _this7.$controller_window),
             $sec = undefined,
             $slide = undefined;
 
-        if (_this6.d.find("section").length >= pres_position.sec_idx) {
-          $sec = _this6.d.find("section:eq(" + pres_position.sec_idx + ")");
+        if (_this7.d.find("section").length >= pres_position.sec_idx) {
+          $sec = _this7.d.find("section:eq(" + pres_position.sec_idx + ")");
 
           if ($sec.find("arcticle").length >= pres_position.slide_idx) {
             $slide = $sec.find("article:eq(" + pres_position.slide_idx + ")");
 
             if ($slide.length) {
-              _this6.Activate($slide);
+              _this7.Activate($slide);
             } else {
-              _this6.Activate($sec.find("article:eq(0)"));
+              _this7.Activate($sec.find("article:eq(0)"));
             }
           }
         }
 
         new_msg.Show(2000);
 
-        _this6.controls.contentlist.GetContents().PrintContentList().HighlightCurrentContents(); //this.Activate(pres_position);
+        _this7.controls.contentlist.GetContents().PrintContentList().HighlightCurrentContents(); //this.Activate(pres_position);
 
       });
     };

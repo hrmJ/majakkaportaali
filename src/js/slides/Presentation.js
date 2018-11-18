@@ -318,14 +318,32 @@ Slides.Presentation = function(){
                 "background": "#000000",
                 "top": "-10px",
                 "left": "-10px",
+                "display": "none"
             });
             if(!this.d.find(".blankscreen").length){
                 this.d.find("body").prepend($bs);
                 $(ev.target).parent().addClass("bs_active");
+                //Animointi
+                if(!this.fade_is_on){
+                    $bs.show();
+                }
+                else{
+                    $bs.fadeIn(this.fadetime);
+                }
             }
             else{
-                this.d.find(".blankscreen").remove();
-                $(ev.target).parent().removeClass("bs_active");
+                //Animointi
+
+                if(this.fade_is_on){
+                    this.d.find(".blankscreen").fadeOut(this.fadetime, () => {
+                        this.d.find(".blankscreen").remove();
+                        $(ev.target).parent().removeClass("bs_active");
+                    });
+                }
+                else{
+                    this.d.find(".blankscreen").remove();
+                    $(ev.target).parent().removeClass("bs_active");
+                }
             }
         }
 
