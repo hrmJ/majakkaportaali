@@ -1,0 +1,2271 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8' />
+  <title>Majakkaportaali 1.0.0 | Documentation</title>
+  <meta name='viewport' content='width=device-width,initial-scale=1'>
+  <link href='assets/bass.css' type='text/css' rel='stylesheet' />
+  <link href='assets/style.css' type='text/css' rel='stylesheet' />
+  <link href='assets/github.css' type='text/css' rel='stylesheet' />
+  <link href='assets/split.css' type='text/css' rel='stylesheet' />
+</head>
+<body class='documentation m0'>
+    <div class='flex'>
+      <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
+        <div class='py1 px2'>
+          <h3 class='mb0 no-anchor'>Majakkaportaali</h3>
+          <div class='mb1'><code>1.0.0</code></div>
+          <input
+            placeholder='Filter'
+            id='filter-input'
+            class='col12 block input'
+            type='text' />
+          <div id='toc'>
+            <ul class='list-reset h5 py1-ul'>
+              
+                
+                <li><a
+                  href='#songslots'
+                  class="">
+                  SongSlots
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#getcurrentslot'
+                  class="">
+                  GetCurrentSlot
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#setcurrentslot'
+                  class="">
+                  SetCurrentSlot
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#loadsongtitles'
+                  class="">
+                  LoadSongTitles
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#loadsongtags'
+                  class="">
+                  LoadSongTags
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#loadsongstoslots'
+                  class="">
+                  LoadSongsToSlots
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#saveslotorder'
+                  class="">
+                  SaveSlotOrder
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#initializecontainers'
+                  class="">
+                  InitializeContainers
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#slotcontainer'
+                  class=" toggle-sibling">
+                  SlotContainer
+                  <span class='icon'>▸</span>
+                </a>
+                
+                <div class='toggle-target display-none'>
+                  
+                  
+                    <ul class='list-reset py1-ul pl1'>
+                      <li class='h5'><span>Instance members</span></li>
+                      
+                      <li><a
+                        href='#slotcontainersetname'
+                        class='regular pre-open'>
+                        #SetName
+                      </a></li>
+                      
+                      <li><a
+                        href='#slotcontainerfetchslots'
+                        class='regular pre-open'>
+                        #FetchSlots
+                      </a></li>
+                      
+                      <li><a
+                        href='#slotcontainersetslots'
+                        class='regular pre-open'>
+                        #SetSlots
+                      </a></li>
+                      
+                      <li><a
+                        href='#slotcontaineraddsortability'
+                        class='regular pre-open'>
+                        #AddSortability
+                      </a></li>
+                      
+                      <li><a
+                        href='#slotcontainersettooltip'
+                        class='regular pre-open'>
+                        #SetToolTip
+                      </a></li>
+                      
+                      <li><a
+                        href='#slotcontainersetmultisongbuttons'
+                        class='regular pre-open'>
+                        #SetMultisongButtons
+                      </a></li>
+                      
+                      <li><a
+                        href='#slotcontaineraddnewslot'
+                        class='regular pre-open'>
+                        #AddNewSlot
+                      </a></li>
+                      
+                      <li><a
+                        href='#slotcontainerremoveslot'
+                        class='regular pre-open'>
+                        #RemoveSlot
+                      </a></li>
+                      
+                    </ul>
+                  
+                  
+                  
+                </div>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#songslot'
+                  class=" toggle-sibling">
+                  SongSlot
+                  <span class='icon'>▸</span>
+                </a>
+                
+                <div class='toggle-target display-none'>
+                  
+                  
+                    <ul class='list-reset py1-ul pl1'>
+                      <li class='h5'><span>Instance members</span></li>
+                      
+                      <li><a
+                        href='#songslotsetnotservicespecific'
+                        class='regular pre-open'>
+                        #SetNotServiceSpecific
+                      </a></li>
+                      
+                      <li><a
+                        href='#songslotmarknowords'
+                        class='regular pre-open'>
+                        #MarkNoWords
+                      </a></li>
+                      
+                      <li><a
+                        href='#songslotmarkusedverses'
+                        class='regular pre-open'>
+                        #MarkUsedVerses
+                      </a></li>
+                      
+                      <li><a
+                        href='#songslotcreate'
+                        class='regular pre-open'>
+                        #Create
+                      </a></li>
+                      
+                      <li><a
+                        href='#songslotacceptdroppedsong'
+                        class='regular pre-open'>
+                        #AcceptDroppedSong
+                      </a></li>
+                      
+                      <li><a
+                        href='#songslotremove'
+                        class='regular pre-open'>
+                        #Remove
+                      </a></li>
+                      
+                      <li><a
+                        href='#songsloteditwords'
+                        class='regular pre-open'>
+                        #EditWords
+                      </a></li>
+                      
+                      <li><a
+                        href='#songslotaddnewversion'
+                        class='regular pre-open'>
+                        #AddNewVersion
+                      </a></li>
+                      
+                      <li><a
+                        href='#songslotcheckdetails'
+                        class='regular pre-open'>
+                        #CheckDetails
+                      </a></li>
+                      
+                      <li><a
+                        href='#songslotprinteditactions'
+                        class='regular pre-open'>
+                        #PrintEditActions
+                      </a></li>
+                      
+                      <li><a
+                        href='#songsloteditmeta'
+                        class='regular pre-open'>
+                        #EditMeta
+                      </a></li>
+                      
+                      <li><a
+                        href='#songslotrefreshversions'
+                        class='regular pre-open'>
+                        #RefreshVersions
+                      </a></li>
+                      
+                      <li><a
+                        href='#songslotloadversionpicker'
+                        class='regular pre-open'>
+                        #LoadVersionPicker
+                      </a></li>
+                      
+                      <li><a
+                        href='#songslotsetversion'
+                        class='regular pre-open'>
+                        #SetVersion
+                      </a></li>
+                      
+                      <li><a
+                        href='#songslotchecklyrics'
+                        class='regular pre-open'>
+                        #CheckLyrics
+                      </a></li>
+                      
+                      <li><a
+                        href='#songslotindicatelyrics'
+                        class='regular pre-open'>
+                        #IndicateLyrics
+                      </a></li>
+                      
+                      <li><a
+                        href='#songslotattachevents'
+                        class='regular pre-open'>
+                        #AttachEvents
+                      </a></li>
+                      
+                    </ul>
+                  
+                  
+                  
+                </div>
+                
+                </li>
+              
+            </ul>
+          </div>
+          <div class='mt1 h6 quiet'>
+            <a href='http://documentation.js.org/reading-documentation.html'>Need help reading this?</a>
+          </div>
+        </div>
+      </div>
+      <div id='split-right' class='relative overflow-auto height-viewport-100'>
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='songslots'>
+      SongSlots
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Moduuli yhden messun laulusloteista</p>
+
+
+  <div class='pre p1 fill-light mt0'>SongSlots</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='getcurrentslot'>
+      GetCurrentSlot
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Palauttaa aktiivisen, esim. sanojen muokkausta odottavan slotin</p>
+
+
+  <div class='pre p1 fill-light mt0'>new GetCurrentSlot()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='setcurrentslot'>
+      SetCurrentSlot
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Asettaa aktiivisen slotin</p>
+
+
+  <div class='pre p1 fill-light mt0'>new SetCurrentSlot(slot: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>slot</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='loadsongtitles'>
+      LoadSongTitles
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Hakee tietokannassa olevien laulujen nimet</p>
+<p>*</p>
+
+
+  <div class='pre p1 fill-light mt0'>new LoadSongTitles(request: any, response: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>request</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>response</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='loadsongtags'>
+      LoadSongTags
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Hakee tietokannasta laulujen tägit</p>
+<p>*</p>
+
+
+  <div class='pre p1 fill-light mt0'>new LoadSongTags(request: any, response: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>request</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>response</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='loadsongstoslots'>
+      LoadSongsToSlots
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Hakee nyt käsiteltävässä messussa käytössä olevat laulut</p>
+
+
+  <div class='pre p1 fill-light mt0'>new LoadSongsToSlots()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='saveslotorder'>
+      SaveSlotOrder
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Tallentaa muutokset lauluslottien järjestykseen yhden "kontin" sisällä </p>
+<p>*</p>
+
+
+  <div class='pre p1 fill-light mt0'>new SaveSlotOrder($parent_el: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>$parent_el</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='initializecontainers'>
+      InitializeContainers
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Luo jokaisesta lauluslotista oma olionsa, joka kuuntelee siihen
+liittyviä tapahtumia, kuten laulujen raahaamista.</p>
+
+
+  <div class='pre p1 fill-light mt0'>new InitializeContainers(slot_data: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>slot_data</span> <code class='quiet'>(any)</code>
+	    ajax-response, joka sisältää tiedot tähän messuun tallennetuista lauluista
+<p>*</p>
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='slotcontainer'>
+      SlotContainer
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Yhden tai useamman laulun sisältävä slotti
+tai pikemminkin niiden  "kontti"</p>
+
+
+  <div class='pre p1 fill-light mt0'>SlotContainer($div: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>$div</span> <code class='quiet'>(any)</code>
+	    kontti representaatio DOMissa
+<p>*</p>
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Instance Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='slotcontainersetname'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>SetName(name)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Asettaa nimen</p>
+
+
+  <div class='pre p1 fill-light mt0'>SetName(name: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>name</span> <code class='quiet'>(any)</code>
+	    asetettava nimi
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='slotcontainerfetchslots'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>FetchSlots()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Hakee käikki tämän kontin sisältämät laulut</p>
+<p>*</p>
+
+
+  <div class='pre p1 fill-light mt0'>FetchSlots()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='slotcontainersetslots'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>SetSlots(slots)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Syöttää kontin sisältämien lauluslottien mukaisen datan paikalleen</p>
+
+
+  <div class='pre p1 fill-light mt0'>SetSlots(slots: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>slots</span> <code class='quiet'>(any)</code>
+	    taulukko niistä sloteista, joita ajax-response palauttaa
+<p>*</p>
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='slotcontaineraddsortability'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>AddSortability()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Lisää järjestelymahdollisuuden konttiin, jossa monta lauluslottia</p>
+<p>*</p>
+
+
+  <div class='pre p1 fill-light mt0'>AddSortability()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='slotcontainersettooltip'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>SetToolTip()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Lisää opasteen näyttävän tapahtuman</p>
+
+
+  <div class='pre p1 fill-light mt0'>SetToolTip()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='slotcontainersetmultisongbuttons'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>SetMultisongButtons()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Lisää painikkeet, joilla voidaan lisätä tai vähentää lauluja tästä
+"kontista"</p>
+
+
+  <div class='pre p1 fill-light mt0'>SetMultisongButtons()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='slotcontaineraddnewslot'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>AddNewSlot()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Lisää tämän kontin alle uuden slotin</p>
+<p>*</p>
+
+
+  <div class='pre p1 fill-light mt0'>AddNewSlot()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='slotcontainerremoveslot'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>RemoveSlot()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Poistaa tämän kontin alta slotin</p>
+
+
+  <div class='pre p1 fill-light mt0'>RemoveSlot()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+</div>
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='songslot'>
+      SongSlot
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Yksi lauluslotti, joka kuvaa esim. alkulaulua tai yhtä
+ylistyslauluista</p>
+
+
+  <div class='pre p1 fill-light mt0'>SongSlot(title: any, position: any, cont: any, picked_id: any, verses: any, is_instrumental: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>title</span> <code class='quiet'>(any)</code>
+	    valitun laulun nimi (jos joku laulu jo valittu)
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>position</span> <code class='quiet'>(any)</code>
+	    valitun laulun järjestysnumero tässä "kontissa"
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>cont</span> <code class='quiet'>(any)</code>
+	    slotin sisältävä "kontti" SlotContainer-oliona
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>picked_id</span> <code class='quiet'>(any)</code>
+	    valitun laulun id (jos joku laulu jo valittu)
+<p>*</p>
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>verses</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>is_instrumental</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Instance Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='songslotsetnotservicespecific'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>SetNotServiceSpecific()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Tekee slotista ei-messukohtaisen (jos hallitaan lauluja muualta)</p>
+
+
+  <div class='pre p1 fill-light mt0'>SetNotServiceSpecific()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='songslotmarknowords'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>MarkNoWords()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Merkitsee laulu instrumentaaliseksi (ei lisätä sanoja)</p>
+
+
+  <div class='pre p1 fill-light mt0'>MarkNoWords()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='songslotmarkusedverses'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>MarkUsedVerses()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Merkitsee, mitkä säkeistöt kappaleesta halutaan messussa
+laulaa. Oletuksena kaikki, mutta poistamalla
+ruksin säkeistön edestä voidaan myös jättää säkeistöjä pois.</p>
+
+
+  <div class='pre p1 fill-light mt0'>MarkUsedVerses()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='songslotcreate'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>Create()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Lisää DOMiin divin, jossa varsinainen slotti on kuvattuna</p>
+
+
+  <div class='pre p1 fill-light mt0'>Create()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='songslotacceptdroppedsong'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>AcceptDroppedSong(e, ui)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Ottaa laulun arvon raahatusta elementistä</p>
+
+
+  <div class='pre p1 fill-light mt0'>AcceptDroppedSong(e: any, ui: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>e</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>ui</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='songslotremove'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>Remove()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Poistaa tämän laulun kontista</p>
+
+
+  <div class='pre p1 fill-light mt0'>Remove()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='songsloteditwords'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>EditWords()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Muokkaa olemassaolevia sanoja</p>
+
+
+  <div class='pre p1 fill-light mt0'>EditWords()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='songslotaddnewversion'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>AddNewVersion()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Lisää uuden version tästä laulusta</p>
+
+
+  <div class='pre p1 fill-light mt0'>AddNewVersion()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='songslotcheckdetails'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>CheckDetails(ev)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Avaa ikkunan, jossa voi tarkkailla laulun yksityiskohtia ja esim. muokata sanoja</p>
+
+
+  <div class='pre p1 fill-light mt0'>CheckDetails(ev: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>ev</span> <code class='quiet'>(any)</code>
+	    klikkaustapahtuma
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='songslotprinteditactions'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>PrintEditActions()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Lisää toiminnallisuuden laulun tarkasteluikkunaan</p>
+
+
+  <div class='pre p1 fill-light mt0'>PrintEditActions()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='songsloteditmeta'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>EditMeta(ev)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Muokkaa laulun säveltäjää / sanoittajaa / tägejä</p>
+<p>TODO: abstraktimman tason muokkausfunktio tai -metodi</p>
+
+
+  <div class='pre p1 fill-light mt0'>EditMeta(ev: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>ev</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='songslotrefreshversions'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>RefreshVersions(callback)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Päivittää laulusta saatavilla olevat versiot</p>
+
+
+  <div class='pre p1 fill-light mt0'>RefreshVersions(callback: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>callback</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='songslotloadversionpicker'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>LoadVersionPicker()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Luo valintamenun, jos monta eri laulua</p>
+
+
+  <div class='pre p1 fill-light mt0'>LoadVersionPicker()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='songslotsetversion'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>SetVersion(e, itm)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Vaihtaa käytössä olevan version</p>
+
+
+  <div class='pre p1 fill-light mt0'>SetVersion(e: any, itm: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>e</span> <code class='quiet'>(any)</code>
+	    tapahtuma
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>itm</span> <code class='quiet'>(any)</code>
+	    jquery-ui:n selectmenusta valittu elementti
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='songslotchecklyrics'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>CheckLyrics(ev, item)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Tarkistaa, onko tämän laulun sanoja tietokannassa</p>
+<p>*</p>
+
+
+  <div class='pre p1 fill-light mt0'>CheckLyrics(ev: any, item: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>ev</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>item</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='songslotindicatelyrics'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>IndicateLyrics(song_ids)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Näyttää informaation siitä, onko laulun sanoja tietokannassa. Lisää
+myös tiedon niistä laulujen id:istä, jotka valitulla laulun nimellä
+löytyvät.</p>
+<p>TODO: mahdollisuus klikata yksityiskohtaikkunasta vahvistus sille,
+että tähän ei tule sanoja.</p>
+
+
+  <div class='pre p1 fill-light mt0'>IndicateLyrics(song_ids: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>song_ids</span> <code class='quiet'>(any)</code>
+	    id:t niistä lauluista, joita löydettiin
+<p>*</p>
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='songslotattachevents'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>AttachEvents()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Liittää lauluslottiin kuuluvat tapahtumat</p>
+<p>*</p>
+
+
+  <div class='pre p1 fill-light mt0'>AttachEvents()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+</div>
+
+  
+
+  
+</section>
+
+          
+        
+      </div>
+    </div>
+  <script src='assets/anchor.js'></script>
+  <script src='assets/split.js'></script>
+  <script src='assets/site.js'></script>
+</body>
+</html>

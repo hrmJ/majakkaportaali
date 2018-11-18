@@ -1,0 +1,700 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8' />
+  <title>Majakkaportaali 1.0.0 | Documentation</title>
+  <meta name='viewport' content='width=device-width,initial-scale=1'>
+  <link href='assets/bass.css' type='text/css' rel='stylesheet' />
+  <link href='assets/style.css' type='text/css' rel='stylesheet' />
+  <link href='assets/github.css' type='text/css' rel='stylesheet' />
+  <link href='assets/split.css' type='text/css' rel='stylesheet' />
+</head>
+<body class='documentation m0'>
+    <div class='flex'>
+      <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
+        <div class='py1 px2'>
+          <h3 class='mb0 no-anchor'>Majakkaportaali</h3>
+          <div class='mb1'><code>1.0.0</code></div>
+          <input
+            placeholder='Filter'
+            id='filter-input'
+            class='col12 block input'
+            type='text' />
+          <div id='toc'>
+            <ul class='list-reset h5 py1-ul'>
+              
+                
+                <li><a
+                  href='#attach'
+                  class="">
+                  Attach
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#loadparams'
+                  class="">
+                  LoadParams
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#saveparams'
+                  class="">
+                  SaveParams
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#setslotparams'
+                  class="">
+                  SetSlotParams
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#updateslot'
+                  class="">
+                  UpdateSlot
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#addnewslot'
+                  class="">
+                  AddNewSlot
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#getslideclass'
+                  class="">
+                  GetSlideClass
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#setpreviewparams'
+                  class="">
+                  SetPreviewParams
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#getslideclasses'
+                  class="">
+                  GetSlideClasses
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#setslideclasses'
+                  class="">
+                  SetSlideClasses
+                  
+                </a>
+                
+                </li>
+              
+            </ul>
+          </div>
+          <div class='mt1 h6 quiet'>
+            <a href='http://documentation.js.org/reading-documentation.html'>Need help reading this?</a>
+          </div>
+        </div>
+      </div>
+      <div id='split-right' class='relative overflow-auto height-viewport-100'>
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='attach'>
+      Attach
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Liittää datan lataamiseen  liittyvän toiminnallisuuden lähdeolioon</p>
+
+
+  <div class='pre p1 fill-light mt0'>new Attach(source: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>source</span> <code class='quiet'>(any)</code>
+	    olio, johon liitetään
+<p>*</p>
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='loadparams'>
+      LoadParams
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Hae dian sisältötiedot tietokannasta: tyypistä riippuen vähintään nimi ja luokka,
+mahdollisesti myös teksti, laulun nimi, kuvat, ylätunniste jne.</p>
+
+
+  <div class='pre p1 fill-light mt0'>LoadParams(new_slot: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>new_slot</span> <code class='quiet'>(any)</code>
+	    jos määritetty, kyseessä on uusi slotti eikä vanhan datan lataus
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='saveparams'>
+      SaveParams
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Tallentaa diaaan tehdyt muutokset</p>
+
+
+  <div class='pre p1 fill-light mt0'>SaveParams(callback: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>callback</span> <code class='quiet'>(any)</code>
+	    , funktio,joka laukaistaan, kun tallennus valmis
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='setslotparams'>
+      SetSlotParams
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Hakee yleiset, tätä slottia koskevat tiedot ja tallentaa ne
+slot_params-attribuuttiin</p>
+
+
+  <div class='pre p1 fill-light mt0'>SetSlotParams()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='updateslot'>
+      UpdateSlot
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Päivittää tietokantaan käyttäjän muuttamat slottikohtaiset tiedot</p>
+
+
+  <div class='pre p1 fill-light mt0'>UpdateSlot(callback: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>callback</span> <code class='quiet'>(any)</code>
+	    funktio, joka suoritetaan, kun valmis
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='addnewslot'>
+      AddNewSlot
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Lisää kokonaan uuden slotin tietokantaan: jos esimerkiksi käyttäjä
+lisää slotin "alkuinfo", tämä lisätään presentation_structure-tauluun samalla
+kun dian konkreettinen lisätään infosegments-tauluun</p>
+
+
+  <div class='pre p1 fill-light mt0'>AddNewSlot(callback: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>callback</span> <code class='quiet'>(any)</code>
+	    funktio, joka suoritetaan, kun valmis
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='getslideclass'>
+      GetSlideClass
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Hakee luokan, jos asetetu</p>
+
+
+  <div class='pre p1 fill-light mt0'>GetSlideClass()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='setpreviewparams'>
+      SetPreviewParams
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Tallenna dian tiedot tietokantaan (myös mahdollista esikatselua varten)</p>
+
+
+  <div class='pre p1 fill-light mt0'>SetPreviewParams()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='getslideclasses'>
+      GetSlideClasses
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Lataa käytössä olevta messuosiot / dialuokat tietokannasta</p>
+
+
+  <div class='pre p1 fill-light mt0'>GetSlideClasses()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='setslideclasses'>
+      SetSlideClasses
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Syötä käytössä olevta messuosiot / dialuokat select-valikkoon</p>
+
+
+  <div class='pre p1 fill-light mt0'>SetSlideClasses(data: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>data</span> <code class='quiet'>(any)</code>
+	    ajax-responssina saatu data eli lista käytössä olevista luokista
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+      </div>
+    </div>
+  <script src='assets/anchor.js'></script>
+  <script src='assets/split.js'></script>
+  <script src='assets/site.js'></script>
+</body>
+</html>

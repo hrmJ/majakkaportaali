@@ -1,0 +1,317 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8' />
+  <title>Majakkaportaali 1.0.0 | Documentation</title>
+  <meta name='viewport' content='width=device-width,initial-scale=1'>
+  <link href='assets/bass.css' type='text/css' rel='stylesheet' />
+  <link href='assets/style.css' type='text/css' rel='stylesheet' />
+  <link href='assets/github.css' type='text/css' rel='stylesheet' />
+  <link href='assets/split.css' type='text/css' rel='stylesheet' />
+</head>
+<body class='documentation m0'>
+    <div class='flex'>
+      <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
+        <div class='py1 px2'>
+          <h3 class='mb0 no-anchor'>Majakkaportaali</h3>
+          <div class='mb1'><code>1.0.0</code></div>
+          <input
+            placeholder='Filter'
+            id='filter-input'
+            class='col12 block input'
+            type='text' />
+          <div id='toc'>
+            <ul class='list-reset h5 py1-ul'>
+              
+                
+                <li><a
+                  href='#attach'
+                  class="">
+                  Attach
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#updatepickedheader'
+                  class="">
+                  UpdatePickedHeader
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#setheadertemplates'
+                  class="">
+                  SetHeaderTemplates
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#pickheader'
+                  class="">
+                  PickHeader
+                  
+                </a>
+                
+                </li>
+              
+            </ul>
+          </div>
+          <div class='mt1 h6 quiet'>
+            <a href='http://documentation.js.org/reading-documentation.html'>Need help reading this?</a>
+          </div>
+        </div>
+      </div>
+      <div id='split-right' class='relative overflow-auto height-viewport-100'>
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='attach'>
+      Attach
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Liittää ylätunnisteisiin liittyvän toiminnallisuuden lähdeolioon</p>
+
+
+  <div class='pre p1 fill-light mt0'>new Attach(source: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>source</span> <code class='quiet'>(any)</code>
+	    olio, johon liitetään
+<p>*</p>
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='updatepickedheader'>
+      UpdatePickedHeader
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Päivitä tietokantaan ylätunnisteeseen tehdyt muutokset, kuten
+kuvan vaihtaminen tai kuvan sijainnin muuttaminen</p>
+
+
+  <div class='pre p1 fill-light mt0'>UpdatePickedHeader()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='setheadertemplates'>
+      SetHeaderTemplates
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Tulostaa käyttäjän määrittämät ylätunnisteet.
+Tallentaa myös muistiin ylätunnisteiden sisällön.
+Huomaa, että tämä metodi kutsutaan AddImageLoader-metodista,
+jotta ylätunnisteen kuvat ehtivät latautua.</p>
+
+
+  <div class='pre p1 fill-light mt0'>SetHeaderTemplates(set_select_val: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>set_select_val</span> <code class='quiet'>(any)</code>
+	    boolean Tehdäänkö enemmän kuin vain ladataan ylätunnisteet: merkitäänkäö jokin tunniste valituksi
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='pickheader'>
+      PickHeader
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Lataa näytettäväksi käyttäjän valitseman ylätunnisteen.
+Jos käyttäjä syöttänyt kokonaan uuden, lisätään se ylätunnisteiden listaan.</p>
+
+
+  <div class='pre p1 fill-light mt0'>PickHeader(selected_item: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>selected_item</span> <code class='quiet'>(any)</code>
+	    valittu elementti (jquery ui-oliona)
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+      </div>
+    </div>
+  <script src='assets/anchor.js'></script>
+  <script src='assets/split.js'></script>
+  <script src='assets/site.js'></script>
+</body>
+</html>

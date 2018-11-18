@@ -1,0 +1,703 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8' />
+  <title>Majakkaportaali 1.0.0 | Documentation</title>
+  <meta name='viewport' content='width=device-width,initial-scale=1'>
+  <link href='assets/bass.css' type='text/css' rel='stylesheet' />
+  <link href='assets/style.css' type='text/css' rel='stylesheet' />
+  <link href='assets/github.css' type='text/css' rel='stylesheet' />
+  <link href='assets/split.css' type='text/css' rel='stylesheet' />
+</head>
+<body class='documentation m0'>
+    <div class='flex'>
+      <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
+        <div class='py1 px2'>
+          <h3 class='mb0 no-anchor'>Majakkaportaali</h3>
+          <div class='mb1'><code>1.0.0</code></div>
+          <input
+            placeholder='Filter'
+            id='filter-input'
+            class='col12 block input'
+            type='text' />
+          <div id='toc'>
+            <ul class='list-reset h5 py1-ul'>
+              
+                
+                <li><a
+                  href='#generalstructure'
+                  class="">
+                  GeneralStructure
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#setcontrolledbypresentation'
+                  class="">
+                  SetControlledByPresentation
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#setserviceid'
+                  class="">
+                  SetServiceid
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#reloadslots'
+                  class="">
+                  ReloadSlots
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#removeslot'
+                  class="">
+                  RemoveSlot
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#saveslotorder'
+                  class="">
+                  SaveSlotOrder
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#initializenewslotmenu'
+                  class="">
+                  InitializeNewslotMenu
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#initializeslotfunctionality'
+                  class="">
+                  InitializeSlotFunctionality
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#addcommonfields'
+                  class="">
+                  AddCommonFields
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#initialize'
+                  class="">
+                  Initialize
+                  
+                </a>
+                
+                </li>
+              
+            </ul>
+          </div>
+          <div class='mt1 h6 quiet'>
+            <a href='http://documentation.js.org/reading-documentation.html'>Need help reading this?</a>
+          </div>
+        </div>
+      </div>
+      <div id='split-right' class='relative overflow-auto height-viewport-100'>
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='generalstructure'>
+      GeneralStructure
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Moduuli, jolla hallitaan messujen rakennetta: lauluja, raamatunkohtia,
+messukohtaisia tai yleisempiä infodioja jne.</p>
+<p>*</p>
+
+
+  <div class='pre p1 fill-light mt0'>GeneralStructure</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='setcontrolledbypresentation'>
+      SetControlledByPresentation
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Merkitse, että näkymä ladattu diaesityksen hallintapaneelin kautta</p>
+
+
+  <div class='pre p1 fill-light mt0'>new SetControlledByPresentation(pres: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>pres</span> <code class='quiet'>(any)</code>
+	    Presentation-olio, joka avannut messun muokkausikkunan
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='setserviceid'>
+      SetServiceid
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Tekee rakenteesta messukohtaisen asettamalla messun id:n parametriksi</p>
+
+
+  <div class='pre p1 fill-light mt0'>new SetServiceid(id: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>id</span> <code class='quiet'>(any)</code>
+	    messun id
+<p>*</p>
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='reloadslots'>
+      ReloadSlots
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Lataa informaation messun rakenneosista</p>
+
+
+  <div class='pre p1 fill-light mt0'>new ReloadSlots(data: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>data</span> <code class='quiet'>(any)</code>
+	    ajax-responssina tullut informaatio sloteista
+<p>*</p>
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='removeslot'>
+      RemoveSlot
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Poista jokin messun rakenneosa kokonaan</p>
+<p>*</p>
+
+
+  <div class='pre p1 fill-light mt0'>new RemoveSlot()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='saveslotorder'>
+      SaveSlotOrder
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Tallentaa muutokset slottien järjestykseen</p>
+
+
+  <div class='pre p1 fill-light mt0'>new SaveSlotOrder($ul: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>$ul</span> <code class='quiet'>(any)</code>
+	    listan jquery-representaatio
+<p>*</p>
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='initializenewslotmenu'>
+      InitializeNewslotMenu
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Alustaa uusia slotteja lisäävän jquery-ui-menun toiminnallisuuden</p>
+
+
+  <div class='pre p1 fill-light mt0'>new InitializeNewslotMenu(selector: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>selector</span> <code class='quiet'>(any)</code>
+	    minne menu liitetään
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='initializeslotfunctionality'>
+      InitializeSlotFunctionality
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Lisää toiminnallisuuden messuslotteihin</p>
+<p>*</p>
+
+
+  <div class='pre p1 fill-light mt0'>new InitializeSlotFunctionality()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='addcommonfields'>
+      AddCommonFields
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Lisää kaikille segmenttityypeille yhteisiä tietoja</p>
+
+
+  <div class='pre p1 fill-light mt0'>new AddCommonFields()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='initialize'>
+      Initialize
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Alusta kaikki messun rakenneosiin liittyvät tapahtumat</p>
+
+
+  <div class='pre p1 fill-light mt0'>new Initialize(menuselector: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>menuselector</span> <code class='quiet'>(any)</code>
+	    minne slottien lisäysmenu liitetään
+<p>*</p>
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+      </div>
+    </div>
+  <script src='assets/anchor.js'></script>
+  <script src='assets/split.js'></script>
+  <script src='assets/site.js'></script>
+</body>
+</html>

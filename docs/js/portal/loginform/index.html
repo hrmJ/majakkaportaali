@@ -1,0 +1,771 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8' />
+  <title>Majakkaportaali 1.0.0 | Documentation</title>
+  <meta name='viewport' content='width=device-width,initial-scale=1'>
+  <link href='assets/bass.css' type='text/css' rel='stylesheet' />
+  <link href='assets/style.css' type='text/css' rel='stylesheet' />
+  <link href='assets/github.css' type='text/css' rel='stylesheet' />
+  <link href='assets/split.css' type='text/css' rel='stylesheet' />
+</head>
+<body class='documentation m0'>
+    <div class='flex'>
+      <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
+        <div class='py1 px2'>
+          <h3 class='mb0 no-anchor'>Majakkaportaali</h3>
+          <div class='mb1'><code>1.0.0</code></div>
+          <input
+            placeholder='Filter'
+            id='filter-input'
+            class='col12 block input'
+            type='text' />
+          <div id='toc'>
+            <ul class='list-reset h5 py1-ul'>
+              
+                
+                <li><a
+                  href='#portal'
+                  class="">
+                  Portal
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#testcredentials'
+                  class="">
+                  TestCredentials
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#showloginoptions'
+                  class="">
+                  ShowLoginOptions
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#setiframecallback'
+                  class="">
+                  SetIframeCallback
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#addroleselect'
+                  class="">
+                  AddRoleSelect
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#testislogged'
+                  class="">
+                  TestIsLogged
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#closeiframe'
+                  class="">
+                  CloseIframe
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#getnextservice'
+                  class="">
+                  GetNextService
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#showinfoslideadder'
+                  class="">
+                  ShowInfoSlideAdder
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#hideinfoslideadder'
+                  class="">
+                  HideInfoSlideAdder
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#saveinfoslide'
+                  class="">
+                  SaveInfoSlide
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#initialize'
+                  class="">
+                  Initialize
+                  
+                </a>
+                
+                </li>
+              
+            </ul>
+          </div>
+          <div class='mt1 h6 quiet'>
+            <a href='http://documentation.js.org/reading-documentation.html'>Need help reading this?</a>
+          </div>
+        </div>
+      </div>
+      <div id='split-right' class='relative overflow-auto height-viewport-100'>
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='portal'>
+      Portal
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Sisäänkirjautumisskriptien käynnistämiseen backend-puolelta käynnistettävät
+ei-salaiset frontend-koodit</p>
+
+
+  <div class='pre p1 fill-light mt0'>Portal</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='testcredentials'>
+      TestCredentials
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Lähettää pyynnön serverille varsinaisen kirjautumislogiikan
+käynnistämiseksi</p>
+
+
+  <div class='pre p1 fill-light mt0'>new TestCredentials()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='showloginoptions'>
+      ShowLoginOptions
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Näyttää pikalinkit sisältöön, jos kirjauduttu onnistuneesti</p>
+<p>(huom: ei haittaa, vaikka tämä on front end -koodia, koska ilman onnistuneesti
+asetettua php:n sessiomuuttujaa sisältöön ei pääse käsiksi vaikka linkit olisikin)</p>
+
+
+  <div class='pre p1 fill-light mt0'>new ShowLoginOptions()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='setiframecallback'>
+      SetIframeCallback
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Jos kutsuttu iframesta, tallenna sulkemisfunktio</p>
+
+
+  <div class='pre p1 fill-light mt0'>new SetIframeCallback(callback: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>callback</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='addroleselect'>
+      AddRoleSelect
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Lisää valintaelementin, jolla voi suoraan siirtyä yhden roolin vastuihin</p>
+
+
+  <div class='pre p1 fill-light mt0'>new AddRoleSelect()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='testislogged'>
+      TestIsLogged
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Jos yritetty saapua suoraan esimerkiksi messukohtaiselle sivulle,
+printtaa järkevä kirjautumislomake (mikäli tarpeen)</p>
+
+
+  <div class='pre p1 fill-light mt0'>new TestIsLogged()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='closeiframe'>
+      CloseIframe
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Jos iframesta kutsuttu kirjautumisikkuna palauttanut hyväksytyn, lataa uudelleen</p>
+
+
+  <div class='pre p1 fill-light mt0'>new CloseIframe()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='getnextservice'>
+      GetNextService
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Etsi lähin messu tulevaisuudesta ja siirry siihen</p>
+
+
+  <div class='pre p1 fill-light mt0'>new GetNextService(ev: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>ev</span> <code class='quiet'>(any)</code>
+	    klikkaustapahtuma
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='showinfoslideadder'>
+      ShowInfoSlideAdder
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Näytetään pikavalikko, jossa voi lisätä infodian ja piilotetaan näytöltä muut elementit</p>
+
+
+  <div class='pre p1 fill-light mt0'>new ShowInfoSlideAdder(ev: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>ev</span> <code class='quiet'>(any)</code>
+	    klikkaustapahtuma
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='hideinfoslideadder'>
+      HideInfoSlideAdder
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Piilottaa infodian lisäävän pikavalikon</p>
+
+
+  <div class='pre p1 fill-light mt0'>new HideInfoSlideAdder()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='saveinfoslide'>
+      SaveInfoSlide
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Tallentaa pikavalikon kautta syötetyn infodian</p>
+
+
+  <div class='pre p1 fill-light mt0'>new SaveInfoSlide()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='initialize'>
+      Initialize
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Alustaa kirjautumistoiminnallisuuden</p>
+
+
+  <div class='pre p1 fill-light mt0'>new Initialize()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+      </div>
+    </div>
+  <script src='assets/anchor.js'></script>
+  <script src='assets/split.js'></script>
+  <script src='assets/site.js'></script>
+</body>
+</html>

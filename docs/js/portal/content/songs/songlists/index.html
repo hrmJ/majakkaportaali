@@ -1,0 +1,1438 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8' />
+  <title>Majakkaportaali 1.0.0 | Documentation</title>
+  <meta name='viewport' content='width=device-width,initial-scale=1'>
+  <link href='assets/bass.css' type='text/css' rel='stylesheet' />
+  <link href='assets/style.css' type='text/css' rel='stylesheet' />
+  <link href='assets/github.css' type='text/css' rel='stylesheet' />
+  <link href='assets/split.css' type='text/css' rel='stylesheet' />
+</head>
+<body class='documentation m0'>
+    <div class='flex'>
+      <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
+        <div class='py1 px2'>
+          <h3 class='mb0 no-anchor'>Majakkaportaali</h3>
+          <div class='mb1'><code>1.0.0</code></div>
+          <input
+            placeholder='Filter'
+            id='filter-input'
+            class='col12 block input'
+            type='text' />
+          <div id='toc'>
+            <ul class='list-reset h5 py1-ul'>
+              
+                
+                <li><a
+                  href='#songlists'
+                  class="">
+                  SongLists
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#songlist'
+                  class=" toggle-sibling">
+                  Songlist
+                  <span class='icon'>▸</span>
+                </a>
+                
+                <div class='toggle-target display-none'>
+                  
+                  
+                    <ul class='list-reset py1-ul pl1'>
+                      <li class='h5'><span>Instance members</span></li>
+                      
+                      <li><a
+                        href='#songlistgetandsetsubcategories'
+                        class='regular pre-open'>
+                        #GetAndSetSubCategories
+                      </a></li>
+                      
+                      <li><a
+                        href='#songlistsetsubcategories'
+                        class='regular pre-open'>
+                        #SetSubCategories
+                      </a></li>
+                      
+                      <li><a
+                        href='#songlistsetsongs'
+                        class='regular pre-open'>
+                        #SetSongs
+                      </a></li>
+                      
+                      <li><a
+                        href='#songlistgetversionlink'
+                        class='regular pre-open'>
+                        #GetVersionLink
+                      </a></li>
+                      
+                      <li><a
+                        href='#songlistshowversioninfo'
+                        class='regular pre-open'>
+                        #ShowVersionInfo
+                      </a></li>
+                      
+                      <li><a
+                        href='#songlistshowsongversions'
+                        class='regular pre-open'>
+                        #ShowSongVersions
+                      </a></li>
+                      
+                      <li><a
+                        href='#songlistpreparesongforinsertion'
+                        class='regular pre-open'>
+                        #PrepareSongForInsertion
+                      </a></li>
+                      
+                      <li><a
+                        href='#songlistexaminesong'
+                        class='regular pre-open'>
+                        #ExamineSong
+                      </a></li>
+                      
+                      <li><a
+                        href='#songlistgetcurrentsong'
+                        class='regular pre-open'>
+                        #GetCurrentSong
+                      </a></li>
+                      
+                    </ul>
+                  
+                  
+                  
+                </div>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#alphabeticalsonglist'
+                  class=" toggle-sibling">
+                  AlphabeticalSonglist
+                  <span class='icon'>▸</span>
+                </a>
+                
+                <div class='toggle-target display-none'>
+                  
+                  
+                    <ul class='list-reset py1-ul pl1'>
+                      <li class='h5'><span>Instance members</span></li>
+                      
+                      <li><a
+                        href='#alphabeticalsonglistlistsongs'
+                        class='regular pre-open'>
+                        #ListSongs
+                      </a></li>
+                      
+                    </ul>
+                  
+                  
+                  
+                </div>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#loadsonglists'
+                  class="">
+                  LoadSongLists
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#initialize'
+                  class="">
+                  Initialize
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#getwaitingforattachment'
+                  class="">
+                  GetWaitingForAttachment
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#setlyrics'
+                  class="">
+                  SetLyrics
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#setsongmeta'
+                  class="">
+                  SetSongMeta
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#saveeditedlyrics'
+                  class="">
+                  SaveEditedLyrics
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#seteditedlyricscallback'
+                  class="">
+                  SetEditedLyricsCallback
+                  
+                </a>
+                
+                </li>
+              
+            </ul>
+          </div>
+          <div class='mt1 h6 quiet'>
+            <a href='http://documentation.js.org/reading-documentation.html'>Need help reading this?</a>
+          </div>
+        </div>
+      </div>
+      <div id='split-right' class='relative overflow-auto height-viewport-100'>
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='songlists'>
+      SongLists
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Moduuli erilaisille laulujen selauslistoille</p>
+
+
+  <div class='pre p1 fill-light mt0'>SongLists</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='songlist'>
+      Songlist
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Lista, josta käyttäjä näkee kaikki selattavissa olevat laulut</p>
+<p>*</p>
+
+
+  <div class='pre p1 fill-light mt0'>Songlist()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Instance Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='songlistgetandsetsubcategories'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>GetAndSetSubCategories()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Hakee alaluokat tietokannasta</p>
+<p>*</p>
+
+
+  <div class='pre p1 fill-light mt0'>GetAndSetSubCategories()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='songlistsetsubcategories'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>SetSubCategories(categories, self)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Lisää alaluokat listaan</p>
+<p>*</p>
+
+
+  <div class='pre p1 fill-light mt0'>SetSubCategories(categories: any, self: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>categories</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>self</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='songlistsetsongs'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>SetSongs(songs, $launcher, self)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Listaa kaikki tämän kategorian / kirjaimen laulut, jotka
+on jo haettu tietokannasta</p>
+
+
+  <div class='pre p1 fill-light mt0'>SetSongs(songs: any, $launcher: any, self: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>songs</span> <code class='quiet'>(any)</code>
+	    laulujen nimet taulukkona
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>$launcher</span> <code class='quiet'>(any)</code>
+	    tapahtuman laukaissut listaelementti
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>self</span> <code class='quiet'>(any)</code>
+	    viittaus olioon itseensä
+<p>*</p>
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='songlistgetversionlink'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>GetVersionLink(title)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Luo yksittäisen laulun / version listaelementin liitettäväksi listaan</p>
+
+
+  <div class='pre p1 fill-light mt0'>GetVersionLink(title: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>title</span> <code class='quiet'>(any)</code>
+	    laulun nimi
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='songlistshowversioninfo'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>ShowVersionInfo(e)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Näyttää tarkemmat tiedot ja toiminnot yksittäisestä laulun versiosta</p>
+
+
+  <div class='pre p1 fill-light mt0'>ShowVersionInfo(e: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>e</span> <code class='quiet'>(any)</code>
+	    klikkaustapahtuma
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='songlistshowsongversions'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>ShowSongVersions($li)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Näyttää samannimisen laulun kaikki versiot</p>
+
+
+  <div class='pre p1 fill-light mt0'>ShowSongVersions($li: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>$li</span> <code class='quiet'>(any)</code>
+	    laulun sisältävä listaelementti
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='songlistpreparesongforinsertion'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>PrepareSongForInsertion(ev)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Erottaa listasta valitun laulun, niin että se voidaan
+liittää osaksi messua.</p>
+
+
+  <div class='pre p1 fill-light mt0'>PrepareSongForInsertion(ev: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>ev</span> <code class='quiet'>(any)</code>
+	    tapahtuma
+<p>*</p>
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='songlistexaminesong'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>ExamineSong(ev)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Avaa erillisen tilan listasta valitun yksittäisen laulun tutkimista
+ja esimerkiksi sanojen muokkaamista varten</p>
+
+
+  <div class='pre p1 fill-light mt0'>ExamineSong(ev: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>ev</span> <code class='quiet'>(any)</code>
+	    tapahtuma
+<p>*</p>
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='songlistgetcurrentsong'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>GetCurrentSong(ev)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Hakee tiedon siitä, mitä laulua nyt tutkitaan</p>
+
+
+  <div class='pre p1 fill-light mt0'>GetCurrentSong(ev: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>ev</span> <code class='quiet'>(any)</code>
+	    tapahtuma
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+</div>
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='alphabeticalsonglist'>
+      AlphabeticalSonglist
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Aakkosittain järjestetty lista</p>
+<p>*</p>
+
+
+  <div class='pre p1 fill-light mt0'>AlphabeticalSonglist()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Instance Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='alphabeticalsonglistlistsongs'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>ListSongs($launcher)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Hakee kaikki käyttäjän klikkaamaan kategoriaan
+kuuluvat laulut ja listaa ne</p>
+
+
+  <div class='pre p1 fill-light mt0'>ListSongs($launcher: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>$launcher</span> <code class='quiet'>(any)</code>
+	    klikkauksen laukaissut linkki
+<p>*</p>
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+</div>
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='loadsonglists'>
+      LoadSongLists
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Lataa kaikki selattavat kategoriat (eri listat)</p>
+
+
+  <div class='pre p1 fill-light mt0'>new LoadSongLists()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='initialize'>
+      Initialize
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Valmistaa laululistoihin ja sanoihin liittyvät toiminnot</p>
+
+
+  <div class='pre p1 fill-light mt0'>new Initialize(make_not_service_specific: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>make_not_service_specific</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='getwaitingforattachment'>
+      GetWaitingForAttachment
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Hae liittämistä odottavan laulun nimi</p>
+<p>*</p>
+
+
+  <div class='pre p1 fill-light mt0'>new GetWaitingForAttachment()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='setlyrics'>
+      SetLyrics
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Hakee laulun sanat tietokannasta</p>
+
+
+  <div class='pre p1 fill-light mt0'>new SetLyrics(id: any, $target_el: any, no_checkbox: any, $checkbox: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>id</span> <code class='quiet'>(any)</code>
+	    laulun id tietokannassa
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>$target_el</span> <code class='quiet'>(any)</code>
+	    jquery-elementti, johon sanat lisätään
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>no_checkbox</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>$checkbox</span> <code class='quiet'>(any)</code>
+	    jätetäänkö  säkeistöjen viereiset valintalaatikot tulostamatta
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='setsongmeta'>
+      SetSongMeta
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Hakee tiedot laulun tägeistä, säveltäjästä ja sanoittajasta</p>
+
+
+  <div class='pre p1 fill-light mt0'>new SetSongMeta()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='saveeditedlyrics'>
+      SaveEditedLyrics
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Talentaa muokatut sanat tai uuden version.</p>
+
+
+  <div class='pre p1 fill-light mt0'>new SaveEditedLyrics(id: any, newtext: any, $target_el: any, idselector: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>id</span> <code class='quiet'>(any)</code>
+	    muokattavan laulun id tai nimi, jos uusi
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>newtext</span> <code class='quiet'>(any)</code>
+	    uudet sanat
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>$target_el</span> <code class='quiet'>(any)</code>
+	    jquery-elementti, johon sanat lisätään
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>idselector</span> <code class='quiet'>(any)</code>
+	    css-selektori, jolla määritetään, mihin tallennetaan tieto id:stä
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='seteditedlyricscallback'>
+      SetEditedLyricsCallback
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Asettaa funktion, joka ajetaan sen jälkeen, kun sanat ladattu</p>
+
+
+  <div class='pre p1 fill-light mt0'>new SetEditedLyricsCallback(callback: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>callback</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+      </div>
+    </div>
+  <script src='assets/anchor.js'></script>
+  <script src='assets/split.js'></script>
+  <script src='assets/site.js'></script>
+</body>
+</html>
