@@ -426,7 +426,10 @@ Slides.Presentation = function(){
                 this.$slide.fadeIn(this.fadetime);
             }
             this.$slide.css({"display":"flex"});
-            this.FixOverFlow();
+            //Quick, hacky fix for credit lists
+            if(!this.$slide.find(".credits_list").length) {
+                this.FixOverFlow();
+            }
         };
 
 
