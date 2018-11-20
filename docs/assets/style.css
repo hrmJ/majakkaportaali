@@ -5,6 +5,12 @@
   background: #f5f5f5;
 }
 
+.contdiv  {
+    display:flex;
+    justify-content:center;
+
+}
+
 .black {
   color: #666;
 }

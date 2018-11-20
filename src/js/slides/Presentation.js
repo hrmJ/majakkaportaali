@@ -435,6 +435,15 @@ Slides.Presentation = function(){
 
         /**
          *
+         * Nollaa nykyisen dian kohdalta tehdyt fonttien koon automaattiset korjaukset.
+         *
+         */
+        this.ResetOverflowCorrectionInSlide = function(){
+        }
+
+
+        /**
+         *
          * Varmista, että sisältö mahtuu ruudulle
          *
          */

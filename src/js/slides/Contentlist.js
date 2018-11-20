@@ -25,6 +25,7 @@ Slides.ContentList = function(parent_presentation){
      *
      */
     function ShowSlotInstructions(text, $el){
+        console.log("showing instructions...");
         current_instruction = new Utilities.Message(text, $el);
         current_instruction.Show(99999);
     }

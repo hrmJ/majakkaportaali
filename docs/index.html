@@ -10,12 +10,12 @@
   <link href='assets/split.css' type='text/css' rel='stylesheet' />
 </head>
 <body class='documentation m0'>
-    <div class='flex'>
-      <div id='split-right' class='relative overflow-auto height-viewport-100'>
-        
-          
-          <div class='clearfix'>
             
+        <div class="contdiv">
+
+            <div>
+            
+
             <h3 class='fl m0' id='widgets'>
                 Majakkaportaali - dokumentaatio
             </h3>
@@ -29,26 +29,63 @@
                         <ul>
                             <li> <strong>content</strong>  varsinainen sisältö 
                                 <ul>
-                                    <li><strong>songs</strong> lauluihin liittyvät moduulit</li>
-                                    <li><strong>tabs</strong> messunäkymän välilehtiin liittyvät moduulit</li>
+                                    <li><strong>songs</strong> lauluihin liittyvät moduulit
+                                        <ul>
+                                            <li><a href="js/portal/content/songs/songlists/">Laulujen lista</a></li>
+                                            <li><a href="js/portal/content/songs/slots/">Laulujen messukohtainen syöttö</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a  href="js/portal/content/tabs">tabs</a> messunäkymän välilehtiin liittyvät moduulit</li>
                                 </ul>
                             </li>
-                            <li> <strong>navigation</strong>  Menut ym.
+                            <li> <a  href="js/portal/menus/">navigation</a>  Menut ym.
                             </li>
                             <li> <strong>plugins</strong>  projektin sisäiset pluginit kuten raamattusisällön valitsin
+                                <ul>
+                                    <li> <a  href="js/portal/plugins/biblemodule/">Raamatuntekstit</a></li>
+                                    <li> <a  href="js/portal/plugins/credits/">Messun tekijät</a></li>
+                                    <li> <a  href="js/portal/plugins/percentbar/">Progress bar </a></li>
+                                </ul>
                             </li>
                             <li> <strong>service_structure</strong>  Messun rakenteen muokkausta koskevat moduulit
+                                <ul>
+                                    <li> <a  href="js/portal/service_structure/generalstructure/">Rakenteen muokkauksen päämoduuli</a></li>
+                                    <li> <a  href="js/portal/service_structure/bibleslide">Raamattudia</a></li>
+                                    <li> <a  href="js/portal/service_structure/dataloading/">Datan lataus</a></li>
+                                    <li> <a  href="js/portal/service_structure/draganddrop/">Drag and drop -toiminnallisuus</a></li>
+                                    <li> <a  href="js/portal/service_structure/headers/">Ala- ja ylätunnisteet</a></li>
+                                    <li> <a  href="js/portal/service_structure/images/">Kuvat</a></li>
+                                    <li> <a  href="js/portal/service_structure/infoslide/">Muut kuin laulu- tai raamattudiat</a></li>
+                                    <li> <a  href="js/portal/service_structure/injectabledata/">Datan upottaminen</a></li>
+                                    <li> <a  href="js/portal/service_structure/lightbox/">Lightbox</a></li>
+                                    <li> <a  href="js/portal/service_structure/liturgicalslide/">Liturgisia tekstejä kuvaavat diat</a></li>
+                                    <li> <a  href="js/portal/service_structure/preview/">Esikatselu</a></li>
+                                    <li> <a  href="js/portal/service_structure/slotfactory/">Slottien luonti</a></li>
+                                    <li> <a  href="js/portal/service_structure/songslide/">Lauludiat</a></li>
+                                </ul>
                             </li>
                         </ul>
                     </li>
-                    <li><strong>slides</strong> diaesitykseen liittyvä koodi</li>
+                    <li><strong>slides</strong> diaesitykseen liittyvä koodi
+                        <ul>
+                            <li> <a  href="js/slides/contentlist/">Sisällön näyttäminen presenter-näytöllä</a></li>
+                            <li> <a  href="js/slides/contentloader/">Sisällön lataus tietokannasta</a></li>
+                            <li> <a  href="js/slides/controls/">Hallintanapit yms.</a></li>
+                            <li> <a  href="js/slides/presentation/">Esitysolio</a></li>
+                            <li> <a  href="js/slides/styles/controller/">Tyylien hallinta</a></li>
+                            <li> <a  href="js/slides/styles/fontcontroller/">Fontteja koskevien tyylien hallinta</a></li>
+                            <li> <a  href="js/slides/widgets/contentadders/">Sisällön lisäämistä hallinnoivat widgetit</a></li>
+                            <li> <a  href="js/slides/widgets/stylewidgets/">Tyylejä hallinnoivat widgetit</a></li>
+                            <li> <a  href="js/slides/widgets/">Widgettien pohjalla oleva olio</a></li>
+                        </ul>
+                    </li>
                 </ul>
+
             </p>
-            
-          </div>
-        
-      </div>
+
+        </div>
     </div>
+        
   <script src='assets/anchor.js'></script>
   <script src='assets/split.js'></script>
   <script src='assets/site.js'></script>

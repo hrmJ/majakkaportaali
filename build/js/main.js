@@ -10862,6 +10862,14 @@ Slides.Presentation = function () {
     };
     /**
      *
+     * Nollaa nykyisen dian kohdalta tehdyt fonttien koon automaattiset korjaukset.
+     *
+     */
+
+
+    this.ResetOverflowCorrectionInSlide = function () {};
+    /**
+     *
      * Varmista, että sisältö mahtuu ruudulle
      *
      */
@@ -11285,6 +11293,7 @@ Slides.ContentList = function (parent_presentation) {
    */
 
   function ShowSlotInstructions(text, $el) {
+    console.log("showing instructions...");
     current_instruction = new Utilities.Message(text, $el);
     current_instruction.Show(99999);
   }
