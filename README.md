@@ -87,3 +87,4 @@ Vanhan template-placeholderen korvaamiseen käytettävä regex vimissä:   %s/\[
 
 # Javascript API
 
+Ks. [ täältä ](https://hrmj.github.io/majakkaportaali/index.html)
