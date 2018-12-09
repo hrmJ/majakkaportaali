@@ -224,6 +224,7 @@ var Utilities = function(){
             //BlurContent(self.box);
         },
 
+
         /**
          *  Adds a title to the message 
          *

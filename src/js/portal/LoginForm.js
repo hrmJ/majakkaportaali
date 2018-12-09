@@ -35,6 +35,13 @@ Portal.LoginForm = function(){
                     $.when(AddRoleSelect()).done(() => ShowLoginOptions());
                 }
             }
+            else {
+                let msg = new Utilities.Message(
+                    "Väärä käyttäjänimi tai salasana.",
+                    $(".logincontent"));
+                msg.$box.css({"top": 300 + "px", "left": 30 + "px"});
+                msg.Show(4000);
+            }
         
         });
     }
