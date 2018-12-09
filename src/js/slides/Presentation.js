@@ -482,7 +482,7 @@ Slides.Presentation = function(){
             this.d.find("div,h1,h2,h3,h4,p").each(function(){
                 if(
                     $(this).text().trim()=="" && 
-                    !$(this).find("img").length && 
+                    !$(this).find("img,iframe").length && 
                     !$(this).hasClass("percent_bar") &&
                     !$(this).hasClass("denominator") &&
                     !$(this).hasClass("numerator") &&

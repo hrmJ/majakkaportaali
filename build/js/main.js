@@ -10920,7 +10920,7 @@ Slides.Presentation = function () {
     this.AdjustLayout = function () {
       //Varmista, että tyhjät elementit eivät vie tilaa esityksen kankaalta:
       this.d.find("div,h1,h2,h3,h4,p").each(function () {
-        if ($(this).text().trim() == "" && !$(this).find("img").length && !$(this).hasClass("percent_bar") && !$(this).hasClass("denominator") && !$(this).hasClass("numerator") && !$(this).find(".credits_list").length && !$(this).hasClass("blankscreen")) {
+        if ($(this).text().trim() == "" && !$(this).find("img,iframe").length && !$(this).hasClass("percent_bar") && !$(this).hasClass("denominator") && !$(this).hasClass("numerator") && !$(this).find(".credits_list").length && !$(this).hasClass("blankscreen")) {
           $(this).hide();
         }
       }); //Hack to preserve credit lists inside p tags
