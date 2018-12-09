@@ -64,8 +64,9 @@ Portal.Service.TabFactory.Songs = function(){
      *
      */
     this.CheckLyricsOk = function(){
-        var msg = new Utilities.Message("",$("#songslots")),
+        var msg = new Utilities.Message("",$("#additional_songs_info")),
             nolyr = [];
+        console.log($("#additional_songs_info").length);
         $(".songslot").each(function(){
             var title = $(this).find(".songinput").val();
             if($(this).hasClass("no_lyrics") && 
