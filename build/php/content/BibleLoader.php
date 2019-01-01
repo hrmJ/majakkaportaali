@@ -161,6 +161,10 @@ class BibleLoader{
                 $thisgroup  = "";
             }
         }
+        //Parittomien viimeinen jae
+        if(!in_array($thisgroup, $grouped)){
+            $grouped[] =  $thisgroup;
+        }
         if(!$grouped){
             //Yksijakeiset
             $grouped = [$thisgroup];

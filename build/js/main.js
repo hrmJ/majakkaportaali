@@ -2877,6 +2877,11 @@ Portal.SongSlots = function () {
 
 
     this.CheckLyrics = function (ev, item) {
+      if (ev) {
+        // Jos käynnistetty tapahtumasta, nollaa oletuksena id
+        this.picked_id = null;
+      }
+
       if (this.is_service_specific) {
         var self = this,
             //Jos käynnistetty klikkaamalla autocomplete-listaa (tai selectmenua), käytä sen arvoa

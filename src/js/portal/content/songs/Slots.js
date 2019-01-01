@@ -571,6 +571,7 @@ Portal.SongSlots = function(){
                 return 0;
             }
 
+
             SetCurrentSlot(this);
 
             $("#songdetails").find(".version_cont, .lyrics").html("");
@@ -796,6 +797,10 @@ Portal.SongSlots = function(){
          *
          **/
         this.CheckLyrics = function(ev, item){
+            if (ev) { 
+                // Jos käynnistetty tapahtumasta, nollaa oletuksena id
+                this.picked_id = null;
+            }
             if(this.is_service_specific){
                 var self = this,
                     //Jos käynnistetty klikkaamalla autocomplete-listaa (tai selectmenua), käytä sen arvoa
@@ -871,6 +876,8 @@ Portal.SongSlots = function(){
                     .removeClass("has_lyrics")
                     .addClass("no_indicator");
             }
+
+
         };
 
         /** 
