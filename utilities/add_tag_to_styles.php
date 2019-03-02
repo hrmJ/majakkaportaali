@@ -41,7 +41,7 @@ $con = new Medoo([
 
 
 AddNewTag($con, "ul");
-AddNewTag($con, "ol");
+#AddNewTag($con, "ol");
 
 
 
