@@ -11138,6 +11138,7 @@ Slides.Presentation = function () {
   function ToggleDarkMode() {
     console.log("toggling dm");
     $("body").toggleClass("darkmode");
+    $("#darkmodelink").text() == "Dark mode" ? $("#darkmodelink").text("Light mode") : $("#darkmodelink").text("Dark mode");
   }
 
   return {
@@ -11309,35 +11310,9 @@ Slides.ContentList = function (parent_presentation) {
   var currently_dragged_no = undefined,
       current_instruction = undefined;
   /**
-   *
-   * Näyttää messusegmenttiin sisällytettyjä ohjeita diannäyttäjälle
-   * siitä, miten tätä segmenttiä pitäisi näyttää yms.
-   *
-   * @param text näytettävä teksti
-   * @param $el  elementti, jonka yhteydessä näytetään
-   *
-   */
-
-  function ShowSlotInstructions(text, $el) {
-    console.log("showing instructions...");
-    current_instruction = new Utilities.Message(text, $el);
-    current_instruction.Show(99999);
-  }
-  /**
-   *
-   * Piilottaa messusegmenttiin sisällytettyt ohjeet
-   *
-   */
-
-
-  function HideSlotInstructions() {
-    current_instruction.Destroy();
-  }
-  /**
    * Hakee listan sisällöstä (esitysikkunan sisällön 
    * perusteella.)
    */
-
 
   this.GetContents = function () {
     var self = this,
@@ -11410,7 +11385,13 @@ Slides.ContentList = function (parent_presentation) {
 
       if (heading.instruction) {
         //Lisää ohjetekstin
-        $("<div><i class='fa fa-question-circle'></i></div>").hover(ShowSlotInstructions.bind(null, heading.instruction, $li), HideSlotInstructions).appendTo($li);
+        $("<div><i class='fa fa-question-circle'></i></div>").click(function (ev) {
+          console.log('raxxx');
+          ev.stopPropagation();
+          var msg = new Utilities.Message(heading.instruction, $(".contentlist:eq(0)"));
+          msg.AddCloseButton();
+          msg.Show(9999);
+        }).appendTo($li);
       }
 
       if (heading.isinfo) {

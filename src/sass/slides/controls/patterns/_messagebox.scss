@@ -34,3 +34,11 @@
 .boxclose:before {
     content: "×";
 }
+
+
+.fa-question-circle{
+    font-size:1.4em;
+    &:hover{
+        color:red;
+    }
+}

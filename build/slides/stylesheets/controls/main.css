@@ -216,6 +216,11 @@ label {
 .boxclose:before {
   content: "×"; }
 
+.fa-question-circle {
+  font-size: 1.4em; }
+  .fa-question-circle:hover {
+    color: red; }
+
 .side-menu-left, .side-menu-right {
   display: flex;
   flex-flow: column nowrap;

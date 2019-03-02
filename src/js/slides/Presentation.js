@@ -682,6 +682,9 @@ Slides.Presentation = function(){
     function ToggleDarkMode(){
         console.log("toggling dm")
         $("body").toggleClass("darkmode");
+        $("#darkmodelink").text() == "Dark mode" ?
+            $("#darkmodelink").text("Light mode") :
+            $("#darkmodelink").text("Dark mode");
     }
 
 

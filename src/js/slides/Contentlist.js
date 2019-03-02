@@ -15,29 +15,7 @@ Slides.ContentList = function(parent_presentation){
     var currently_dragged_no = undefined,
         current_instruction = undefined;
 
-    /**
-     *
-     * Näyttää messusegmenttiin sisällytettyjä ohjeita diannäyttäjälle
-     * siitä, miten tätä segmenttiä pitäisi näyttää yms.
-     *
-     * @param text näytettävä teksti
-     * @param $el  elementti, jonka yhteydessä näytetään
-     *
-     */
-    function ShowSlotInstructions(text, $el){
-        console.log("showing instructions...");
-        current_instruction = new Utilities.Message(text, $el);
-        current_instruction.Show(99999);
-    }
 
-    /**
-     *
-     * Piilottaa messusegmenttiin sisällytettyt ohjeet
-     *
-     */
-    function HideSlotInstructions(){
-        current_instruction.Destroy();
-    }
 
     /**
      * Hakee listan sisällöstä (esitysikkunan sisällön 
@@ -107,8 +85,13 @@ Slides.ContentList = function(parent_presentation){
             if(heading.instruction){ 
                 //Lisää ohjetekstin
                 $("<div><i class='fa fa-question-circle'></i></div>")
-                    .hover(ShowSlotInstructions.bind(null, heading.instruction, $li),
-                        HideSlotInstructions)
+                    .click((ev) => {
+                        console.log('raxxx');
+                        ev.stopPropagation();
+                        const msg = new Utilities.Message(heading.instruction, $(".contentlist:eq(0)"));
+                        msg.AddCloseButton();
+                        msg.Show(9999);
+                    } )
                     .appendTo($li);
             }
             if(heading.isinfo){
