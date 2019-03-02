@@ -11128,11 +11128,23 @@ Slides.Presentation = function () {
     current_presentation = current_presentation || new Presentation();
     current_presentation.ToggleOpen();
   }
+  /**
+   * 
+   * Asettaa käyttöliittymälle tumman tai vaalean ulkoasun
+   *
+   */
+
+
+  function ToggleDarkMode() {
+    console.log("toggling dm");
+    $("body").toggleClass("darkmode");
+  }
 
   return {
     Initialize: Initialize,
     GetCurrentPresentation: GetCurrentPresentation,
-    KeyHandler: KeyHandler
+    KeyHandler: KeyHandler,
+    ToggleDarkMode: ToggleDarkMode
   };
 }();
 "use strict";
@@ -11230,6 +11242,7 @@ Slides.Controls = function () {
     $(".side-menu-left, .side-menu-right, .nav_below").hide();
     $(".addlink").click(OpenMenu);
     $("#launchlink").click(Slides.Presentation.Initialize);
+    $("#darkmodelink").click(Slides.Presentation.ToggleDarkMode);
   }
   /**
    *

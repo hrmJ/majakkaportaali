@@ -110,6 +110,7 @@ Slides.Controls = function(){
         $(".side-menu-left, .side-menu-right, .nav_below").hide();
         $(".addlink").click(OpenMenu);
         $("#launchlink").click(Slides.Presentation.Initialize);
+        $("#darkmodelink").click(Slides.Presentation.ToggleDarkMode);
 
 
     }

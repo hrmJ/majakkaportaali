@@ -28,6 +28,10 @@ main {
   max-width: 600px;
   margin: auto; }
 
+.darkmode main {
+  background: #1a1a1a;
+  color: white; }
+
 nav {
   position: relative;
   display: flex;

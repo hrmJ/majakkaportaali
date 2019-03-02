@@ -674,6 +674,17 @@ Slides.Presentation = function(){
         current_presentation.ToggleOpen();
     }
 
+    /**
+     * 
+     * Asettaa käyttöliittymälle tumman tai vaalean ulkoasun
+     *
+     */
+    function ToggleDarkMode(){
+        console.log("toggling dm")
+        $("body").toggleClass("darkmode");
+    }
+
+
 
 
     return {
@@ -681,6 +692,7 @@ Slides.Presentation = function(){
         Initialize,
         GetCurrentPresentation,
         KeyHandler,
+        ToggleDarkMode
     
     }
 
