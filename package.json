@@ -29,5 +29,14 @@
   "bugs": {
     "url": ""
   },
-  "homepage": ""
+  "homepage": "",
+  "dependencies": {
+    "event-stream": "^3.3.5",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^4.1.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-deporder": "^1.1.0",
+    "gulp-newer": "^1.4.0",
+    "gulp-ruby-sass": "^2.1.1"
+  }
 }
