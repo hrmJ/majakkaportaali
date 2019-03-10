@@ -70,6 +70,8 @@ Jos sivua ei näy, tsekkaa nginx-logi (`/var/log/nginx/majakkaportaali.test-erro
 
 Diaesityksissä: poista esim. firefoxissa olevat sylesheettejä muokkaavat pluginit (kuten tridactyl, vimperator tms) käytöstä!
 
+kuvien uploadauksen varmistaminen:  muista antaa kuvakansioon oikeudet (esim. `chown www-data:www-data build/assets/images`)
+
 
 # Ohjeita kehittäjille
 

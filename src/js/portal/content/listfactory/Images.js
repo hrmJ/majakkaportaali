@@ -8,14 +8,13 @@ Portal.ManageableLists.ListFactory = Portal.ManageableLists.ListFactory || {};
  */
 Portal.ManageableLists.ListFactory.Images = function(){
 
-        this.keys = ["name", "description", "resp_name", "day", "time_and_place"];
+        this.keys = ["filename", "description", "resp_name", "day", "time_and_place"];
         this.addhtml = (`
                     <section>
                         <form name='imgform' id="imguploadform" action="${Utilities.GetAjaxPath('Saver.php')}">
-                            <div><input type="text" name="test" /></div>
                             <div class='label-parent some-margin'>
                                 <div>Kuvan lataus</div>
-                                <div><input id="uploadImage" type="file" accept="image/*" name="image" /></div>
+                                <div><input id="uploadImage" type="file" name="image" /></div>
                                 <div id="preview"></div>
                             </div>
                         </form>
@@ -29,14 +28,9 @@ Portal.ManageableLists.ListFactory.Images = function(){
          *
          */
         this.AddListRow = function(raw_data, $li){
-            $li.find("span").text(raw_data.name);
-            $.each(this.keys.concat(["id"]), (idx, key) => {
-                $li.append(`<input type='hidden' class='${key}-container' 
-                    value='${raw_data[key]}'></input>`)
-            }
-            );
-            $li.append(`<input type='hidden' class='is_active-container' 
-                value='${raw_data.is_active}'></input>`);
+			$li.append(`<img width='50px' src='assets/images/${raw_data.filename}'>`);
+			$li.find("span").text(raw_data.filename);
+			$li.find(".fa-pencil").remove();
             return $li;
         }
 
@@ -84,20 +78,25 @@ Portal.ManageableLists.ListFactory.Images = function(){
          *
          */
         this.SaveAdded = function(){
-            //$("#imguploadform").on("submit", (e) => {
-            //   e.preventDefault() ;
-            //   let fd = new FormData(e.target);
-            //   $.ajax({
-            //       type: post,
-            //       url: Utilities.GetAjaxPath("Saver.php"),
-            //       data: fd,
-            //       success: (d) => console.log(d)
-            //   };
-            //   //for (var [key, value] of fd.entries()) { 
-            //   //  console.log(key, value);
-            //   //}
-            //});
-            //$("#imguploadform").submit();
+            console.log('saving an image!!');
+            $("#imguploadform").on("submit", (e) => {
+               e.preventDefault() ;
+               let fd = new FormData(e.target);
+               fd.append('action','save_added_Images')
+               $.ajax({
+                   type: "POST",
+                   processData: false,
+                   contentType: false,
+                   url: Utilities.GetAjaxPath("Saver.php"),
+                   data: fd,
+                   success: (d) => console.log(d)
+               });
+               //for (var [key, value] of fd.entries()) { 
+               //  console.log(key, value);
+               //}
+            });
+            $("#imguploadform").submit();
+
         };
 
 
@@ -126,8 +125,9 @@ Portal.ManageableLists.ListFactory.Images = function(){
         this.GetRemoveParams = function($li){
             var params =  {
                 "action" : "remove_image",
-                "id" : $li.find(".id-container").val()
+                "img_name" : $li.find("span").text()
             };
+			console.log(params);
             return params;
         }
 

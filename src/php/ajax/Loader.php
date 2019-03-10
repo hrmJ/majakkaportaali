@@ -116,7 +116,8 @@ switch($params["action"]){
         echo json_encode($songlist->FetchLtexts());
         break;
     case "mlist_Images":
-        echo json_encode([]);
+        $structure = new Structure($database, $m);
+        echo json_encode($structure->LoadSlideImageNames());
         break;
     case "get_ltext_verses":
         $songlist = new Songlist($database, 0, $m);

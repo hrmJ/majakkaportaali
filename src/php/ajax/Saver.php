@@ -55,6 +55,49 @@ else{
 
     switch($params["action"]){
         case "save_added_Images":
+            $message = "";
+            $valid_file = true;
+            if(isset($_FILES['image']['name']))
+            {
+                if($_FILES['image']['error'] == 0)
+                {
+                    if($_FILES['image']['size'] > (5024000)) //can't be larger than 5 MB
+                    {
+                        $valid_file = false;
+                        $message = 'file too large.';
+                    }
+                    if($valid_file)
+                    {
+                        $filename = $_FILES['image']['name'];
+                        $moved = move_uploaded_file($_FILES['image']['tmp_name'], "../../assets/images/$filename");
+                        // $moved = move_uploaded_file($_FILES['image']['tmp_name'], "/tmp/test.png");
+
+                        if($moved){
+                            $database->delete('backgrounds',['filename'=>$filename]);
+                            $database->insert('backgrounds',['filename'=>$filename]);
+                            $message = 'upload succesful';
+                        }
+                    }
+                }
+                else
+                {
+                    $message = 'Ooops!  Your upload triggered the following error:  '.$_FILES['image']['error'];
+                }
+            }
+            if($message){
+                echo json_encode($message);
+            }
+            //error_log(print_r("MORO",true));
+            //$img = $_FILES["image"]["name"]; // stores the original filename from the client
+            //$tmpfile = $_FILES["image"]["tm"]; // stores the original filename from the client
+            //$errorimg = $_FILES["image"]["error"]; // stores any error code resulting from the transfer
+            //move_uploaded_file( $img, "assets/images/$img"),true);
+            //$target = "assets/$imgs".$newname;
+            
+            //error_log(print_r(move_uploaded_file( $img, "assets/images/$img"),true));
+            //$songlist = new Songlist($database, 0, $m);
+            //$songlist->AddLtext($params["params"]["title"], $params["params"]["content"]);
+            //
             break;
         case "save_added_Services":
             $com->SaveNewServices($params["params"]["dates"]);
@@ -86,6 +129,10 @@ else{
             break;
         case "remove_smallgroup":
             $com->RemoveSmallGroup($params["id"]);
+            break;
+        case "remove_image":
+            unlink('../../assets/images/' . $params["img_name"]);
+		    $database->delete("backgrounds",["filename"=>$params["img_name"]]);
             break;
         case "save_added_Responsibilities":
             $com->SaveNewResponsibility(

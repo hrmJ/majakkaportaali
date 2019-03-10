@@ -6205,8 +6205,8 @@ Portal.ManageableLists.ListFactory = Portal.ManageableLists.ListFactory || {};
  */
 
 Portal.ManageableLists.ListFactory.Images = function () {
-  this.keys = ["name", "description", "resp_name", "day", "time_and_place"];
-  this.addhtml = "\n                    <section>\n                        <form name='imgform' id=\"imguploadform\" action=\"".concat(Utilities.GetAjaxPath('Saver.php'), "\">\n                            <div><input type=\"text\" name=\"test\" /></div>\n                            <div class='label-parent some-margin'>\n                                <div>Kuvan lataus</div>\n                                <div><input id=\"uploadImage\" type=\"file\" accept=\"image/*\" name=\"image\" /></div>\n                                <div id=\"preview\"></div>\n                            </div>\n                        </form>\n                    </section>\n                ");
+  this.keys = ["filename", "description", "resp_name", "day", "time_and_place"];
+  this.addhtml = "\n                    <section>\n                        <form name='imgform' id=\"imguploadform\" action=\"".concat(Utilities.GetAjaxPath('Saver.php'), "\">\n                            <div class='label-parent some-margin'>\n                                <div>Kuvan lataus</div>\n                                <div><input id=\"uploadImage\" type=\"file\" name=\"image\" /></div>\n                                <div id=\"preview\"></div>\n                            </div>\n                        </form>\n                    </section>\n                ");
   /**
    *
    * @param raw_data tarvittavat tiedot tietokannasta
@@ -6215,11 +6215,9 @@ Portal.ManageableLists.ListFactory.Images = function () {
    */
 
   this.AddListRow = function (raw_data, $li) {
-    $li.find("span").text(raw_data.name);
-    $.each(this.keys.concat(["id"]), function (idx, key) {
-      $li.append("<input type='hidden' class='".concat(key, "-container' \n                    value='").concat(raw_data[key], "'></input>"));
-    });
-    $li.append("<input type='hidden' class='is_active-container' \n                value='".concat(raw_data.is_active, "'></input>"));
+    $li.append("<img width='50px' src='assets/images/".concat(raw_data.filename, "'>"));
+    $li.find("span").text(raw_data.filename);
+    $li.find(".fa-pencil").remove();
     return $li;
   };
   /**
@@ -6265,20 +6263,26 @@ Portal.ManageableLists.ListFactory.Images = function () {
    */
 
 
-  this.SaveAdded = function () {//$("#imguploadform").on("submit", (e) => {
-    //   e.preventDefault() ;
-    //   let fd = new FormData(e.target);
-    //   $.ajax({
-    //       type: post,
-    //       url: Utilities.GetAjaxPath("Saver.php"),
-    //       data: fd,
-    //       success: (d) => console.log(d)
-    //   };
-    //   //for (var [key, value] of fd.entries()) { 
-    //   //  console.log(key, value);
-    //   //}
-    //});
-    //$("#imguploadform").submit();
+  this.SaveAdded = function () {
+    console.log('saving an image!!');
+    $("#imguploadform").on("submit", function (e) {
+      e.preventDefault();
+      var fd = new FormData(e.target);
+      fd.append('action', 'save_added_Images');
+      $.ajax({
+        type: "POST",
+        processData: false,
+        contentType: false,
+        url: Utilities.GetAjaxPath("Saver.php"),
+        data: fd,
+        success: function success(d) {
+          return console.log(d);
+        }
+      }); //for (var [key, value] of fd.entries()) { 
+      //  console.log(key, value);
+      //}
+    });
+    $("#imguploadform").submit();
   };
   /**
    *
@@ -6306,8 +6310,9 @@ Portal.ManageableLists.ListFactory.Images = function () {
   this.GetRemoveParams = function ($li) {
     var params = {
       "action": "remove_image",
-      "id": $li.find(".id-container").val()
+      "img_name": $li.find("span").text()
     };
+    console.log(params);
     return params;
   };
   /**
