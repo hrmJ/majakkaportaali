@@ -95,6 +95,7 @@ gulp.task("js",function(){
                    "js/portal/content/listfactory/Services",
                    "js/portal/content/listfactory/Offerings",
                    "js/portal/content/listfactory/Infos",
+                   "js/portal/content/listfactory/Images",
                    "js/portal/content/listfactory/Smallgroups",
                    "js/portal/content/listfactory/LiturgicalTexts",
 

@@ -54,6 +54,8 @@ else{
     $com = new Community($database);
 
     switch($params["action"]){
+        case "save_added_Images":
+            break;
         case "save_added_Services":
             $com->SaveNewServices($params["params"]["dates"]);
             break;
