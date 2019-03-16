@@ -287,6 +287,17 @@ var Utilities = function(){
             return this;
         },
 
+
+        /**
+         *  Adds an id , e.g. to prevent duplicates
+         *  @param id  the id to be added
+         */
+        SetMaxWidth: function(newwidth){
+            this.$box.css({"max-width": newwidth});
+            return this;
+        },
+
+
         /**
          *  Adds an id , e.g. to prevent duplicates
          *  @param id  the id to be added

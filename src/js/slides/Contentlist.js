@@ -89,7 +89,7 @@ Slides.ContentList = function(parent_presentation){
                         console.log('raxxx');
                         ev.stopPropagation();
                         const msg = new Utilities.Message(heading.instruction, $(".contentlist:eq(1)"));
-                        msg.AddCloseButton();
+                        msg.AddCloseButton().SetMaxWidth("30vw");
                         msg.Show(9999);
                     } )
                     .appendTo($li);

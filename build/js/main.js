@@ -476,6 +476,17 @@ var Utilities = function () {
      *  Adds an id , e.g. to prevent duplicates
      *  @param id  the id to be added
      */
+    SetMaxWidth: function SetMaxWidth(newwidth) {
+      this.$box.css({
+        "max-width": newwidth
+      });
+      return this;
+    },
+
+    /**
+     *  Adds an id , e.g. to prevent duplicates
+     *  @param id  the id to be added
+     */
     AddId: function AddId(id) {
       this.$box.attr({
         "id": id
@@ -11557,7 +11568,7 @@ Slides.ContentList = function (parent_presentation) {
           console.log('raxxx');
           ev.stopPropagation();
           var msg = new Utilities.Message(heading.instruction, $(".contentlist:eq(1)"));
-          msg.AddCloseButton();
+          msg.AddCloseButton().SetMaxWidth("30vw");
           msg.Show(9999);
         }).appendTo($li);
       }
