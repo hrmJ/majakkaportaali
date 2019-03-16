@@ -11556,7 +11556,7 @@ Slides.ContentList = function (parent_presentation) {
         $("<div><i class='fa fa-question-circle'></i></div>").click(function (ev) {
           console.log('raxxx');
           ev.stopPropagation();
-          var msg = new Utilities.Message(heading.instruction, $(".contentlist:eq(0)"));
+          var msg = new Utilities.Message(heading.instruction, $(".contentlist:eq(1)"));
           msg.AddCloseButton();
           msg.Show(9999);
         }).appendTo($li);

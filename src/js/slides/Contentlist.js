@@ -88,7 +88,7 @@ Slides.ContentList = function(parent_presentation){
                     .click((ev) => {
                         console.log('raxxx');
                         ev.stopPropagation();
-                        const msg = new Utilities.Message(heading.instruction, $(".contentlist:eq(0)"));
+                        const msg = new Utilities.Message(heading.instruction, $(".contentlist:eq(1)"));
                         msg.AddCloseButton();
                         msg.Show(9999);
                     } )
