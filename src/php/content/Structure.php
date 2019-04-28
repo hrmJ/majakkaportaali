@@ -575,6 +575,7 @@ class Structure{
                 'ORDER' => [ 'id' => 'ASC' ]
             ]);
 
+        # $noheader = false;
         $noheader = false;
         foreach($segments as $segment_idx => $segment){
             $loader = new BibleLoader($segment["testament"], $this->biblecon);

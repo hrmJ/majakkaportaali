@@ -80,22 +80,24 @@ class BibleSegment extends Slide{
     public function SetVerses($verses){
         $output = "";
         foreach($verses as $idx => $verse){
-            $params = [];
-            $tplname = "bibleverse";
-            if($idx == 0){
-                $tplname .= "_with_header";
-                $params = [
-                    "address" => $this->details["address"],
-                ];
-                if(!$this->noheader){
-                    //Jos sama raamattuslotti sisältää useampia pätkiä, tulosta
-                    //slotin otsikko vain ensimmäiseen
-                    $params["name"] = $this->details["segment_name"] . ": ";
+	   if(trim($verse) != ""){
+                $params = [];
+                $tplname = "bibleverse";
+                if($idx == 0){
+                    $tplname .= "_with_header";
+                    $params = [
+                        "address" => $this->details["address"],
+                    ];
+                    if(!$this->noheader){
+                        //Jos sama raamattuslotti sisältää useampia pätkiä, tulosta
+                        //slotin otsikko vain ensimmäiseen
+                        $params["name"] = $this->details["segment_name"] . ": ";
+                    }
                 }
-            }
-            $tpl = $this->template_engine->loadTemplate($tplname);
-            $params["text"] = $verse;
-            $output .= $tpl->render($params) . "\n";
+                $tpl = $this->template_engine->loadTemplate($tplname);
+                $params["text"] = $verse;
+                $output .= $tpl->render($params) . "\n";
+	   }
         }
 
         $this->Set("verses",trim($output));
