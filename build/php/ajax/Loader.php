@@ -342,6 +342,7 @@ switch($params["action"]){
     case "load_slides_to_presentation":
         $structure = new Structure($database, $m, $database_bible);
         $structure->SetAsServiceSpecific($params["service_id"], false);
+        header('Access-Control-Allow-Origin: *'); 
         echo $structure->LoadSlidesForPresentation()->InjectData()->slotstring;
         break;
 }
