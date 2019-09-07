@@ -6,6 +6,8 @@
  * TODO: kirjautumislogiikka tännekin!
  *
  */
+header('Access-Control-Allow-Origin: https://diat.majakkaportaali.org'); 
+header('Access-Control-Allow-Credentials: true'); 
 
 require '../../../vendor/autoload.php';
 
@@ -342,7 +344,7 @@ switch($params["action"]){
     case "load_slides_to_presentation":
         $structure = new Structure($database, $m, $database_bible);
         $structure->SetAsServiceSpecific($params["service_id"], false);
-        header('Access-Control-Allow-Origin: *'); 
+        #header('Access-Control-Allow-Credentials: omit'); 
         echo $structure->LoadSlidesForPresentation()->InjectData()->slotstring;
         break;
 }
