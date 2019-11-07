@@ -522,20 +522,19 @@ var Utilities = function () {
     Destroy: function Destroy() {
       this.$box.html("").remove();
     }
-    /**
-     *
-     * https://stackoverflow.com/questions/41194368/how-to-get-all-sundays-mondays-tuesdays-between-two-dates#41194523
-     * Given a start date, end date and day name, return
-     * an array of dates between the two dates for the
-     * given day inclusive
-     * @param {Date} start - date to start from
-     * @param {Date} end - date to end on
-     * @param {int} day - number of the day
-     * @returns {Array} array of Dates 
-     *
-     */
-
   };
+  /**
+   *
+   * https://stackoverflow.com/questions/41194368/how-to-get-all-sundays-mondays-tuesdays-between-two-dates#41194523
+   * Given a start date, end date and day name, return
+   * an array of dates between the two dates for the
+   * given day inclusive
+   * @param {Date} start - date to start from
+   * @param {Date} end - date to end on
+   * @param {int} day - number of the day
+   * @returns {Array} array of Dates 
+   *
+   */
 
   function getDaysBetweenDates(start, end, day) {
     // Copy start date
@@ -1442,7 +1441,7 @@ Portal.LoginForm = function () {
       "username": $("[name='username']").val(),
       "password": $("[name='password']").val()
     }, function (result) {
-      if (result.trim() == "success") {
+      if (result.search(/success/)) {
         if (iframe_callback) {
           iframe_callback();
         } else {
@@ -11665,7 +11664,7 @@ Slides.ContentList = function (parent_presentation) {
     var $hlverse = $("#verselist .highlight:eq(0)");
     $hlverse.removeClass("highlight");
 
-    if (this.pres.$slide.attr("class").match("verse")) {
+    if (this.pres.$slide.attr("class") && this.pres.$slide.attr("class").match("verse")) {
       //Raamatunteksteillä + liturgisilla: huomioi, että otsikko ekassa diassa
       //hmm..?
       var offset = 1;
@@ -11676,6 +11675,17 @@ Slides.ContentList = function (parent_presentation) {
 
       if (this.pres.$section.hasClass("song")) {
         offset = 2;
+      }
+
+      var $aside = this.pres.$section.find("aside");
+      var $header = this.pres.$section.find("header");
+
+      if ($aside.length && $aside.index() < this.pres.$slide.index()) {
+        offset = offset + 1;
+      }
+
+      if ($header.length && $header.index() < this.pres.$slide.index()) {
+        offset = offset + 1;
       }
 
       $("#verselist div:eq(" + (this.pres.$slide.index() - offset) + ")").addClass("highlight");

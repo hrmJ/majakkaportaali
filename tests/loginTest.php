@@ -18,7 +18,7 @@ class LoginTest extends TestCase
         $database = new Medoo([
         'database_type' => 'mysql',
         'database_name' => 'majakkaportaali',
-        'server' => 'localhost',
+        'server' => $config['hostname'],
         'username' => $config["un"],
         'password' => $config["pw"],
         'charset' => 'utf8'

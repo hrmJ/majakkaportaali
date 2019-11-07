@@ -5,6 +5,7 @@
  *
  **/
 
+session_start();
 require '../vendor/autoload.php';
 
 use Medoo\Medoo;

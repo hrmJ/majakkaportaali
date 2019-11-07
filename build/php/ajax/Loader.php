@@ -1,4 +1,5 @@
 <?php
+session_start();
 /**
  *
  * Lataa tietokannasta ajax-tekniikalla dataa. 
@@ -6,10 +7,9 @@
  * TODO: kirjautumislogiikka tännekin!
  *
  */
-header('Access-Control-Allow-Origin: https://diat.majakkaportaali.org'); 
-header('Access-Control-Allow-Credentials: true'); 
 
 require '../../../vendor/autoload.php';
+error_reporting(E_ERROR | E_PARSE);
 
 use Medoo\Medoo;
 use Portal\LoginController;
@@ -27,7 +27,7 @@ $config = parse_ini_file("../../../config.ini");
 $database = new Medoo([
     'database_type' => 'mysql',
     'database_name' => $config["dbname"],
-    'server' => 'localhost',
+    'server' => $config['hostname'],
     'username' => $config["un"],
     'password' => $config["pw"],
     'charset' => 'utf8'
@@ -36,7 +36,7 @@ $database = new Medoo([
 $database_bible = new Medoo([
     'database_type' => 'mysql',
     'database_name' => 'bibles',
-    'server' => 'localhost',
+    'server' => $config['hostname'],
     'username' => $config["un"],
     'password' => $config["pw"],
     'charset' => 'utf8'
@@ -344,7 +344,6 @@ switch($params["action"]){
     case "load_slides_to_presentation":
         $structure = new Structure($database, $m, $database_bible);
         $structure->SetAsServiceSpecific($params["service_id"], false);
-        #header('Access-Control-Allow-Credentials: omit'); 
         echo $structure->LoadSlidesForPresentation()->InjectData()->slotstring;
         break;
 }

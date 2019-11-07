@@ -17,10 +17,9 @@ services:
     networks:
       - majakkaportaali
   majakkaphp:
-    image: php:7.2-fpm
-    #build:
-    #  context: ./
-    #  dockerfile: container_files/majakkaphp.dockerfile
+    build:
+      context: ./
+      dockerfile: container_files/majakkaphp.dockerfile
     volumes:
       - ./:/var/www/html/
     networks:
@@ -30,6 +29,7 @@ services:
     volumes:
       - ./:/home/node/app
     working_dir: /home/node/app
+    command: "npm start"
   composer:
       image: composer
       volumes:

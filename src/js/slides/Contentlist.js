@@ -183,7 +183,7 @@ Slides.ContentList = function(parent_presentation){
         //Säkeistöjen ym. korostaminen
         var $hlverse = $("#verselist .highlight:eq(0)");
         $hlverse.removeClass("highlight");
-        if(this.pres.$slide.attr("class").match("verse")){
+        if(this.pres.$slide.attr("class") && this.pres.$slide.attr("class").match("verse")){
             //Raamatunteksteillä + liturgisilla: huomioi, että otsikko ekassa diassa
             //hmm..?
             var offset = 1;
@@ -194,7 +194,14 @@ Slides.ContentList = function(parent_presentation){
             if(this.pres.$section.hasClass("song")){
                 offset = 2;
             }
-
+            const $aside = this.pres.$section.find("aside");
+            const $header = this.pres.$section.find("header");
+            if($aside.length && $aside.index() < this.pres.$slide.index()){
+              offset = offset +1;
+            }
+            if($header.length && $header.index() < this.pres.$slide.index()){
+              offset = offset +1;
+            }
 
             $("#verselist div:eq("+ (this.pres.$slide.index() - offset) +")").addClass("highlight");
             $("#verselist").scrollTo(".highlight",100, {"offset":-$("#verselist").height()/2});

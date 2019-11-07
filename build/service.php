@@ -5,7 +5,9 @@
  *
  **/
 
+session_start();
 require '../vendor/autoload.php';
+error_reporting(E_ERROR | E_PARSE);
 
 use Medoo\Medoo;
 use Portal\LoginController;
@@ -14,7 +16,7 @@ $config = parse_ini_file("../config.ini");
 $database = new Medoo([
     'database_type' => 'mysql',
     'database_name' => $config["dbname"],
-    'server' => 'localhost',
+    'server' => $config['hostname'],
     'username' => $config["un"],
     'password' => $config["pw"],
     'charset' => 'utf8'

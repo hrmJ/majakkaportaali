@@ -1,4 +1,5 @@
 <?php
+session_start();
 /**
  *
  * Lataa tietokannasta ajax-tekniikalla dataa. 
@@ -6,12 +7,10 @@
  * TODO: kirjautumislogiikka tännekin!
  *
  */
-
 require '../../../vendor/autoload.php';
 
 use Medoo\Medoo;
 use Portal\LoginController;
-use Portal\content\Comment;
 use Portal\content\Community;
 use Portal\content\Service;
 use Portal\content\Structure;
@@ -19,11 +18,12 @@ use Portal\content\Servicelist;
 use Portal\content\Songlist;
 
 
+error_reporting(E_ERROR | E_PARSE);
 $config = parse_ini_file("../../../config.ini");
 $database = new Medoo([
     'database_type' => 'mysql',
     'database_name' => $config["dbname"],
-    'server' => 'localhost',
+    'server' => $config['hostname'],
     'username' => $config["un"],
     'password' => $config["pw"],
     'charset' => 'utf8'

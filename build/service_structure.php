@@ -6,6 +6,7 @@
  */
 
 require '../vendor/autoload.php';
+error_reporting(E_ERROR | E_PARSE);
 
 use Medoo\Medoo;
 use Portal\content\Structure;
