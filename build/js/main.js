@@ -1441,7 +1441,7 @@ Portal.LoginForm = function () {
       "username": $("[name='username']").val(),
       "password": $("[name='password']").val()
     }, function (result) {
-      if (result.search(/success/)) {
+      if (result.search(/success/) > -1) {
         if (iframe_callback) {
           iframe_callback();
         } else {
