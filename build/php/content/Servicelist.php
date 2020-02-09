@@ -84,6 +84,7 @@ class Servicelist{
                 services ser_tab ON res_tab.service_id = ser_tab.id 
                 WHERE res_tab.responsibility = :filteredby AND
                 (ser_tab.servicedate >= :sd AND ser_tab.servicedate <= :ed) 
+                ORDER BY ser_tab.servicedate
                 ",
                  ["filteredby" => $filteredby ,
                  "sd" => $this->season["startdate"],
