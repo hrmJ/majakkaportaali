@@ -11088,11 +11088,7 @@ Slides.Presentation = function () {
         }
       };
 
-      if (this.$section.attr("class") !== "Infodia") {
-        //Temporary fix: dont apply for infodia class
-        this.$slide.find("p").each(fixer);
-      } //this.$slide.find("h1,h2,h3,h4").each(fixer);
-
+      this.$slide.find("p").each(fixer); //this.$slide.find("h1,h2,h3,h4").each(fixer);
     };
     /**
      *
