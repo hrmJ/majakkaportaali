@@ -275,9 +275,9 @@ div.amounts {
   justify-content: space-between;
 }
 
-.Infodia h3,
-.Infodia h2,
-.Infodia h1 {
+body .Infodia h3,
+body .Infodia h2,
+body .Infodia h1 {
   margin-bottom: 1rem;
   overflow: initial !important;
 }
