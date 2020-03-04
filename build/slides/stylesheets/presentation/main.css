@@ -278,6 +278,6 @@ div.amounts {
 .Infodia h3,
 .Infodia h2,
 .Infodia h1 {
-  margin-bottom: 0;
+  margin-bottom: 0.2rem;
   overflow: initial;
 }
