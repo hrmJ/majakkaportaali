@@ -10651,15 +10651,15 @@ Slides.Presentation = function () {
     this.$section = $("");
     this.$slide = $("");
     this.text_levels = {
-      "body": "kaikki",
-      "h1": "1-otsikko",
-      "h2": "2-otsikko",
-      "h3": "3-otsikko",
-      "p": "leipäteksti",
-      "ul": "lista",
-      "img": "kuvat",
-      "header": "ylätunniste",
-      "aside": "sivutunniste"
+      body: "kaikki",
+      h1: "1-otsikko",
+      h2: "2-otsikko",
+      h3: "3-otsikko",
+      p: "leipäteksti",
+      ul: "lista",
+      img: "kuvat",
+      header: "ylätunniste",
+      aside: "sivutunniste"
     };
     this.initial_load_ready = false;
     self = this;
@@ -10683,7 +10683,7 @@ Slides.Presentation = function () {
         //this.service_id = 2;
 
         if (!isNaN(this.service_id)) {
-          this.view = window.open('content.html', '_blank', 'toolbar=0,location=0,menubar=0');
+          this.view = window.open("content.html", "_blank", "toolbar=0,location=0,menubar=0");
           $("#launchlink").text("Sulje esitys");
         } else {
           alert("Valitse ensin näytettävä messu");
@@ -10707,7 +10707,7 @@ Slides.Presentation = function () {
     };
     /**
      *
-     * Hakee esityksen sisällön, tyylit ja muun tarvittavan.  
+     * Hakee esityksen sisällön, tyylit ja muun tarvittavan.
      *
      */
 
@@ -10747,8 +10747,8 @@ Slides.Presentation = function () {
 
       var path = Utilities.GetAjaxPath("Loader.php");
       return $.get(path, {
-        "service_id": this.service_id,
-        "action": "load_slides_to_presentation"
+        service_id: this.service_id,
+        action: "load_slides_to_presentation"
       }, function (html) {
         return _this2.d.find("main").html(html);
       });
@@ -10767,9 +10767,9 @@ Slides.Presentation = function () {
 
       var path = Utilities.GetAjaxPath("Loader.php");
       return $.get(path, {
-        "action": "load_styles",
+        action: "load_styles",
         //"classes":this.classes,
-        "stylesheet": "default"
+        stylesheet: "default"
       }, function (stylestring) {
         return _this3.d.find("#updated_styles").html(stylestring);
       });
@@ -10793,8 +10793,6 @@ Slides.Presentation = function () {
           //...vain, jos samaa luokkaa ei ole jo lisätty
           self.classes.push(section_classes[1]);
         }
-
-        ;
       }); //Jätetty vain yhteensopivuuden vuoksi (TODO)
 
       self.segment_types = self.classes;
@@ -10812,7 +10810,7 @@ Slides.Presentation = function () {
       console.log("What????");
 
       if (!this.initial_load_ready) {
-        //Tähän controls-attribuuttiin on listattu kaikki 
+        //Tähän controls-attribuuttiin on listattu kaikki
         //sisältöä / ulkoasua tuottavat tai muokkaavat widgetit
         this.controls = {
           contentlist: new Slides.ContentList(this),
@@ -10928,14 +10926,14 @@ Slides.Presentation = function () {
 
       var $bs = $("<div class='blankscreen'></div>");
       $bs.css({
-        "width": "200%",
-        "height": "200%",
-        "position": "absolute",
+        width: "200%",
+        height: "200%",
+        position: "absolute",
         "z-index": "999999",
-        "background": "#000000",
-        "top": "-10px",
-        "left": "-10px",
-        "display": "none"
+        background: "#000000",
+        top: "-10px",
+        left: "-10px",
+        display: "none"
       });
 
       if (!this.d.find(".blankscreen").length) {
@@ -10996,7 +10994,7 @@ Slides.Presentation = function () {
 
       $("#layout-target_select").html("<option>Koko esitys</option>");
       var $types_group = $("<optgroup>").attr({
-        "label": "Aseta dialuokan mukaan"
+        label: "Aseta dialuokan mukaan"
       });
       $.each(this.classes, function (idx, thisclass) {
         //Käy sitten läpi kaikki esityksestä löytyvät segmenttityypit ja lisää ne listaan
@@ -11044,7 +11042,7 @@ Slides.Presentation = function () {
       }
 
       this.$slide.css({
-        "display": "flex"
+        display: "flex"
       }); //Quick, hacky fix for credit lists
 
       if (!this.$slide.find(".credits_list").length) {
@@ -11090,7 +11088,11 @@ Slides.Presentation = function () {
         }
       };
 
-      this.$slide.find("p").each(fixer); //this.$slide.find("h1,h2,h3,h4").each(fixer);
+      if (this.$section.attr("class") !== "Infodia") {
+        //Temporary fix: dont apply for infodia class
+        this.$slide.find("p").each(fixer);
+      } //this.$slide.find("h1,h2,h3,h4").each(fixer);
+
     };
     /**
      *
@@ -11283,13 +11285,12 @@ Slides.Presentation = function () {
         break;
     }
   }
-
-  ;
   /**
    *
    * Palauttaa esitysolion
    *
    */
+
 
   function GetCurrentPresentation() {
     return current_presentation;
@@ -11306,7 +11307,7 @@ Slides.Presentation = function () {
     current_presentation.ToggleOpen();
   }
   /**
-   * 
+   *
    * Asettaa käyttöliittymälle tumman tai vaalean ulkoasun
    *
    */

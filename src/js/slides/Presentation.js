@@ -496,7 +496,10 @@ Slides.Presentation = (function() {
           }
         }
       };
-      this.$slide.find("p").each(fixer);
+      if (this.$section.attr("class") !== "Infodia") {
+        //Temporary fix: dont apply for infodia class
+        this.$slide.find("p").each(fixer);
+      }
       //this.$slide.find("h1,h2,h3,h4").each(fixer);
     };
 
@@ -533,20 +536,16 @@ Slides.Presentation = (function() {
       var $header = this.$section.find("header");
       if ($header.length) {
         //Muokkaa sisällön marginaalia ylhäältä kattamaan ylätunniste ja lisä vielä 5px väliä
-        this.$section
-          .find("article")
-          .css({
-            "margin-top": $header.css("height").replace("px", "") * 1 + 5 + "px"
-          });
+        this.$section.find("article").css({
+          "margin-top": $header.css("height").replace("px", "") * 1 + 5 + "px"
+        });
       }
       var $aside = this.$section.find("aside");
       if ($aside.length) {
         //Muokkaa sisällön marginaalia ylhäältä kattamaan sivutunniste ja lisä' vielä 5px väliä
-        this.$section
-          .find("article")
-          .css({
-            "margin-left": $aside.css("width").replace("px", "") * 1 + 5 + "px"
-          });
+        this.$section.find("article").css({
+          "margin-left": $aside.css("width").replace("px", "") * 1 + 5 + "px"
+        });
       }
     };
 
