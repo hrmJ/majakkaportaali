@@ -274,3 +274,9 @@ div.amounts {
   flex-flow: row nowrap;
   justify-content: space-between;
 }
+
+.Infodia h3,
+.Infodia h2,
+.Infodia h1 {
+  margin-bottom: 0;
+}
