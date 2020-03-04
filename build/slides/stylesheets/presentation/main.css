@@ -1,11 +1,14 @@
 @import url("https://fonts.googleapis.com/css?family=Lustria|Noto+Serif|Gloria+Hallelujah|Amatic+SC|Poiret+One|Quicksand|Open+Sans|Raleway|Playfair+Display|Josefin+Slab");
-body, html {
+body,
+html {
   margin: 0;
   padding: 0;
-  border: 0; }
+  border: 0;
+}
 
 nav {
-  color: blue; }
+  color: blue;
+}
 
 header {
   width: 100%;
@@ -14,7 +17,8 @@ header {
   position: absolute;
   padding-bottom: 0.1em;
   overflow: hidden;
-  display: flex; }
+  display: flex;
+}
 
 aside {
   height: 100vh;
@@ -23,7 +27,8 @@ aside {
   position: absolute;
   padding-left: 0.2em;
   overflow: hidden;
-  display: flex; }
+  display: flex;
+}
 
 footer {
   position: absolute;
@@ -32,53 +37,72 @@ footer {
   background: white;
   color: black;
   height: 5vh;
-  overflow: hidden; }
+  overflow: hidden;
+}
 
 article {
-  display: none; }
+  display: none;
+}
 
 .current {
-  display: block; }
+  display: block;
+}
 
 .song .byline p {
-  font-size: 0.5em; }
+  font-size: 0.5em;
+}
 
 .credits_list {
   list-style-type: none;
-  padding-left: 0px; }
+  padding-left: 0px;
+}
 
 .img-wholescreen {
   width: 100%;
-  height: 100%; }
-  .img-wholescreen img {
-    width: 100%;
-    height: 100%; }
-  .img-wholescreen img {
-    object-fit: contain;
-    max-height: 97vh;
-    max-width: 97vw; }
+  height: 100%;
+}
+.img-wholescreen img {
+  width: 100%;
+  height: 100%;
+}
+.img-wholescreen img {
+  object-fit: contain;
+  max-height: 97vh;
+  max-width: 97vw;
+}
 
-.img-left, .img-right {
+.img-left,
+.img-right {
   display: flex;
-  flex-flow: row nowrap; }
-  .img-left img, .img-right img {
-    width: 100%;
-    height: 100%; }
+  flex-flow: row nowrap;
+}
+.img-left img,
+.img-right img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 
 .img-left img {
   margin-right: 1em;
-  max-width: 50%; }
+  max-width: 50%;
+}
 
 .img-right img {
-  margin-left: 1em; }
+  margin-left: 1em;
+}
 
-.img-top, .img-bottom {
+.img-top,
+.img-bottom {
   max-height: 50%;
   display: flex;
-  flex-flow: column nowrap; }
-  .img-top img, .img-bottom img {
-    width: 100%;
-    height: 100%; }
+  flex-flow: column nowrap;
+}
+.img-top img,
+.img-bottom img {
+  width: 100%;
+  height: 100%;
+}
 
 body {
   font-family: "Roboto", sans-serif;
@@ -90,146 +114,163 @@ body {
   justify-content: flex-start;
   border: 0em solid black;
   font-size: 3em;
-  background: black; }
-  body article {
-    margin-top: 0.2em;
-    margin-left: 0.2em;
-    background: none;
-    border: 0em solid black;
-    border-radius: 0em;
-    font-family: "Roboto", sans-serif;
-    width: auto;
-    height: auto;
-    display: flex;
-    flex-flow: column;
-    justify-content: flex-start;
-    align-items: center; }
-  body h1 {
-    font-size: 2em;
-    font-family: "Roboto", sans-serif;
-    color: blue;
-    margin-top: 0.1em;
-    margin-left: 0.1em;
-    padding: 0.1em;
-    border: 0em solid black;
-    background: none;
-    border-radius: 0em; }
-  body h2 {
-    font-size: 1.5em;
-    font-family: "Roboto", sans-serif;
-    color: blue;
-    padding: 0.1em;
-    background: none;
-    margin-top: 0.1em;
-    margin-left: 0.1em;
-    border: 0em solid black;
-    border-radius: 0em; }
-  body h3 {
-    font-size: 1.17em;
-    font-family: "Roboto", sans-serif;
-    color: blue;
-    padding: 0.1em;
-    background: none;
-    margin-top: 0.1em;
-    margin-left: 0.1em;
-    border: 0em solid black;
-    border-radius: 0em; }
-  body p {
-    font-size: 1em;
-    font-family: "Roboto", sans-serif;
-    color: blue;
-    padding: 0.1em;
-    background: none;
-    margin-top: 0.1em;
-    margin-left: 0.1em;
-    border: 0em solid black;
-    border-radius: 0em; }
-  body ul {
-    font-size: 1em;
-    font-family: "Roboto", sans-serif;
-    color: blue;
-    padding: 0.1em;
-    background: none;
-    margin-top: 0.1em;
-    margin-left: 0.1em;
-    border: 0em solid black;
-    border-radius: 0em; }
-  body img {
-    font-size: 1em;
-    font-family: "Roboto", sans-serif;
-    padding: 0.0em;
-    background: none;
-    margin-top: 0.0em;
-    margin-left: 0.0em;
-    border: 0em solid black;
-    border-radius: 0em; }
-  body header {
-    font-size: 1em;
-    font-family: "Roboto", sans-serif;
-    color: blue;
-    padding: 0.1em;
-    background: white;
-    margin-top: 0.1em;
-    margin-left: 0.1em;
-    border: 0em solid black;
-    border-radius: 0em; }
-  body aside {
-    font-size: 1em;
-    font-family: "Roboto", sans-serif;
-    color: blue;
-    padding: 0.1em;
-    background: white;
-    margin-top: 0.1em;
-    margin-left: 0.1em;
-    border: 0em solid black;
-    border-radius: 0em; }
-  body section {
-    position: relative;
-    margin-top: 0;
-    margin-left: 0;
-    background: none;
-    background-size: cover;
-    background-repeat: no-repeat;
-    border: 0em solid black;
-    border-radius: 0px;
-    font-family: "Roboto", sans-serif;
-    padding-left: 0;
-    padding-right: 0;
-    padding-bottom: 0;
-    padding-top: 0;
-    z-index: 0;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-    justify-content: flex-start; }
+  background: black;
+}
+body article {
+  margin-top: 0.2em;
+  margin-left: 0.2em;
+  background: none;
+  border: 0em solid black;
+  border-radius: 0em;
+  font-family: "Roboto", sans-serif;
+  width: auto;
+  height: auto;
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+body h1 {
+  font-size: 2em;
+  font-family: "Roboto", sans-serif;
+  color: blue;
+  margin-top: 0.1em;
+  margin-left: 0.1em;
+  padding: 0.1em;
+  border: 0em solid black;
+  background: none;
+  border-radius: 0em;
+}
+body h2 {
+  font-size: 1.5em;
+  font-family: "Roboto", sans-serif;
+  color: blue;
+  padding: 0.1em;
+  background: none;
+  margin-top: 0.1em;
+  margin-left: 0.1em;
+  border: 0em solid black;
+  border-radius: 0em;
+}
+body h3 {
+  font-size: 1.17em;
+  font-family: "Roboto", sans-serif;
+  color: blue;
+  padding: 0.1em;
+  background: none;
+  margin-top: 0.1em;
+  margin-left: 0.1em;
+  border: 0em solid black;
+  border-radius: 0em;
+}
+body p {
+  font-size: 1em;
+  font-family: "Roboto", sans-serif;
+  color: blue;
+  padding: 0.1em;
+  background: none;
+  margin-top: 0.1em;
+  margin-left: 0.1em;
+  border: 0em solid black;
+  border-radius: 0em;
+}
+body ul {
+  font-size: 1em;
+  font-family: "Roboto", sans-serif;
+  color: blue;
+  padding: 0.1em;
+  background: none;
+  margin-top: 0.1em;
+  margin-left: 0.1em;
+  border: 0em solid black;
+  border-radius: 0em;
+}
+body img {
+  font-size: 1em;
+  font-family: "Roboto", sans-serif;
+  padding: 0em;
+  background: none;
+  margin-top: 0em;
+  margin-left: 0em;
+  border: 0em solid black;
+  border-radius: 0em;
+}
+body header {
+  font-size: 1em;
+  font-family: "Roboto", sans-serif;
+  color: blue;
+  padding: 0.1em;
+  background: white;
+  margin-top: 0.1em;
+  margin-left: 0.1em;
+  border: 0em solid black;
+  border-radius: 0em;
+}
+body aside {
+  font-size: 1em;
+  font-family: "Roboto", sans-serif;
+  color: blue;
+  padding: 0.1em;
+  background: white;
+  margin-top: 0.1em;
+  margin-left: 0.1em;
+  border: 0em solid black;
+  border-radius: 0em;
+}
+body section {
+  position: relative;
+  margin-top: 0;
+  margin-left: 0;
+  background: none;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border: 0em solid black;
+  border-radius: 0px;
+  font-family: "Roboto", sans-serif;
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-top: 0;
+  z-index: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: flex-start;
+}
 
 .verse {
-  margin-top: 1em; }
+  margin-top: 1em;
+}
 
 .byline p {
-  background: none; }
+  background: none;
+}
 
 div.pcbar_parent {
   color: white;
-  margin-top: 1em; }
+  margin-top: 1em;
+}
 
 div.denominator {
   position: relative;
   height: 3em;
   width: 80vw;
   display: block;
-  border: 1px solid white; }
+  border: 1px solid white;
+}
 
 div.numerator {
   position: absolute;
   height: 100%;
   background: white;
-  display: block; }
+  display: block;
+}
 
 div.amounts {
   display: flex;
   flex-flow: row nowrap;
-  justify-content: space-between; }
+  justify-content: space-between;
+}
