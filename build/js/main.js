@@ -11090,8 +11090,7 @@ Slides.Presentation = function () {
         }
       };
 
-      this.$slide.find("p").each(fixer);
-      this.$slide.find("h1,h2,h3,h4").each(fixer);
+      this.$slide.find("p").each(fixer); //this.$slide.find("h1,h2,h3,h4").each(fixer);
     };
     /**
      *
