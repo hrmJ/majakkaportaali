@@ -1,12 +1,10 @@
 <?php
 
-
 namespace Portal\slides;
 
 use Medoo\Medoo;
 use Michelf\Markdown;
 use PDO;
-
 
 /**
  *
@@ -15,36 +13,43 @@ use PDO;
  * @param string $slot_name infosegmentin tunniste
  *
  */
-class Infoslide extends Slide{
-
+class Infoslide extends Slide
+{
     /**
      *
      * @param Object $m Mustache template-moottori
      * @param Array $details Dian tiedot: teksti, laulun nimi, kuvien läsnäolo tms.
      *
      */
-    public function __construct($m, $details, $slot_name){
+    public function __construct($m, $details, $slot_name)
+    {
         parent::__construct($m, $details);
         $this->template_engine;
         $this->segment_name = $slot_name;
-        $this->template = $this->template_engine->loadTemplate('infoslide'); 
+        $this->template = $this->template_engine->loadTemplate('infoslide');
         #Markdown conversion:
-        $this->details["maintext"] =  Markdown::defaultTransform($this->details["maintext"]);
+        // $this->details["maintext"] =  Markdown::defaultTransform($this->details["maintext"]);
     }
-
 
     /**
      * Lisää html-esitykseen varsinaiset dian yksityiskohdat: tekstit, otsikot, kuvat...
      */
-    public function SetDetails(){
-        if($this->details["imgname"] and $this->details["imgname"] != "Ei kuvaa"){
+    public function SetDetails()
+    {
+        if (
+            $this->details["imgname"] and
+            $this->details["imgname"] != "Ei kuvaa"
+        ) {
             //Jos tähän diaan kuuluu kuva, syötetään teksti kuvan yhteydessä
-            $this->SetImg($this->details["imgname"],$this->details["imgposition"],
-                "content", $this->details["maintext"]);
-        }
-        else{
+            $this->SetImg(
+                $this->details["imgname"],
+                $this->details["imgposition"],
+                "content",
+                $this->details["maintext"]
+            );
+        } else {
             //Muutoin teksti erikseen:
-            $this->Set("content",$this->details["maintext"]);
+            $this->Set("content", $this->details["maintext"]);
         }
 
         $this->SetServiceheader($this->details["genheader"])
@@ -53,13 +58,14 @@ class Infoslide extends Slide{
             ->SetSegmentName();
         return $this;
     }
-    
+
     /**
      * Asettaa infodian tunnisteen
      *
      */
-    public function SetSegmentName(){
-        $this->Set("segment_name",$this->segment_name);
+    public function SetSegmentName()
+    {
+        $this->Set("segment_name", $this->segment_name);
         return $this;
     }
 
@@ -68,8 +74,9 @@ class Infoslide extends Slide{
      *
      * @param  string $title otsikko
      */
-    public function SetServiceheader($title){
-        $this->Set("serviceheader",$title);
+    public function SetServiceheader($title)
+    {
+        $this->Set("serviceheader", $title);
         return $this;
     }
 
@@ -78,24 +85,22 @@ class Infoslide extends Slide{
      *
      * @param  string $theme laulun sanoittaja
      */
-    public function SetServiceTheme($theme){
-        $this->Set("servicetheme",$theme);
+    public function SetServiceTheme($theme)
+    {
+        $this->Set("servicetheme", $theme);
         return $this;
     }
-    
+
     /**
      * Asettaa diakohtaisen otsikon
      *
      * @param  string $header dian otsikko
      */
-    public function SetSlideHeader($header){
-        $this->Set("slideheader",$header);
+    public function SetSlideHeader($header)
+    {
+        $this->Set("slideheader", $header);
         return $this;
     }
-
-
-
-
 }
 
 ?>
