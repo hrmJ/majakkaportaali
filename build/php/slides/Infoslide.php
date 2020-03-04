@@ -28,7 +28,9 @@ class Infoslide extends Slide
         $this->segment_name = $slot_name;
         $this->template = $this->template_engine->loadTemplate('infoslide');
         #Markdown conversion:
-        // $this->details["maintext"] =  Markdown::defaultTransform($this->details["maintext"]);
+        $this->details["maintext"] = Markdown::defaultTransform(
+            $this->details["maintext"]
+        );
     }
 
     /**
