@@ -5,12 +5,10 @@
  *
  */
 
-
 namespace Portal\slides;
 
 use Medoo\Medoo;
 use PDO;
-
 
 /**
  *
@@ -19,8 +17,8 @@ use PDO;
  * @param $render_array renderöitävät arvot sisällään pitävä taulukko
  *
  **/
-class Slide{
-
+class Slide
+{
     public $render_array = [];
 
     /**
@@ -29,42 +27,45 @@ class Slide{
      * @param Array $details Dian tiedot: teksti, laulun nimi, kuvien läsnäolo tms.
      *
      */
-    public function __construct($m, $details){
+    public function __construct($m, $details)
+    {
         $this->details = $details;
         $this->template_engine = $m;
     }
-
 
     /**
      *
      * Asettaa renderöitäviä arvoja
      *
      */
-    public function Set($key, $val){
+    public function Set($key, $val)
+    {
         $this->render_array[$key] = $val;
     }
-
 
     /**
      *
      * Renderöi html:n
      *
      */
-    public function Output(){
+    public function Output()
+    {
         return $this->template->render($this->render_array);
     }
 
     /**
      *
-     * Varmista, että ensimmäinen dia on oletuksena ensimmäinen näytettävä 
+     * Varmista, että ensimmäinen dia on oletuksena ensimmäinen näytettävä
      *
      * @param integer $slide_idx kuinka mones dia kyseessä
      */
-    public function MarkIfFirst($slide_idx){
-        if($slide_idx==0)
-            $this->Set("iscurrent","current");
-        else
-            $this->Set("iscurrent","");
+    public function MarkIfFirst($slide_idx)
+    {
+        if ($slide_idx == 0) {
+            $this->Set("iscurrent", "current");
+        } else {
+            $this->Set("iscurrent", "");
+        }
         return $this;
     }
 
@@ -74,11 +75,11 @@ class Slide{
      *
      * @param  string $addedclass määritelty luokka
      */
-    public function SetAddedClass($addedclass){
-        $this->Set("addedclass",str_replace(".","",$addedclass));
+    public function SetAddedClass($addedclass)
+    {
+        $this->Set("addedclass", str_replace(".", "", $addedclass));
         return $this;
     }
-
 
     /**
      * Asettaa ohjeet diojen näyttäjää varten
@@ -86,11 +87,14 @@ class Slide{
      *
      * @param  string $instr ohjeet
      */
-    public function SetInstr($instr){
-        $this->Set("instruction", "<input type='hidden' class='slide_instruction' value='$instr'></input>");
+    public function SetInstr($instr)
+    {
+        $this->Set(
+            "instruction",
+            "<input type='hidden' class='slide_instruction' value='$instr'></input>"
+        );
         return $this;
     }
-
 
     /**
      * Asettaa käyttäjän määrittelemän ylätunnisteen
@@ -99,30 +103,41 @@ class Slide{
      * @param DbCon $con tietokantayhteys
      *
      */
-    public function SetPageHeader($header_id, $con){
+    public function SetPageHeader($header_id, $con)
+    {
         $headercontent = "";
-        if($header_id){
-            $headerdata = $con->get("headers", 
+        if ($header_id) {
+            $headerdata = $con->get(
+                "headers",
                 ["maintext", "imgname", "imgposition", "is_aside"],
-                ["id" => $header_id]);
-            $header_type = ($headerdata["is_aside"] == 1 ? "aside" : "header");
+                ["id" => $header_id]
+            );
+            $header_type = $headerdata["is_aside"] == 1 ? "aside" : "header";
             #LEGACY HACK:
             $header_tpl = new Slide($this->template_engine, []);
-            $header_tpl->template = $this->template_engine->loadTemplate($header_type);
+            $header_tpl->template = $this->template_engine->loadTemplate(
+                $header_type
+            );
             $text = "<div>{$headerdata["maintext"]}</div>";
-            if ($headerdata["imgname"] and $headerdata["imgname"] !== "Ei kuvaa"){
+            if (
+                $headerdata["imgname"] and
+                $headerdata["imgname"] !== "Ei kuvaa"
+            ) {
                 //Jos tähän ylätunnisteeseen liittyy kuva
-                $header_tpl->SetImg($headerdata["imgname"],$headerdata["imgposition"],"content",$text);
-            }
-            else{
-                $header_tpl->Set("content",$text);
+                $header_tpl->SetImg(
+                    $headerdata["imgname"],
+                    $headerdata["imgposition"],
+                    "content",
+                    $text
+                );
+            } else {
+                $header_tpl->Set("content", $text);
             }
             $headercontent = $header_tpl->Output();
         }
-        $this->Set("header",$headercontent);
+        $this->Set("header", $headercontent);
         return $this;
     }
-
 
     /**
      * Asettaa kuvan, jonka on tarkoitus näkyä ennen (joko vasemmalla tai
@@ -134,38 +149,38 @@ class Slide{
      * @param  string $target_in_template se paikanmerkki templeitissä, johon kuva syötetään, esim. [@imgdiv]
      * @param  string $txt teksti, joka kuvan yhteyteen tulee
      */
-    public function SetImg($imgpath, $imgpos, $target_in_template, $txt){
+    public function SetImg($imgpath, $imgpos, $target_in_template, $txt)
+    {
         $img_template = $this->template_engine->loadTemplate("slide_img");
-        $params = ["img_before" => "", 
+        $params = [
+            "img_before" => "",
             "img_after" => "",
-            "imgclass"=> "img-$imgpos",
-            "text" => "<div>$txt</div>"
+            "imgclass" => "img-$imgpos",
+            "text" => "<p>$txt</p>"
         ];
 
         //TODO oikea polku
         $img = "<img src='../assets/images/$imgpath'>";
 
-            switch ($imgpos){
-                case "left":
-                case "wholescreen":
-                case "top":
-                    $params["img_before"] = $img;
-                    break;
-                case "right":
-                case "bottom":
-                    $params["img_after"] = $img;
-                    break;
-                case "wholescreen":
-                    $img_template->Set("img_before",$img);
-                    break;
-            }
+        switch ($imgpos) {
+            case "left":
+            case "wholescreen":
+            case "top":
+                $params["img_before"] = $img;
+                break;
+            case "right":
+            case "bottom":
+                $params["img_after"] = $img;
+                break;
+            case "wholescreen":
+                $img_template->Set("img_before", $img);
+                break;
+        }
 
         $this->Set($target_in_template, $img_template->render($params));
 
         return $this;
     }
-
-
 }
 
 ?>
