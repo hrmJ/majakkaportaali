@@ -156,7 +156,7 @@ class Slide
             "img_before" => "",
             "img_after" => "",
             "imgclass" => "img-$imgpos",
-            "text" => "<p>$txt</p>"
+            "text" => "<div>$txt</div>"
         ];
 
         //TODO oikea polku
