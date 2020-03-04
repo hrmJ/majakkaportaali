@@ -28,7 +28,7 @@ class Infoslide extends Slide
         $this->segment_name = $slot_name;
         $this->template = $this->template_engine->loadTemplate('infoslide');
         $this->details["maintext"] = preg_replace(
-            '/\n{2,}/',
+            '/\n{2}/',
             '<br>',
             $this->details["maintext"]
         );
