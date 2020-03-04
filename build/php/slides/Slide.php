@@ -139,7 +139,7 @@ class Slide{
         $params = ["img_before" => "", 
             "img_after" => "",
             "imgclass"=> "img-$imgpos",
-            "text" => $txt
+            "text" => "<div>$txt</div>"
         ];
 
         //TODO oikea polku
