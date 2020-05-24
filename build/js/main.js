@@ -4143,15 +4143,51 @@ Portal.Service.TabFactory.Details = function () {
  *
  **/
 Portal.Service.TabFactory.Structure = function () {
+  this.setBaseService = function (baseId) {
+    var self = this;
+    $.post("php/ajax/Saver.php", {
+      action: "set_base_service",
+      service_id: Portal.Service.GetServiceId(),
+      target_id: baseId
+    }, function () {
+      var msg = new Utilities.Message("Muutokset tallennettu", $("section.comments:eq(0)"));
+      self.Initialize();
+    });
+  };
+  /**
+   *
+   * Lisää valintaelementin, jolla voi vaihtaa nykyistä messua
+   *
+   */
+
+
+  this.addBaseServiceList = function () {
+    var self = this;
+    var list = new Portal.Servicelist.List(),
+        $sel = $("<select><option>Käytä pohjana messua</option></select>");
+    list.LoadServices(function (d) {
+      console.info(d);
+      $sel.append(d.map(function (s) {
+        return "<option value='".concat(s.id, "'>").concat(s.servicedate, "</option>");
+      })).appendTo($("#pick_base_service").html(""));
+      $sel.selectmenu();
+      $sel.on("selectmenuchange", function (eel) {
+        self.setBaseService($(this).val());
+      });
+    });
+  };
   /**
    *
    * Avaa välilehden ja lataa / päivittää sisällön
    *
    */
+
+
   this.Initialize = function () {
     console.log("Initializing the structure tab");
     this.GetStructure(this.SetStructure);
     this.AddSaveButton();
+    this.addBaseServiceList();
   };
   /**
    *

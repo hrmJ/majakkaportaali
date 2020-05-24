@@ -201,6 +201,8 @@ else{
         case "update_headertemplate":
             $struct->UpdateHeaderTemplate($params["header_id"], $params["params"]);
             break;
+        case "set_base_service":
+						$struct->setBaseService($params["service_id"], $params["target_id"]);
         case "remove_slot":
             if($params["service_id"] != 0){
                 //tarkoituksella != eikä !==

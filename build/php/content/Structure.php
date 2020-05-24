@@ -141,6 +141,40 @@ class Structure{
         }
     }
 
+
+
+
+    /**
+     *
+     * 
+     *
+     * @param $service_id messun id
+     * @param $create_if_not_exist luodaanko messuspesifin taulun sisältö, jos sitä ei ole
+     *
+     */
+    public function setBaseService($source, $target){
+        $this->table = "service_specific_presentation_structure";
+        //Tarkistetaan, onko jo tälle messulle tallennettu omaa rakennetta
+        $rows = $this->con->select($this->table, "*", ["service_id" => $target]);
+        $this->con->delete($this->table, ["service_id" => $source]);
+				foreach ($rows as $row) {
+					$this->con->insert($this->table,
+							["service_id" => $source, 
+							"slot_name" => $row['slot_name'],
+							"slot_number" => $row['slot_number'],
+							"slot_type" => $row['slot_type'],
+							"id_in_type_table" => $row['id_in_type_table'],
+							"content_id" => $row['content_id'],
+							"addedclass" => $row['addedclass'],
+							"header_id" => $row['header_id'],
+							"instruction" => $row['instruction']]);
+				}
+    }
+
+
+
+
+
     /**
      *
      * Poistaa slotin
