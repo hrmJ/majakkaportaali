@@ -10610,18 +10610,31 @@ var Slides = Slides || {};
 Slides.ContentLoader = function () {
   /**
    *
-   * Lisää kaikki kauden messut select-elementtiin, josta käyttäjä voi 
+   * Lisää kaikki kauden messut select-elementtiin, josta käyttäjä voi
    * valita haluamansa päivän messun.
    *
    * @param services ajax-vastauksena saatu messujen lista muodossa [{"servicedate":xxx,"teme":...}]
    *
    */
-  function AddServicesToSelect(services) {
+  function AddServicesToSelect(services, pickedId) {
+    var serviceIdMatch = document.location.search.match(/service_id=(\d+)/);
+    var pickedId = null;
+
+    if (serviceIdMatch && serviceIdMatch.length > 1) {
+      var pickedId = serviceIdMatch[1] * 1;
+    }
+
     var $sel = $("#service-select");
     $sel.find("option:gt(0)").remove();
     $sel.append(services.map(function (service) {
-      return "<option value='".concat(service.id, "'>").concat(service.servicedate, " </option>");
+      return "<option value='".concat(service.id, "' ").concat(pickedId && pickedId == service.id ? "selected" : "", ">").concat(service.servicedate, " </option>");
     }));
+
+    if (pickedId) {
+      $sel.val(pickedId);
+      $sel.selectmenu("refresh");
+      Slides.Controls.ShowServiceInPortal(pickedId);
+    }
   }
   /**
    * Lataa näkyville listan messun lauluista
@@ -10633,8 +10646,8 @@ Slides.ContentLoader = function () {
 
   function LoadSongs(id) {
     $.getJSON("php/loadservices.php", {
-      "fetch": "songs",
-      "id": id
+      fetch: "songs",
+      id: id
     }, function (data) {
       var $songs = $("<div></div>");
       $.each(data, function (idx, songtitle) {
@@ -11411,14 +11424,14 @@ Slides.Controls = function () {
 
   function AddLeftControlsFunctionality() {
     $(".contentadder-heading").click(function () {
-      //Avaa haluttu sisällönlisäysikkuna 
+      //Avaa haluttu sisällönlisäysikkuna
       Slides.Presentation.GetCurrentPresentation().controls[$(this).parent().attr("class").split(" ")[1]].OpenWidget($(this));
     }); //Lisää widgettien lisäyslinkit kaikkiin vasemman valikon widgetteihin kerralla
 
     $(".side-menu-left .contentadder-open").append("<div class='addtoprescontrols'>\n                    <a class='addtopreslink' href='javascript:void(0)'>Lis\xE4\xE4 esitykseen</a> \n                    <!--<a class='shownowlink' href='javascript:void(0)'> N\xE4yt\xE4 nyt</a> --></div>"); //Huolehdi siitä, että navigointipalkin linkkien klikkaus aktivoi oikeanpuolimmaisen menun
 
     $(".addtopreslink").click(function () {
-      //avaa haluttu sisällönlisäysikkuna 
+      //avaa haluttu sisällönlisäysikkuna
       Slides.Presentation.GetCurrentPresentation().controls[$(this).parents(".contentadder").attr("class").split(" ")[1]].AddToPres();
     });
     $(".contentadder-open").hide(); //Piilota menut ja linkit joita ei vielä käytetä
@@ -11438,9 +11451,9 @@ Slides.Controls = function () {
    */
 
 
-  function ShowServiceInPortal() {
+  function ShowServiceInPortal(id) {
     //var iframe = document.getElementById("service-data-iframe");
-    var id = $(this).val();
+    var id = id || $(this).val();
     $("#service-data-iframe").on("load", function () {
       this.contentWindow.Portal.Service.SetServiceId(id); //this.contentWindow.Portal.Service.Initialize();
 
@@ -11464,6 +11477,17 @@ Slides.Controls = function () {
     $(".addlink").click(OpenMenu);
     $("#launchlink").click(Slides.Presentation.Initialize);
     $("#darkmodelink").click(Slides.Presentation.ToggleDarkMode);
+    var serviceIdMatch = document.location.search.match(/service_id=(\d+)/);
+
+    if (serviceIdMatch && serviceIdMatch.length > 1) {
+      var serviceId = serviceIdMatch[1];
+
+      if (serviceId) {
+        //$('#service-select').val(serviceId);
+        //$('#service-select').selectmenu("refresh");
+        console.log('aaal', serviceId); //ShowServiceInPortal();
+      }
+    }
   }
   /**
    *
@@ -11509,7 +11533,8 @@ Slides.Controls = function () {
 
   return {
     Initialize: Initialize,
-    GetCurrentService: GetCurrentService
+    GetCurrentService: GetCurrentService,
+    ShowServiceInPortal: ShowServiceInPortal
   };
 }();
 "use strict";
@@ -13293,14 +13318,6 @@ $(document).ready(function () {
 
     $.when(Portal.Servicelist.SetSeasonByCurrentDate()).done(function () {
       list.LoadServices(Slides.ContentLoader.AddServicesToSelect.bind(Slides.ContentLoader));
-      var serviceIdMatch = document.location.search.match(/service_id=(\d+)/);
-
-      if (serviceIdMatch.length > 1) {
-        var serviceId = serviceIdMatch[1]; //Slides.Presentation.Initialize(serviceId)
-
-        $("#service-select").val(serviceId);
-        $("#service-select").selectmenu('refresh');
-      }
     });
 
     if (!Portal.Menus.GetInitialized()) {
