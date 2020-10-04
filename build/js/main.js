@@ -13296,8 +13296,10 @@ $(document).ready(function () {
       var serviceIdMatch = document.location.search.match(/service_id=(\d+)/);
 
       if (serviceIdMatch.length > 1) {
-        var serviceId = serviceIdMatch[1];
-        Slides.Presentation.Initialize(serviceId);
+        var serviceId = serviceIdMatch[1]; //Slides.Presentation.Initialize(serviceId)
+
+        $("#service-select").val(serviceId);
+        $("#service-select").selectmenu('refresh');
       }
     });
 
