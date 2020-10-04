@@ -259,7 +259,7 @@ Portal.LoginForm = (function () {
     $("#save_info_add").click(SaveInfoSlide);
     $("#cancel_info_add").click(HideInfoSlideAdder);
     $("#add_info h4").click(Portal.Menus.InitializeFoldMenu);
-		$("#startLides").click(function(e){
+		$("#startSlides").click(function(e){
 			GetNextService(e, true);
 
 		});
