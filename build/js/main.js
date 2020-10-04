@@ -1568,6 +1568,8 @@ Portal.LoginForm = function () {
     $.getJSON(path, {
       action: "get_next_service"
     }, function (service_id) {
+      console.log(service_id, startSlides, 'aaa');
+
       if (service_id == "no next services") {
         msg = new Utilities.Message("Ei uusia messuja. Siirrytään pääsivulle.", $(".nav_options"));
         msg.Show(8888);

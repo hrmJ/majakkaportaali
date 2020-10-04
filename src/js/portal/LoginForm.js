@@ -142,6 +142,7 @@ Portal.LoginForm = (function () {
         action: "get_next_service",
       },
       (service_id) => {
+				console.log(service_id, startSlides, 'aaa')
         if (service_id == "no next services") {
           msg = new Utilities.Message(
             "Ei uusia messuja. Siirrytään pääsivulle.",
@@ -152,7 +153,7 @@ Portal.LoginForm = (function () {
         } else if (startSlides) {
           window.location = "/slides/index.html?service_id=" + service_id;
         } else {
-          window.location =
+					window.location =
             "service.php?service_id=" +
             service_id +
             "&tab=" +
