@@ -36,6 +36,7 @@ Slides.ContentLoader = (function () {
       $sel.val(pickedId);
       $sel.selectmenu("refresh");
 			Slides.Controls.ShowServiceInPortal(pickedId);
+			Slides.Presentation.SetServiceId(pickedId);
     }
   }
 
