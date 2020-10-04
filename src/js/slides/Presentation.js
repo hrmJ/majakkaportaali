@@ -57,10 +57,11 @@ Slides.Presentation = (function () {
 
     self = this;
 
+
     /**
      * Avaa esityksen erilliseen ikkunaan (=esitysikkuna). Jos esitys jo auki, sulkee ikkunan.
      */
-    this.ToggleOpen = function () {
+    this.ToggleOpen = function (serviceId) {
       var abort = false;
       var wasclosed = false;
       $(".nav_below").toggle();
@@ -71,7 +72,7 @@ Slides.Presentation = (function () {
         $("#launchlink").text("Avaa esitys");
         wasclosed = true;
       } else {
-        this.service_id = $("#service-select").val() * 1;
+        this.service_id = serviceId || $("#service-select").val() * 1;
         //JUST FOR TESTING purposes:
         //this.service_id = 2;
         if (!isNaN(this.service_id)) {
@@ -687,9 +688,9 @@ Slides.Presentation = (function () {
    * Käynnistää esityksen
    *
    */
-  function Initialize() {
+  function Initialize(serviceId) {
     current_presentation = current_presentation || new Presentation();
-    current_presentation.ToggleOpen();
+    current_presentation.ToggleOpen(serviceId);
   }
 
   /**
@@ -710,7 +711,5 @@ Slides.Presentation = (function () {
     GetCurrentPresentation,
     KeyHandler,
     ToggleDarkMode,
-    handleTouchStart,
-    handleTouchEnd,
   };
 })();

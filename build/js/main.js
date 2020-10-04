@@ -1418,7 +1418,7 @@ Portal.Credits = function () {
 
 /**
  *
- * Sisäänkirjautumisskriptien käynnistämiseen backend-puolelta käynnistettävät 
+ * Sisäänkirjautumisskriptien käynnistämiseen backend-puolelta käynnistettävät
  * ei-salaiset frontend-koodit
  *
  *
@@ -1437,9 +1437,9 @@ Portal.LoginForm = function () {
 
   function TestCredentials() {
     $.post(ajaxpath, {
-      "action": "login",
-      "username": $("[name='username']").val(),
-      "password": $("[name='password']").val()
+      action: "login",
+      username: $("[name='username']").val(),
+      password: $("[name='password']").val()
     }, function (result) {
       if (result.search(/success/) > -1) {
         if (iframe_callback) {
@@ -1452,8 +1452,8 @@ Portal.LoginForm = function () {
       } else {
         var msg = new Utilities.Message("Väärä käyttäjänimi tai salasana.", $(".logincontent"));
         msg.$box.css({
-          "top": 300 + "px",
-          "left": 30 + "px"
+          top: 300 + "px",
+          left: 30 + "px"
         });
         msg.Show(4000);
       }
@@ -1494,7 +1494,7 @@ Portal.LoginForm = function () {
   function AddRoleSelect() {
     var path = Utilities.GetAjaxPath("Loader.php");
     return $.getJSON(path, {
-      "action": "get_list_of_responsibilities"
+      action: "get_list_of_responsibilities"
     }, function (d) {
       console.log("MOO");
       console.log(d);
@@ -1532,7 +1532,7 @@ Portal.LoginForm = function () {
 
     if ($("body").hasClass("loginpage")) {
       $.getJSON(path, {
-        "action": "test_is_logged"
+        action: "test_is_logged"
       }, function (user) {
         if (user !== "Ei kirjauduttu") {
           $.when(AddRoleSelect()).done(function () {
@@ -1561,21 +1561,21 @@ Portal.LoginForm = function () {
    */
 
 
-  function GetNextService(ev) {
+  function GetNextService(ev, startSlides) {
     var path = Utilities.GetAjaxPath("Loader.php"),
         msg = undefined,
         $launcher = $(ev.target);
     $.getJSON(path, {
-      "action": "get_next_service"
+      action: "get_next_service"
     }, function (service_id) {
-      console.log(service_id);
-
       if (service_id == "no next services") {
         msg = new Utilities.Message("Ei uusia messuja. Siirrytään pääsivulle.", $(".nav_options"));
         msg.Show(8888);
         setTimeout(function () {
           return window.location = "main.php";
         }, 2800);
+      } else if (startSlides) {
+        window.location = "/slides/index.html?service_id=" + service_id;
       } else {
         window.location = "service.php?service_id=" + service_id + "&tab=" + $launcher.attr("id");
       }
@@ -1613,7 +1613,7 @@ Portal.LoginForm = function () {
   }
   /**
    *
-   * Piilottaa infodian lisäävän pikavalikon 
+   * Piilottaa infodian lisäävän pikavalikon
    *
    */
 
@@ -1683,6 +1683,9 @@ Portal.LoginForm = function () {
     $("#save_info_add").click(SaveInfoSlide);
     $("#cancel_info_add").click(HideInfoSlideAdder);
     $("#add_info h4").click(Portal.Menus.InitializeFoldMenu);
+    $("#startLides").click(function (e) {
+      GetNextService(e, true);
+    });
   }
 
   return {
@@ -10703,7 +10706,7 @@ Slides.Presentation = function () {
      * Avaa esityksen erilliseen ikkunaan (=esitysikkuna). Jos esitys jo auki, sulkee ikkunan.
      */
 
-    this.ToggleOpen = function () {
+    this.ToggleOpen = function (serviceId) {
       var abort = false;
       var wasclosed = false;
       $(".nav_below").toggle();
@@ -10715,7 +10718,7 @@ Slides.Presentation = function () {
         $("#launchlink").text("Avaa esitys");
         wasclosed = true;
       } else {
-        this.service_id = $("#service-select").val() * 1; //JUST FOR TESTING purposes:
+        this.service_id = serviceId || $("#service-select").val() * 1; //JUST FOR TESTING purposes:
         //this.service_id = 2;
 
         if (!isNaN(this.service_id)) {
@@ -11339,9 +11342,9 @@ Slides.Presentation = function () {
    */
 
 
-  function Initialize() {
+  function Initialize(serviceId) {
     current_presentation = current_presentation || new Presentation();
-    current_presentation.ToggleOpen();
+    current_presentation.ToggleOpen(serviceId);
   }
   /**
    *
@@ -11360,9 +11363,7 @@ Slides.Presentation = function () {
     Initialize: Initialize,
     GetCurrentPresentation: GetCurrentPresentation,
     KeyHandler: KeyHandler,
-    ToggleDarkMode: ToggleDarkMode,
-    handleTouchStart: handleTouchStart,
-    handleTouchEnd: handleTouchEnd
+    ToggleDarkMode: ToggleDarkMode
   };
 }();
 "use strict";
@@ -13290,6 +13291,12 @@ $(document).ready(function () {
 
     $.when(Portal.Servicelist.SetSeasonByCurrentDate()).done(function () {
       list.LoadServices(Slides.ContentLoader.AddServicesToSelect.bind(Slides.ContentLoader));
+      var serviceIdMatch = document.location.search.match(/service_id=(\d+)/);
+
+      if (serviceIdMatch.length > 1) {
+        var serviceId = serviceIdMatch[1];
+        Slides.Presentation.Initialize(serviceId);
+      }
     });
 
     if (!Portal.Menus.GetInitialized()) {
