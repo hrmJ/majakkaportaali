@@ -37,6 +37,54 @@ $(document).ready(function(){
         window.opener.Slides.Presentation.GetCurrentPresentation().SetContent();
         document.onkeydown = window.opener.Slides.Presentation.KeyHandler;
         window.opener.onkeydown = window.opener.Slides.Presentation.KeyHandler;
+  var startX = 0;
+  var startY = 0;
+
+
+  function handleTouchStart(e) {
+		console.log('aakuuu')
+    startX = e.changedTouches[0].screenX;
+    startY = e.changedTouches[0].screenY;
+		console.log('TOUCHSTART')
+  }
+
+  function handleTouchEnd(e) {
+		console.log('TOUCHEND')
+    var diffX = e.changedTouches[0].screenX - startX;
+    var diffY = e.changedTouches[0].screenY - startY;
+    var ratioX = Math.abs(diffX / diffY);
+    var ratioY = Math.abs(diffY / diffX);
+    var absDiff = Math.abs(ratioX > ratioY ? diffX : diffY);
+
+    // Ignore small movements.
+    if (absDiff < 30) {
+      return;
+    }
+
+    if (ratioX > ratioY) {
+      if (diffX >= 0) {
+        window.opener.Slides.Presentation.GetCurrentPresentation().Prev();
+      } else {
+        window.opener.Slides.Presentation.GetCurrentPresentation().Next();
+      }
+    } else {
+      if (diffY >= 0) {
+        window.opener.Slides.Presentation.GetCurrentPresentation().ToggleBlackScreen(e, true);
+      } else {
+        window.opener.Slides.Presentation.GetCurrentPresentation().ToggleBlackScreen(e, false, true);
+      }
+    }
+  }
+
+
+
+				//document.body.addEventListener('touchstart', window.opener.Slides.Presentation.handleTouchStart, false);
+				document.body.addEventListener('touchstart', handleTouchStart, false)
+				document.body.addEventListener('touchend', handleTouchEnd, false);
+
+
+
+
     }
     //Just for dev purposes
     $("#stylelink").attr({"href": $("#stylelink").attr("href") + "?id=" + Math.random() });

@@ -10957,7 +10957,7 @@ Slides.Presentation = function () {
      */
 
 
-    this.ToggleBlackScreen = function (ev) {
+    this.ToggleBlackScreen = function (ev, forceOn, forceOff) {
       var _this5 = this;
 
       var $bs = $("<div class='blankscreen'></div>");
@@ -10971,8 +10971,13 @@ Slides.Presentation = function () {
         left: "-10px",
         display: "none"
       });
+      var setBlankScreen = !this.d.find(".blankscreen").length || forceOn;
 
-      if (!this.d.find(".blankscreen").length) {
+      if (forceOff) {
+        setBlankScreen = false;
+      }
+
+      if (setBlankScreen) {
         this.d.find("body").prepend($bs);
         $(ev.target).parent().addClass("bs_active"); //Animointi
 
@@ -11355,7 +11360,9 @@ Slides.Presentation = function () {
     Initialize: Initialize,
     GetCurrentPresentation: GetCurrentPresentation,
     KeyHandler: KeyHandler,
-    ToggleDarkMode: ToggleDarkMode
+    ToggleDarkMode: ToggleDarkMode,
+    handleTouchStart: handleTouchStart,
+    handleTouchEnd: handleTouchEnd
   };
 }();
 "use strict";

@@ -5,7 +5,7 @@ var Slides = Slides || {};
  * Varsinaisen hallittavan diaesityksen käsittävä moduuli
  *
  */
-Slides.Presentation = (function() {
+Slides.Presentation = (function () {
   var current_presentation = undefined;
 
   /**
@@ -25,7 +25,7 @@ Slides.Presentation = (function() {
    * @param boolean  initial_load_ready tallentaa teidon siitä, onko käyttöliittymä ladattu
    *
    */
-  var Presentation = function() {
+  var Presentation = function () {
     this.d = undefined;
     this.dom = undefined;
     this.styles = undefined;
@@ -50,7 +50,7 @@ Slides.Presentation = (function() {
       ul: "lista",
       img: "kuvat",
       header: "ylätunniste",
-      aside: "sivutunniste"
+      aside: "sivutunniste",
     };
 
     this.initial_load_ready = false;
@@ -60,7 +60,7 @@ Slides.Presentation = (function() {
     /**
      * Avaa esityksen erilliseen ikkunaan (=esitysikkuna). Jos esitys jo auki, sulkee ikkunan.
      */
-    this.ToggleOpen = function() {
+    this.ToggleOpen = function () {
       var abort = false;
       var wasclosed = false;
       $(".nav_below").toggle();
@@ -107,7 +107,7 @@ Slides.Presentation = (function() {
      * Hakee esityksen sisällön, tyylit ja muun tarvittavan.
      *
      */
-    this.SetContent = function() {
+    this.SetContent = function () {
       this.d = $(this.view.document).contents();
       this.dom = this.view.document;
       //Lataa sisältö ulkoisesta lähteestä
@@ -131,15 +131,15 @@ Slides.Presentation = (function() {
      * Hakee  esityksen sisällön tietokannasta
      *
      */
-    this.LoadSlides = function() {
+    this.LoadSlides = function () {
       var path = Utilities.GetAjaxPath("Loader.php");
       return $.get(
         path,
         {
           service_id: this.service_id,
-          action: "load_slides_to_presentation"
+          action: "load_slides_to_presentation",
         },
-        html => this.d.find("main").html(html)
+        (html) => this.d.find("main").html(html)
       );
     };
 
@@ -150,16 +150,16 @@ Slides.Presentation = (function() {
      * TODO: default --> ?
      *
      */
-    this.SetStyles = function() {
+    this.SetStyles = function () {
       var path = Utilities.GetAjaxPath("Loader.php");
       return $.get(
         path,
         {
           action: "load_styles",
           //"classes":this.classes,
-          stylesheet: "default"
+          stylesheet: "default",
         },
-        stylestring => this.d.find("#updated_styles").html(stylestring)
+        (stylestring) => this.d.find("#updated_styles").html(stylestring)
       );
     };
 
@@ -169,13 +169,11 @@ Slides.Presentation = (function() {
      * on käytössä.
      *
      */
-    this.LoadSlideClasses = function() {
+    this.LoadSlideClasses = function () {
       var self = this;
       this.classes = [];
-      this.d.find("section").each(function() {
-        var section_classes = $(this)
-          .attr("class")
-          .split(" ");
+      this.d.find("section").each(function () {
+        var section_classes = $(this).attr("class").split(" ");
         //Lisää jälkimmäinen kahdesta section-elementin luokasta niiden
         //css-luokkien joukkoon, joita määrittävät tyylit ladataan.
         if (self.classes.indexOf(section_classes[1]) == -1) {
@@ -191,7 +189,7 @@ Slides.Presentation = (function() {
      * Lataa hallintapainikkeet ja esityksen sisällön
      *
      */
-    this.LoadControlsAndContent = function() {
+    this.LoadControlsAndContent = function () {
       //Tähän styles-attribuuttiin on tallennettu esityksen alkuperäiset ja muokatut tyylit
       this.styles = new Slides.Styles.Controller.StyleController(this);
       this.styles.GetOriginalStyles();
@@ -212,7 +210,7 @@ Slides.Presentation = (function() {
             this
           ),
           imageadder: new Slides.Widgets.ContentAdders.ImageAdder(this),
-          youtubeadder: new Slides.Widgets.ContentAdders.YoutubeAdder(this)
+          youtubeadder: new Slides.Widgets.ContentAdders.YoutubeAdder(this),
         };
         this.controls.biblecontentadder.Initialize();
         this.controls.imageadder.Initialize();
@@ -224,7 +222,7 @@ Slides.Presentation = (function() {
           .HighlightCurrentContents();
         var self = this;
         $("#songsearch").autocomplete(this.controls.songcontentadder.autocomp);
-        $("#songsearch").on("change paste keyup", function() {
+        $("#songsearch").on("change paste keyup", function () {
           self.controls.songcontentadder.CreateContent();
         });
         this.UpdateSegmentListForLayoutEditing();
@@ -280,7 +278,7 @@ Slides.Presentation = (function() {
      * Alustaa diojen hallintaan liittyvän toiminnallisuuden, kun sisältölista ladattu
      *
      */
-    this.SetControlActions = function() {
+    this.SetControlActions = function () {
       $("#infolooplink").click(this.ToggleInfoLoop.bind(this));
       $("#loop_settings_block").slider({
         min: 0,
@@ -292,7 +290,7 @@ Slides.Presentation = (function() {
           $(".nav_slider .indicator").text(" (" + ui.value / 1000 + " s) ");
           clearInterval(this.loop_id);
           this.LoopSlides(".event_info_at_beginning");
-        }
+        },
       });
       $("#anim_settings_block").slider({
         min: 0,
@@ -302,7 +300,7 @@ Slides.Presentation = (function() {
         slide: (ev, ui) => {
           this.fadetime = ui.value;
           $(".fade_slider .indicator").text(" (" + ui.value / 1000 + " s) ");
-        }
+        },
       });
       $("#bslink").click(this.ToggleBlackScreen.bind(this));
       $("#animatelink").click(this.ToggleFadeOn.bind(this));
@@ -318,11 +316,9 @@ Slides.Presentation = (function() {
      * @param ev klikkaustapahtuma
      *
      */
-    this.ToggleFadeOn = function(ev) {
+    this.ToggleFadeOn = function (ev) {
       this.fade_is_on = this.fade_is_on ? false : true;
-      $(ev.target)
-        .parent()
-        .toggleClass("bs_active");
+      $(ev.target).parent().toggleClass("bs_active");
       $(".fade_slider").toggle();
     };
 
@@ -333,7 +329,7 @@ Slides.Presentation = (function() {
      * @param ev klikkaustapahtuma
      *
      */
-    this.ToggleBlackScreen = function(ev) {
+    this.ToggleBlackScreen = function (ev, forceOn, forceOff) {
       var $bs = $("<div class='blankscreen'></div>");
       $bs.css({
         width: "200%",
@@ -343,13 +339,15 @@ Slides.Presentation = (function() {
         background: "#000000",
         top: "-10px",
         left: "-10px",
-        display: "none"
+        display: "none",
       });
-      if (!this.d.find(".blankscreen").length) {
+			var setBlankScreen = !this.d.find(".blankscreen").length || forceOn;
+			if(forceOff){
+				setBlankScreen = false;
+			}
+      if (setBlankScreen) {
         this.d.find("body").prepend($bs);
-        $(ev.target)
-          .parent()
-          .addClass("bs_active");
+        $(ev.target).parent().addClass("bs_active");
         //Animointi
         if (!this.fade_is_on) {
           $bs.show();
@@ -358,19 +356,14 @@ Slides.Presentation = (function() {
         }
       } else {
         //Animointi
-
         if (this.fade_is_on) {
           this.d.find(".blankscreen").fadeOut(this.fadetime, () => {
             this.d.find(".blankscreen").remove();
-            $(ev.target)
-              .parent()
-              .removeClass("bs_active");
+            $(ev.target).parent().removeClass("bs_active");
           });
         } else {
           this.d.find(".blankscreen").remove();
-          $(ev.target)
-            .parent()
-            .removeClass("bs_active");
+          $(ev.target).parent().removeClass("bs_active");
         }
       }
     };
@@ -382,7 +375,7 @@ Slides.Presentation = (function() {
      * @param ev klikkaustapahtuma
      *
      */
-    this.ToggleInfoLoop = function(ev) {
+    this.ToggleInfoLoop = function (ev) {
       var current_text = $(ev.target).text(),
         new_text =
           current_text == "Luuppaa infodioja"
@@ -403,19 +396,17 @@ Slides.Presentation = (function() {
      * Päivittää sisältölistauksen ulkoasupaneeliin, jotta ulkoasua voidaan säätää tarkemmin
      *
      */
-    this.UpdateSegmentListForLayoutEditing = function() {
+    this.UpdateSegmentListForLayoutEditing = function () {
       var self = this;
       self.segment_types = [];
       //Tyhjennä ensin mahdollisesti jo olemassaoleva sisältö
       $("#layout-target_select").html("<option>Koko esitys</option>");
       var $types_group = $("<optgroup>").attr({
-        label: "Aseta dialuokan mukaan"
+        label: "Aseta dialuokan mukaan",
       });
-      $.each(this.classes, function(idx, thisclass) {
+      $.each(this.classes, function (idx, thisclass) {
         //Käy sitten läpi kaikki esityksestä löytyvät segmenttityypit ja lisää ne listaan
-        $("<option>")
-          .text(thisclass)
-          .appendTo($types_group);
+        $("<option>").text(thisclass).appendTo($types_group);
       });
       //Lisää lopuksi jokainen segmentti valittavaksi erikseen
       //var $segments_group  = $("<optgroup>").attr({"label":"Aseta segmenttikohtaisesti"})
@@ -425,7 +416,7 @@ Slides.Presentation = (function() {
       //Lisää vielä valintatapahtuma ja muuta jquery-ui-menuksi
       $("#layout-target_select")
         .append($types_group)
-        .on("change", function() {
+        .on("change", function () {
           self.styles.SetEditTarget($(this));
         });
       $("#layout-target_select").selectmenu();
@@ -442,7 +433,7 @@ Slides.Presentation = (function() {
      * @param object $target se esityksen dia, joka on (tai josta tulee) aktiivinen
      *
      */
-    this.Activate = function($target) {
+    this.Activate = function ($target) {
       //Piilota lähtökohtaisesti kaikki segmentit (ja poista piilotus erikseen nyt aktiivisesta)
       this.d.find("section, article").hide();
       this.$slide.removeClass("current");
@@ -470,14 +461,14 @@ Slides.Presentation = (function() {
      * Nollaa nykyisen dian kohdalta tehdyt fonttien koon automaattiset korjaukset.
      *
      */
-    this.ResetOverflowCorrectionInSlide = function() {};
+    this.ResetOverflowCorrectionInSlide = function () {};
 
     /**
      *
      * Varmista, että sisältö mahtuu ruudulle
      *
      */
-    this.FixOverFlow = function() {
+    this.FixOverFlow = function () {
       //Varmista, että kaikki leipäteksti mahtuu ruudulle
       var fixer = (idx, el) => {
         var $el = $(el),
@@ -506,13 +497,11 @@ Slides.Presentation = (function() {
      * ylätunnisteen marginaali ja piilottamalla tyhjät elementit.
      *
      */
-    this.AdjustLayout = function() {
+    this.AdjustLayout = function () {
       //Varmista, että tyhjät elementit eivät vie tilaa esityksen kankaalta:
-      this.d.find("div,h1,h2,h3,h4,p").each(function() {
+      this.d.find("div,h1,h2,h3,h4,p").each(function () {
         if (
-          $(this)
-            .text()
-            .trim() == "" &&
+          $(this).text().trim() == "" &&
           !$(this).find("img,iframe").length &&
           !$(this).hasClass("percent_bar") &&
           !$(this).hasClass("denominator") &&
@@ -524,7 +513,7 @@ Slides.Presentation = (function() {
         }
       });
       //Hack to preserve credit lists inside p tags
-      this.d.find(".credits_list").each(function() {
+      this.d.find(".credits_list").each(function () {
         if (!$(this).parents("p").length) {
           $(this).wrap("<p></p>");
         }
@@ -534,14 +523,14 @@ Slides.Presentation = (function() {
       if ($header.length) {
         //Muokkaa sisällön marginaalia ylhäältä kattamaan ylätunniste ja lisä vielä 5px väliä
         this.$section.find("article").css({
-          "margin-top": $header.css("height").replace("px", "") * 1 + 5 + "px"
+          "margin-top": $header.css("height").replace("px", "") * 1 + 5 + "px",
         });
       }
       var $aside = this.$section.find("aside");
       if ($aside.length) {
         //Muokkaa sisällön marginaalia ylhäältä kattamaan sivutunniste ja lisä' vielä 5px väliä
         this.$section.find("article").css({
-          "margin-left": $aside.css("width").replace("px", "") * 1 + 5 + "px"
+          "margin-left": $aside.css("width").replace("px", "") * 1 + 5 + "px",
         });
       }
     };
@@ -551,7 +540,7 @@ Slides.Presentation = (function() {
      * Siirtyy seuraavaan diaan
      *
      */
-    this.Next = function() {
+    this.Next = function () {
       this.Move("next");
     };
 
@@ -560,7 +549,7 @@ Slides.Presentation = (function() {
      * Siirtyy edelliseen diaan
      *
      */
-    this.Prev = function() {
+    this.Prev = function () {
       this.Move("prev");
     };
 
@@ -570,7 +559,7 @@ Slides.Presentation = (function() {
      * @param where string Suunta, johon liikutaan (prev/next)
      *
      */
-    this.Move = function(where) {
+    this.Move = function (where) {
       this.Activate(this.d.find(".current"));
       //1. Liiku sisarelementtiin eli esimerkiksi saman laulun seuraavaan säkeistöön
       var $target = this.$slide[where]("article");
@@ -595,7 +584,7 @@ Slides.Presentation = (function() {
      * @param byno jos luuppaus tehdään css-luokan perusteella
      *
      */
-    this.LoopSlides = function(byclass, byno) {
+    this.LoopSlides = function (byclass, byno) {
       var active_idx = undefined,
         $target = undefined;
 
@@ -626,10 +615,10 @@ Slides.Presentation = (function() {
      * tai rakennetta muutettu
      *
      */
-    this.Update = function() {
+    this.Update = function () {
       var pres_position = {
         sec_idx: this.$section.index(),
-        slide_idx: this.$slide.index()
+        slide_idx: this.$slide.index(),
       };
       return $.when(this.SetContent()).done(() => {
         var new_msg = new Utilities.Message(
@@ -720,6 +709,8 @@ Slides.Presentation = (function() {
     Initialize,
     GetCurrentPresentation,
     KeyHandler,
-    ToggleDarkMode
+    ToggleDarkMode,
+    handleTouchStart,
+    handleTouchEnd,
   };
 })();
